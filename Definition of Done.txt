@@ -1,0 +1,9 @@
+----------------------------------------------
+ DEFINITION OF DONE
+----------------------------------------------
+- JavaDoc written (Classes, public methods)
+- Code complies to design
+- Unit tests written and passing
+- Code reviewed
+- Code commited (with release note)
+- VersionOne updated
