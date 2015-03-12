@@ -11,4 +11,13 @@ package domain;
  */
 public class Participant {
     
+    private String email;
+    private String password;
+    private String name;
+    
+    public Participant(){
+        
+    }
+    
+    
 }
