@@ -5,23 +5,49 @@
  */
 package domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The team class represents a team that participates in a competition. A team
+ * consists of one or more participants, of which one is the initiator. A team
+ * also has a name.
  *
- * @author Astrid
+ * @author Astrid Belder
  */
 public class Team {
-    
-    private List<Participant> participants;
-    
-    public Team(Participant participant){
-        this.participants = new ArrayList<>();
-        this.participants.add(participant);
+
+    private List<User> participants;
+    private User initiatior;
+    private String name;
+
+    public Team(User initiatior) {
+        this.initiatior = initiatior;
     }
-    
-    public void addParticipant(Participant participant){
-        this.participants.add(participant);
+
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Function adds a participant to the team.
+     *
+     * @param participant participant that should be added
+     */
+    public void addParticipant(User participant) {
+
+    }
+
+    /**
+     * Function removes a participant from the team.
+     *
+     * @param participant participant that should be removed
+     */
+    public void removeParticipant(User participant) {
+
+    }
+
 }

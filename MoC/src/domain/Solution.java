@@ -7,17 +7,14 @@ package domain;
 
 /**
  *
- * @author Astrid
+ * @author Astrid Belder
  */
-public class Participant {
+public class Solution {
     
-    private String email;
-    private String password;
-    private String name;
+    private Team team;
+    private Challenge challenge;
     
-    public Participant(){
+    public Solution(){
         
     }
-    
-    
 }
