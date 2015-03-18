@@ -24,6 +24,7 @@ public class AccountManager {
 
     /**
      * Creates an account with the specified AccountType.
+     *
      * @param type The type of the account to create.
      */
     public void CreateAccount(AccountType type) {
@@ -37,5 +38,13 @@ public class AccountManager {
             default:
                 throw new NotImplementedException();
         }
+    }
+
+    /**
+     * An enum indicating the possible account types.
+     */
+    public enum AccountType {
+
+        PARTICIPANT, ADMINISTRATOR
     }
 }
