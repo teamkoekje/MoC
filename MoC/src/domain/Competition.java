@@ -25,12 +25,15 @@ public class Competition {
     private List<Team> teams;    
     
     private Round currentRound;
+    
+    private final NewsFeed newsFeed;
     //</editor-fold>    
     
     // <editor-fold defaultstate="collapsed" desc="Constructor (singleton)" >
     private static Competition instance;
     
     private Competition() {
+        newsFeed = new NewsFeed();
     }
     
     public static Competition getInstance() {
