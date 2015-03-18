@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 import java.util.List;
@@ -17,15 +12,18 @@ import java.util.List;
  */
 public class Challenge {
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     private String name;
     private int difficulty;
 
     private List<Hint> hints;
+    // </editor-fold>
 
     public Challenge(String name) {
         this.name = name;
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     /**
      * Function returns the name of the challenge.
      * @return name of the challenge
@@ -49,4 +47,5 @@ public class Challenge {
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
+    //</editor-fold>
 }

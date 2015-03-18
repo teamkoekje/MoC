@@ -1,24 +1,42 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 /**
  * The Hint class represents a hint that can be shown during a challenge. It
- * contains a string with the content of the hint and a set time in seconds when the hint
- * should be released.
+ * contains a string with the content of the hint and a set time in seconds when
+ * the hint should be released.
  *
  * @author Astrid Belder
  */
 public class Hint {
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     private String content;
     private int time;
-
+    private boolean published;
+    //</editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Constructor" >
     public Hint(String content) {
         this.content = content;
+        this.published = false;
+    }
+    //</editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
+    /**
+     * Gets whether this Hint is published or not.
+     * @return 
+     */
+    public boolean isPublished() {
+        return published;
+    }
+
+    /**
+     * Sets whether this Hint has been published or not
+     * @param published Whether the boolean has been published or not.
+     */
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
     /**
@@ -47,5 +65,5 @@ public class Hint {
     public void setTime(int time) {
         this.time = time;
     }
-
+    //</editor-fold>
 }

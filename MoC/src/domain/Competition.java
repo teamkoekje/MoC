@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 import java.util.Date;
@@ -16,7 +11,8 @@ import java.util.List;
  * @author Astrid Belder
  */
 public class Competition {
-
+    
+    // <editor-fold defaultstate="collapsed" desc="variables" >
     private String name;
     private Date date;
     private Date startTime;
@@ -26,10 +22,22 @@ public class Competition {
     private int maxTeamSize;
 
     private List<Round> rounds;
-    private List<Team> teams;
-
-    public Competition() {
+    private List<Team> teams;    
+    
+    private Round currentRound;
+    //</editor-fold>    
+    
+    // <editor-fold defaultstate="collapsed" desc="Constructor (singleton)" >
+    private static Competition instance;
+    
+    private Competition() {
     }
+    
+    public static Competition getInstance() {
+        if(instance == null)instance = new Competition();
+        return instance;
+    }
+    //</editor-fold>    
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     public String getName() {
@@ -88,7 +96,8 @@ public class Competition {
         return teams;
     }
     // </editor-fold>
-
+    
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Function adds a challenge to the competition.
      *
@@ -136,4 +145,12 @@ public class Competition {
 
     }
 
+    /**
+     * Tells the current round the specified Team is done.
+     * @param toSubmit The Team that is done.
+     */
+    public void submit(Team toSubmit) {
+        currentRound.submit(toSubmit);
+    }
+    //</editor-fold>
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 import java.util.List;
@@ -16,14 +11,21 @@ import java.util.List;
  */
 public class Team {
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     private List<User> participants;
     private User initiatior;
     private String name;
+    private final Competition competition;
+    //</editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor" >
     public Team(User initiatior) {
         this.initiatior = initiatior;
+        this.competition = Competition.getInstance();
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Getters & Setters" >
     public String getName() {
         return name;
     }
@@ -32,6 +34,9 @@ public class Team {
         this.name = name;
     }
 
+    //</editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.
      *
@@ -50,4 +55,11 @@ public class Team {
 
     }
 
+    /**
+     * Tells the competition this Team is done with the current Round.
+     */
+    public void submit() {
+        competition.submit(this);
+    }
+    //</editor-fold>
 }
