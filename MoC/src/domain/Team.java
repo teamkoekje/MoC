@@ -12,14 +12,14 @@ import java.util.List;
 public class Team {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
-    private List<User> participants;
-    private User initiatior;
+    private List<Participant> participants;
+    private final Participant initiatior;
     private String name;
     private final Competition competition;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    public Team(User initiatior) {
+    public Team(Participant initiatior) {
         this.initiatior = initiatior;
         this.competition = Competition.getInstance();
     }
@@ -42,7 +42,7 @@ public class Team {
      *
      * @param participant participant that should be added
      */
-    public void addParticipant(User participant) {
+    public void addParticipant(Participant participant) {
 
     }
 
@@ -51,7 +51,7 @@ public class Team {
      *
      * @param participant participant that should be removed
      */
-    public void removeParticipant(User participant) {
+    public void removeParticipant(Participant participant) {
 
     }
 

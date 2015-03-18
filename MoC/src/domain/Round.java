@@ -1,6 +1,8 @@
 package domain;
 
+import domain.Events.HintReleasedEvent;
 import domain.Events.HintReleasedListener;
+import domain.Events.RoundEndedEvent;
 import domain.Events.RoundEndedListener;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +25,7 @@ public class Round {
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
-    
+
     protected EventListenerList roundEndedListenerList;
     protected EventListenerList hintReleasedListenerList;
     // </editor-fold>
@@ -117,6 +119,7 @@ public class Round {
 
     /**
      * Gets the RoundState of this Round.
+     *
      * @return A RoundState object indicating the state of this Round.
      */
     public RoundState getRoundState() {
@@ -125,6 +128,7 @@ public class Round {
 
     /**
      * Sets the roundState to the specified state
+     *
      * @param roundState The new state of the round.
      */
     private void setRoundState(RoundState roundState) {
@@ -138,20 +142,22 @@ public class Round {
      * Start the round.
      */
     public void start() {
-        if(roundState == RoundState.NOT_STARTED)
+        if (roundState == RoundState.NOT_STARTED) {
             roundState = RoundState.ONGOING;
-        else
+        } else {
             throw new IllegalArgumentException("The round has already started.");
+        }
     }
 
     /**
      * Stop the round.
      */
     public void stop() {
-        if(roundState == RoundState.NOT_STARTED)
+        if (roundState == RoundState.NOT_STARTED) {
             throw new IllegalArgumentException("Cannot stop a round that has not been started yet.");
-        else
+        } else {
             roundState = RoundState.ENDED;
+        }
     }
 
     /**
@@ -159,10 +165,11 @@ public class Round {
      * continue working on the challenge.
      */
     public void pause() {
-        if(roundState != RoundState.ONGOING)
+        if (roundState != RoundState.ONGOING) {
             throw new IllegalArgumentException("Cannot pause a round which is not ongoing.");
-        else
+        } else {
             roundState = RoundState.PAUSED;
+        }
     }
 
     /**
@@ -170,57 +177,90 @@ public class Round {
      * able to work on the challenge.
      */
     public void freeze() {
-        if(roundState != RoundState.ONGOING)
+        if (roundState != RoundState.ONGOING) {
             throw new IllegalArgumentException("Cannot freeze a round which is not ongoing.");
-        else
+        } else {
             roundState = RoundState.FROZEN;
+        }
     }
 
     /**
      * Resume the round after it has been paused or frozen.
      */
     public void resume() {
-        if(roundState == RoundState.FROZEN || roundState == RoundState.PAUSED)
+        if (roundState == RoundState.FROZEN || roundState == RoundState.PAUSED) {
             roundState = RoundState.ONGOING;
-        else
+        } else {
             throw new IllegalArgumentException("Cannot resume a round which is not frozen or paused.");
+        }
     }
-    
-    //</editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Event Subscriptions" >
+    //</editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Events" >
     /**
      * Adds the specified RoundEndedListener to the listener list.
+     *
      * @param toAdd The RoundEndedListener to add.
      */
-    public void addRoundEndedListener(RoundEndedListener toAdd){
+    public void addRoundEndedListener(RoundEndedListener toAdd) {
         roundEndedListenerList.add(RoundEndedListener.class, toAdd);
     }
-    
+
     /**
      * Removes the specified RoundEndedListener from the listener list.
+     *
      * @param toRemove The RoundEndedListener to remove.
      */
-    public void removeRoundEndedListener(RoundEndedListener toRemove){
-        roundEndedListenerList.remove(RoundEndedListener.class, toRemove);        
+    public void removeRoundEndedListener(RoundEndedListener toRemove) {
+        roundEndedListenerList.remove(RoundEndedListener.class, toRemove);
     }
-    
-        /**
+
+    /**
+     * Fires the round ended event.
+     * @param toFire The event to fire.
+     */
+    private void fireRoundEndedEvent(RoundEndedEvent toFire) {
+        Object[] listeners = roundEndedListenerList.getListenerList();
+        for (int i = 0; i < listeners.length; i = i + 2) {
+            if (listeners[i] == RoundEndedListener.class) {
+                ((RoundEndedListener) listeners[i + 1]).roundEndedOccurred(toFire);
+            }
+        }
+    }
+
+    /**
+     * Fires the hint released event.
+     * @param toFire The event to fire.
+     */
+    private void fireHintReleasedEvent(HintReleasedEvent toFire) {
+        Object[] listeners = hintReleasedListenerList.getListenerList();
+        for (int i = 0; i < listeners.length; i = i + 2) {
+            if (listeners[i] == HintReleasedListener.class) {
+                ((HintReleasedListener) listeners[i + 1]).hintReleasedOccurred(toFire);
+            }
+        }
+    }
+
+    /**
      * Adds the specified HintReleasedListener to the listener list.
+     *
      * @param toAdd The HintReleasedListener to add.
      */
-    public void addHintReleasedListener(HintReleasedListener toAdd){
+    public void addHintReleasedListener(HintReleasedListener toAdd) {
         hintReleasedListenerList.add(HintReleasedListener.class, toAdd);
     }
-    
+
     /**
      * Removes the specified HintReleasedListener from the listener list.
+     *
      * @param toRemove The HintReleasedListener to remove.
      */
-    public void removeHintReleasedListener(HintReleasedListener toRemove){
-        hintReleasedListenerList.remove(HintReleasedListener.class, toRemove);        
+    public void removeHintReleasedListener(HintReleasedListener toRemove) {
+        hintReleasedListenerList.remove(HintReleasedListener.class, toRemove);
     }
+
     // </editor-fold>
+
     /**
      * Increase the remaining totalTime of the round with a certain amount of
      * totalTime.
