@@ -11,7 +11,7 @@ import java.util.HashMap;
  *
  * @author Robin
  */
-public class IniviteManager {
+public class InviteManager {
     public enum InvitationState{UNDECIDED, ACCEPTED, DECLINED}
     
     private HashMap<String, InvitationState> sentInvitations;
