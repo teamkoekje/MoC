@@ -32,4 +32,12 @@ public class Workspace {
     public String getPath() {
         return null;
     }
+    
+    public String testCode(){
+        return null;
+    }
+    
+    public String compileCode(){
+        return null;
+    }
 }

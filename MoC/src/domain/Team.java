@@ -33,6 +33,18 @@ public class Team {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public List<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<Participant> participants) {
+        this.participants = participants;
+    }
+
+    public Participant getInitiatior() {
+        return initiatior;
+    }
 
     //</editor-fold>
     

@@ -47,5 +47,15 @@ public class Challenge {
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
+
+    /**
+     * Gets a list of hints
+     * @param u the user requesting the hints, must be a manager
+     * @return List of hints
+     */
+    public List<Hint> getHints(User u) {
+        
+        return hints;
+    }
     //</editor-fold>
 }

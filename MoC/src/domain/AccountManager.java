@@ -23,6 +23,21 @@ public class AccountManager {
     }
 
     /**
+     * Removes an account with the specified user.
+     *
+     * @param user The user to remove.
+     */
+    public void RemoveAccount(User user) {
+        if(user instanceof Participant){
+            participants.remove(user);
+        }else if(user instanceof Manager){
+            managers.remove(user);
+        }else{
+            throw new IllegalArgumentException("Unknown user implementation");
+        }
+    }
+
+    /**
      * Creates an account with the specified AccountType.
      *
      * @param type The type of the account to create.

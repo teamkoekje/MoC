@@ -134,6 +134,15 @@ public class Round {
     private void setRoundState(RoundState roundState) {
         this.roundState = roundState;
     }
+
+    /**
+     * Gets all submitted teams
+     * 
+     * @return Set of teams
+     */
+    public Set<Team> getSubmittedTeams() {
+        return submittedTeams;
+    }
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="methods" >

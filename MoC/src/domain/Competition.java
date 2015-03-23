@@ -98,6 +98,10 @@ public class Competition {
     public List<Team> getTeams() {
         return teams;
     }
+
+    public Round getCurrentRound() {
+        return currentRound;
+    }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Methods" >
