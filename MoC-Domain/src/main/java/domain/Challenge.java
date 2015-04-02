@@ -26,6 +26,7 @@ public class Challenge {
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     /**
      * Function returns the name of the challenge.
+     *
      * @return name of the challenge
      */
     public String getName() {
@@ -34,6 +35,7 @@ public class Challenge {
 
     /**
      * Function returns the difficulty of the challenge.
+     *
      * @return difficulty of the challenge
      */
     public int getDifficulty() {
@@ -42,7 +44,8 @@ public class Challenge {
 
     /**
      * Function sets the difficulty of the challenge.
-     * @param difficulty 
+     *
+     * @param difficulty
      */
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
@@ -50,11 +53,12 @@ public class Challenge {
 
     /**
      * Gets a list of hints
+     *
      * @param u the user requesting the hints, must be a manager
      * @return List of hints
      */
     public List<Hint> getHints(User u) {
-        
+
         return hints;
     }
     //</editor-fold>

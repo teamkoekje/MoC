@@ -6,6 +6,8 @@ import domain.Events.RoundEndedEvent;
 import domain.Events.RoundEndedListener;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.swing.event.EventListenerList;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -19,6 +21,10 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class Round {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
+    @Id
+    @GeneratedValue
+    private long id;
+
     private Challenge challenge;
     private int totalTime;
     private int currentTime;
@@ -137,7 +143,7 @@ public class Round {
 
     /**
      * Gets all submitted teams
-     * 
+     *
      * @return Set of teams
      */
     public Set<Team> getSubmittedTeams() {
@@ -226,6 +232,7 @@ public class Round {
 
     /**
      * Fires the round ended event.
+     *
      * @param toFire The event to fire.
      */
     private void fireRoundEndedEvent(RoundEndedEvent toFire) {
@@ -239,6 +246,7 @@ public class Round {
 
     /**
      * Fires the hint released event.
+     *
      * @param toFire The event to fire.
      */
     private void fireHintReleasedEvent(HintReleasedEvent toFire) {
@@ -269,7 +277,6 @@ public class Round {
     }
 
     // </editor-fold>
-
     /**
      * Increase the remaining totalTime of the round with a certain amount of
      * totalTime.

@@ -32,12 +32,12 @@ public class Workspace {
     public String getPath() {
         return null;
     }
-    
-    public String testCode(){
+
+    public String testCode() {
         return null;
     }
-    
-    public String compileCode(){
+
+    public String compileCode() {
         return null;
     }
 }

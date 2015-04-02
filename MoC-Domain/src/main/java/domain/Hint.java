@@ -14,7 +14,7 @@ public class Hint {
     private int time;
     private boolean published;
     //</editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     public Hint(String content) {
         this.content = content;
@@ -25,7 +25,8 @@ public class Hint {
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     /**
      * Gets whether this Hint is published or not.
-     * @return 
+     *
+     * @return
      */
     public boolean isPublished() {
         return published;
@@ -33,6 +34,7 @@ public class Hint {
 
     /**
      * Sets whether this Hint has been published or not
+     *
      * @param published Whether the boolean has been published or not.
      */
     public void setPublished(boolean published) {

@@ -2,6 +2,8 @@ package domain;
 
 import java.util.Date;
 import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * The Competition class represents a Masters of Code competition. A competition
@@ -11,8 +13,12 @@ import java.util.List;
  * @author Astrid Belder
  */
 public class Competition {
-    
+
     // <editor-fold defaultstate="collapsed" desc="variables" >
+    @Id
+    @GeneratedValue
+    private long id;
+
     private String name;
     private Date date;
     private Date startTime;
@@ -22,22 +28,24 @@ public class Competition {
     private int maxTeamSize;
 
     private List<Round> rounds;
-    private List<Team> teams;    
-    
+    private List<Team> teams;
+
     private Round currentRound;
-    
+
     private final NewsFeed newsFeed;
     //</editor-fold>    
-    
+
     // <editor-fold defaultstate="collapsed" desc="Constructor (singleton)" >
     private static Competition instance;
-    
+
     private Competition() {
         newsFeed = new NewsFeed();
     }
-    
+
     public static Competition getInstance() {
-        if(instance == null)instance = new Competition();
+        if (instance == null) {
+            instance = new Competition();
+        }
         return instance;
     }
     //</editor-fold>    
@@ -103,7 +111,7 @@ public class Competition {
         return currentRound;
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Function adds a challenge to the competition.
@@ -154,6 +162,7 @@ public class Competition {
 
     /**
      * Tells the current round the specified Team is done.
+     *
      * @param toSubmit The Team that is done.
      */
     public void submit(Team toSubmit) {

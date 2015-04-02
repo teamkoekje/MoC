@@ -12,6 +12,5 @@ public class Participant extends User {
     public void setTeam(Team team) {
         this.team = team;
     }
-    
-    
+
 }

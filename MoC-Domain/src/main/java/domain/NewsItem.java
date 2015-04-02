@@ -5,12 +5,12 @@ public class NewsItem {
 
     private final String content;
     private String timestamp;
-    
-    public NewsItem(String content){
+
+    public NewsItem(String content) {
         this.content = content;
     }
-    
-    public void setTimestamp(String timestamp){
+
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

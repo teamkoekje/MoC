@@ -1,6 +1,8 @@
 package domain;
 
 import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -12,6 +14,10 @@ import java.util.List;
 public class Team {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
+    @Id
+    @GeneratedValue
+    private long id;
+
     private List<Participant> participants;
     private final Participant initiatior;
     private String name;
@@ -33,7 +39,7 @@ public class Team {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public List<Participant> getParticipants() {
         return participants;
     }
@@ -47,7 +53,6 @@ public class Team {
     }
 
     //</editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.

@@ -28,11 +28,11 @@ public class AccountManager {
      * @param user The user to remove.
      */
     public void RemoveAccount(User user) {
-        if(user instanceof Participant){
+        if (user instanceof Participant) {
             participants.remove(user);
-        }else if(user instanceof Manager){
+        } else if (user instanceof Manager) {
             managers.remove(user);
-        }else{
+        } else {
             throw new IllegalArgumentException("Unknown user implementation");
         }
     }

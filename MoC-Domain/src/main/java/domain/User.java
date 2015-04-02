@@ -1,10 +1,17 @@
 package domain;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  *
  * @author Astrid Belder
  */
 public abstract class User {
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     private String email;
     private String password;

@@ -12,22 +12,26 @@ import java.util.HashMap;
  * @author Robin
  */
 public class InviteManager {
-    public enum InvitationState{UNDECIDED, ACCEPTED, DECLINED}
-    
+
+    public enum InvitationState {
+
+        UNDECIDED, ACCEPTED, DECLINED
+    }
+
     private HashMap<String, InvitationState> sentInvitations;
 
     public HashMap<String, InvitationState> getSentInvitations() {
         return sentInvitations;
     }
-    
-    public void addInvitation(String email){
+
+    public void addInvitation(String email) {
         sentInvitations.put(email, InvitationState.UNDECIDED);
     }
-    
-    public void setInvitationState(String email, InvitationState state){
+
+    public void setInvitationState(String email, InvitationState state) {
         if (sentInvitations.containsKey(email)) {
             sentInvitations.replace(email, state);
-        }else{
+        } else {
             throw new IllegalArgumentException("Unknown email");
         }
     }
