@@ -22,6 +22,7 @@ public class Team {
     private final Participant initiatior;
     private String name;
     private final Competition competition;
+    private InviteManager inviteManager;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >

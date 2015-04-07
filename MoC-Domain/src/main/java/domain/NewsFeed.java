@@ -1,24 +1,49 @@
 package domain;
 
 //@Author Casper
+<<<<<<< HEAD
 import domain.Events.NewsItemPublishedEvent;
 import domain.Events.NewsItemPublishedListener;
+=======
+
+import domain.Events.HintReleasedEvent;
+import domain.Events.HintReleasedListener;
+import domain.Events.RoundEndedEvent;
+>>>>>>> 7f8809cb67711473af09c09a45fc612ae34b720f
 import domain.Events.RoundEndedListener;
-import javax.swing.event.EventListenerList;
+import java.util.ArrayList;
+import java.util.List;
 
-public class NewsFeed {
+public class NewsFeed implements HintReleasedListener, RoundEndedListener{
 
+<<<<<<< HEAD
     protected EventListenerList newsItemPublishedListenerList;
 
     //should probably be a singleton
     public NewsFeed() {
         this.newsItemPublishedListenerList = new EventListenerList();
+=======
+    private List<NewsItem> newsItems;
+    
+    //should probably be a singleton
+    public NewsFeed(){
+        this.newsItems = new ArrayList<>();
+    }
+
+    public List<NewsItem> getNewsItems() {
+        return newsItems;
+    }
+    
+    public void addNewsItem(NewsItem newsItem){
+        newsItems.add(newsItem);
+>>>>>>> 7f8809cb67711473af09c09a45fc612ae34b720f
     }
 
     public void publishNewsItem(NewsItem toPublish) {
         toPublish.setTimestamp("current time");
         //throw event
     }
+<<<<<<< HEAD
 
     /**
      * Adds the specified NewsItemPublishedListener to the listener list.
@@ -28,16 +53,15 @@ public class NewsFeed {
     public void addRoundEndedListener(NewsItemPublishedListener toAdd) {
         newsItemPublishedListenerList.add(NewsItemPublishedListener.class, toAdd);
     }
+=======
+>>>>>>> 7f8809cb67711473af09c09a45fc612ae34b720f
 
-    /**
-     * Removes the specified NewsItemPublishedListener from the listener list.
-     *
-     * @param toRemove The NewsItemPublishedListener to remove.
-     */
-    public void removeRoundEndedListener(NewsItemPublishedListener toRemove) {
-        newsItemPublishedListenerList.remove(NewsItemPublishedListener.class, toRemove);
+    @Override
+    public void hintReleasedOccurred(HintReleasedEvent event) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+<<<<<<< HEAD
     /**
      * Fires the news item published event.
      *
@@ -50,5 +74,10 @@ public class NewsFeed {
                 ((NewsItemPublishedListener) listeners[i + 1]).newsItemPublishedOccurred(toFire);
             }
         }
+=======
+    @Override
+    public void roundEndedOccurred(RoundEndedEvent event) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+>>>>>>> 7f8809cb67711473af09c09a45fc612ae34b720f
     }
 }
