@@ -1,23 +1,22 @@
 package dao;
 
-import domain.Competition;
+import domain.User;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Stateless
-public class CompetitionDAO extends AbstractDAO<Competition> {
+public class UserDAO extends AbstractDAO<User> {
 
     @PersistenceContext
     private EntityManager em;
-
-    public CompetitionDAO() {
-        super(Competition.class);
-    }
 
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
 
+    public UserDAO() {
+        super(User.class);
+    }
 }

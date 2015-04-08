@@ -1,20 +1,23 @@
 package service;
 
 import dao.AbstractDAO;
-import dao.CompetitionDAO;
-import domain.Competition;
+import dao.UserDAO;
 import domain.User;
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 
+/**
+ * Service class used to manage users
+ *
+ * @author Astrid
+ */
 @Stateless
 @RequestScoped
-public class CompetitionService extends AbstractService<Competition> {
+public class UserService extends AbstractService<User> {
 
     @Inject
-    private CompetitionDAO dao;
+    private UserDAO dao;
 
     @Override
     protected AbstractDAO getDAO() {

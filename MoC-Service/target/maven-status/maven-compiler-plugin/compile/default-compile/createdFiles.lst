@@ -1,3 +1,13 @@
+dao\AbstractDAO.class
+dao\RoundDAO.class
+service\UserService.class
 api\ApplicationConfig.class
+service\RoundService.class
+dao\CompetitionDAO.class
+service\CompetitionService.class
+dao\TeamDAO.class
+service\AbstractService.class
+dao\UserDAO.class
 api\CompetitionResource.class
 api\UserResource.class
+service\TeamService.class

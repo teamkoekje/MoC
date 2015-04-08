@@ -14,6 +14,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import service.CompetitionService;
+import service.RoundService;
+import service.TeamService;
 
 /**
  * API used to manage competitions, round and teams
@@ -24,7 +26,13 @@ import service.CompetitionService;
 public class CompetitionResource {
 
     @Inject
-    private CompetitionService service;
+    private CompetitionService competitionService;
+
+    @Inject
+    private RoundService roundService;
+
+    @Inject
+    private TeamService teamService;
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
@@ -35,7 +43,7 @@ public class CompetitionResource {
     @GET
     @Produces("application/xml,application/json")
     public List<Competition> getCompetitions() {
-        return service.getCompetitions();
+        return competitionService.findAll();
     }
 
     /**
@@ -48,7 +56,7 @@ public class CompetitionResource {
     @Produces("application/xml,application/json")
     @Path("/{competitionId}")
     public Competition getCompetitionById(@PathParam("competitionId") long competitionId) {
-        return service.getCompetitionById(competitionId);
+        return competitionService.findById(competitionId);
     }
 
     /**
@@ -59,7 +67,7 @@ public class CompetitionResource {
     @POST
     @Consumes("application/xml,application/json")
     public void createCompetition(Competition competition) {
-        service.createCompetition(competition);
+        competitionService.create(competition);
     }
 
     /**
@@ -70,8 +78,8 @@ public class CompetitionResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/update")
-    public void updateCompetition(Competition competition) {
-        service.updateCompetition(competition);
+    public void editCompetition(Competition competition) {
+        competitionService.edit(competition);
     }
 
     /**
@@ -81,8 +89,8 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}")
-    public void deleteCompetition(@PathParam("competitionId") long competitionId) {
-        service.deleteCompetition(competitionId);
+    public void removeCompetition(@PathParam("competitionId") long competitionId) {
+        competitionService.remove(competitionId);
     }
     //</editor-fold>
 
@@ -97,7 +105,7 @@ public class CompetitionResource {
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/round")
     public List<Round> getRounds(@PathParam("competitionId") long competitionId) {
-        return service.getRounds(competitionId);
+        return roundService.findByCompetition(competitionId);
     }
 
     /**
@@ -109,8 +117,8 @@ public class CompetitionResource {
     @GET
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/round/{roundId}")
-    public Competition getRoundById(@PathParam("roundId") long roundId) {
-        return service.getRoundById(roundId);
+    public Round getRoundById(@PathParam("roundId") long roundId) {
+        return roundService.findById(roundId);
     }
 
     /**
@@ -122,7 +130,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/round")
     public void createRound(Round round) {
-        service.createRound(round);
+        roundService.create(round);
     }
 
     /**
@@ -133,8 +141,8 @@ public class CompetitionResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/round/update")
-    public void updateRound(Round round) {
-        service.updateRound(round);
+    public void editRound(Round round) {
+        roundService.edit(round);
     }
 
     /**
@@ -144,8 +152,8 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}/round/{roundId}")
-    public void deleteRound(@PathParam("roundId") long roundId) {
-        service.deleteRound(roundId);
+    public void removeRound(@PathParam("roundId") long roundId) {
+        roundService.remove(roundId);
     }
     //</editor-fold>
 
@@ -160,7 +168,7 @@ public class CompetitionResource {
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/team")
     public List<Team> getTeams(@PathParam("competitionId") long competitionId) {
-        return service.getTeams(competitionId);
+        return teamService.findByCompetition(competitionId);
     }
 
     /**
@@ -172,8 +180,8 @@ public class CompetitionResource {
     @GET
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}")
-    public Competition getTeamById(@PathParam("teamId") long teamId) {
-        return service.getTeamById(teamId);
+    public Team getTeamById(@PathParam("teamId") long teamId) {
+        return teamService.findById(teamId);
     }
 
     /**
@@ -185,7 +193,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team")
     public void createTeam(Team team) {
-        service.createTeam(team);
+        teamService.create(team);
     }
 
     /**
@@ -196,8 +204,8 @@ public class CompetitionResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/update")
-    public void updateTeam(Team team) {
-        service.updateTeam(team);
+    public void editTeam(Team team) {
+        teamService.edit(team);
     }
 
     /**
@@ -207,8 +215,8 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}/team/{teamId}")
-    public void deleteTeam(@PathParam("teamId") long teamId) {
-        service.deleteTeam(teamId);
+    public void removeTeam(@PathParam("teamId") long teamId) {
+        teamService.remove(teamId);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Invites">
@@ -222,7 +230,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/invite")
     public void inviteMember(String email, @PathParam("teamId") long teamId) {
-        service.inviteMember(email, teamId);
+        teamService.inviteMember(email, teamId);
     }
 
     /**
@@ -236,7 +244,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/join")
     public void joinTeam(User user, String token, @PathParam("teamId") long teamId) {
-        service.joinTeam(user, token, teamId);
+        teamService.joinTeam(user, token, teamId);
     }
 
     /**
@@ -249,7 +257,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/leave")
     public void leaveTeam(User user, @PathParam("teamId") long teamId) {
-        service.leaveTeam(user, teamId);
+        teamService.leaveTeam(user, teamId);
     }
     //</editor-fold>
     //</editor-fold>
