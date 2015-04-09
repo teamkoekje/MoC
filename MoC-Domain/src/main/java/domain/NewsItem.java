@@ -1,6 +1,5 @@
 package domain;
 
-//@Author Casper
 public class NewsItem {
 
     private final String content;
