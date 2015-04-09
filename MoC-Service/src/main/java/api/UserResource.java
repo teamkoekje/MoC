@@ -20,7 +20,7 @@ import service.UserService;
 public class UserResource {
 
     @Inject
-    private UserService service;
+    private UserService userService;
 
     //<editor-fold defaultstate="collapsed" desc="User">
     /**
@@ -31,7 +31,7 @@ public class UserResource {
     @GET
     @Produces("application/xml,application/json")
     public List<User> getUsers() {
-        throw new UnsupportedOperationException();
+        return userService.findAll();
     }
 
     /**
@@ -44,7 +44,7 @@ public class UserResource {
     @Produces("application/xml,application/json")
     @Path("/{userId}")
     public User getUserById(@PathParam("userId") String userId) {
-        throw new UnsupportedOperationException();
+        return userService.findById(userId);
     }
 
     /**
@@ -55,20 +55,19 @@ public class UserResource {
     @POST
     @Consumes("application/xml,application/json")
     public void createUser(User user) {
-        throw new UnsupportedOperationException();
+        userService.create(user);
     }
 
     /**
      * Updates a user
      *
      * @param user user with updated information
-     * @param userId id of the user that should be updated
      */
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{userId}")
-    public void updateUser(User user, @PathParam("userId") String userId) {
-        throw new UnsupportedOperationException();
+    @Path("/update")
+    public void updateUser(User user) {
+        userService.edit(user);
     }
 
     /**
@@ -79,7 +78,7 @@ public class UserResource {
     @DELETE
     @Path("/{userId}")
     public void deleteUser(@PathParam("userId") String userId) {
-        throw new UnsupportedOperationException();
+        userService.remove(userId);
     }
     //</editor-fold>
 }
