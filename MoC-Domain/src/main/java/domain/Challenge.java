@@ -8,7 +8,6 @@ import java.util.List;
  * location of the content of the challenge, and a set of hints that can be
  * given out during the challenge.
  *
- * @author Astrid Belder
  */
 public class Challenge {
 

@@ -28,9 +28,9 @@ public class AccountManager {
      */
     public void RemoveAccount(User user) {
         if (user instanceof Participant) {
-            participants.remove((Participant)user);
+            participants.remove((Participant) user);
         } else if (user instanceof Manager) {
-            managers.remove((Manager)user);
+            managers.remove((Manager) user);
         } else {
             throw new IllegalArgumentException("Unknown user implementation");
         }
