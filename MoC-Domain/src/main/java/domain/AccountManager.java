@@ -1,6 +1,5 @@
 package domain;
 
-//@Author Casper
 import java.util.List;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -29,9 +28,9 @@ public class AccountManager {
      */
     public void RemoveAccount(User user) {
         if (user instanceof Participant) {
-            participants.remove(user);
+            participants.remove((Participant) user);
         } else if (user instanceof Manager) {
-            managers.remove(user);
+            managers.remove((Manager) user);
         } else {
             throw new IllegalArgumentException("Unknown user implementation");
         }

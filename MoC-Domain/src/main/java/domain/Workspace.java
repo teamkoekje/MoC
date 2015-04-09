@@ -4,7 +4,6 @@ package domain;
  * The workspace class represents the workspace where a team can access the
  * challenges of a competition and create solutions.
  *
- * @author Astrid Belder
  */
 public class Workspace {
 

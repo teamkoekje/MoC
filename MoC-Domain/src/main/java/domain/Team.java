@@ -9,7 +9,6 @@ import javax.persistence.Id;
  * consists of one or more participants, of which one is the initiator. A team
  * also has a name.
  *
- * @author Astrid Belder
  */
 public class Team {
 
@@ -54,6 +53,7 @@ public class Team {
     }
 
     //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.

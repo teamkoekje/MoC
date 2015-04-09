@@ -16,7 +16,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * round contains a challenge and a totalTime that represents how much totalTime
  * there is left before the round is over.
  *
- * @author Astrid Belder
  */
 public class Round {
 

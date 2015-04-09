@@ -8,7 +8,6 @@ import java.util.List;
  * location of the content of the challenge, and a set of hints that can be
  * given out during the challenge.
  *
- * @author Astrid Belder
  */
 public class Challenge {
 
@@ -19,9 +18,11 @@ public class Challenge {
     private List<Hint> hints;
     // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="constructor" >
     public Challenge(String name) {
         this.name = name;
     }
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     /**

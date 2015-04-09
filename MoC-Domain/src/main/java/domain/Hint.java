@@ -4,8 +4,6 @@ package domain;
  * The Hint class represents a hint that can be shown during a challenge. It
  * contains a string with the content of the hint and a set time in seconds when
  * the hint should be released.
- *
- * @author Astrid Belder
  */
 public class Hint {
 
