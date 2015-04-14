@@ -1,7 +1,9 @@
 package domain;
 
-import java.util.HashMap;
+import domain.Invitation.InvitationState;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A class used for managing invitations. Each team has their own InviteManager.
@@ -9,27 +11,7 @@ import java.util.Iterator;
 public class InviteManager {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
-    /**
-     * An enum indicating the state of an invitation
-     */
-    public enum InvitationState {
-
-        /**
-         * Indicates that an invitation has not been accepted or declined yet,
-         * this should be the default state.
-         */
-        UNDECIDED,
-        /**
-         * Indicates an invitation has been accepted.
-         */
-        ACCEPTED,
-        /**
-         * Indicates an invitation has been declined.
-         */
-        DECLINED
-    }
-
-    private final HashMap<String, InvitationState> sentInvitations;
+    private final List<Invitation> sentInvitations;
     // </editor-fold >
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
@@ -37,7 +19,7 @@ public class InviteManager {
      * Creates a new instance of the InviteManager.
      */
     public InviteManager() {
-        sentInvitations = new HashMap<>();
+        sentInvitations = new ArrayList<>();
     }
 
     // </editor-fold>
@@ -49,7 +31,7 @@ public class InviteManager {
      * @return An iterator representing the sent invitations HashMap.
      */
     public Iterator iterator() {
-        return sentInvitations.entrySet().iterator();
+        return sentInvitations.iterator();
     }
 
     /**
@@ -60,11 +42,13 @@ public class InviteManager {
      * @param state The state to change to
      */
     public void setInvitationState(String email, InvitationState state) {
-        if (sentInvitations.containsKey(email)) {
-            sentInvitations.put(email, state);
+        Invitation i = findInvitation(email);
+        if (i != null) {
+            i.setState(state);
         } else {
             throw new IllegalArgumentException("Unknown email");
         }
+
     }
     // </editor-fold>
 
@@ -75,13 +59,24 @@ public class InviteManager {
      * IllegalArgumentException is thrown.
      *
      * @param email The email to add.
+     * @param token
      */
-    public void addInvitation(String email) {
-        if (!sentInvitations.containsKey(email)) {
-            sentInvitations.put(email, InvitationState.UNDECIDED);
-        }else{
-            throw new IllegalArgumentException("Email already present.");
+    public void addInvitation(String email, String token) {
+        Invitation i = findInvitation(email);
+        if (i == null) {
+            //sentInvitations.add(new Invitation(email, token));
+        } else {
+            throw new IllegalArgumentException("Unknown email");
         }
+    }
+
+    private Invitation findInvitation(String email) {
+        for (Invitation i : sentInvitations) {
+            if (i.getEmail().equals(email)) {
+                return i;
+            }
+        }
+        return null;
     }
     // </editor-fold>
 }

@@ -238,13 +238,14 @@ public class CompetitionResource {
      *
      * @param user user that should join the team
      * @param token string to verify if the user is allowed to join the team
+     * @param competitionId id of the competition that the team belongs to
      * @param teamId id of the team that the user should join
      */
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/join")
-    public void joinTeam(User user, String token, @PathParam("teamId") long teamId) {
-        teamService.joinTeam(user, token, teamId);
+    public void joinTeam(User user, String token, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
+        competitionService.joinTeam(user.getEmail(), token, competitionId, teamId);
     }
 
     /**

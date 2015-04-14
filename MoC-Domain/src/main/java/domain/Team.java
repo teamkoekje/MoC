@@ -21,7 +21,7 @@ public class Team {
     private final Participant initiatior;
     private String name;
     private final Competition competition;
-    private InviteManager inviteManager;
+    //private InviteManager inviteManager;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
@@ -32,6 +32,10 @@ public class Team {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters" >
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -53,14 +57,13 @@ public class Team {
     }
 
     //</editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.
      *
      * @param participant participant that should be added
      */
-    public void addParticipant(Participant participant) {
+    public void join(Participant participant) {
 
     }
 

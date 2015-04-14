@@ -1,9 +1,13 @@
 package service;
 
 import dao.AbstractDAO;
+import dao.InvititationDAO;
 import dao.TeamDAO;
+import domain.Invitation;
 import domain.Team;
 import domain.User;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
@@ -14,11 +18,16 @@ import javax.inject.Inject;
 public class TeamService extends AbstractService<Team> {
 
     @Inject
-    private TeamDAO dao;
+    private TeamDAO teamDao;
+    
+    @Inject
+    private InvititationDAO invitationDao;
+
+    private final SecureRandom random = new SecureRandom();
 
     @Override
     protected AbstractDAO getDAO() {
-        return dao;
+        return teamDao;
     }
 
     /**
@@ -28,7 +37,7 @@ public class TeamService extends AbstractService<Team> {
      * @return list with teams that belong to the competition
      */
     public List<Team> findByCompetition(long competitionId) {
-        return dao.findByCompetition(competitionId);
+        return teamDao.findByCompetition(competitionId);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Invites">
@@ -39,7 +48,13 @@ public class TeamService extends AbstractService<Team> {
      * @param teamId id of the team that the person should be invited to
      */
     public void inviteMember(String email, long teamId) {
-        throw new UnsupportedOperationException();
+        //Generate token
+        String token = generateToken();
+        Team t = teamDao.findById(teamId);
+        Invitation invite = new Invitation(t, email, token);
+        invitationDao.create(invite);
+        
+        //send email
     }
 
     /**
@@ -50,6 +65,8 @@ public class TeamService extends AbstractService<Team> {
      * @param teamId id of the team that the user should join
      */
     public void joinTeam(User user, String token, long teamId) {
+        Team t = teamDao.findById(teamId);
+
         throw new UnsupportedOperationException();
     }
 
@@ -63,4 +80,8 @@ public class TeamService extends AbstractService<Team> {
         throw new UnsupportedOperationException();
     }
     //</editor-fold>
+
+    private String generateToken() {
+        return new BigInteger(130, random).toString(32);
+    }
 }

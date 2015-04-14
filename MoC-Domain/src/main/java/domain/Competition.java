@@ -168,5 +168,14 @@ public class Competition {
     public void submit(Team toSubmit) {
         currentRound.submit(toSubmit);
     }
+
+    public boolean joinTeam(String email, String token, long teamId) {
+        for(Team t : teams){
+            if(t.getId() == teamId){
+                //t.join();
+            }
+        }
+        return false;
+    }
     //</editor-fold>
 }
