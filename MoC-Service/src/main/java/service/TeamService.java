@@ -9,9 +9,12 @@ import domain.User;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Properties;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
+import javax.mail.*;
+import javax.mail.internet.*;
 
 @Stateless
 @RequestScoped
@@ -19,7 +22,7 @@ public class TeamService extends AbstractService<Team> {
 
     @Inject
     private TeamDAO teamDao;
-    
+
     @Inject
     private InvititationDAO invitationDao;
 
@@ -53,8 +56,36 @@ public class TeamService extends AbstractService<Team> {
         Team t = teamDao.findById(teamId);
         Invitation invite = new Invitation(t, email, token);
         invitationDao.create(invite);
-        
         //send email
+        // Recipient's email ID needs to be mentioned.
+        String to = "c.linschooten@gmail.com";
+        // Sender's email ID needs to be mentioned
+        String from = "no-reply@MastersOfCode.com";
+        // Assuming you are sending email from localhost
+        String host = "localhost";
+        // Get system properties
+        Properties properties = System.getProperties();
+        // Setup mail server
+        properties.setProperty("mail.smtp.host", host);
+        // Get the default Session object.
+        Session session = Session.getDefaultInstance(properties);
+        try {
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            // Set Subject: header field
+            message.setSubject("This is the Subject Line!");
+            // Send the actual HTML message, as big as you like
+            message.setContent("<h1>This is actual message</h1>", "text/html");
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
     }
 
     /**
@@ -79,9 +110,10 @@ public class TeamService extends AbstractService<Team> {
     public void leaveTeam(User user, long teamId) {
         throw new UnsupportedOperationException();
     }
-    //</editor-fold>
 
     private String generateToken() {
         return new BigInteger(130, random).toString(32);
     }
+    //</editor-fold>
+
 }
