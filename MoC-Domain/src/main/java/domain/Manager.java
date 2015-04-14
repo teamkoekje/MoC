@@ -1,5 +1,9 @@
 package domain;
 
-public class Manager extends User {
+import java.io.Serializable;
+import javax.persistence.Entity;
+
+@Entity
+public class Manager extends User implements Serializable{
 
 }

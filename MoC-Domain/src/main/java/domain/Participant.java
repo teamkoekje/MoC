@@ -1,7 +1,14 @@
 package domain;
 
-public class Participant extends User {
+import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
+@Entity
+public class Participant extends User implements Serializable{
+
+    @ManyToOne(cascade = CascadeType.PERSIST) 
     private Team team;
 
     public Team getTeam() {

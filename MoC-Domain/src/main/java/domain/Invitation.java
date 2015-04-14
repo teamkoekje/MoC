@@ -1,6 +1,15 @@
 package domain;
 
-public class Invitation {
+import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class Invitation implements Serializable{
+    
 
     /**
      * An enum indicating the state of an invitation
@@ -22,24 +31,35 @@ public class Invitation {
         DECLINED
     }
     
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+    @ManyToOne(cascade = CascadeType.PERSIST) 
     private final Team team;
     private final String email;
     private final String token;
-    private InvitationState state;
+    private InvitationState invitationState;
+
+    protected Invitation() {
+        team = /*new Team(new Participant());*/null;
+        email = "no email";
+        token = "no token";
+    }
 
     public Invitation(Team team, String email, String token) {
         this.team = team;
         this.email = email;
         this.token = token;
-        this.state = InvitationState.UNDECIDED;
+        this.invitationState = InvitationState.UNDECIDED;
     }
 
     public InvitationState getState() {
-        return state;
+        return invitationState;
     }
 
     public void setState(InvitationState state) {
-        this.state = state;
+        this.invitationState = state;
     }
 
     public String getEmail() {
@@ -63,5 +83,13 @@ public class Invitation {
         }
         Invitation otherInvitation = (Invitation) other;
         return otherInvitation.email.equals(this.email);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

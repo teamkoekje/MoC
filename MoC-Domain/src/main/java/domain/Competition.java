@@ -1,18 +1,27 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.ejb.Singleton;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 
 /**
  * The Competition class represents a Masters of Code competition. A competition
- * contains a name, date, startTime and location. It also has a minimum and
- * maximum team size, a list of rounds and a list of participating teams.
+ contains a name, competitionDate, startTime and location. It also has a minimum and
+ maximum team size, a list of rounds and a list of participating teams.
  *
  * @author Astrid Belder
  */
-public class Competition {
+@Entity
+@Singleton
+public class Competition implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
     @Id
@@ -20,16 +29,21 @@ public class Competition {
     private long id;
 
     private String name;
-    private Date date;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date competitionDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date startTime;
     private String location;
 
     private int minTeamSize;
     private int maxTeamSize;
 
+    @OneToMany(cascade = CascadeType.PERSIST) 
     private List<Round> rounds;
+    @OneToMany(cascade = CascadeType.PERSIST) 
     private List<Team> teams;
 
+    @OneToOne(cascade = CascadeType.PERSIST) 
     private Round currentRound;
 
     private final NewsFeed newsFeed;
@@ -38,7 +52,7 @@ public class Competition {
     // <editor-fold defaultstate="collapsed" desc="Constructor (singleton)" >
     private static Competition instance;
 
-    private Competition() {
+    protected Competition() {
         newsFeed = new NewsFeed();
     }
 
@@ -60,11 +74,11 @@ public class Competition {
     }
 
     public Date getDate() {
-        return date;
+        return competitionDate;
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.competitionDate = date;
     }
 
     public Date getStartTime() {

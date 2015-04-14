@@ -1,9 +1,12 @@
 package domain;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-public abstract class User {
+@Entity
+public class User implements Serializable {
 
     @Id
     @GeneratedValue

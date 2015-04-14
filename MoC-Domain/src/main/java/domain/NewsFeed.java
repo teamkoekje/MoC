@@ -8,9 +8,10 @@ import domain.Events.HintReleasedEvent;
 import domain.Events.HintReleasedListener;
 import domain.Events.RoundEndedEvent;
 import domain.Events.RoundEndedListener;
+import java.io.Serializable;
 import javax.swing.event.EventListenerList;
 
-public class NewsFeed implements HintReleasedListener, RoundEndedListener {
+public class NewsFeed implements HintReleasedListener, RoundEndedListener, Serializable {
 
     protected EventListenerList newsItemPublishedListenerList;
 

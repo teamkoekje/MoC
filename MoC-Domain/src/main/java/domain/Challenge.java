@@ -1,6 +1,10 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * The Challenge class represents a coding challenge that can be given during a
@@ -9,7 +13,8 @@ import java.util.List;
  * given out during the challenge.
  *
  */
-public class Challenge {
+@Entity
+public class Challenge implements Serializable{
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     private String name;
@@ -17,8 +22,15 @@ public class Challenge {
 
     private List<Hint> hints;
     // </editor-fold>
+    @Id 
+    @GeneratedValue
+    private Long id;
 
     // <editor-fold defaultstate="collapsed" desc="constructor" >
+    protected Challenge() {
+        this.name = "Not set yet";
+    }
+    
     public Challenge(String name) {
         this.name = name;
     }
@@ -63,4 +75,12 @@ public class Challenge {
         return hints;
     }
     //</editor-fold>
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

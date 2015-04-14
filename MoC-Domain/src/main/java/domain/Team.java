@@ -1,8 +1,14 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -10,21 +16,30 @@ import javax.persistence.Id;
  * also has a name.
  *
  */
-public class Team {
+@Entity
+public class Team implements Serializable{
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
     @GeneratedValue
     private long id;
 
+    @OneToMany(cascade = CascadeType.PERSIST) 
     private List<Participant> participants;
+    @OneToOne(cascade = CascadeType.PERSIST) 
     private final Participant initiatior;
     private String name;
+    @ManyToOne(cascade = CascadeType.PERSIST) 
     private final Competition competition;
     //private InviteManager inviteManager;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
+    protected Team(){
+        this.competition = Competition.getInstance();
+        this.initiatior = null;
+    }
+    
     public Team(Participant initiatior) {
         this.initiatior = initiatior;
         this.competition = Competition.getInstance();

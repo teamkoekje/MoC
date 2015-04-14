@@ -4,8 +4,10 @@ import domain.Events.HintReleasedEvent;
 import domain.Events.HintReleasedListener;
 import domain.Events.RoundEndedEvent;
 import domain.Events.RoundEndedListener;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.swing.event.EventListenerList;
@@ -17,7 +19,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * there is left before the round is over.
  *
  */
-public class Round {
+@Entity
+public class Round implements Serializable{
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id

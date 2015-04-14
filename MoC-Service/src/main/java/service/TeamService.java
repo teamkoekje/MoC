@@ -3,17 +3,18 @@ package service;
 import dao.AbstractDAO;
 import dao.InvititationDAO;
 import dao.TeamDAO;
-import domain.Invitation;
 import domain.Team;
 import domain.User;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Properties;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.mail.*;
+import javax.mail.Message.RecipientType;
 import javax.mail.internet.*;
 
 @Stateless
@@ -43,6 +44,10 @@ public class TeamService extends AbstractService<Team> {
         return teamDao.findByCompetition(competitionId);
     }
 
+    
+    @Resource(name = "mail/MoC")
+    private Session session; //mailing session
+
     //<editor-fold defaultstate="collapsed" desc="Invites">
     /**
      * Invites a member to a certain team
@@ -52,40 +57,60 @@ public class TeamService extends AbstractService<Team> {
      */
     public void inviteMember(String email, long teamId) {
         //Generate token
-        String token = generateToken();
-        Team t = teamDao.findById(teamId);
-        Invitation invite = new Invitation(t, email, token);
-        invitationDao.create(invite);
+        //String token = generateToken();
+        //Team t = new Team(new Participant());
+        //Team t = teamDao.findById(teamId);
+        //Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
+        //invitationDao.create(invite);
         //send email
-        // Recipient's email ID needs to be mentioned.
-        String to = "c.linschooten@gmail.com";
-        // Sender's email ID needs to be mentioned
-        String from = "no-reply@MastersOfCode.com";
-        // Assuming you are sending email from localhost
-        String host = "localhost";
-        // Get system properties
-        Properties properties = System.getProperties();
-        // Setup mail server
-        properties.setProperty("mail.smtp.host", host);
-        // Get the default Session object.
-        Session session = Session.getDefaultInstance(properties);
+
         try {
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
-            // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            // Set Subject: header field
-            message.setSubject("This is the Subject Line!");
-            // Send the actual HTML message, as big as you like
-            message.setContent("<h1>This is actual message</h1>", "text/html");
-            // Send message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("c.linschooten@gmail.com"));//this doesnt work as the injected session will override it
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse("c.linschooten@gmail.com"));
+            message.setSubject("BEEEERRRRR!!");
+            message.setText("Let's have a beer party sometime.");
+
             Transport.send(message);
             System.out.println("Sent message successfully....");
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        
+        //this one uses ssl instead of tsl, untested code
+        /*Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.moc.com");
+        props.put("mail.smtp.socketFactory.port", "25");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "25");
+
+        Session session2 = Session.getDefaultInstance(props,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("no-reply@smtp.moc.com","admin");
+                }
+            });
+
+        try {
+
+            Message message = new MimeMessage(session2);
+            message.setFrom(new InternetAddress("no-reply@smtp.moc.com"));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse("c.linschooten@gmail.com"));
+            message.setSubject("Testing Subject");
+            message.setText("Dear Mail Crawler," +
+                    "\n\n No spam to my email, please!");
+
+            Transport.send(message);
+
+            System.out.println("Done");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     /**
