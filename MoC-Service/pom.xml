@@ -16,11 +16,6 @@
     
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MoC-Domain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.5.0</version>
@@ -45,6 +40,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>MoC-Messaging</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>MoC-Domain</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

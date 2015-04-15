@@ -1,7 +1,5 @@
 package messaging;
 
-import javax.ejb.Stateless;
-import javax.faces.bean.RequestScoped;
 import workspace.Reply;
 import workspace.Request;
 
