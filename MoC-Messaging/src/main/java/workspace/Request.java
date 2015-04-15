@@ -2,6 +2,10 @@ package workspace;
 
 import java.io.Serializable;
 
+/**
+ * This class represents an object that tells a specific workspace to perform a specific action
+ * @author TeamKoekje
+ */
 public class Request implements Serializable {
 
     private final Action action;

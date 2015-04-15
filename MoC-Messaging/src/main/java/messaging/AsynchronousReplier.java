@@ -9,10 +9,9 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 /**
- *
+ * @author TeamKoekje
  * @param <REQUEST>
  * @param <REPLY>
- * @author Maja Pesic
  */
 public class AsynchronousReplier<REQUEST, REPLY> {
 
@@ -54,7 +53,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     }
 
     /**
-     * sets the listener that will be notified when each request arriives
+     * sets the listener that will be notified when each request arrives
      *
      * @param requestListener
      */
@@ -63,7 +62,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     }
 
     /**
-     * Opens the jms connection of the Messaging Gateway in order to start
+     * Opens the JMS connection of the Messaging Gateway in order to start
      * sending/receiving requests.
      */
     public void start() {
@@ -76,7 +75,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
      * @todo Implement this method. It should: 1. de-serialize the message into
      * a REQUEST 2. register the message to belong to the REQUEST 3. notify the
      * listener about the REQUEST arrival
-     * @param message the incomming message containing the request
+     * @param message the incoming message containing the request
      */
     private synchronized void onRequest(ObjectMessage message) {
         try {
@@ -91,13 +90,13 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     /**
      * Sends the reply for a specific request.
      *
-     * @todo implement the following: 1. get the requestMessage registered for
-     * the request from activeRequests 2. serialize the reply and create the
-     * replyMessage for it 3. set the JMSCorrelationID of the replyMessage to be
-     * equal to the JMSMessageID of the requestMessage 4. get the getJMSReplyTo
-     * destination of the requestMessage 5. send the replyMessage to this
-     * Destination; use method send(Message m, Destination d) in
-     * MessagingGateway
+     * 1. get the requestMessage registered for
+     * the request from activeRequests 
+     * 2. serialize the reply and create the replyMessage for it 
+     * 3. set the JMSCorrelationID of the replyMessage to be equal to the 
+     *  JMSMessageID of the requestMessage 
+     * 4. get the getJMSReplyTo destination of the requestMessage 
+     * 5. send the replyMessage to this Destination
      *
      * @param request to which this reply belongs
      * @param reply to the request

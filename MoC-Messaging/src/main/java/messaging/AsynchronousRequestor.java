@@ -10,12 +10,12 @@ import javax.jms.ObjectMessage;
 
 /**
  * This class is used for sending requests and receiving replies in asynchronous
- * communication.This class inherits ythe MessagingGateway, i.e., it has access
+ * communication.This class inherits the MessagingGateway, i.e., it has access
  * to a MessageSender and MessageReceiver.
  *
+ * @author TeamKoekje
  * @param <REQUEST> is the domain class for requests
  * @param <REPLY> is the domain class for replies
- * @author Maja Pesic
  */
 public class AsynchronousRequestor<REQUEST, REPLY> {
 
@@ -46,7 +46,7 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
 
     /**
      * The only constructor. This constructor does the following: 1. creates the
-     * serializer and listener. 2. registeres itself as the listener on the
+     * serializer and listener. 2. registers itself as the listener on the
      * MessageReceiver (method onReply)
      *
      * @param requestSenderQueue

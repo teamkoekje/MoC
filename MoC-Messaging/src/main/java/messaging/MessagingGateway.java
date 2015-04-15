@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package messaging;
 
 import java.io.Serializable;
@@ -17,13 +12,13 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
 /**
- *
- * @author Astrid
+ * This class is responsible for actually sending messages from one point to another.
+ * 
+ * @author TeamKoekje
  */
 public class MessagingGateway {
 

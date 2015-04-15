@@ -1,8 +1,7 @@
 package messaging;
 
 /**
- *
- * @author Maja Pesic
+ * @author TeamKoekje
  * @param <REQUEST>
  */
 public interface IRequestListener<REQUEST> {
