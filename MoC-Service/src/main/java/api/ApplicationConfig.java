@@ -21,6 +21,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(api.CompetitionResource.class);
         resources.add(api.UserResource.class);
+        resources.add(api.WorkspaceResource.class);
     }
 
 }

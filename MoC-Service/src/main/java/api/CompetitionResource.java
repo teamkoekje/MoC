@@ -243,8 +243,8 @@ public class CompetitionResource {
      */
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/team/{teamId}/join")
-    public void joinTeam(User user/*, String token*/, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
+    @Path("/{competitionId}/team/{teamId}/join/{token}")
+    public void joinTeam(User user, @PathParam("token") String token, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
         competitionService.joinTeam(user.getEmail(), "token", competitionId, teamId);
     }
 

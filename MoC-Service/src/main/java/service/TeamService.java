@@ -8,13 +8,11 @@ import domain.User;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.Properties;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.mail.*;
-import javax.mail.Message.RecipientType;
 import javax.mail.internet.*;
 
 @Stateless
