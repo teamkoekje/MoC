@@ -15,8 +15,6 @@ import messaging.IReplyListener;
 public class Broker {
     private final ServiceGateway serviceGtw;
     private final WorkspaceGateway workspaceGtw;
-    private IReplyListener<Request, Reply> workspaceReplyListener;
-    private ArrayList<WorkspaceServer> workspaceServers;
     
     public Broker(String serviceReplyQueue, String workspaceReplyQueue, String workspaceRequestQueue){
         workspaceGtw = new WorkspaceGateway(workspaceReplyQueue, workspaceRequestQueue);
@@ -32,35 +30,14 @@ public class Broker {
                 }
             }
         };
-        
-        workspaceReplyListener = new IReplyListener<Request, Reply>() {
-            @Override
-            public void onReply(Request request, Reply reply) {
-                onWorkspaceReply(request, reply);
-            }
-        };
     }
     
     private void createNewWorkspace(Request request){
-        WorkspaceServer workspaceServer = null;
-        if(!workspaceServers.isEmpty()){
-            for(WorkspaceServer w : workspaceServers){
-                if(workspaceServer == null || w.getNumberOfWorkspaces() < workspaceServer.getNumberOfWorkspaces()){
-                    workspaceServer = w;
-                }
-            }
-        }else{
-            workspaceServer = new WorkspaceServer(0L, "", 0);
-            workspaceServers.add(workspaceServer);
-        }
-        
-        //workspaceGtw.sendRequest(request, workspaceReplyListener);
-        
-        // TODO
+        workspaceGtw.addWorkspace(request);
     }
     
     private void sendToWorkspace(Request request){
-        workspaceGtw.sendRequest(request, workspaceReplyListener);
+        
     }
 
     private void onWorkspaceReply(Request request, Reply reply) {

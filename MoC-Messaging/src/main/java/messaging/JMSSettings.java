@@ -26,7 +26,8 @@ public class JMSSettings {
 
     public static final String BROKER_REQUEST = "BROKER_REQUEST";
     public static final String WORKSPACE_REQUEST = "WORKSPACE_REQUEST";
-    public static final String BROKER_RERPLY = "BROKER_REPLY";
+    public static final String WORKSPACE_REPLY = "WORKSPACE_REPLY";
+    public static final String BROKER_REPLY = "BROKER_REPLY";
     public static final String SERVICE_REPLY = "SERVICE_REPLY";
 
     private static RunMode runMode;

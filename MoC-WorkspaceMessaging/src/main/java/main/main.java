@@ -18,7 +18,7 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Broker broker = new Broker(JMSSettings.BROKER_REQUEST, JMSSettings.WORKSPACE_REQUEST, JMSSettings.BROKER_RERPLY);
+        Broker broker = new Broker(JMSSettings.BROKER_REQUEST, JMSSettings.WORKSPACE_REQUEST, JMSSettings.BROKER_REPLY);
         broker.start();
     }
 }

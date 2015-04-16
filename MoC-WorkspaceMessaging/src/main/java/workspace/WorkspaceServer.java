@@ -5,19 +5,39 @@
  */
 package workspace;
 
+import domain.Workspace;
+import java.util.ArrayList;
+import messaging.GatewayType;
+import messaging.MessagingGateway;
+
 /**
  *
  * @author Robin
  */
 public class WorkspaceServer {
+
     private Long id;
     private String queue;
-    private int numberOfWorkspaces;
-    
-    public WorkspaceServer(Long id, String queue, int numberOfWorkspaces){
+    private ArrayList<Workspace> workspaces;
+    private MessagingGateway sender;
+
+    public WorkspaceServer(Long id, String queue) throws Exception {
         this.id = id;
         this.queue = queue;
-        this.numberOfWorkspaces = numberOfWorkspaces;
+        this.workspaces = new ArrayList<>();
+        sender = new MessagingGateway(queue, GatewayType.SENDER);
+    }
+
+    MessagingGateway getSender() {
+        return sender;
+    }
+
+    public ArrayList<Workspace> getWorkspaces() {
+        return workspaces;
+    }
+
+    public void addWorkspace(Workspace w) {
+        this.workspaces.add(w);
     }
 
     public Long getId() {
@@ -37,10 +57,6 @@ public class WorkspaceServer {
     }
 
     public int getNumberOfWorkspaces() {
-        return numberOfWorkspaces;
-    }
-
-    public void setNumberOfWorkspaces(int numberOfWorkspaces) {
-        this.numberOfWorkspaces = numberOfWorkspaces;
+        return workspaces.size();
     }
 }
