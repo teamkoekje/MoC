@@ -8,41 +8,32 @@ package workspace;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import messaging.MessagingGateway;
-import messaging.requestreply.AsynchronousReplier;
-import messaging.requestreply.IRequestListener;
+import messaging.AsynchronousReplier;
+import messaging.AsynchronousRequestor;
+import messaging.IReplyListener;
+import messaging.IRequestListener;
 
 /**
  *
- * @author Robiin
+ * @author Robin
  */
-public abstract class WorkspaceGateway{
+public class WorkspaceGateway{
     MessagingGateway gtw;
-    AsynchronousReplier<Object, Object> rep;
-    IRequestListener<Object> requestListener;
+    AsynchronousRequestor<Object, Object> req;
     
     public WorkspaceGateway(String brokerRequestQueue, String brokerReplyQueue){
         try {
-            this.requestListener = new IRequestListener<Object>() {
-                public void receivedRequest(Object request) {
-                    onBrokerRequest((Request) request);
-                }
-            };
-            
-            // create the serializer
-            rep = new AsynchronousReplier<Object, Object>(brokerReplyQueue, brokerRequestQueue);
-            rep.setRequestListener(requestListener);
+            req = new AsynchronousRequestor<>(brokerReplyQueue, brokerRequestQueue);
         } catch (Exception ex) {
             Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    void sendReply(Request req, Reply reply) {
-        rep.sendReply(req, reply);
+    void sendRequest(Request request, IReplyListener listener) {
+        req.sendRequest(request, listener);
     }
     
     void start(){
-        rep.start();
+        req.start();
     }
-    
-    abstract void onBrokerRequest(Request r);
 }

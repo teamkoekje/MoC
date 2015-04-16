@@ -8,28 +8,28 @@ package workspace;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import messaging.MessagingGateway;
-import messaging.requestreply.AsynchronousReplier;
-import messaging.requestreply.IRequestListener;
+import messaging.AsynchronousReplier;
+import messaging.IRequestListener;
 
 /**
  *
- * @author Robiin
+ * @author Robin
  */
 public abstract class ServiceGateway{
     MessagingGateway gtw;
-    AsynchronousReplier<Object, Object> rep;
-    IRequestListener<Object> requestListener;
+    AsynchronousReplier<Request, Reply> rep;
+    IRequestListener<Request> requestListener;
     
-    public ServiceGateway(String serviceRequestQueue, String serviceReplyQueue){
+    public ServiceGateway(String serviceReplyQueue){
         try {
-            this.requestListener = new IRequestListener<Object>() {
-                public void receivedRequest(Object request) {
+            this.requestListener = new IRequestListener<Request>() {
+                public void receivedRequest(Request request) {
                     onServiceRequest((Request) request);
                 }
             };
             
             // create the serializer
-            rep = new AsynchronousReplier<Object, Object>(serviceReplyQueue, serviceRequestQueue);
+            rep = new AsynchronousReplier<>(serviceReplyQueue);
             rep.setRequestListener(requestListener);
         } catch (Exception ex) {
             Logger.getLogger(ServiceGateway.class.getName()).log(Level.SEVERE, null, ex);

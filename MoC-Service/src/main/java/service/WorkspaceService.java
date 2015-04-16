@@ -25,7 +25,7 @@ public class WorkspaceService {
 
     @PostConstruct
     private void init() {
-        //gateway = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.SERVICE_REPLY);
+        gateway = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.SERVICE_REPLY);
     }
 
     public void update(File file, long teamId) {

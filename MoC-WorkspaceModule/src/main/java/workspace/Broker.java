@@ -5,8 +5,8 @@
  */
 package workspace;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
+import messaging.IReplyListener;
 
 /**
  *
@@ -14,47 +14,61 @@ import java.util.Iterator;
  */
 public class Broker {
     private final ServiceGateway serviceGtw;
-    //private final WorkspaceGateway workspaceGtw;
+    private final WorkspaceGateway workspaceGtw;
+    private IReplyListener<Request, Reply> workspaceReplyListener;
+    private ArrayList<WorkspaceServer> workspaceServers;
     
-    HashMap<Long, Integer> workspaces = new HashMap<>();
-    
-    public Broker(String serviceRequestQueue, String serviceReplyQueue){
-        serviceGtw = new ServiceGateway(serviceRequestQueue, serviceReplyQueue) {
+    public Broker(String serviceReplyQueue, String workspaceReplyQueue, String workspaceRequestQueue){
+        workspaceGtw = new WorkspaceGateway(workspaceReplyQueue, workspaceRequestQueue);
+
+        serviceGtw = new ServiceGateway(serviceReplyQueue) {
 
             @Override
-            void onServiceRequest(Request serviceRequest) {
-                createNewWorkspace(serviceRequest);
-                // or
-                compileCode(serviceRequest);
-                // or
-                testCode(serviceRequest);
+            void onServiceRequest(Request request) {
+                if (request.getAction() == Action.CREATE) {
+                    createNewWorkspace(request);
+                }else{
+                    sendToWorkspace(request);
+                }
+            }
+        };
+        
+        workspaceReplyListener = new IReplyListener<Request, Reply>() {
+            @Override
+            public void onReply(Request request, Reply reply) {
+                onWorkspaceReply(request, reply);
             }
         };
     }
     
-    private void createNewWorkspace(Request serviceRequest){
-        Iterator<Long> iterator = workspaces.keySet().iterator();
-        Long workspaceId = null;
-        while(iterator.hasNext()){
-            Long id = iterator.next();
-            if(workspaceId == null || workspaces.get(id) < workspaces.get(workspaceId)){
-                workspaceId = id;
+    private void createNewWorkspace(Request request){
+        WorkspaceServer workspaceServer = null;
+        if(!workspaceServers.isEmpty()){
+            for(WorkspaceServer w : workspaceServers){
+                if(workspaceServer == null || w.getNumberOfWorkspaces() < workspaceServer.getNumberOfWorkspaces()){
+                    workspaceServer = w;
+                }
             }
+        }else{
+            workspaceServer = new WorkspaceServer(0L, "", 0);
+            workspaceServers.add(workspaceServer);
         }
         
+        //workspaceGtw.sendRequest(request, workspaceReplyListener);
         
+        // TODO
     }
     
-    private void compileCode(Request serviceRequest){
-        
-        
+    private void sendToWorkspace(Request request){
+        workspaceGtw.sendRequest(request, workspaceReplyListener);
     }
-    
-    private void testCode(Request serviceRequest){
-        
+
+    private void onWorkspaceReply(Request request, Reply reply) {
+        serviceGtw.sendReply(request, reply);
     }
     
     public void start(){
         serviceGtw.start();
+        workspaceGtw.start();
     }
 }
