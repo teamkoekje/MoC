@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class JMSSettings {
 
     public enum RunMode {
+
         MANUAL, AUTOMATICALLY
     }
 
@@ -26,9 +27,11 @@ public class JMSSettings {
 
     public static final String BROKER_REQUEST = "BROKER_REQUEST";
     public static final String WORKSPACE_REQUEST = "WORKSPACE_REQUEST";
-    public static final String WORKSPACE_REPLY = "WORKSPACE_REPLY";
     public static final String BROKER_REPLY = "BROKER_REPLY";
     public static final String SERVICE_REPLY = "SERVICE_REPLY";
+
+    public static final String WORKSPACE_INIT_REPLY = "WORKSPACE_INIT_REPLY";
+    public static final String BROKER_INIT_MESSAGE = "BROKER_INIT_REQUEST";
 
     private static RunMode runMode;
     private static HashMap<String, String> map;

@@ -12,12 +12,14 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
 /**
- * This class is responsible for actually sending messages from one point to another.
- * 
+ * This class is responsible for actually sending messages from one point to
+ * another.
+ *
  * @author TeamKoekje
  */
 public class MessagingGateway {
@@ -98,7 +100,11 @@ public class MessagingGateway {
         return receiverDestination;
     }
 
-    public ObjectMessage createMessage(Serializable s) throws JMSException {
+    public TextMessage createTextMessage(String s) throws JMSException {
+        return session.createTextMessage(s);
+    }
+
+    public ObjectMessage createObjectMessage(Serializable s) throws JMSException {
         return session.createObjectMessage(s);
     }
 

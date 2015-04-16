@@ -91,7 +91,7 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
     public synchronized void sendRequest(REQUEST request, IReplyListener<REQUEST, REPLY> listener) {
 
         try {
-            Message msg = gateway.createMessage((Serializable) request);
+            Message msg = gateway.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(gateway.getReceiverDestination());
             gateway.sendMessage(msg);
             String requestID = msg.getJMSMessageID();

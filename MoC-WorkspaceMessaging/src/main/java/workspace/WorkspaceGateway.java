@@ -32,7 +32,7 @@ public class WorkspaceGateway{
     public synchronized void addWorkspace(Request request){
         try {
             MessagingGateway gtw = sender.getServerWithLeastWorkspaces();
-            ObjectMessage msg = gtw.createMessage((Serializable)request);
+            ObjectMessage msg = gtw.createObjectMessage((Serializable)request);
             
             gtw.sendMessage(msg);
         } catch (JMSException ex) {

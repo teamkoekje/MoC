@@ -5,6 +5,8 @@
  */
 package messaging;
 
+import javax.jms.Message;
+import javax.jms.MessageListener;
 import workspace.Reply;
 import workspace.Request;
 
@@ -12,33 +14,37 @@ import workspace.Request;
  *
  * @author Robin
  */
-public class BrokerGateway implements IReplyListener<Request, Reply>, IRequestListener<Request> {
-    
-    AsynchronousRequestor<Request, Reply> requestor;
+public class BrokerGateway implements IReplyListener<Request, Reply>, MessageListener {
+
+    MessagingGateway gtw;
     AsynchronousReplier<Request, Reply> replier;
-    
-    public BrokerGateway(String requestSenderQueue, String replyReceiverQueue, String requestReceiverQueue) throws Exception {
-        requestor = new AsynchronousRequestor<>(requestSenderQueue, replyReceiverQueue);
+
+    public BrokerGateway(String requestReceiverQueue) throws Exception {
         replier = new AsynchronousReplier<>(requestReceiverQueue);
+        gtw = new MessagingGateway(JMSSettings.BROKER_INIT_MESSAGE, GatewayType.SENDER);
+        gtw.setReceivedMessageListener(this);
+        sendInitMessage();
     }
-    
-    public void sendRequest(Request request){
-        requestor.sendRequest(request, this);
+
+    private void sendInitMessage() throws Exception {
+        Message msg = gtw.createTextMessage("HALLO SERVER");
+        //TODO - Idk hoe we aan deze destination komen
+        msg.setJMSReplyTo(null);
+        gtw.sendMessage(msg);
     }
-    
+
     @Override
     public void onReply(Request request, Reply reply) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void receivedRequest(Request request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public void start(){
-        requestor.start();
+    public void start() {
         replier.start();
     }
-    
+
+    @Override
+    public void onMessage(Message msg) {
+        //YAY DOE IETS
+    }
+
 }

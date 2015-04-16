@@ -106,7 +106,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     public synchronized boolean sendReply(REQUEST request, REPLY reply) {
         try {
             Message requestMsg = activeRequests.get(request);
-            Message replyMsg = gateway.createMessage((Serializable) reply);
+            Message replyMsg = gateway.createObjectMessage((Serializable) reply);
             String messageID = requestMsg.getJMSMessageID();
             replyMsg.setJMSCorrelationID(messageID);
             beforeSendReply(requestMsg, replyMsg);

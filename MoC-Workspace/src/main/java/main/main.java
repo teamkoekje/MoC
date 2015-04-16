@@ -21,7 +21,7 @@ public class main {
      */
     public static void main(String[] args) {
         try {
-            BrokerGateway gtw = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.WORKSPACE_REPLY, JMSSettings.WORKSPACE_REQUEST);
+            BrokerGateway gtw = new BrokerGateway(JMSSettings.WORKSPACE_REQUEST);
             gtw.start();
         } catch (Exception ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
