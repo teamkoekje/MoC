@@ -32,7 +32,7 @@ public class MessagingGateway {
     public MessagingGateway(String senderName, String receiverName) throws Exception {
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-        props.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
+        props.setProperty(Context.PROVIDER_URL, JMSSettings.URL_ACTIVE_MQ);
         props.put(("queue." + receiverName), receiverName);
         props.put(("queue." + senderName), senderName);
         Context jndiContext = new InitialContext(props);
@@ -49,7 +49,7 @@ public class MessagingGateway {
     public MessagingGateway(String destinationName, GatewayType type) throws Exception {
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-        props.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
+        props.setProperty(Context.PROVIDER_URL, JMSSettings.URL_ACTIVE_MQ);
         props.put(("queue." + destinationName), destinationName);
         Context jndiContext = new InitialContext(props);
 

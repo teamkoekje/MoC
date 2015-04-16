@@ -16,6 +16,6 @@ app.config(['$routeProvider',
                     templateUrl: 'views/apiDemo.html',
                     controller: 'demoController'
                 })
-                .otherwise({redirectTo: '/view1'});
+                .otherwise({redirectTo: '/apiDemo'});
     }
 ]);

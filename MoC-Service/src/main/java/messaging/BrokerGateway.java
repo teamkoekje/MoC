@@ -5,12 +5,16 @@ import workspace.Request;
 
 public class BrokerGateway implements IReplyListener<Request, Reply> {
 
-    private final AsynchronousRequestor<Request, Reply> requestor;
+    private AsynchronousRequestor<Request, Reply> requestor = null;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public BrokerGateway(String senderName, String receiverName) throws Exception {
-        requestor = new AsynchronousRequestor(senderName, receiverName);
-        requestor.start();
+    public BrokerGateway(String requestSenderQueue, String replyReceiverQueue) {
+        try {
+            requestor = new AsynchronousRequestor(requestSenderQueue, replyReceiverQueue);
+            requestor.start();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     public void sendRequest(Request request) {

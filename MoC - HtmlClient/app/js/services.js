@@ -18,3 +18,9 @@ services.factory('user', ['$resource',
         return $resource(baseUrl + '/user/:userId', {username: '@userId'});
     }
 ]);
+
+services.factory('workspace', ['$resource',
+    function ($resource) {
+        return $resource(baseUrl + '/workspace/:teamId', {username: '@teamId'});
+    }
+]);

@@ -23,10 +23,32 @@
         </tr>
         <tr>
             <td colspan="2" align="right">
-               <input type="submit" value="Create user"/>
+                <input type="submit" value="Create user"/>
             </td>
         </tr>
     </table>
 </form>
 
 <h1>Users:</h1>
+<table border="1">
+    <tr>
+        <td>Username</td>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Organisation</td>
+    </tr>
+    <tr ng-repeat="user in users">
+        <td>{{user.username}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.organisation}}</td>
+    </tr>
+
+</table>
+<ul >
+</ul>
+
+<h1>Messaging demo</h1>
+<form ng-submit="compileWorkspace()">
+    <input type="submit" value="Compile workspace"/>
+</form>

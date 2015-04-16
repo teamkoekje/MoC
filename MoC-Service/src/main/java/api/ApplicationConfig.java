@@ -3,7 +3,7 @@ package api;
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
-@javax.ws.rs.ApplicationPath("webresources")
+@javax.ws.rs.ApplicationPath("api")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -20,6 +20,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(api.CompetitionResource.class);
+        resources.add(api.RestResponseFilter.class);
         resources.add(api.UserResource.class);
         resources.add(api.WorkspaceResource.class);
     }
