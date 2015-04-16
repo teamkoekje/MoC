@@ -6,6 +6,7 @@
 package main;
 
 import workspace.Broker;
+import messaging.JMSSettings;
 
 /**
  *
@@ -17,8 +18,7 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Broker broker = new Broker("", "");
+        Broker broker = new Broker(JMSSettings.BROKER_REQUEST, JMSSettings.WORKSPACE_REQUEST, JMSSettings.BROKER_RERPLY);
         broker.start();
     }
-    
 }
