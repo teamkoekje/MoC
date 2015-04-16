@@ -21,6 +21,13 @@ public class WorkspaceResource {
     //<editor-fold defaultstate="collapsed" desc="Workspace">
     @POST
     @Consumes("application/xml,application/json")
+    @Path("/{teamId}/create")
+    public void create(@PathParam("teamId") long teamId) {
+        workspaceService.create(teamId);
+    }
+
+    @POST
+    @Consumes("application/xml,application/json")
     @Path("/{teamId}/update")
     public void update(File file, @PathParam("teamId") long teamId) {
         workspaceService.update(file, teamId);

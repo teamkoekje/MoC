@@ -43,7 +43,7 @@ public class UserResource {
     @GET
     @Produces("application/xml,application/json")
     @Path("/{userId}")
-    public User getUserById(@PathParam("userId") String userId) {
+    public User getUserById(@PathParam("userId") Long userId) {
         return userService.findById(userId);
     }
 
@@ -77,7 +77,7 @@ public class UserResource {
      */
     @DELETE
     @Path("/{userId}")
-    public void deleteUser(@PathParam("userId") String userId) {
+    public void deleteUser(@PathParam("userId") Long userId) {
         userService.remove(userId);
     }
     //</editor-fold>

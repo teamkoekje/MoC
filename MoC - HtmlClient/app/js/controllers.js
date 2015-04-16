@@ -12,6 +12,13 @@ controllers.controller('demoController', ['$scope', 'user',
             $scope.user = new $user();
         };
         
+        $scope.deleteUser = function (userId) {
+            console.log("Delete User");
+            $user.delete({userId:userId}, function () {
+                loadData();
+            });
+        };
+        
         $scope.compileWorkspace = function () {
             console.log("Compile workspace");
 

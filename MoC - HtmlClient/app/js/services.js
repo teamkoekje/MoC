@@ -15,12 +15,14 @@ var baseUrl = 'http://localhost\\:8080/MoC-Service/api';
 
 services.factory('user', ['$resource',
     function ($resource) {
-        return $resource(baseUrl + '/user/:userId', {username: '@userId'});
+        return $resource(baseUrl + '/user/:userId', {userId: '@userId'}, {
+            remove: {method: 'DELETE'}
+        });
     }
 ]);
 
 services.factory('workspace', ['$resource',
     function ($resource) {
-        return $resource(baseUrl + '/workspace/:teamId', {username: '@teamId'});
+        return $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'});
     }
 ]);

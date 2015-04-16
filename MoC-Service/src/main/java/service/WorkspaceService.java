@@ -1,12 +1,9 @@
 package service;
 
-import dao.AbstractDAO;
-import domain.User;
 import java.io.File;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
-import javax.inject.Inject;
 import messaging.BrokerGateway;
 import messaging.JMSSettings;
 import workspace.Action;
@@ -25,7 +22,17 @@ public class WorkspaceService {
 
     @PostConstruct
     private void init() {
-        //gateway = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.SERVICE_REPLY);
+        gateway = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.SERVICE_REPLY);
+    }
+
+    public void create(long teamId) {
+        Request request = new Request(Action.CREATE, teamId);
+        gateway.sendRequest(request);
+    }
+    
+    public void delete(long teamId) {
+        Request request = new Request(Action.DELETE, teamId);
+        gateway.sendRequest(request);
     }
 
     public void update(File file, long teamId) {
@@ -48,5 +55,4 @@ public class WorkspaceService {
         request.setTestName(testName);
         gateway.sendRequest(request);
     }
-
 }
