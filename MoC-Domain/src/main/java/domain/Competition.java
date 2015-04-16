@@ -17,7 +17,7 @@ import javax.persistence.Temporal;
  contains a name, competitionDate, startTime and location. It also has a minimum and
  maximum team size, a list of rounds and a list of participating teams.
  *
- * @author Astrid Belder
+ * @author TeamKoekje
  */
 @Entity
 @Singleton

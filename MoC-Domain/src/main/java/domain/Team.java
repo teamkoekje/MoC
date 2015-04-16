@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
  * consists of one or more participants, of which one is the initiator. A team
  * also has a name.
  *
+ * @author TeamKoekje
  */
 @Entity
 public class Team implements Serializable{
@@ -72,6 +73,7 @@ public class Team implements Serializable{
     }
 
     //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.
