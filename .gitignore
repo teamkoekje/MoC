@@ -6,4 +6,10 @@
 /MoC - HtmlClient/node_modules
 /MoC - HtmlClient/app/bower_components
 /MoC-WorkspaceMessaging/target/
-/MoC-Workspace/target//barry2/target/
+/projectToTest/target/
+/MavenInvokerTest/target/
+/MavenInvokerTest/MoC/workspaces/teamA/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamB/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamC/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamD/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamE/projectToTest/target/

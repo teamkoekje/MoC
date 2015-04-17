@@ -1,26 +1,26 @@
 package domain;
 
 import domain.Events.HintReleasedEvent;
-import domain.Events.HintReleasedListener;
 import domain.Events.RoundEndedEvent;
-import domain.Events.RoundEndedListener;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.enterprise.event.Event;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.swing.event.EventListenerList;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import javax.persistence.Transient;
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * The Round class represents a round within a Masters of Code competition. A
- * round contains a challenge and a totalTime that represents how much totalTime
+ * round contains a challenge and a roundTime that represents how much roundTime
  * there is left before the round is over.
  *
+ * @author TeamKoekje
  */
 @Entity
-public class Round implements Serializable{
+public class Round implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
@@ -28,23 +28,37 @@ public class Round implements Serializable{
     private long id;
 
     private Challenge challenge;
-    private int totalTime;
+    private int roundTime;
     private int currentTime;
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
 
-    protected EventListenerList roundEndedListenerList;
-    protected EventListenerList hintReleasedListenerList;
+    @Transient
+    private Event<RoundEndedEvent> endedEvent;
+    //to fire: endedEvent.fire(new RoundEndedEvent(this));
+    //to listen to it, define a method in a listener class:
+    //  public void endedHandler(@Observes RoundEndedEvent event){/* do stuff */}
+    private Event<HintReleasedEvent> hintReleasedEvent;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     public Round() {
+        init();
+        challenge = null;
+        roundTime = 0;
+    }
+
+    public Round(Challenge challenge, int roundTime) {
+        init();
+        this.challenge = challenge;
+        this.roundTime = roundTime;
+    }
+
+    private void init() {
         this.submittedTeams = new HashSet<>();
         this.roundState = RoundState.NOT_STARTED;
         this.currentTime = 0;
-        this.roundEndedListenerList = new EventListenerList();
-        this.hintReleasedListenerList = new EventListenerList();
     }
     //</editor-fold>
 
@@ -68,12 +82,12 @@ public class Round implements Serializable{
     }
 
     /**
-     * Gets the total amount of totalTime for this round, in seconds.
+     * Gets the total amount of roundTime for this round, in seconds.
      *
      * @return An integer indicating the total time for this Round.
      */
     public int getTotalTime() {
-        return totalTime;
+        return roundTime;
     }
 
     /**
@@ -82,7 +96,7 @@ public class Round implements Serializable{
      * @param time The total amount of time availble for this Round.
      */
     public void setTime(int time) {
-        this.totalTime = time;
+        this.roundTime = time;
     }
 
     /**
@@ -106,17 +120,17 @@ public class Round implements Serializable{
     }
 
     /**
-     * Function returns the amount of remaining totalTime.
+     * Function returns the amount of remaining roundTime.
      *
-     * @return the remaining totalTime in seconds
+     * @return the remaining roundTime in seconds
      */
     public int getRemainingTime() {
-        return totalTime - currentTime;
+        return roundTime - currentTime;
     }
 
     /**
      * Function returns the amount of remaining points. This amount is equal to
-     * the amount of totalTime that is left multiplied with the difficulty of
+     * the amount of roundTime that is left multiplied with the difficulty of
      * the challenge.
      *
      * @return the amount of remaining points for the challenge
@@ -174,6 +188,7 @@ public class Round implements Serializable{
             throw new IllegalArgumentException("Cannot stop a round that has not been started yet.");
         } else {
             roundState = RoundState.ENDED;
+            endedEvent.fire(new RoundEndedEvent(this));
         }
     }
 
@@ -214,80 +229,26 @@ public class Round implements Serializable{
 
     //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Events" >
-    /**
-     * Adds the specified RoundEndedListener to the listener list.
-     *
-     * @param toAdd The RoundEndedListener to add.
-     */
-    public void addRoundEndedListener(RoundEndedListener toAdd) {
-        roundEndedListenerList.add(RoundEndedListener.class, toAdd);
-    }
-
-    /**
-     * Removes the specified RoundEndedListener from the listener list.
-     *
-     * @param toRemove The RoundEndedListener to remove.
-     */
-    public void removeRoundEndedListener(RoundEndedListener toRemove) {
-        roundEndedListenerList.remove(RoundEndedListener.class, toRemove);
-    }
-
-    /**
-     * Fires the round ended event.
-     *
-     * @param toFire The event to fire.
-     */
-    private void fireRoundEndedEvent(RoundEndedEvent toFire) {
-        Object[] listeners = roundEndedListenerList.getListenerList();
-        for (int i = 0; i < listeners.length; i = i + 2) {
-            if (listeners[i] == RoundEndedListener.class) {
-                ((RoundEndedListener) listeners[i + 1]).roundEndedOccurred(toFire);
+    
+    public void secondExpired() {
+        if (roundState == RoundState.ONGOING) {
+            currentTime++;
+            if (currentTime >= roundTime) {
+                stop();
             }
         }
-    }
-
-    /**
-     * Fires the hint released event.
-     *
-     * @param toFire The event to fire.
-     */
-    private void fireHintReleasedEvent(HintReleasedEvent toFire) {
-        Object[] listeners = hintReleasedListenerList.getListenerList();
-        for (int i = 0; i < listeners.length; i = i + 2) {
-            if (listeners[i] == HintReleasedListener.class) {
-                ((HintReleasedListener) listeners[i + 1]).hintReleasedOccurred(toFire);
-            }
-        }
-    }
-
-    /**
-     * Adds the specified HintReleasedListener to the listener list.
-     *
-     * @param toAdd The HintReleasedListener to add.
-     */
-    public void addHintReleasedListener(HintReleasedListener toAdd) {
-        hintReleasedListenerList.add(HintReleasedListener.class, toAdd);
-    }
-
-    /**
-     * Removes the specified HintReleasedListener from the listener list.
-     *
-     * @param toRemove The HintReleasedListener to remove.
-     */
-    public void removeHintReleasedListener(HintReleasedListener toRemove) {
-        hintReleasedListenerList.remove(HintReleasedListener.class, toRemove);
     }
 
     // </editor-fold>
     /**
-     * Increase the remaining totalTime of the round with a certain amount of
-     * totalTime.
+     * Increase the remaining roundTime of the round with a certain amount of
+     * roundTime.
      *
-     * @param seconds the amount to increase the remaining totalTime with in
+     * @param seconds the amount to increase the remaining roundTime with in
      * seconds
      */
     public void increaseTime(int seconds) {
-        totalTime += seconds;
+        roundTime += seconds;
     }
 
     /**

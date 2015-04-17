@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -63,16 +64,28 @@ public class Challenge implements Serializable{
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
-
+    
+    public boolean addHint(Hint h){
+        if(!hints.contains(h))
+        {
+            hints.add(h);
+            hintsChanged();
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * Gets a list of hints
      *
-     * @param u the user requesting the hints, must be a manager
      * @return List of hints
      */
-    public List<Hint> getHints(User u) {
-
+    public List<Hint> getHints() {
         return hints;
+    }
+    
+    private void hintsChanged(){
+        Collections.sort(hints, new HintComparator());
     }
     //</editor-fold>
 

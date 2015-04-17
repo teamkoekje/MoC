@@ -18,29 +18,28 @@ import javax.persistence.OneToOne;
  * @author TeamKoekje
  */
 @Entity
-public class Team implements Serializable{
+public class Team implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
     @GeneratedValue
     private long id;
 
-    @OneToMany(cascade = CascadeType.PERSIST) 
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Participant> participants;
-    @OneToOne(cascade = CascadeType.PERSIST) 
+    @OneToOne(cascade = CascadeType.PERSIST)
     private final Participant initiatior;
     private String name;
-    @ManyToOne(cascade = CascadeType.PERSIST) 
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private final Competition competition;
-    //private InviteManager inviteManager;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    protected Team(){
+    protected Team() {
         this.competition = Competition.getInstance();
         this.initiatior = null;
     }
-    
+
     public Team(Participant initiatior) {
         this.initiatior = initiatior;
         this.competition = Competition.getInstance();
@@ -73,24 +72,31 @@ public class Team implements Serializable{
     }
 
     //</editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.
      *
      * @param participant participant that should be added
+     * @return True if the participant was added, otherwise false (already in
+     * this team)
      */
-    public void join(Participant participant) {
-
+    public boolean addParticipant(Participant participant) {
+        if (!participants.contains(participant)) {
+            participants.add(participant);
+            return true;
+        }
+        return false;
     }
 
     /**
      * Function removes a participant from the team.
      *
      * @param participant participant that should be removed
+     * @return True if the participant is removed (exists in list), otherwise
+     * false
      */
-    public void removeParticipant(Participant participant) {
-
+    public boolean removeParticipant(Participant participant) {
+        return participants.remove(participant);
     }
 
     /**

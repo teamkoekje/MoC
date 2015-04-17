@@ -1,17 +1,19 @@
 package domain;
 
-//@Author Casper
 import domain.Events.NewsItemPublishedEvent;
 import domain.Events.NewsItemPublishedListener;
 
 import domain.Events.HintReleasedEvent;
-import domain.Events.HintReleasedListener;
 import domain.Events.RoundEndedEvent;
-import domain.Events.RoundEndedListener;
 import java.io.Serializable;
+import javax.enterprise.event.Observes;
 import javax.swing.event.EventListenerList;
 
-public class NewsFeed implements HintReleasedListener, RoundEndedListener, Serializable {
+/**
+ * 
+ * @author TeamKoekje
+ */
+public class NewsFeed implements Serializable {
 
     protected EventListenerList newsItemPublishedListenerList;
 
@@ -33,12 +35,7 @@ public class NewsFeed implements HintReleasedListener, RoundEndedListener, Seria
     public void addRoundEndedListener(NewsItemPublishedListener toAdd) {
         newsItemPublishedListenerList.add(NewsItemPublishedListener.class, toAdd);
     }
-
-    @Override
-    public void hintReleasedOccurred(HintReleasedEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     /**
      * Fires the news item published event.
      *
@@ -52,9 +49,12 @@ public class NewsFeed implements HintReleasedListener, RoundEndedListener, Seria
             }
         }
     }
-
-    @Override
-    public void roundEndedOccurred(RoundEndedEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public void hintReleased(@Observes HintReleasedEvent event) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void roundEnded(@Observes RoundEndedEvent event){
+        throw new UnsupportedOperationException("Not supported yet.");        
     }
 }

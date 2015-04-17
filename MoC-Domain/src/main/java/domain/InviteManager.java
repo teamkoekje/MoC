@@ -23,6 +23,7 @@ public class InviteManager {
     }
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Get & Setters" >
     /**
      * Gets the iterator for HashMap of the sent invitations. The key is the

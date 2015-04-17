@@ -1,8 +1,11 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.ejb.Singleton;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,11 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  * The Competition class represents a Masters of Code competition. A competition
- contains a name, competitionDate, startTime and location. It also has a minimum and
- maximum team size, a list of rounds and a list of participating teams.
+ * contains a name, competitionDate, startTime and location. It also has a
+ * minimum and maximum team size, a list of rounds and a list of participating
+ * teams.
  *
  * @author TeamKoekje
  */
@@ -29,22 +34,27 @@ public class Competition implements Serializable {
     private long id;
 
     private String name;
+    /*@Temporal(javax.persistence.TemporalType.DATE)
+     private Date competitionDate;
+     @Temporal(javax.persistence.TemporalType.DATE)
+     private Date startTime;*/
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date competitionDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startTime;
+    private Calendar startTime;
     private String location;
 
     private int minTeamSize;
     private int maxTeamSize;
 
-    @OneToMany(cascade = CascadeType.PERSIST) 
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Round> rounds;
-    @OneToMany(cascade = CascadeType.PERSIST) 
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Team> teams;
 
-    @OneToOne(cascade = CascadeType.PERSIST) 
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Round currentRound;
+
+    @Transient
+    private final Runnable timerRunnable;
 
     private final NewsFeed newsFeed;
     //</editor-fold>    
@@ -54,6 +64,17 @@ public class Competition implements Serializable {
 
     protected Competition() {
         newsFeed = new NewsFeed();
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (Calendar.getInstance().after(startTime) && currentRound != null) {
+                    currentRound.secondExpired();
+                }
+            }
+        };
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(timerRunnable, 0, 1, TimeUnit.SECONDS);
     }
 
     public static Competition getInstance() {
@@ -73,20 +94,12 @@ public class Competition implements Serializable {
         this.name = name;
     }
 
-    public Date getDate() {
-        return competitionDate;
-    }
-
-    public void setDate(Date date) {
-        this.competitionDate = date;
-    }
-
-    public Date getStartTime() {
+    public Calendar getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setStartTime(Calendar time) {
+        this.startTime = time;
     }
 
     public String getLocation() {
@@ -134,7 +147,7 @@ public class Competition implements Serializable {
      * @param time time in seconds allowed for completing the challenge
      */
     public void addChallenge(Challenge challenge, int time) {
-
+        //unneeded? SHOULD be add round, but we already create/remove/edit rounds using RoundService/DAO
     }
 
     /**
@@ -143,7 +156,7 @@ public class Competition implements Serializable {
      * @param challenge challenge that has to be removed
      */
     public void removeChallenge(Challenge challenge) {
-
+        //unneeded? SHOULD be remove round, but we already create/remove/edit rounds using RoundService/DAO
     }
 
     /**
@@ -153,7 +166,7 @@ public class Competition implements Serializable {
      * @param position the position to which the challenge should be set
      */
     public void changeChallengeOrder(Challenge challenge, int position) {
-
+        //unneeded? SHOULD be edit round, but we already create/remove/edit rounds using RoundService/DAO
     }
 
     /**
@@ -162,7 +175,7 @@ public class Competition implements Serializable {
      * @param team team that needs to be added
      */
     public void addTeam(Team team) {
-
+        //unneeded? we already create/remove/edit rounds using TeamService/DAO
     }
 
     /**
@@ -171,6 +184,7 @@ public class Competition implements Serializable {
      * @param team team that needs to be removed
      */
     public void removeTeam(Team team) {
+        //unneeded? we already create/remove/edit rounds using TeamService/DAO
 
     }
 
@@ -184,9 +198,9 @@ public class Competition implements Serializable {
     }
 
     public boolean joinTeam(String email, String token, long teamId) {
-        for(Team t : teams){
-            if(t.getId() == teamId){
-                //t.join();
+        for (Team t : teams) {
+            if (t.getId() == teamId) {
+                //t.addParticipant(user);
             }
         }
         return false;

@@ -65,5 +65,6 @@ public class Hint {
     public void setTime(int time) {
         this.time = time;
     }
-    //</editor-fold>
+
+    //</editor-fold>    
 }
