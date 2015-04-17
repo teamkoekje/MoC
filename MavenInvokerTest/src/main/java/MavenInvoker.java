@@ -18,7 +18,7 @@ import org.apache.maven.shared.invoker.MavenInvocationException;
 public class MavenInvoker {
 
     private static final File mavenHome = new File("D:\\Software\\Programming\\Maven\\apache-maven-3.2.5");
-    private static final String basePath = "D:\\College\\Software Course\\S6\\PTS6\\MoC\\MavenInvokerTest\\MoC\\workspaces";
+    private static final String basePath = "D:\\College\\Software Course\\S6\\PTS6\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
     private static final Invoker invoker = new DefaultInvoker();
 
     private static FileWriter outputWriter;
@@ -42,7 +42,7 @@ public class MavenInvoker {
 
         System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("attempting to build: teamA (compilation error)");
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         try {
             build("teamA", "projectToTest");
         } catch (Exception ex) {
@@ -52,11 +52,11 @@ public class MavenInvoker {
         } finally {
             bufferedWriter.close();
         }
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("teamA done");
         System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("attempting to run 2 tests: teamB (should all succeed)");
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         try {
             testAll("teamB", "projectToTest");
         } catch (Exception ex) {
@@ -66,11 +66,11 @@ public class MavenInvoker {
         } finally {
             bufferedWriter.close();
         }
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("teamB done");
         System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("Attempting to run a specific test: teamC (should succeed)");
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         try {
             test("teamC", "projectToTest", "AnAmazingClassTest", "testAMethod");
         } catch (Exception ex) {
@@ -80,11 +80,11 @@ public class MavenInvoker {
         } finally {
             bufferedWriter.close();
         }
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("teamC done");
         System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
-        System.out.println("Attempts to run 3 tests: teamD (third should fail)");
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("Attempts to run 3 tests: teamD (third should fail: testEvenAnotherMethod)");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         try {
             testAll("teamD", "projectToTest");
         } catch (Exception ex) {
@@ -94,11 +94,11 @@ public class MavenInvoker {
         } finally {
             bufferedWriter.close();
         }
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("teamD done");
         System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("Attempts to run 4 tests: teamE (second & fourth should fail)");
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         try {
             testAll("teamE", "projectToTest");
         } catch (Exception ex) {
@@ -108,8 +108,8 @@ public class MavenInvoker {
         } finally {
             bufferedWriter.close();
         }
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
-        System.out.println("teamA done");        
+        System.out.println("\n<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("teamE done");        
         System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
     }
 
