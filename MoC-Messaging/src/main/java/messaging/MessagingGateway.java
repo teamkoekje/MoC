@@ -17,8 +17,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 /**
- * This class is responsible for actually sending messages from one point to
- * another.
+ * This class is responsible for actually sending messages from one point to another.
  *
  * @author TeamKoekje
  */
