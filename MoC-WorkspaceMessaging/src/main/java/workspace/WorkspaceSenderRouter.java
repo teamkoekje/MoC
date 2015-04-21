@@ -12,13 +12,17 @@ import messaging.MessagingGateway;
  */
 class WorkspaceSenderRouter {
 
-    private ArrayList<WorkspaceServer> workspaceServers;
+    private final List<WorkspaceServer> workspaceServers;
     private Long lastServerId;
 
     public WorkspaceSenderRouter() throws Exception {
         super();
         workspaceServers = new ArrayList<>();
         lastServerId = 0L;
+    }
+    
+    public long getNextServerId(){
+        return this.lastServerId++;
     }
 
     public Long addWorkspaceServer() {
@@ -28,7 +32,7 @@ class WorkspaceSenderRouter {
             workspaceServers.add(ws);
             return lastServerId;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage());
         }
         return null;
     }

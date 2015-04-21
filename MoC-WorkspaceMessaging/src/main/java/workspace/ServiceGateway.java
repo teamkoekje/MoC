@@ -20,6 +20,7 @@ public abstract class ServiceGateway {
     public ServiceGateway(String serviceReplyQueue) {
         try {
             this.requestListener = new IRequestListener<Request>() {
+                @Override
                 public void receivedRequest(Request request) {
                     onServiceRequest((Request) request);
                 }

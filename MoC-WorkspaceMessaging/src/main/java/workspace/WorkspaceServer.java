@@ -2,6 +2,7 @@ package workspace;
 
 import domain.Workspace;
 import java.util.ArrayList;
+import messaging.DestinationType;
 import messaging.GatewayType;
 import messaging.MessagingGateway;
 
@@ -21,7 +22,7 @@ public class WorkspaceServer {
         this.id = id;
         this.queue = queue;
         this.workspaces = new ArrayList<>();
-        sender = new MessagingGateway(queue, GatewayType.SENDER);
+        sender = new MessagingGateway(queue, DestinationType.QUEUE, GatewayType.SENDER);
     }
 
     MessagingGateway getSender() {

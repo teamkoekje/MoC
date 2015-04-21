@@ -1,31 +1,36 @@
 package messaging;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 import workspace.Reply;
 import workspace.Request;
 
 /**
  * //TODO: class description, what does this class do
+ *
  * @author TeamKoekje
  */
 public class BrokerGateway implements IReplyListener<Request, Reply>, MessageListener {
 
-    MessagingGateway gtw;
-    AsynchronousReplier<Request, Reply> replier;
+    private MessagingGateway initGtw;
+    private String initMsgId;
 
-    public BrokerGateway(String requestReceiverQueue) throws Exception {
-        replier = new AsynchronousReplier<>(requestReceiverQueue);
-        gtw = new MessagingGateway(JMSSettings.BROKER_INIT_MESSAGE, GatewayType.SENDER);
-        gtw.setReceivedMessageListener(this);
+    private AsynchronousReplier<Request, Reply> replier;
+
+    public BrokerGateway() throws Exception {
+        initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
+        initGtw.setReceivedMessageListener(this);
+        initGtw.openConnection();
         sendInitMessage();
     }
 
     private void sendInitMessage() throws Exception {
-        Message msg = gtw.createTextMessage("HALLO SERVER");
-        //TODO - Idk hoe we aan deze destination komen
-        msg.setJMSReplyTo(null);
-        gtw.sendMessage(msg);
+        Message msg = initGtw.createTextMessage("HELLO SERVER");
+        initGtw.sendMessage(msg);
+        initMsgId = msg.getJMSMessageID();
+        System.out.println("Init request send: " + initMsgId);
     }
 
     @Override
@@ -33,13 +38,29 @@ public class BrokerGateway implements IReplyListener<Request, Reply>, MessageLis
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void start() {
-        replier.start();
-    }
-
     @Override
     public void onMessage(Message msg) {
-        //YAY DOE IETS
+        try {
+            System.out.println("Init reply received: " + msg.getJMSCorrelationID());
+            if (msg.getJMSCorrelationID().equals(initMsgId)) {
+                String id = ((TextMessage) msg).getText();
+                initReplier(id);
+                System.out.println("Server id: " + id);
+                initGtw.closeConnection();
+                initGtw = null;
+            }
+        } catch (JMSException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    private void initReplier(String id) {
+        try {
+            replier = new AsynchronousReplier<>(JMSSettings.BROKER_REQUEST + "_" + id);
+            replier.start();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
 }

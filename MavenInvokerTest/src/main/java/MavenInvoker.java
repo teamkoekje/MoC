@@ -17,8 +17,8 @@ import org.apache.maven.shared.invoker.MavenInvocationException;
  */
 public class MavenInvoker {
 
-    private static final File mavenHome = new File("D:\\Software\\Programming\\Maven\\apache-maven-3.2.5");
-    private static final String basePath = "D:\\College\\Software Course\\S6\\PTS6\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
+    private static final File mavenHome = new File("C:\\Program Files\\apache-maven-3.2.5");
+    private static final String basePath = "C:\\Users\\Astrid\\Desktop\\git\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
     private static final Invoker invoker = new DefaultInvoker();
 
     private static FileWriter outputWriter;

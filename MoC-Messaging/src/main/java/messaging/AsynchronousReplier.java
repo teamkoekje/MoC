@@ -41,7 +41,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
      */
     public AsynchronousReplier(String requestReceiverQueue) throws Exception {
         super();
-        gateway = new MessagingGateway(requestReceiverQueue, GatewayType.RECEIVER);
+        gateway = new MessagingGateway(requestReceiverQueue, DestinationType.QUEUE, GatewayType.RECEIVER);
         gateway.setReceivedMessageListener(new MessageListener() {
 
             @Override
