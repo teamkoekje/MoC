@@ -4,7 +4,7 @@ import java.util.EventListener;
 
 /**
  *
- * @author Robin
+ * @author TeamKoekje
  */
 public interface NewsItemPublishedListener extends EventListener{
     public void newsItemPublishedOccurred(NewsItemPublishedEvent event);

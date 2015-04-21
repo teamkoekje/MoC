@@ -7,9 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+/**
+ * Used to keep track of invitations sent out by teams to people they wish to
+ * participate in a competition with them.
+ *
+ * @author TeamKoekje
+ */
 @Entity
-public class Invitation implements Serializable{
-    
+public class Invitation implements Serializable {
 
     /**
      * An enum indicating the state of an invitation
@@ -30,19 +35,19 @@ public class Invitation implements Serializable{
          */
         DECLINED
     }
-    
+
     @Id
     @GeneratedValue
     private Long id;
-    
-    @ManyToOne(cascade = CascadeType.PERSIST) 
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private final Team team;
     private final String email;
     private final String token;
     private InvitationState invitationState;
 
     protected Invitation() {
-        team = /*new Team(new Participant());*/null;
+        team = /*new Team(new Participant());*/ null;
         email = "no email";
         token = "no token";
     }

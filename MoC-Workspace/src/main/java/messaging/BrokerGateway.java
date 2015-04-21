@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package messaging;
 
 import javax.jms.Message;
@@ -11,8 +6,8 @@ import workspace.Reply;
 import workspace.Request;
 
 /**
- *
- * @author Robin
+ * //TODO: class description, what does this class do
+ * @author TeamKoekje
  */
 public class BrokerGateway implements IReplyListener<Request, Reply>, MessageListener {
 

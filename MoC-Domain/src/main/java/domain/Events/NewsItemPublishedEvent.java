@@ -5,7 +5,7 @@ import java.util.EventObject;
 
 /**
  *
- * @author Robin
+ * @author TeamKoekje
  */
 public class NewsItemPublishedEvent extends EventObject {
     private final NewsItem releasedItem;

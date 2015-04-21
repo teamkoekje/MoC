@@ -2,6 +2,7 @@ package domain;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,9 +14,10 @@ import javax.persistence.Id;
  * location of the content of the challenge, and a set of hints that can be
  * given out during the challenge.
  *
+ * @author TeamKoekje
  */
 @Entity
-public class Challenge implements Serializable{
+public class Challenge implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     private String name;
@@ -23,7 +25,7 @@ public class Challenge implements Serializable{
 
     private List<Hint> hints;
     // </editor-fold>
-    @Id 
+    @Id
     @GeneratedValue
     private Long id;
 
@@ -31,13 +33,21 @@ public class Challenge implements Serializable{
     protected Challenge() {
         this.name = "Not set yet";
     }
-    
+
     public Challenge(String name) {
         this.name = name;
     }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     /**
      * Function returns the name of the challenge.
      *
@@ -64,17 +74,16 @@ public class Challenge implements Serializable{
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
-    
-    public boolean addHint(Hint h){
-        if(!hints.contains(h))
-        {
+
+    public boolean addHint(Hint h) {
+        if (!hints.contains(h)) {
             hints.add(h);
             hintsChanged();
             return true;
         }
         return false;
     }
-    
+
     /**
      * Gets a list of hints
      *
@@ -83,17 +92,13 @@ public class Challenge implements Serializable{
     public List<Hint> getHints() {
         return hints;
     }
-    
-    private void hintsChanged(){
+
+    public Iterator<Hint> hintsIterator() {
+        return hints.iterator();
+    }
+
+    private void hintsChanged() {
         Collections.sort(hints, new HintComparator());
     }
     //</editor-fold>
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

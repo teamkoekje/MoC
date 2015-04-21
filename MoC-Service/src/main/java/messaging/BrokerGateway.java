@@ -7,7 +7,7 @@ public class BrokerGateway implements IReplyListener<Request, Reply> {
 
     private AsynchronousRequestor<Request, Reply> requestor = null;
 
-    @SuppressWarnings("LeakingThisInConstructor")
+    //@SuppressWarnings("LeakingThisInConstructor")
     public BrokerGateway(String requestSenderQueue, String replyReceiverQueue) {
         try {
             requestor = new AsynchronousRequestor(requestSenderQueue, replyReceiverQueue);

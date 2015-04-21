@@ -11,7 +11,6 @@ public class AccountManager {
     private static AccountManager instance;
 
     private AccountManager() {
-        //load managers & participants
     }
 
     public static AccountManager getInstance() {

@@ -72,9 +72,6 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     /**
      * This method is invoked every time a new request arrives
      *
-     * @todo Implement this method. It should: 1. de-serialize the message into
-     * a REQUEST 2. register the message to belong to the REQUEST 3. notify the
-     * listener about the REQUEST arrival
      * @param message the incoming message containing the request
      */
     private synchronized void onRequest(ObjectMessage message) {

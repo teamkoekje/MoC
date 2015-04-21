@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace;
 
 import java.util.logging.Level;
@@ -12,22 +7,24 @@ import messaging.AsynchronousReplier;
 import messaging.IRequestListener;
 
 /**
+ * //TODO: class description, what does this class do
  *
- * @author Robin
+ * @author TeamKoekje
  */
-public abstract class ServiceGateway{
+public abstract class ServiceGateway {
+
     MessagingGateway gtw;
     AsynchronousReplier<Request, Reply> rep;
     IRequestListener<Request> requestListener;
-    
-    public ServiceGateway(String serviceReplyQueue){
+
+    public ServiceGateway(String serviceReplyQueue) {
         try {
             this.requestListener = new IRequestListener<Request>() {
                 public void receivedRequest(Request request) {
                     onServiceRequest((Request) request);
                 }
             };
-            
+
             // create the serializer
             rep = new AsynchronousReplier<>(serviceReplyQueue);
             rep.setRequestListener(requestListener);
@@ -35,14 +32,14 @@ public abstract class ServiceGateway{
             Logger.getLogger(ServiceGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     void sendReply(Request req, Reply reply) {
         rep.sendReply(req, reply);
     }
-    
-    void start(){
+
+    void start() {
         rep.start();
     }
-    
+
     abstract void onServiceRequest(Request r);
 }

@@ -4,13 +4,13 @@ import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import javax.enterprise.event.Event;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * The Round class represents a round within a Masters of Code competition. A
@@ -28,8 +28,8 @@ public class Round implements Serializable {
     private long id;
 
     private Challenge challenge;
-    private int roundTime;
-    private int currentTime;
+    private long totalRoundTime;
+    private long currentTime;
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
@@ -39,6 +39,7 @@ public class Round implements Serializable {
     //to fire: endedEvent.fire(new RoundEndedEvent(this));
     //to listen to it, define a method in a listener class:
     //  public void endedHandler(@Observes RoundEndedEvent event){/* do stuff */}
+    @Transient
     private Event<HintReleasedEvent> hintReleasedEvent;
     // </editor-fold>
 
@@ -46,13 +47,13 @@ public class Round implements Serializable {
     public Round() {
         init();
         challenge = null;
-        roundTime = 0;
+        totalRoundTime = 0;
     }
 
-    public Round(Challenge challenge, int roundTime) {
+    public Round(Challenge challenge, long roundTime) {
         init();
         this.challenge = challenge;
-        this.roundTime = roundTime;
+        this.totalRoundTime = roundTime;
     }
 
     private void init() {
@@ -86,8 +87,8 @@ public class Round implements Serializable {
      *
      * @return An integer indicating the total time for this Round.
      */
-    public int getTotalTime() {
-        return roundTime;
+    public long getTotalTime() {
+        return totalRoundTime;
     }
 
     /**
@@ -95,8 +96,8 @@ public class Round implements Serializable {
      *
      * @param time The total amount of time availble for this Round.
      */
-    public void setTime(int time) {
-        this.roundTime = time;
+    public void setTime(long time) {
+        this.totalRoundTime = time;
     }
 
     /**
@@ -124,8 +125,8 @@ public class Round implements Serializable {
      *
      * @return the remaining roundTime in seconds
      */
-    public int getRemainingTime() {
-        return roundTime - currentTime;
+    public long getRemainingTime() {
+        return totalRoundTime - currentTime;
     }
 
     /**
@@ -135,7 +136,7 @@ public class Round implements Serializable {
      *
      * @return the amount of remaining points for the challenge
      */
-    public int getRemainingPoints() {
+    public long getRemainingPoints() {
         return getRemainingTime() * challenge.getDifficulty();
     }
 
@@ -153,7 +154,7 @@ public class Round implements Serializable {
      *
      * @param roundState The new state of the round.
      */
-    private void setRoundState(RoundState roundState) {
+    protected void setRoundState(RoundState roundState) {
         this.roundState = roundState;
     }
 
@@ -164,6 +165,17 @@ public class Round implements Serializable {
      */
     public Set<Team> getSubmittedTeams() {
         return submittedTeams;
+    }
+
+    /**
+     * Gets the amount of teams that have submitted. If the amount of teams that
+     * have submitted equals the amount of teams in the competition, the round
+     * should be over.
+     *
+     * @return The amount of teams that have submitted
+     */
+    public int submittedTeamCount() {
+        return submittedTeams.size();
     }
     //</editor-fold>
 
@@ -229,12 +241,21 @@ public class Round implements Serializable {
 
     //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Events" >
-    
     public void secondExpired() {
         if (roundState == RoundState.ONGOING) {
             currentTime++;
-            if (currentTime >= roundTime) {
+            if (currentTime >= totalRoundTime) {
                 stop();
+            }
+            Iterator<Hint> hintsIterator = challenge.hintsIterator();
+            while (hintsIterator.hasNext()) {
+                Hint h = hintsIterator.next();
+                if (!h.isPublished()) {
+                    if (currentTime >= h.getTime()) {
+                        hintReleasedEvent.fire(new HintReleasedEvent(h));
+                        h.setPublished(true);
+                    }
+                }
             }
         }
     }
@@ -248,20 +269,32 @@ public class Round implements Serializable {
      * seconds
      */
     public void increaseTime(int seconds) {
-        roundTime += seconds;
+        totalRoundTime += seconds;
     }
 
     /**
-     * Function returns the next hint in the list of hints from the challenge,
-     * that hasn't been given out yet.
+     * Releases the next hint for this challenge. Returns true if the hint has
+     * been released or false if there are no hints left to release. True if the
+     * hint has been released, false if there are no hints left to release.
      *
+     * @return
      */
-    public void releaseNextHint() {
-        throw new NotImplementedException();
+    public boolean releaseNextHint() {
+        Iterator<Hint> hintsIterator = challenge.hintsIterator();
+        while (hintsIterator.hasNext()) {
+            Hint h = hintsIterator.next();
+            if (!h.isPublished()) {
+                hintReleasedEvent.fire(new HintReleasedEvent(h));
+                h.setPublished(true);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * Adds the specified team to the list of teams that completed this challe
+     * Adds the specified team to the list of teams that completed this
+     * challenge
      *
      * @param toSubmit The team to submit
      */

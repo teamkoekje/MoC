@@ -4,17 +4,19 @@ package domain;
  * The Hint class represents a hint that can be shown during a challenge. It
  * contains a string with the content of the hint and a set time in seconds when
  * the hint should be released.
+ * 
+ * @author TeamKoekje
  */
 public class Hint {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     private String content;
-    private int time;
+    private long time;
     private boolean published;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    public Hint(String content) {
+    public Hint(String content, long time) {
         this.content = content;
         this.published = false;
     }
@@ -53,7 +55,7 @@ public class Hint {
      *
      * @return time in seconds
      */
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
@@ -62,7 +64,7 @@ public class Hint {
      *
      * @param time the time in seconds
      */
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

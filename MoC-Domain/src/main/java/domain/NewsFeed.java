@@ -10,7 +10,9 @@ import javax.enterprise.event.Observes;
 import javax.swing.event.EventListenerList;
 
 /**
- * 
+ * The Newsfeed listens to events within competitions and forwards them to the
+ * appropriate clients
+ *
  * @author TeamKoekje
  */
 public class NewsFeed implements Serializable {
@@ -35,7 +37,7 @@ public class NewsFeed implements Serializable {
     public void addRoundEndedListener(NewsItemPublishedListener toAdd) {
         newsItemPublishedListenerList.add(NewsItemPublishedListener.class, toAdd);
     }
-    
+
     /**
      * Fires the news item published event.
      *
@@ -49,12 +51,12 @@ public class NewsFeed implements Serializable {
             }
         }
     }
-    
+
     public void hintReleased(@Observes HintReleasedEvent event) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public void roundEnded(@Observes RoundEndedEvent event){
-        throw new UnsupportedOperationException("Not supported yet.");        
+
+    public void roundEnded(@Observes RoundEndedEvent event) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

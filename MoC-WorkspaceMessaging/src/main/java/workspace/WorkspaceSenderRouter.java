@@ -1,22 +1,20 @@
 package workspace;
 
-import domain.Team;
 import domain.Workspace;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import messaging.GatewayType;
 import messaging.JMSSettings;
 import messaging.MessagingGateway;
 
 /**
- * @author Robin
+ * //TODO: class description, what does this class do
+ *
+ * @author TeamKoekje
  */
 class WorkspaceSenderRouter {
 
     private ArrayList<WorkspaceServer> workspaceServers;
     private Long lastServerId;
-   
+
     public WorkspaceSenderRouter() throws Exception {
         super();
         workspaceServers = new ArrayList<>();
@@ -34,24 +32,24 @@ class WorkspaceSenderRouter {
         }
         return null;
     }
-    
-    public Workspace addWorkspace(){
+
+    public Workspace addWorkspace() {
         //Workspace w = new Workspace();
         //ws.addWorkspace(w);
         //return w;
         return null;
     }
-    
-    public WorkspaceServer getServerById(Long workspaceId){
-        for (WorkspaceServer s : workspaceServers){
+
+    public WorkspaceServer getServerById(Long workspaceId) {
+        for (WorkspaceServer s : workspaceServers) {
         }
         return null;
     }
-    
-    public MessagingGateway getServerWithLeastWorkspaces(){
+
+    public MessagingGateway getServerWithLeastWorkspaces() {
         WorkspaceServer workspaceServer = null;
-        for(WorkspaceServer w : workspaceServers){
-            if(workspaceServer == null || w.getNumberOfWorkspaces() < workspaceServer.getNumberOfWorkspaces()){
+        for (WorkspaceServer w : workspaceServers) {
+            if (workspaceServer == null || w.getNumberOfWorkspaces() < workspaceServer.getNumberOfWorkspaces()) {
                 workspaceServer = w;
             }
         }

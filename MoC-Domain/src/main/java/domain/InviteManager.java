@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * A class used for managing invitations. Each team has their own InviteManager.
+ * 
+ * @author TeamKoekje
  */
 public class InviteManager {
 

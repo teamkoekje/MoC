@@ -76,13 +76,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
     }
 
     /**
-     * @todo implement this method! Sends one request. Immediately, a listener
-     * is registered for this request. This listener will be notified when
-     * (later) a reply for this request arrives. This method should: 1. create a
-     * Message for the request (use serializer). 2. set the JMSReplyTo of the
-     * Message to be the Destination of the gateway's receiver. 3. send the
-     * Message 4. register the listener to belong to the JMSMessageID of the
-     * request Message
+     * Sends a request to the set gateway, where the JMSReplyTo is the receiver
+     * destination of the set gateway. Also saves the request and the listener
+     * method to call the proper listener when a reply is received.
      *
      * @param request is the request object (a domain class) to be sent
      * @param listener is the listener that will be notified when the reply
@@ -105,12 +101,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
     }
 
     /**
-     * @todo implement this method! This method is invoked for processing of a
-     * single reply when it arrives. This method should be registered on the
-     * MessageReceiver. This method should: 1. get the registered listener fo
-     * the JMSCorrelationID of the Message 2. de-serialize the REPLY from the
-     * Message 3. notify the listener about the arrival of the REPLY 4.
-     * unregister the listener
+     * Called when a reply is received. Uses the correlation ID of the message
+     * to retrieve the correct listener and calls the onReply of that listener.
+     *
      * @param message the reply message
      */
     private synchronized void onReply(ObjectMessage message) {

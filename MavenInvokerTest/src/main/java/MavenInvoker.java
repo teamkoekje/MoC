@@ -12,7 +12,7 @@ import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
 /**
- * 
+ * TODO: integrate with main project
  * @author Casper
  */
 public class MavenInvoker {

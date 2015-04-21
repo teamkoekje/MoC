@@ -1,5 +1,10 @@
 package domain;
 
+/**
+ * Generic class that is send out to clients listening to the Newsfeed.
+ * 
+ * @author TeamKoekje
+ */
 public class NewsItem {
 
     private final String content;
