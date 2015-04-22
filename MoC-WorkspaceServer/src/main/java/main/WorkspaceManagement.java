@@ -4,9 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -31,7 +34,7 @@ import workspace.Request;
  */
 public class WorkspaceManagement {
 
-    public final String defaultPath = "C:/MoC/";
+    public static final String defaultPath = "C:\\MoC\\";
     public List<String> teams;
     private static final File mavenHome = new File("C:\\Program Files\\apache-maven-3.2.5");
     private static final String basePath = "C:\\Users\\Astrid\\Desktop\\git\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
@@ -300,6 +303,24 @@ public class WorkspaceManagement {
     }
 
     private static String updateFile(String teamName, String filePath, String fileContent) {
-        return null;
+        File oldName = new File(defaultPath + "/" + teamName + "/" + filePath);
+        File newName = new File(oldName + ".temp");
+        if (oldName.renameTo(newName)) {
+            System.out.println("renamed: " + oldName + " to: " + newName);
+        } else {
+            System.out.println("Error");
+        }
+
+        try {
+            PrintWriter writer = new PrintWriter(oldName, "UTF-8");
+            writer.printf(fileContent);
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            return ("Error File not found: " + ex);
+        } catch (UnsupportedEncodingException ex) {
+            return ("Error Unsupported Encoding: " + ex);
+        }
+
+        return "File succesful Updated";
     }
 }
