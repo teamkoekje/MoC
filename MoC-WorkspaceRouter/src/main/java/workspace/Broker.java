@@ -1,5 +1,7 @@
 package workspace;
 
+import javax.jms.Message;
+
 /**
  * //TODO: class description, what does this class do
  *
@@ -12,7 +14,13 @@ public class Broker {
     private final WorkspaceGateway workspaceGtw;
 
     public Broker(String serviceReplyQueue, String workspaceReplyQueue, String workspaceRequestQueue) {
-        workspaceGtw = new WorkspaceGateway(workspaceReplyQueue, workspaceRequestQueue);
+        workspaceGtw = new WorkspaceGateway(workspaceReplyQueue, workspaceRequestQueue) {
+
+            @Override
+            void onWorkspaceMessageReceived(Message message) {
+                onMessageReceived(message);
+            }
+        };
 
         serviceGtw = new ServiceGateway(serviceReplyQueue) {
 
@@ -20,12 +28,16 @@ public class Broker {
             synchronized void onServiceRequest(Request request) {
                 System.out.println("Message received!");
                 if (request.getAction() == Action.CREATE) {
-                    //createNewWorkspace(request);
+                    createNewWorkspace(request);
                 } else {
                     sendToWorkspace(request);
                 }
             }
         };
+    }
+
+    private void onMessageReceived(Message message) {
+        // TODO Send message back to service module
     }
 
     private void createNewWorkspace(Request request) {

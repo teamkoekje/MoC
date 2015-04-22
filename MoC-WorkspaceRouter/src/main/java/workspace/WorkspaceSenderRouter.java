@@ -37,27 +37,24 @@ class WorkspaceSenderRouter {
         return null;
     }
 
-    public Workspace addWorkspace() {
-        //Workspace w = new Workspace();
-        //ws.addWorkspace(w);
-        //return w;
-        return null;
-    }
-
     public WorkspaceServer getServerById(Long workspaceId) {
         for (WorkspaceServer s : workspaceServers) {
         }
         return null;
     }
 
-    public MessagingGateway getServerWithLeastWorkspaces() {
+    public WorkspaceServer getServerWithLeastWorkspaces() {
         WorkspaceServer workspaceServer = null;
         for (WorkspaceServer w : workspaceServers) {
             if (workspaceServer == null || w.getNumberOfWorkspaces() < workspaceServer.getNumberOfWorkspaces()) {
                 workspaceServer = w;
             }
         }
-        return workspaceServer.getSender();
+        if(workspaceServer != null){
+            return workspaceServer;
+        }else{
+            return null;
+        }
     }
 
     void openConnection() {

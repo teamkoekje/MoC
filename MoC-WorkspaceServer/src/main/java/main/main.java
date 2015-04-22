@@ -1,9 +1,6 @@
 package main;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import messaging.BrokerGateway;
-import messaging.JMSSettings;
 
 /**
  * //TODO: class description, what does this class do

@@ -1,5 +1,6 @@
 package workspace;
 
+import domain.Workspace;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,6 +9,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import messaging.DestinationType;
+import messaging.GatewayType;
 import messaging.JMSSettings;
 import messaging.MessagingGateway;
 
@@ -16,10 +18,12 @@ import messaging.MessagingGateway;
  *
  * @author TeamKoekje
  */
-public class WorkspaceGateway {
+public abstract class WorkspaceGateway {
 
     private WorkspaceSenderRouter router;
     private MessagingGateway initGtw;
+    private MessagingGateway receiverGtw;
+    private final String AGGREGATION = "aggregation";
 
     public WorkspaceGateway(String brokerRequestQueue, String brokerReplyQueue) {
         try {
@@ -32,6 +36,22 @@ public class WorkspaceGateway {
                     processInitMessage(msg);
                 }
             });
+            
+            receiverGtw = new MessagingGateway(JMSSettings.BROKER_REPLY, DestinationType.QUEUE, GatewayType.RECEIVER);
+            receiverGtw.setReceivedMessageListener(new MessageListener() {
+
+                @Override
+                public void onMessage(Message message) {
+                    try {
+                        System.out.println("Message received " + message.getJMSCorrelationID());
+                    } catch (JMSException ex) {
+                        Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    onWorkspaceMessageReceived(message);
+                }
+            });
+            
+            receiverGtw.openConnection();
             initGtw.openConnection();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
@@ -54,10 +74,17 @@ public class WorkspaceGateway {
 
     public synchronized void addWorkspace(Request request) {
         try {
-            MessagingGateway gtw = router.getServerWithLeastWorkspaces();
-            ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
-
-            gtw.sendMessage(msg);
+            WorkspaceServer ws = router.getServerWithLeastWorkspaces();
+            MessagingGateway gtw = ws.getSender();
+            if (gtw != null) {
+                //ws.addWorkspace(request.getTeamName());
+                ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
+                msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
+                gtw.sendMessage(msg);
+                System.out.println("Message sent");
+            } else {
+                System.out.println("No servers available");
+            }
         } catch (JMSException ex) {
             Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,4 +100,6 @@ public class WorkspaceGateway {
     void start() {
         router.openConnection();
     }
+    
+    abstract void onWorkspaceMessageReceived(Message message);
 }
