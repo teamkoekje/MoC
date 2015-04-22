@@ -57,7 +57,7 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
         super();
         this.listeners = new HashMap<>();
 
-        gateway = new MessagingGateway(requestSenderQueue, replyReceiverQueue);
+        gateway = new MessagingGateway(requestSenderQueue, DestinationType.QUEUE, replyReceiverQueue, DestinationType.QUEUE);
         gateway.setReceivedMessageListener(new MessageListener() {
 
             @Override

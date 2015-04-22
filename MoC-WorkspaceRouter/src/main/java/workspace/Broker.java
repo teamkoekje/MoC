@@ -3,6 +3,7 @@ package workspace;
 /**
  * //TODO: class description, what does this class do
  *
+ * @author Robin
  * @author TeamKoekje
  */
 public class Broker {
@@ -16,9 +17,10 @@ public class Broker {
         serviceGtw = new ServiceGateway(serviceReplyQueue) {
 
             @Override
-            void onServiceRequest(Request request) {
+            synchronized void onServiceRequest(Request request) {
+                System.out.println("Message received!");
                 if (request.getAction() == Action.CREATE) {
-                    createNewWorkspace(request);
+                    //createNewWorkspace(request);
                 } else {
                     sendToWorkspace(request);
                 }

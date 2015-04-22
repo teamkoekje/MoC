@@ -26,6 +26,7 @@ public class WorkspaceService {
     }
 
     public void create(long teamId) {
+        System.out.println("Send message: create workspace");
         Request request = new Request(Action.CREATE, teamId);
         gateway.sendRequest(request);
     }

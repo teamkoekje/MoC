@@ -7,7 +7,7 @@ import messaging.JMSSettings;
 
 /**
  * //TODO: class description, what does this class do
- * 
+ *
  * @author TeamKoekje
  */
 public class main {
@@ -17,11 +17,10 @@ public class main {
      */
     public static void main(String[] args) {
         try {
-            BrokerGateway gtw = new BrokerGateway(JMSSettings.WORKSPACE_REQUEST);
-            gtw.start();
+            BrokerGateway gtw = new BrokerGateway();
         } catch (Exception ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
-    
+
 }
