@@ -193,9 +193,9 @@ public class WorkspaceManagement {
             sb = new StringBuilder();
             return outputString;
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceManagment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MavenInvocationException ex) {
-            Logger.getLogger(WorkspaceManagment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -223,9 +223,9 @@ public class WorkspaceManagement {
             sb = new StringBuilder();
             return outputString;
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceManagment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MavenInvocationException ex) {
-            Logger.getLogger(WorkspaceManagment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -255,9 +255,9 @@ public class WorkspaceManagement {
             sb = new StringBuilder();
             return outputString;
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceManagment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MavenInvocationException ex) {
-            Logger.getLogger(WorkspaceManagment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
