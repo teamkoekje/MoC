@@ -43,7 +43,7 @@ public class WorkspaceManagement {
 
     private static StringBuilder sb;
 
-    public WorkspaceManagment() {
+    public WorkspaceManagement() {
         teams = new ArrayList<>();
         getWorkspaceFolders();
         sb = new StringBuilder();
