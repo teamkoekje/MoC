@@ -77,7 +77,7 @@ public abstract class WorkspaceGateway {
             WorkspaceServer ws = router.getServerWithLeastWorkspaces();
             MessagingGateway gtw = ws.getSender();
             if (gtw != null) {
-                //ws.addWorkspace(request.getTeamName());
+                ws.addWorkspace(request.getTeamName());
                 ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
                 msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
                 gtw.sendMessage(msg);

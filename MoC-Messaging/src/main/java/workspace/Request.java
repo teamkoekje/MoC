@@ -9,20 +9,16 @@ import java.io.Serializable;
 public class Request implements Serializable {
 
     private final Action action;
-    private final long workspaceId;
     private String testName;
+    private String teamName;
 
-    public Request(Action action, long workspaceId) {
+    public Request(Action action, String teamName) {
         this.action = action;
-        this.workspaceId = workspaceId;
+        this.teamName = teamName;
     }
 
     public Action getAction() {
         return action;
-    }
-
-    public long getWorkspaceId() {
-        return workspaceId;
     }
 
     public String getTestName() {
@@ -34,7 +30,7 @@ public class Request implements Serializable {
     }
 
     public String getTeamName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return teamName;
     }
 
     public String getChallengeName() {
