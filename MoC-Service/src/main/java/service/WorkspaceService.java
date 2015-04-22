@@ -25,34 +25,34 @@ public class WorkspaceService {
         gateway = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.SERVICE_REPLY);
     }
 
-    public void create(long teamId) {
+    public void create(String teamName) {
         System.out.println("Send message: create workspace");
-        Request request = new Request(Action.CREATE, teamId);
+        Request request = new Request(Action.CREATE, teamName);
         gateway.sendRequest(request);
     }
     
-    public void delete(long teamId) {
-        Request request = new Request(Action.DELETE, teamId);
+    public void delete(String teamName) {
+        Request request = new Request(Action.DELETE, teamName);
         gateway.sendRequest(request);
     }
 
-    public void update(File file, long teamId) {
-        Request request = new Request(Action.UPDATE, teamId);
+    public void update(File file, String teamName) {
+        Request request = new Request(Action.UPDATE, teamName);
         gateway.sendRequest(request);
     }
 
-    public void compile(String artifactName, long teamId) {
-        Request request = new Request(Action.COMPILE, teamId);
+    public void compile(String artifactName, String teamName) {
+        Request request = new Request(Action.COMPILE, teamName);
         gateway.sendRequest(request);
     }
 
-    public void testAll(String artifactName, long teamId) {
-        Request request = new Request(Action.TESTALL, teamId);
+    public void testAll(String artifactName, String teamName) {
+        Request request = new Request(Action.TESTALL, teamName);
         gateway.sendRequest(request);
     }
 
-    public void test(String artifactName, long teamId, String testName) {
-        Request request = new Request(Action.TEST, teamId);
+    public void test(String artifactName, String teamName, String testName) {
+        Request request = new Request(Action.TEST, teamName);
         request.setTestName(testName);
         gateway.sendRequest(request);
     }
