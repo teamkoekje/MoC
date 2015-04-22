@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -302,32 +303,48 @@ public class WorkspaceManagement {
         }
     }
 
-    private static String updateFile(String teamName, String filePath, String fileContent) {
-        File oldName = new File(defaultPath + "/" + teamName + "/" + filePath);
-        File newName = new File(oldName + ".temp");
-        if (oldName.exists()) {
-            if (oldName.renameTo(newName)) {
-                System.out.println("renamed: " + oldName + " to: " + newName);
+    private static String updateFile(String teamName , String filePath, String fileContent ) {
+
+        File originalPath = new File(defaultPath + "/" + teamName + "/" + filePath);
+        File tempPath = new File(originalPath + ".temp");
+        if (originalPath.exists()) {
+            if (originalPath.renameTo(tempPath)) {
+                System.out.println("backup made from: " + originalPath + " to: " + tempPath);
             } else {
-                System.out.println("Error while renaming");
-                return "error while renaming";
+                System.out.println("Error while creating backup");
+                return "Error attempting to backup: " + originalPath + " to: " + tempPath;
             }
-        }else {
-            return "file not found";
+        } else {
+            return "file not found: " + originalPath;
         }
 
         try {
-            PrintWriter writer = new PrintWriter(oldName, "UTF-8");
+            PrintWriter writer = new PrintWriter(originalPath, "UTF-8");
             writer.printf(fileContent);
             writer.close();
         } catch (FileNotFoundException ex) {
-            newName.renameTo(oldName);
+            tempPath.renameTo(originalPath);
+            try {
+                Files.delete(tempPath.toPath());
+            } catch (IOException ex1) {
+                System.err.println("Error while deleting temp file: " + ex1);
+            }
             return ("Error File not found: " + ex);
         } catch (UnsupportedEncodingException ex) {
-            newName.renameTo(oldName);
+            tempPath.renameTo(originalPath);
+            try {
+                Files.delete(tempPath.toPath());
+            } catch (IOException ex1) {
+                System.err.println("Error while deleting temp file: " + ex1);
+            }
             return ("Error Unsupported Encoding: " + ex);
         }
-
-        return "File succesful Updated";
+        try {
+            Files.delete(tempPath.toPath());
+        } catch (IOException ex1) {
+            System.err.println("Error while deleting temp file: " + ex1);
+            return "File succesfully Updated but temp file not deleted";
+        }
+        return "File succesfully Updated";
     }
 }
