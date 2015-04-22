@@ -15,12 +15,12 @@ import java.util.zip.ZipFile;
  * 
  * @author TeamKoekje
  */
-public class WorkspaceManagment {
+public class WorkspaceManagement {
 
     public final String defaultPath = "C:/MoC/";
     public List<String> teams;
 
-    public WorkspaceManagment() {
+    public WorkspaceManagement() {
         teams = new ArrayList<>();
         getWorkspaceFolders();
     }

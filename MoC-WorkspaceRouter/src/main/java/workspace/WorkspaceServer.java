@@ -15,7 +15,7 @@ public class WorkspaceServer {
 
     private Long id;
     private String queue;
-    private ArrayList<Workspace> workspaces;
+    private ArrayList<String> workspaces;
     private MessagingGateway sender;
 
     public WorkspaceServer(Long id, String queue) throws Exception {
@@ -29,11 +29,11 @@ public class WorkspaceServer {
         return sender;
     }
 
-    public ArrayList<Workspace> getWorkspaces() {
+    public ArrayList<String> getWorkspaces() {
         return workspaces;
     }
 
-    public void addWorkspace(Workspace w) {
+    public void addWorkspace(String w) {
         this.workspaces.add(w);
     }
 
