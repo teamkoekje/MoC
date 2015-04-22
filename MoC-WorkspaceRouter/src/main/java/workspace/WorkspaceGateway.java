@@ -1,8 +1,14 @@
 package workspace;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -11,6 +17,7 @@ import messaging.DestinationType;
 import messaging.GatewayType;
 import messaging.JMSSettings;
 import messaging.MessagingGateway;
+import org.apache.activemq.BlobMessage;
 
 /**
  * //TODO: class description, what does this class do
@@ -74,6 +81,13 @@ public abstract class WorkspaceGateway {
         try {
             ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
+            
+            //TEST
+            //BlobMessage bm = initGtw.createBlobMessage("D:\\School\\Proftaak\\MoC\\MoC-WorkspaceRouter\\hin.txt");
+            //bm.setJMSReplyTo(receiverGtw.getReceiverDestination());
+            //gtw.sendMessage(bm);
+            //ENDTEST
+            
             gtw.sendMessage(msg);
             System.out.println("Message sent");
         } catch (JMSException ex) {
