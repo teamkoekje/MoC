@@ -1,6 +1,10 @@
 package messaging;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Properties;
 import javax.jms.BytesMessage;
@@ -76,7 +80,7 @@ public class MessagingGateway {
         }
     }
     
-    public BlobMessage createBlobMessage(String file) throws JMSException{
+    public BlobMessage createBlobMessage(String file) throws JMSException, IOException{
         return ((ActiveMQSession)session).createBlobMessage(new File(file));
     }
     
