@@ -5,5 +5,5 @@ package workspace;
  */
 public enum Action {
 
-    COMPILE, TEST, TESTALL, UPDATE, CREATE, DELETE
+    COMPILE, TEST, TESTALL, UPDATE, CREATE, DELETE, PUSH_CHALLENGE
 }
