@@ -7,7 +7,6 @@ public class BrokerGateway implements IReplyListener<Request, Reply> {
 
     private AsynchronousRequestor<Request, Reply> requestor = null;
 
-    //@SuppressWarnings("LeakingThisInConstructor")
     public BrokerGateway(String requestSenderQueue, String replyReceiverQueue) {
         try {
             requestor = new AsynchronousRequestor(requestSenderQueue, replyReceiverQueue);
@@ -23,6 +22,6 @@ public class BrokerGateway implements IReplyListener<Request, Reply> {
 
     @Override
     public void onReply(Request request, Reply reply) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Reply received: " + reply.getMessage());
     }
 }

@@ -12,7 +12,7 @@ import workspace.Request;
  *
  * @author TeamKoekje
  */
-public class BrokerGateway implements IReplyListener<Request, Reply>, MessageListener {
+public class BrokerGateway implements IRequestListener<Request>, MessageListener {
 
     private MessagingGateway initGtw;
     private String initMsgId;
@@ -34,11 +34,6 @@ public class BrokerGateway implements IReplyListener<Request, Reply>, MessageLis
     }
 
     @Override
-    public void onReply(Request request, Reply reply) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void onMessage(Message msg) {
         try {
             System.out.println("Init reply received: " + msg.getJMSCorrelationID());
@@ -56,11 +51,22 @@ public class BrokerGateway implements IReplyListener<Request, Reply>, MessageLis
 
     private void initReplier(String id) {
         try {
-            replier = new AsynchronousReplier<>(JMSSettings.BROKER_REQUEST + "_" + id);
+            replier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
+            replier.setRequestListener(this);
             replier.start();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
+    }
+
+    @Override
+    public void receivedRequest(Request request) {
+        System.out.println("Request received: " + request.getAction());
+        
+        //TODO: Handle request
+        
+        Reply reply = new Reply("Hallo robin");
+        replier.sendReply(request, reply);
     }
 
 }
