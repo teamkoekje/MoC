@@ -305,10 +305,15 @@ public class WorkspaceManagement {
     private static String updateFile(String teamName, String filePath, String fileContent) {
         File oldName = new File(defaultPath + "/" + teamName + "/" + filePath);
         File newName = new File(oldName + ".temp");
-        if (oldName.renameTo(newName)) {
-            System.out.println("renamed: " + oldName + " to: " + newName);
-        } else {
-            System.out.println("Error");
+        if (oldName.exists()) {
+            if (oldName.renameTo(newName)) {
+                System.out.println("renamed: " + oldName + " to: " + newName);
+            } else {
+                System.out.println("Error while renaming");
+                return "error while renaming";
+            }
+        }else {
+            return "file not found";
         }
 
         try {
@@ -316,8 +321,10 @@ public class WorkspaceManagement {
             writer.printf(fileContent);
             writer.close();
         } catch (FileNotFoundException ex) {
+            newName.renameTo(oldName);
             return ("Error File not found: " + ex);
         } catch (UnsupportedEncodingException ex) {
+            newName.renameTo(oldName);
             return ("Error Unsupported Encoding: " + ex);
         }
 
