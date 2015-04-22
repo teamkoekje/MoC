@@ -30,7 +30,7 @@ public class WorkspaceService {
         Request request = new Request(Action.CREATE, teamName);
         gateway.sendRequest(request);
     }
-    
+
     public void delete(String teamName) {
         Request request = new Request(Action.DELETE, teamName);
         gateway.sendRequest(request);

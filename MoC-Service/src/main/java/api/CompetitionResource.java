@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import service.CompetitionService;
+import service.InvitationService;
 import service.RoundService;
 import service.TeamService;
 
@@ -33,6 +34,9 @@ public class CompetitionResource {
 
     @Inject
     private TeamService teamService;
+
+    @Inject
+    private InvitationService invitationService;
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
@@ -230,7 +234,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/invite")
     public void inviteMember(String email, @PathParam("teamId") long teamId) {
-        teamService.inviteMember(email, teamId);
+        invitationService.inviteMember(email, teamId);
     }
 
     /**
