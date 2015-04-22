@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates
@@ -61,7 +59,7 @@ public class JMSSettings {
 
             scanner.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(JMSSettings.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
 

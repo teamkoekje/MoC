@@ -4,6 +4,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+import main.WorkspaceManagement;
 import workspace.Reply;
 import workspace.Request;
 
@@ -16,10 +17,13 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
 
     private MessagingGateway initGtw;
     private String initMsgId;
+    
+    private WorkspaceManagement wsManagement;
 
     private AsynchronousReplier<Request, Reply> replier;
 
     public BrokerGateway() throws Exception {
+        //wsManagement = new WorkspaceManagement();
         initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
         initGtw.setReceivedMessageListener(this);
         initGtw.openConnection();
@@ -63,9 +67,10 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     public void receivedRequest(Request request) {
         System.out.println("Request received: " + request.getAction());
         
-        //TODO: Handle request
+       // String replyMessage = wsManagement.processRequest(request);
+        String replyMessage = "hoi";
         
-        Reply reply = new Reply("Hallo robin");
+        Reply reply = new Reply(replyMessage);
         replier.sendReply(request, reply);
     }
 

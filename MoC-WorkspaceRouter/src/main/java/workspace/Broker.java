@@ -18,7 +18,7 @@ public class Broker {
 
             @Override
             void onWorkspaceMessageReceived(Message message) {
-                onMessageReceived(message);
+                onWorkspaceReply(message);
             }
         };
 
@@ -28,24 +28,16 @@ public class Broker {
             synchronized void onServiceRequest(Request request) {
                 System.out.println("Message received!");
                 if (request.getAction() == Action.CREATE) {
-                    createNewWorkspace(request);
+                    workspaceGtw.addWorkspace(request);
                 } else {
-                    sendToWorkspace(request);
+                    workspaceGtw.sendRequest(request);
                 }
             }
         };
     }
 
-    private void onMessageReceived(Message message) {
+    private void onWorkspaceReply(Message message) {
         // TODO Send message back to service module
-    }
-
-    private void createNewWorkspace(Request request) {
-        workspaceGtw.addWorkspace(request);
-    }
-
-    private void sendToWorkspace(Request request) {
-
     }
 
     private void onWorkspaceReply(Request request, Reply reply) {
