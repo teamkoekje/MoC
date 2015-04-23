@@ -40,20 +40,17 @@ public class WorkspaceManagement {
      */
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
-        if ("linux".equals(osName.toLowerCase())) {
+        if ("linux".equalsIgnoreCase(osName)) {
             defaultPath = "MoC";
         } else {
             defaultPath = "C:/MoC/";
-            throw new IllegalArgumentException("linux heet niet linux: " + osName);
         }
         //load teams
         File rootFolder = new File(defaultPath);
         if (!rootFolder.exists()) {
             rootFolder.mkdir();
         }
-        if(!rootFolder.isDirectory()){
-            throw new IllegalArgumentException("geen directory: " + rootFolder.getPath());
-        }
+        
         for (File f : rootFolder.listFiles()) {
             if (f.isDirectory()) {
                 teams.add(f.getName());
