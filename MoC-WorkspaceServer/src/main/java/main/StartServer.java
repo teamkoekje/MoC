@@ -1,5 +1,7 @@
 package main;
 
+import javax.jms.JMSException;
+import javax.naming.NamingException;
 import messaging.BrokerGateway;
 
 /**
@@ -14,9 +16,10 @@ public class StartServer {
 
     /**
      * @param args the command line arguments
-     * @throws java.lang.Exception When something goes wrong while creating the gateway
+     * @throws javax.naming.NamingException
+     * @throws javax.jms.JMSException
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws NamingException, JMSException  {
             BrokerGateway gtw = new BrokerGateway();
             System.out.println("Created gateway: " + gtw.toString());        
     }
