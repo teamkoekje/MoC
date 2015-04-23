@@ -23,15 +23,17 @@
         <!-- load ace language tools -->
         <script src="ace-builds/src-noconflict/ext-language_tools.js"></script>
         <script>
+            //http://ace.c9.io/#nav=howto
+            var editor;
             $(window).ready(function () {
                 // trigger extension
-                var editor = ace.edit("editor");
+                editor = ace.edit("editor");
                 editor.session.setMode("ace/mode/java");
                 editor.setTheme("ace/theme/tomorrow");
                 //editor.setTheme("ace/theme/monokai");
                 editor.setShowPrintMargin(false);
                 editor.setReadOnly(false);  // false to make it editable
-
+                editor.$blockScrolling = Infinity; //to fix warning
                 // enable autocompletion and snippets
                 editor.setOptions({
                     enableBasicAutocompletion: true,
@@ -39,6 +41,13 @@
                     enableLiveAutocompletion: false
                 });
             });
+
+            function getTextFromEditor() {
+                return editor.getSession.getValue();
+            }
+            function getSelectionFromEditor() {
+                return editor.session.getTextRange(editor.getSelectionRange());
+            }
         </script>
 
     </head>
@@ -92,7 +101,8 @@
                     <div class='col-xs-3'>
                         <button class="btn btn-default" 
                                 onclick="$('#wrapperAroundEditor').toggleClass('col-xs-12').toggleClass('col-xs-6');
-                                    $('#wrapperAroundResults').toggle()"
+                                        $('#wrapperAroundResults').toggle();
+                                        editor.resize()"
                                 >
                             Show/hide result
                         </button>
