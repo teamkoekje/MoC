@@ -1,30 +1,24 @@
 package service;
 
-import dao.AbstractDAO;
-import dao.CompetitionDAO;
 import domain.Competition;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
-import javax.inject.Inject;
 
 @Stateless
 @RequestScoped
-public class CompetitionService extends AbstractService<Competition> {
+public class CompetitionService extends GenericService<Competition> {
 
-    @Inject
-    private CompetitionDAO dao;
-
-    @Override
-    protected AbstractDAO getDAO() {
-        return dao;
+    public CompetitionService() {
+        super(Competition.class);
     }
 
     public boolean joinTeam(String email, String token, long competitionId, long teamId) {
-        Competition c = dao.findById(competitionId);
+        Competition c = this.findById(competitionId);
         boolean result = c.joinTeam(email, token, teamId);
         if (result) {
-            dao.edit(c);
+            this.edit(c);
         }
         return result;
     }
+
 }

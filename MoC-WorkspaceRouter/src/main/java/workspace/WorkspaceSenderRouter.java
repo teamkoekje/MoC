@@ -1,9 +1,7 @@
 package workspace;
 
-import domain.Workspace;
 import java.util.*;
 import messaging.JMSSettings;
-import messaging.MessagingGateway;
 
 /**
  * //TODO: class description, what does this class do
@@ -20,10 +18,6 @@ class WorkspaceSenderRouter {
         workspaceServers = new ArrayList<>();
         lastServerId = 0L;
     }
-    
-    public long getNextServerId(){
-        return this.lastServerId++;
-    }
 
     public Long addWorkspaceServer() {
         try {
@@ -37,8 +31,11 @@ class WorkspaceSenderRouter {
         return null;
     }
 
-    public WorkspaceServer getServerById(Long workspaceId) {
+    public WorkspaceServer getServerByWorkspaceName(String workspaceName) {
         for (WorkspaceServer s : workspaceServers) {
+            if (s.containsWorkspace(workspaceName)) {
+                return s;
+            }
         }
         return null;
     }
@@ -50,11 +47,7 @@ class WorkspaceSenderRouter {
                 workspaceServer = w;
             }
         }
-        if(workspaceServer != null){
-            return workspaceServer;
-        }else{
-            return null;
-        }
+        return workspaceServer;
     }
 
     void openConnection() {

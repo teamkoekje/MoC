@@ -1,6 +1,5 @@
 package workspace;
 
-import domain.Workspace;
 import java.util.ArrayList;
 import messaging.DestinationType;
 import messaging.GatewayType;
@@ -8,21 +7,25 @@ import messaging.MessagingGateway;
 
 /**
  * //TODO: class description, what does this class do
- * 
+ *
  * @author TeamKoekje
  */
 public class WorkspaceServer {
 
     private Long id;
     private String queue;
-    private ArrayList<String> workspaces;
-    private MessagingGateway sender;
+    private final ArrayList<String> workspaces;
+    private final MessagingGateway sender;
 
     public WorkspaceServer(Long id, String queue) throws Exception {
         this.id = id;
         this.queue = queue;
         this.workspaces = new ArrayList<>();
         sender = new MessagingGateway(queue, DestinationType.QUEUE, GatewayType.SENDER);
+    }
+    
+    public boolean containsWorkspace(String workspaceName){
+        return this.workspaces.contains(workspaceName);
     }
 
     MessagingGateway getSender() {

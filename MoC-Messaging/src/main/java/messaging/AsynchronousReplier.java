@@ -87,13 +87,11 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     /**
      * Sends the reply for a specific request.
      *
-     * 1. get the requestMessage registered for
-     * the request from activeRequests 
-     * 2. serialize the reply and create the replyMessage for it 
-     * 3. set the JMSCorrelationID of the replyMessage to be equal to the 
-     *  JMSMessageID of the requestMessage 
-     * 4. get the getJMSReplyTo destination of the requestMessage 
-     * 5. send the replyMessage to this Destination
+     * 1. get the requestMessage registered for the request from activeRequests
+     * 2. serialize the reply and create the replyMessage for it 3. set the
+     * JMSCorrelationID of the replyMessage to be equal to the JMSMessageID of
+     * the requestMessage 4. get the getJMSReplyTo destination of the
+     * requestMessage 5. send the replyMessage to this Destination
      *
      * @param request to which this reply belongs
      * @param reply to the request

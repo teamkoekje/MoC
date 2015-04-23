@@ -1,9 +1,13 @@
 package messaging;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -17,9 +21,12 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import org.apache.activemq.ActiveMQSession;
+import org.apache.activemq.BlobMessage;
 
 /**
- * This class is responsible for actually sending messages from one point to another.
+ * This class is responsible for actually sending messages from one point to
+ * another.
  *
  * @author TeamKoekje
  */
@@ -72,6 +79,14 @@ public class MessagingGateway {
                 break;
         }
     }
+    
+    public BlobMessage createBlobMessage(String file) throws JMSException, IOException{
+        return ((ActiveMQSession)session).createBlobMessage(new File(file));
+    }
+    
+    public BytesMessage createBytesMessage() throws JMSException{
+        return session.createBytesMessage();
+    }
 
     public boolean sendMessage(Message msg) {
         try {
@@ -100,13 +115,14 @@ public class MessagingGateway {
     public Destination getReceiverDestination() {
         return receiverDestination;
     }
-    
-    public void setReceiverdestination(Destination destination){
+
+    public void setReceiverdestination(Destination destination) {
         try {
             this.receiverDestination = destination;
             this.consumer = session.createConsumer(receiverDestination);
         } catch (JMSException ex) {
-            Logger.getLogger(MessagingGateway.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
+
         }
     }
 
@@ -125,12 +141,12 @@ public class MessagingGateway {
             System.err.println(ex.getMessage());
         }
     }
-    
-    public void closeConnection(){
+
+    public void closeConnection() {
         try {
             connection.close();
         } catch (JMSException ex) {
-            Logger.getLogger(MessagingGateway.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
 
