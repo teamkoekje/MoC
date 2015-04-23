@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.naming.NamingException;
 
 /**
  * This class is used for sending requests and receiving replies in asynchronous
@@ -51,9 +52,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
      *
      * @param requestSenderQueue
      * @param replyReceiverQueue
-     * @throws java.lang.Exception
+     * @throws javax.naming.NamingException
      */
-    public AsynchronousRequestor(String requestSenderQueue, String replyReceiverQueue) throws Exception {
+    public AsynchronousRequestor(String requestSenderQueue, String replyReceiverQueue) throws NamingException, JMSException {
         super();
         this.listeners = new HashMap<>();
 

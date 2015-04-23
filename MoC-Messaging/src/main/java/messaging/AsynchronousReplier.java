@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.naming.NamingException;
 
 /**
  * @param <REQUEST>
@@ -38,9 +39,10 @@ public class AsynchronousReplier<REQUEST, REPLY> {
      *
      * @param requestReceiverQueue is the name of teh JMS queue from which the
      * requests will be received.
-     * @throws java.lang.Exception
+     * @throws javax.naming.NamingException
+     * @throws javax.jms.JMSException
      */
-    public AsynchronousReplier(String requestReceiverQueue) throws Exception {
+    public AsynchronousReplier(String requestReceiverQueue) throws NamingException, JMSException  {
         super();
         gateway = new MessagingGateway(requestReceiverQueue, DestinationType.QUEUE, GatewayType.RECEIVER);
         gateway.setReceivedMessageListener(new MessageListener() {

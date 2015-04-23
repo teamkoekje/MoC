@@ -18,6 +18,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.BlobMessage;
 
@@ -36,7 +37,7 @@ public class MessagingGateway {
     private Session session;
     private Connection connection;
 
-    public MessagingGateway(String senderName, String senderType, String receiverName, String receiverType) throws Exception {
+    public MessagingGateway(String senderName, String senderType, String receiverName, String receiverType) throws NamingException, JMSException {
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         props.setProperty(Context.PROVIDER_URL, JMSSettings.URL_ACTIVE_MQ);
@@ -53,7 +54,7 @@ public class MessagingGateway {
         this.consumer = session.createConsumer(receiverDestination);
     }
 
-    public MessagingGateway(String destinationName, String destinationType, GatewayType type) throws Exception {
+    public MessagingGateway(String destinationName, String destinationType, GatewayType type) throws NamingException, JMSException{
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         props.setProperty(Context.PROVIDER_URL, JMSSettings.URL_ACTIVE_MQ);
