@@ -7,9 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -19,6 +20,10 @@ import javax.xml.bind.annotation.XmlAttribute;
  * @author TeamKoekje
  */
 @Entity
+@NamedQuery(
+        name = "Team.findByCompetition",
+        query = "SELECT t FROM Team t WHERE t.competition = :competition"
+)
 public class Team implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
@@ -28,9 +33,12 @@ public class Team implements Serializable {
     private long id;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    private List<Participant> participants;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private final Participant initiatior;
+    private List<User> participants;
+    
+    @ManyToOne
+    @XmlElement
+    private final User initiator;
+    
     private String name;
     @ManyToOne
     private Competition competition;
@@ -38,11 +46,11 @@ public class Team implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Team() {
-        this.initiatior = null;
+        this.initiator = null;
     }
 
-    public Team(Participant initiatior, String name) {
-        this.initiatior = initiatior;
+    public Team(User initiator, String name) {
+        this.initiator = initiator;
         this.name = name;
     }
     // </editor-fold>
@@ -60,16 +68,16 @@ public class Team implements Serializable {
         this.name = name;
     }
 
-    public List<Participant> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<Participant> participants) {
+    public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
 
-    public Participant getInitiatior() {
-        return initiatior;
+    public User getInitiator() {
+        return initiator;
     }
 
     public Competition getCompetition() {
@@ -81,7 +89,7 @@ public class Team implements Serializable {
     }
     //</editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="methods" >
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Function adds a participant to the team.
      *
@@ -89,14 +97,14 @@ public class Team implements Serializable {
      * @return True if the participant was added, otherwise false (already in
      * this team)
      */
-    public boolean addParticipant(Participant participant) {
+    public boolean addParticipant(User participant) {
         if (!participants.contains(participant)) {
             participants.add(participant);
             return true;
         }
         return false;
     }
-
+    
     /**
      * Function removes a participant from the team.
      *
@@ -104,7 +112,7 @@ public class Team implements Serializable {
      * @return True if the participant is removed (exists in list), otherwise
      * false
      */
-    public boolean removeParticipant(Participant participant) {
+    public boolean removeParticipant(User participant) {
         return participants.remove(participant);
     }
 

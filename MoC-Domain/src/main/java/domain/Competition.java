@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.ejb.Singleton;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -235,6 +234,15 @@ public class Competition implements Serializable {
         for (Team t : teams) {
             if (t.getId() == teamId) {
                 //t.addParticipant(user);
+            }
+        }
+        return false;
+    }
+    
+    public boolean participantIsInTeam(User p){
+        for(Team t : teams){
+            if(t.getParticipants().contains(p)){
+                return true;
             }
         }
         return false;

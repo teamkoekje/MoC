@@ -1,5 +1,6 @@
 package service;
 
+import domain.Competition;
 import domain.Team;
 import domain.User;
 import java.util.List;
@@ -14,16 +15,23 @@ public class TeamService extends GenericService<Team> {
     public TeamService() {
         super(Team.class);
     }
+    
+    public void createTeam(Team team){
+        Competition c = team.getCompetition();
+        if(!c.participantIsInTeam(team.getInitiator())){
+            this.create(team);
+        }
+    }
 
     /**
      * Find all teams that belong to a certain competition
      *
-     * @param competitionId the id of the competition
+     * @param competition the competition
      * @return list with teams that belong to the competition
      */
-    public List<Team> findByCompetition(long competitionId) {
+    public List<Team> findByCompetition(Competition competition) {
         Query q = em.createNamedQuery("Team.findByCompetition");
-        q.setParameter("competitionId", competitionId);
+        q.setParameter("competition", competition);
         return q.getResultList();
     }
 

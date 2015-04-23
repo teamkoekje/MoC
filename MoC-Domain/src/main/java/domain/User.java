@@ -1,9 +1,12 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 
@@ -21,9 +24,27 @@ public class User implements Serializable {
     private String name;
     private String organisation;
     private String username;
+    
+    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL) 
+    private List<Team> teams;
 
+    public User(long id){
+        this.id = id;
+    }
     public User() {
 
+    }
+    
+       public List<Team> getTeams() {
+        return teams;
+    }
+    
+    public void addTeam(Team team){
+        this.teams.add(team);
+    }
+
+    public void removeTeam(Team team){
+        this.teams.remove(team);
     }
 
     public long getId() {
