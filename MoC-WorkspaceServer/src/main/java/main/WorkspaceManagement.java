@@ -26,7 +26,7 @@ public class WorkspaceManagement {
     }
 
     private final List<String> teams = new ArrayList<>();
-    private static final File MAVEN_HOME = new File("C:\\apache-maven-3.3.1");
+    private static final File MAVEN_HOME = new File("C:/apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
     private StringBuilder invocationOutput = new StringBuilder();
@@ -41,9 +41,9 @@ public class WorkspaceManagement {
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
         if ("linux".equals(osName)) {
-            defaultPath = "MoC\\";
+            defaultPath = "MoC/";
         } else {
-            defaultPath = "C:\\MoC\\";
+            defaultPath = "C:/MoC/";
         }
         //load teams
         File rootFolder = new File(defaultPath);
@@ -168,7 +168,7 @@ public class WorkspaceManagement {
      */
     protected String updateFile(String teamName, String filePath, String fileContent) {
         //variables
-        File originalPath = new File(defaultPath + "/" + teamName + "/" + filePath);
+        File originalPath = new File(defaultPath + teamName + "/" + filePath);
         File tempPath = new File(originalPath + ".temp");
         //if the file exists, backup
         if (originalPath.exists()) {
@@ -341,14 +341,14 @@ public class WorkspaceManagement {
 
     private void beforeMavenInvocation(String workspaceName, String challengeName) throws IOException {
         //create target dir
-        String projectDir = defaultPath + workspaceName + "\\" + challengeName;
-        File targetFolder = new File(projectDir + "\\target");
+        String projectDir = defaultPath + workspaceName + "/" + challengeName;
+        File targetFolder = new File(projectDir + "/target");
         if (!targetFolder.exists()) {
             targetFolder.mkdir();
         }
         //setup the request
         request = new DefaultInvocationRequest();
-        request.setPomFile(new File(projectDir + "\\pom.xml"));
+        request.setPomFile(new File(projectDir + "/pom.xml"));
     }
 
     /**

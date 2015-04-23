@@ -63,10 +63,10 @@ public class WorkspaceManagementTest {
         extractRequest.setChallengeName("test challenge");
         instance.processRequest(extractRequest);
         //confirm
-        File teamAFile1 = new File(instance.getDefaultPath() + "team a\\test challenge\\some text.txt");
-        File teamAFile2 = new File(instance.getDefaultPath() + "team a\\test challenge\\a sub folder\\pizza.java");
-        File teamBFile1 = new File(instance.getDefaultPath() + "team b\\test challenge\\some text.txt");
-        File teamBFile2 = new File(instance.getDefaultPath() + "team b\\test challenge\\a sub folder\\pizza.java");
+        File teamAFile1 = new File(instance.getDefaultPath() + "team a/test challenge/some text.txt");
+        File teamAFile2 = new File(instance.getDefaultPath() + "team a/test challenge/a sub folder/pizza.java");
+        File teamBFile1 = new File(instance.getDefaultPath() + "team b/test challenge/some text.txt");
+        File teamBFile2 = new File(instance.getDefaultPath() + "team b/test challenge/a sub folder/pizza.java");
         assertTrue(teamAFile1.exists());
         assertTrue(teamAFile2.exists());
         assertTrue(teamBFile1.exists());
@@ -85,7 +85,7 @@ public class WorkspaceManagementTest {
             String newContent = "new content";
             WorkspaceManagement instance = new WorkspaceManagement();
             instance.createWorkspace("team c");
-            File f = new File(instance.getDefaultPath() + "team c\\test file.txt");
+            File f = new File(instance.getDefaultPath() + "team c/test file.txt");
             f.createNewFile();
             FileWriter fw = new FileWriter(f);
             try (BufferedWriter bw = new BufferedWriter(fw)) {
