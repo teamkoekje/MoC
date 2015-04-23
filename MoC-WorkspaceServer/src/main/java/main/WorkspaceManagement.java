@@ -44,6 +44,7 @@ public class WorkspaceManagement {
             defaultPath = "MoC";
         } else {
             defaultPath = "C:/MoC/";
+            throw new IllegalArgumentException("linux heet niet linux: " + osName);
         }
         //load teams
         File rootFolder = new File(defaultPath);
@@ -51,7 +52,7 @@ public class WorkspaceManagement {
             rootFolder.mkdir();
         }
         if(!rootFolder.isDirectory()){
-            throw new IllegalArgumentException("geen directory: " + rootFolder.getAbsolutePath());
+            throw new IllegalArgumentException("geen directory: " + rootFolder.getPath());
         }
         for (File f : rootFolder.listFiles()) {
             if (f.isDirectory()) {
