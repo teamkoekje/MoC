@@ -21,7 +21,7 @@ public class WorkspaceManagement {
     // <editor-fold defaultstate="collapsed" desc="variables" >
     public static final String defaultPath = "C:\\MoC\\";
     private final List<String> teams = new ArrayList<>();
-
+    // /usr/share/maven
     private static final File mavenHome = new File("C:\\apache-maven-3.3.1");
     private static final Invoker invoker = new DefaultInvoker();
     private static InvocationRequest request;
@@ -42,7 +42,7 @@ public class WorkspaceManagement {
             }
         }
 
-        invoker.setMavenHome(mavenHome);
+        //invoker.setMavenHome(mavenHome);
         invoker.setOutputHandler(new InvocationOutputHandler() {
             @Override
             public void consumeLine(String string) {
@@ -64,8 +64,8 @@ public class WorkspaceManagement {
         }
         return instance;
     }
-
     //</editor-fold>
+
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Processes the given request
@@ -171,8 +171,7 @@ public class WorkspaceManagement {
             try (PrintWriter writer = new PrintWriter(originalPath, "UTF-8")) {
                 writer.printf(fileContent);
             }
-        }
-        //If fail to write the new file, restore the backup
+        } //If fail to write the new file, restore the backup
         catch (FileNotFoundException ex) {
             tempPath.renameTo(originalPath);
             try {
@@ -216,7 +215,7 @@ public class WorkspaceManagement {
                 File file = new File(challengeZip);
                 ZipFile zip = new ZipFile(file);
                 String outputPath = defaultPath + teamName;
-                new File(outputPath).mkdir();  
+                new File(outputPath).mkdir();
                 Enumeration zipFileEntries = zip.entries();
                 //loop through the zip
                 while (zipFileEntries.hasMoreElements()) {
