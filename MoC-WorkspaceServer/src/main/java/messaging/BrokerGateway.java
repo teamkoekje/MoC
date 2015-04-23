@@ -7,8 +7,6 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
-import main.WorkspaceManagement;
-import org.apache.activemq.BlobMessage;
 import workspace.Reply;
 import workspace.Request;
 
@@ -53,6 +51,7 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
             }
         } catch (JMSException ex) {
             Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+            System.err.println(ex.getMessage());
         }
     }
 

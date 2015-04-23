@@ -19,7 +19,7 @@ import workspace.Request;
 public class WorkspaceManagement {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
-    public static final String DEFAULT_PATH = "C:\\MoC\\";
+    public final String DEFAULT_PATH;
     private final List<String> teams = new ArrayList<>();
     private static final File MAVEN_HOME = new File("C:\\apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
@@ -34,6 +34,12 @@ public class WorkspaceManagement {
      * Creates a new instance of the WorkspaceManagement singleton.
      */
     protected WorkspaceManagement() {
+        String osName = System.getProperty("os.name");
+        if(osName.equals("linux")){
+            DEFAULT_PATH = "MoC\\";
+        }else{
+            DEFAULT_PATH = "C:\\MoC\\";
+        }
         //load teams
         File rootFolder = new File(DEFAULT_PATH);
         if (!rootFolder.exists()) {
