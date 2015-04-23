@@ -25,12 +25,19 @@ public class WorkspaceResource {
     public void create(@PathParam("teamName") String teamName) {
         workspaceService.create(teamName);
     }
+    
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{teamName}/delete")
+    public void delete(@PathParam("teamName") String teamName) {
+        workspaceService.delete(teamName);
+    }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{teamName}/update")
-    public void update(File file, @PathParam("teamName") String teamName) {
-        workspaceService.update(file, teamName);
+    public void update(String filePath, @PathParam("teamName") String teamName) {
+        workspaceService.update(filePath, "", teamName);
     }
 
     @POST
@@ -58,5 +65,14 @@ public class WorkspaceResource {
         workspaceService.test(artifactName, teamName, testName);
         return null;
     }
+
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/push/{challengeName}")
+    public String pushChallenge(@PathParam("challengeName") String challengeName) {
+        workspaceService.push(challengeName);
+        return null;
+    }
+    
     //</editor-fold>
 }

@@ -63,7 +63,6 @@ form input:not([type="submit"]){
 #editor { 
     margin: 0;
     position: relative; /*default is absolute but that makes the editor full screen*/
-    height: 300px; /*without a height it won't show up*/
     top: 0;
     bottom: 0;
     left: 0;
@@ -84,4 +83,8 @@ form input:not([type="submit"]){
     border-radius: 0 5px 5px 5px;
     border: 2px solid black;
     padding: 10px;
+}
+
+.jumbotron{
+    padding:20px !important;
 }

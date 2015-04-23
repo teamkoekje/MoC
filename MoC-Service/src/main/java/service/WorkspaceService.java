@@ -49,8 +49,10 @@ public class WorkspaceService {
         gateway.sendRequest(request);
     }
 
-    public void update(File file, String teamName) {
+    public void update(String filePath, String fileContent, String teamName) {
         Request request = new Request(Action.UPDATE, teamName);
+        request.setFilePath("test challenge/some text.txt");
+        request.setFileContent("hooi");
         gateway.sendRequest(request);
     }
 
@@ -68,5 +70,11 @@ public class WorkspaceService {
         Request request = new Request(Action.TEST, teamName);
         request.setTestName(testName);
         gateway.sendRequest(request);
+    }
+
+    public void push(String challengeName) {
+        Request request = new Request(Action.PUSH_CHALLENGE, "");
+        request.setChallengeName(challengeName);
+        gateway.broadcast(request);
     }
 }

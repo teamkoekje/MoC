@@ -48,6 +48,26 @@
             function getSelectionFromEditor() {
                 return editor.session.getTextRange(editor.getSelectionRange());
             }
+
+            $("#wrapperAroundEditor").on(
+                    'webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange',
+                    function () {
+                        editor.resize()
+                    });
+
+            function fullScreenElement(elem) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else {
+                    alert("Full screen is not supported");
+                }
+            }
         </script>
 
     </head>
@@ -58,7 +78,7 @@
                     hints
                 </span>
                 |
-                <span style="cursor: pointer" onclick="window.open('messages.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=150')">
+                <span style="cursor: pointer" onclick="window.open('messages.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=200')">
                     messages
                 </span>
             </span>
@@ -77,9 +97,9 @@
                     <button class="btn btn-default">Read only java file</button>
                     <button class="btn btn-default">Java file</button>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12" id="wrapperAroundEditor">
-                        <div id="editor"></div>
+                <div class="row" style='height: 350px'>
+                    <div class="col-xs-12" id="wrapperAroundEditor" style='height: 100%;'>
+                        <div id="editor" style='height:100%'>Class test{}</div>
                     </div>
                     <div class="col-xs-6" style='display:none' id="wrapperAroundResults">
                         <p>
@@ -89,16 +109,16 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-xs-3">
-                        <button class="btn btn-default" onclick="window.open('testPicker.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=150')">Run specific test</button>
+                    <div class="col-xs-2">
+                        <button class="btn btn-default" onclick="window.open('testPicker.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=200')">Run specific test</button>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <button class="btn btn-default">Run all tests</button>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <button class="btn btn-default">Compile</button>
                     </div>
-                    <div class='col-xs-3'>
+                    <div class='col-xs-2'>
                         <button class="btn btn-default" 
                                 onclick="$('#wrapperAroundEditor').toggleClass('col-xs-12').toggleClass('col-xs-6');
                                         $('#wrapperAroundResults').toggle();
@@ -106,6 +126,9 @@
                                 >
                             Show/hide result
                         </button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="btn btn-default" onclick="fullScreenElement($('#wrapperAroundEditor')[0]);">Fullscreen</button>
                     </div>
                 </div>
             </div>

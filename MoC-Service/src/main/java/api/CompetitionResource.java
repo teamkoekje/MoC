@@ -172,7 +172,8 @@ public class CompetitionResource {
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/team")
     public List<Team> getTeams(@PathParam("competitionId") long competitionId) {
-        return teamService.findByCompetition(competitionId);
+        Competition c = competitionService.findById(competitionId);
+        return teamService.findByCompetition(c);
     }
 
     /**
@@ -200,7 +201,7 @@ public class CompetitionResource {
     public void createTeam(@PathParam("competitionId") long competitionId, Team team) {
         Competition competition = competitionService.findById(competitionId);
         team.setCompetition(competition);
-        teamService.create(team);
+        teamService.createTeam(team);
     }
 
     /**
@@ -222,7 +223,7 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}/team/{teamId}")
-    public void removeTeam(@PathParam("t(@PathParameamId") long teamId) {
+    public void removeTeam(@PathParam("teamId") long teamId) {
         teamService.remove(teamId);
     }
 

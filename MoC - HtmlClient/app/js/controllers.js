@@ -29,10 +29,27 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
             });
         };
 
+        $scope.deleteTeam = function (teamId) {
+            console.log("Delete Team");
+            $team.delete({competitionId: $scope.selected_competition.id, teamId: teamId}, function () {
+                loadData();
+            });
+        };
+
         loadData = function () {
+            console.log("loading data");
             $scope.competitions = $competition.query();
             $scope.users = $user.query();
+            if ($scope.selected_competition !== undefined) {
+                $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
+            }
         };
+        
+        $scope.refreshTeams = function() {
+            if ($scope.selected_competition !== undefined) {
+                $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
+            }
+        }
 
         loadData();
         $scope.team = new $team();

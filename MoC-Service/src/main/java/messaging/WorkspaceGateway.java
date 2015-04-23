@@ -1,14 +1,14 @@
 package messaging;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import messaging.DestinationType;
-import messaging.GatewayType;
-import messaging.JMSSettings;
-import messaging.MessagingGateway;
+import workspace.Reply;
 import workspace.Request;
 import workspace.WorkspaceSenderRouter;
 import workspace.WorkspaceServer;
@@ -41,10 +41,14 @@ public abstract class WorkspaceGateway {
 
                 @Override
                 public void onMessage(Message message) {
-                    try {
-                        System.out.println("Message received " + message.getJMSCorrelationID());
-                    } catch (JMSException ex) {
-                        System.err.println(ex.getMessage());
+                    if (message instanceof ObjectMessage) {
+                        try {
+                            ObjectMessage objMsg = (ObjectMessage) message;
+                            Reply reply = (Reply)objMsg.getObject();
+                            System.out.println("Message received: " + reply.getMessage());
+                        } catch (JMSException ex) {
+                            Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                     onWorkspaceMessageReceived(message);
                 }
@@ -57,8 +61,8 @@ public abstract class WorkspaceGateway {
             System.err.println(ex.getMessage());
         }
     }
-    
-    public void closeConnection(){
+
+    public void closeConnection() {
         initGtw.closeConnection();
         receiverGtw.closeConnection();
         router.closeConnection();
@@ -82,7 +86,7 @@ public abstract class WorkspaceGateway {
         try {
             ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
-            
+
             gtw.sendMessage(msg);
             System.out.println("Message sent");
         } catch (JMSException ex) {
@@ -96,6 +100,13 @@ public abstract class WorkspaceGateway {
             sendRequest(request, ws.getSender());
         } else {
             System.out.println("Workspace not found on available servers");
+        }
+    }
+    
+    public synchronized void broadcast(Request request){
+        List<WorkspaceServer> servers = router.getAllServers();
+        for(WorkspaceServer server : servers){
+            sendRequest(request, server.getSender());
         }
     }
 
