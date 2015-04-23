@@ -9,9 +9,10 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 /**
- * @author TeamKoekje
  * @param <REQUEST>
  * @param <REPLY>
+ * 
+ * @author TeamKoekje
  */
 public class AsynchronousReplier<REQUEST, REPLY> {
 

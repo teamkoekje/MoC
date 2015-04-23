@@ -3,14 +3,20 @@ package workspace;
 import java.io.Serializable;
 
 /**
- * This class represents an object that tells a specific workspace to perform a specific action
+ * This class represents an object that tells a specific workspace to perform a
+ * specific action
+ *
  * @author TeamKoekje
  */
 public class Request implements Serializable {
 
     private final Action action;
+    private String testFile;
     private String testName;
     private String teamName;
+    private String filePath;
+    private String fileContent;
+    private String challengeName;
 
     public Request(Action action, String teamName) {
         this.action = action;
@@ -33,19 +39,36 @@ public class Request implements Serializable {
         return teamName;
     }
 
-    public String getChallengeName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getTestFile() {
+        return testFile;
     }
 
-    public String getTestFile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setTestFile(String testFile) {
+        this.testFile = testFile;
     }
 
     public String getFilePath() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public String getFileContent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return fileContent;
     }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
+    }
+
+    public String getChallengeName() {
+        return challengeName;
+    }
+
+    public void setChallengeName(String challengeName) {
+        this.challengeName = challengeName;
+    }
+
 }

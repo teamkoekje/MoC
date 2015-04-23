@@ -12,13 +12,12 @@ import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
 /**
- * TODO: integrate with main project
  * @author Casper
  */
 public class MavenInvoker {
 
     private static final File mavenHome = new File("C:\\Program Files\\apache-maven-3.2.5");
-    private static final String basePath = "C:\\Users\\Astrid\\Desktop\\git\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
+    private static final String basePath = "D:\\College\\Software Course\\S6\\PTS6\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
     private static final Invoker invoker = new DefaultInvoker();
 
     private static FileWriter outputWriter;

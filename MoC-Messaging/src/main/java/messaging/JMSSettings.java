@@ -6,13 +6,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
- * @author Maja Pesic
+ * @author TeamKoekje
  */
 public class JMSSettings {
 

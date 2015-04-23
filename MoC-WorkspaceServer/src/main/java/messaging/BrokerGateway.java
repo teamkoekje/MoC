@@ -53,16 +53,16 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
             if (msg instanceof BlobMessage) {
                 //TEST
                 /*BlobMessage bm = (BlobMessage) msg;
-                InputStream is = bm.getInputStream();
-                OutputStream os = new FileOutputStream(new File("D:\\hin.txt"));
-                int read = 0;
-                byte[] bytes = new byte[1024];
+                 InputStream is = bm.getInputStream();
+                 OutputStream os = new FileOutputStream(new File("D:\\hin.txt"));
+                 int read = 0;
+                 byte[] bytes = new byte[1024];
 
-                while ((read = is.read(bytes)) != -1) {
-                    os.write(bytes, 0, read);
-                }
-                os.close();
-                is.close();*/
+                 while ((read = is.read(bytes)) != -1) {
+                 os.write(bytes, 0, read);
+                 }
+                 os.close();
+                 is.close();*/
                 //ENDTEST
             } else {
 
