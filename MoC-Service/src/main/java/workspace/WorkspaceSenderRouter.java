@@ -61,4 +61,8 @@ public class WorkspaceSenderRouter {
             workspace.getSender().closeConnection();
         }
     }
+
+    public List<WorkspaceServer> getAllServers() {
+        return workspaceServers;
+    }
 }
