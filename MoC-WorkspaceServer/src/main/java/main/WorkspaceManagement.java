@@ -37,17 +37,20 @@ public class WorkspaceManagement {
 
     public static final String defaultPath = "C:\\MoC\\";
     public List<String> teams;
-    private static final File mavenHome = new File("C:\\Program Files\\apache-maven-3.2.5");
-    private static final String basePath = "C:\\Users\\Astrid\\Desktop\\git\\MoC\\MavenInvokerTest\\MoC\\workspaces\\";
+    private static final File mavenHome = new File("C:\\apache-maven-3.2.5");
+    private static final String basePath = "C:\\MoC\\workspaces\\";
     private static final Invoker invoker = new DefaultInvoker();
 
-    private static FileWriter outputWriter;
-    private static BufferedWriter bufferedWriter;
     private static InvocationRequest request;
 
     private static StringBuilder sb;
 
-    public WorkspaceManagement() {
+    private static WorkspaceManagement instance;
+
+    /**
+     * Creates a new instance of the WorkspaceManagement singleton.
+     */
+    protected WorkspaceManagement() {
         teams = new ArrayList<>();
         getWorkspaceFolders();
         sb = new StringBuilder();
@@ -55,21 +58,29 @@ public class WorkspaceManagement {
         invoker.setOutputHandler(new InvocationOutputHandler() {
             @Override
             public void consumeLine(String string) {
-                sb.append(string + "/n");
-
-                /*
-                 try {
-                 System.out.println(string);
-                 bufferedWriter.write(string + "\n");
-                    
-                 } catch (IOException ex) {
-                 System.err.println(ex.getLocalizedMessage());
-                 }*/
+                sb.append(string);
+                sb.append("\n");
             }
         });
     }
 
-    public String createWorkspace(String teamName) {
+    /**
+     * 
+     * @return 
+     */
+    public static WorkspaceManagement getInstance() {
+        if (instance == null) {
+            instance = new WorkspaceManagement();
+        }
+        return instance;
+    }
+
+    /**
+     *
+     * @param teamName
+     * @return
+     */
+    private String createWorkspace(String teamName) {
         try {
             // Create team directory
             new File(defaultPath + teamName).mkdirs();
@@ -79,7 +90,12 @@ public class WorkspaceManagement {
         }
     }
 
-    public String removeWorkspace(String teamName) {
+    /**
+     *
+     * @param teamName
+     * @return
+     */
+    private String removeWorkspace(String teamName) {
         File path = new File(defaultPath + teamName);
 
         if (deleteDirectory(path)) {
@@ -89,20 +105,28 @@ public class WorkspaceManagement {
         }
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     */
     private boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    deleteDirectory(files[i]);
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
                 } else {
-                    files[i].delete();
+                    file.delete();
                 }
             }
         }
         return (path.delete());
     }
 
+    /**
+     *
+     */
     private void getWorkspaceFolders() {
         File folder = new File(defaultPath);
         for (File f : folder.listFiles()) {
@@ -112,13 +136,17 @@ public class WorkspaceManagement {
         }
     }
 
-    public String extractChallenge(String challengeName) {
+    /**
+     *
+     * @param challengeName
+     * @return
+     */
+    private String extractChallenge(String challengeName) {
 
         String challengeZip = defaultPath + challengeName + ".zip";
 
         for (String teamName : teams) {
             String OUTPUT_FOLDER = defaultPath + teamName;
-
             try {
                 int BUFFER = 2048;
                 File file = new File(challengeZip);
@@ -129,32 +157,23 @@ public class WorkspaceManagement {
                 new File(newPath).mkdir();
                 Enumeration zipFileEntries = zip.entries();
 
-                // Process each entry
                 while (zipFileEntries.hasMoreElements()) {
-                    // grab a zip file entry
                     ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
                     String currentEntry = entry.getName();
 
                     File destFile = new File(newPath, currentEntry);
-                    //destFile = new File(newPath, destFile.getName());
                     File destinationParent = destFile.getParentFile();
 
-                    // create the parent directory structure if needed
                     destinationParent.mkdirs();
 
                     if (!entry.isDirectory()) {
-                        BufferedInputStream is = new BufferedInputStream(zip
-                                .getInputStream(entry));
+                        BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
                         int currentByte;
-                        // establish buffer for writing file
                         byte data[] = new byte[BUFFER];
 
-                        // write the current file to disk
                         FileOutputStream fos = new FileOutputStream(destFile);
-                        BufferedOutputStream dest = new BufferedOutputStream(fos,
-                                BUFFER);
+                        BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
 
-                        // read and write until last byte is encountered
                         while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
                             dest.write(data, 0, currentByte);
                         }
@@ -162,15 +181,13 @@ public class WorkspaceManagement {
                         dest.close();
                         is.close();
                     }
-
                 }
 
             } catch (Exception e) {
-                return "error";
+                return "Error extracting: " + e.getLocalizedMessage();
             }
         }
-
-        return "succes";
+        return "Extracting successfull";
     }
 
     /**
@@ -180,14 +197,12 @@ public class WorkspaceManagement {
      *
      * @param workspaceName The name of the workspace which should be used
      * @param challengeName The name of the challenge to be build
-     * @throws IOException Thrown when an I/O exception occurs.
-     * @throws MavenInvocationException Thrown if the maven invoker is called
-     * wrongly.
+     * @return
      */
-    public static String buildWorkspace(String workspaceName, String challengeName) {
+    private static String buildWorkspace(String workspaceName, String challengeName) {
         try {
 
-            beforeAction(workspaceName, challengeName);
+            beforeMavenInvocation(workspaceName, challengeName);
 
             request.setGoals(Arrays.asList("install"));
             request.setProperties(new Properties());
@@ -211,13 +226,11 @@ public class WorkspaceManagement {
      *
      * @param workspaceName The name of the workspace which should be used
      * @param challengeName The name of the challenge to be tested
-     * @throws IOException Thrown when an I/O exception occurs.
-     * @throws MavenInvocationException Thrown if the maven invoker is called
-     * wrongly.
+     * @return
      */
-    public static String testAll(String workspaceName, String challengeName) {
+    private static String testAll(String workspaceName, String challengeName) {
         try {
-            beforeAction(workspaceName, challengeName);
+            beforeMavenInvocation(workspaceName, challengeName);
 
             request.setGoals(Arrays.asList("test"));
             request.setProperties(new Properties());
@@ -241,13 +254,13 @@ public class WorkspaceManagement {
      *
      * @param workspaceName The name of the workspace which should be used
      * @param challengeName The name of the challenge to be tested
-     * @throws IOException Thrown when an I/O exception occurs.
-     * @throws MavenInvocationException Thrown if the maven invoker is called
-     * wrongly.
+     * @param testFile
+     * @param testName
+     * @return
      */
-    public static String test(String workspaceName, String challengeName, String testFile, String testName) {
+    private static String test(String workspaceName, String challengeName, String testFile, String testName) {
         try {
-            beforeAction(workspaceName, challengeName);
+            beforeMavenInvocation(workspaceName, challengeName);
 
             request.setGoals(Arrays.asList("test"));
             Properties p = new Properties();
@@ -263,26 +276,27 @@ public class WorkspaceManagement {
         } catch (MavenInvocationException ex) {
             Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return "Exception while testing";
     }
 
-    private static void beforeAction(String workspaceName, String challengeName) throws IOException {
+    private static void beforeMavenInvocation(String workspaceName, String challengeName) throws IOException {
         //create target dir
         String projectDir = basePath + workspaceName + "\\" + challengeName;
         File targetFolder = new File(projectDir + "\\target");
         if (!targetFolder.exists()) {
             targetFolder.mkdir();
         }
-        //init writer
-        outputWriter = new FileWriter(targetFolder + "\\output.txt", false);
-        bufferedWriter = new BufferedWriter(outputWriter);
         //setup the request
         request = new DefaultInvocationRequest();
         request.setPomFile(new File(projectDir + "\\pom.xml"));
     }
 
+    /**
+     *
+     * @param r
+     * @return
+     */
     public String processRequest(Request r) {
-
         switch (r.getAction()) {
             case COMPILE:
                 return buildWorkspace(r.getTeamName(), r.getChallengeName());
@@ -303,7 +317,14 @@ public class WorkspaceManagement {
         }
     }
 
-    private static String updateFile(String teamName , String filePath, String fileContent ) {
+    /**
+     *
+     * @param teamName
+     * @param filePath
+     * @param fileContent
+     * @return
+     */
+    private static String updateFile(String teamName, String filePath, String fileContent) {
 
         File originalPath = new File(defaultPath + "/" + teamName + "/" + filePath);
         File tempPath = new File(originalPath + ".temp");
