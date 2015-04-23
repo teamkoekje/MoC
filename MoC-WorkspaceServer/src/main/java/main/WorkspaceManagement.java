@@ -256,19 +256,23 @@ public class WorkspaceManagement {
             destinationParent.mkdirs();
             //if the entry is a file, write the contents to it
             if (!entry.isDirectory()) {
-                try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
-                    int currentByte;
-                    int bufferSize = 2048;
-                    byte data[] = new byte[bufferSize];
+                writeZipEntry(zip, entry, destFile);
+            }
+        }
+    }
 
-                    FileOutputStream fos = new FileOutputStream(destFile);
-                    try (BufferedOutputStream dest = new BufferedOutputStream(fos, bufferSize)) {
-                        while ((currentByte = is.read(data, 0, bufferSize)) != -1) {
-                            dest.write(data, 0, currentByte);
-                        }
-                        dest.flush();
-                    }
+    private void writeZipEntry(ZipFile zip, ZipEntry entry, File destFile) throws IOException {
+        int bufferSize = 2048;
+        try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
+            int currentByte;
+            byte[] data = new byte[bufferSize];
+
+            FileOutputStream fos = new FileOutputStream(destFile);
+            try (BufferedOutputStream dest = new BufferedOutputStream(fos, bufferSize)) {
+                while ((currentByte = is.read(data, 0, bufferSize)) != -1) {
+                    dest.write(data, 0, currentByte);
                 }
+                dest.flush();
             }
         }
     }
