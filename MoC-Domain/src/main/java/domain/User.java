@@ -4,9 +4,11 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @Entity
+@Table(name = "MOC_USER")
 public class User implements Serializable {
 
     @Id
@@ -27,7 +29,7 @@ public class User implements Serializable {
     public long getId() {
         return id;
     }
-    
+
     public String getEmail() {
         return email;
     }

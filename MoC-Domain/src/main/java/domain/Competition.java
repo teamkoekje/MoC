@@ -2,6 +2,7 @@ package domain;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * The Competition class represents a Masters of Code competition. A competition
@@ -25,21 +27,22 @@ import javax.persistence.Transient;
  * @author TeamKoekje
  */
 @Entity
-@Singleton
 public class Competition implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
     @Id
     @GeneratedValue
+    @XmlAttribute
     private long id;
 
     private String name;
-    /*@Temporal(javax.persistence.TemporalType.DATE)
-     private Date competitionDate;
-     @Temporal(javax.persistence.TemporalType.DATE)
-     private Date startTime;*/
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Calendar startTime;
+    private Date competitionDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date startTime;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date endTime;
+
     private String location;
 
     private int minTeamSize;
@@ -59,10 +62,28 @@ public class Competition implements Serializable {
     private final NewsFeed newsFeed;
     //</editor-fold>    
 
-    // <editor-fold defaultstate="collapsed" desc="Constructor (singleton)" >
-    private static Competition instance;
+    // <editor-fold defaultstate="collapsed" desc="Constructor" >
+    public Competition() {
+        newsFeed = new NewsFeed();
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (Calendar.getInstance().after(startTime) && currentRound != null) {
+                    currentRound.secondExpired();
+                }
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(timerRunnable, 0, 1, TimeUnit.SECONDS);
+    }
 
-    protected Competition() {
+    public Competition(String name, Date competitionDate, Date startingTime, Date endTime, String location) {
+        this.name = name;
+        this.competitionDate = competitionDate;
+        this.startTime = startingTime;
+        this.endTime = endTime;
+        this.location = location;
+
         newsFeed = new NewsFeed();
         timerRunnable = new Runnable() {
             @Override
@@ -76,16 +97,13 @@ public class Competition implements Serializable {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(timerRunnable, 0, 1, TimeUnit.SECONDS);
     }
-
-    public static Competition getInstance() {
-        if (instance == null) {
-            instance = new Competition();
-        }
-        return instance;
-    }
     //</editor-fold>    
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -94,14 +112,30 @@ public class Competition implements Serializable {
         this.name = name;
     }
 
-    public Calendar getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Calendar time) {
-        this.startTime = time;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
+    public Date getCompetitionDate() {
+        return competitionDate;
+    }
+
+    public void setCompetitionDate(Date competitionDate) {
+        this.competitionDate = competitionDate;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+    
     public String getLocation() {
         return location;
     }

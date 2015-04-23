@@ -25,6 +25,7 @@ public class Challenge implements Serializable {
 
     private List<Hint> hints;
     // </editor-fold>
+
     @Id
     @GeneratedValue
     private Long id;
