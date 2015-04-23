@@ -1,12 +1,9 @@
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -16,15 +13,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Robin
- */
 public class NewMain {
 
     private static Session session;
@@ -41,41 +29,45 @@ public class NewMain {
             connection = connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            
-            BytesMessage bm = fileToBytesMessage("D:\\testzip.zip");
-            bytesMessageToFile("D:\\School\\testzip.zip", bm);
-            
-            
-        } catch (NamingException | JMSException ex) {
-            Logger.getLogger(NewMain.class.getName()).log(Level.SEVERE, null, ex);
+            BytesMessage bm = zipToByteArray("C:\\Users\\Casper\\Desktop\\test.zip");
+            bytesMessageToFile("C:\\Users\\Casper\\Desktop\\test2.zip", bm);
+
+        } catch (NamingException | JMSException | IOException ex) {
+            System.err.println(ex.getLocalizedMessage());
+            System.exit(1);
         }
+        System.exit(0);
     }
 
-    private static BytesMessage fileToBytesMessage(String fileName) throws JMSException {
-        File f = new File(fileName);
-        byte[] b = new byte[(int) f.length()];
-        try (FileInputStream fis = new FileInputStream(f)) {
-            fis.read(b);
-            fis.close();
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+    private static BytesMessage zipToByteArray(String zipPath) throws JMSException, IOException {
+        long total = new File(zipPath).length();
+        long current = 0;
+        byte[] buffer = new byte[4096];
+        int read;
         BytesMessage bm = session.createBytesMessage();
-        bm.writeBytes(b);
+        try (FileInputStream inputStream = new FileInputStream(zipPath)) {
+            while ((read = inputStream.read(buffer)) != -1) {
+                bm.writeBytes(buffer);
+                current += read;
+                System.out.println("Reading from zip: " + current + "/" + total);
+            }
+        }
+        bm.reset();
         return bm;
     }
 
-    private static void bytesMessageToFile(String fileName, BytesMessage bm) throws JMSException {
-        bm.reset();
-        byte[] b = new byte[(int) bm.getBodyLength()];
-        bm.readBytes(b);
-        try (FileOutputStream fos = new FileOutputStream(fileName)) {
-            fos.write(b);
-            fos.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+    private static void bytesMessageToFile(String outputFile, BytesMessage bm) throws JMSException, IOException {
+        long total = bm.getBodyLength();
+        long current = 0;
+        byte[] buffer = new byte[4096];
+        int read;
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            while ((read = bm.readBytes(buffer)) != -1) {
+                current += read;
+                outputStream.write(buffer);
+                System.out.println("Writing to zip: " + current + "/" + total);
+            }
         }
     }
 }
+

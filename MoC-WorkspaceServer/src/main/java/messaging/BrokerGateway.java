@@ -7,6 +7,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
+import main.WorkspaceManagement;
 import workspace.Reply;
 import workspace.Request;
 
@@ -20,6 +21,7 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
 
     private MessagingGateway initGtw;
     private String initMsgId;
+    private final WorkspaceManagement wm = WorkspaceManagement.getInstance();
 
     private AsynchronousReplier<Request, Reply> replier;
 
@@ -71,8 +73,9 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
         System.out.println("Request received: " + request.getAction());
 
         String replyMessage = "hoi";
-
-        Reply reply = new Reply(replyMessage);
+        
+        Reply reply = new Reply(wm.processRequest(request));
+        //Reply reply = new Reply(replyMessage);
         replier.sendReply(request, reply);
     }
 
