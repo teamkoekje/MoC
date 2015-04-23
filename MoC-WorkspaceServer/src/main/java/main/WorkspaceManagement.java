@@ -19,7 +19,12 @@ import workspace.Request;
 public class WorkspaceManagement {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
-    public final String DEFAULT_PATH;
+    private final String defaultPath;
+
+    public String getDefaultPath() {
+        return defaultPath;
+    }
+
     private final List<String> teams = new ArrayList<>();
     private static final File MAVEN_HOME = new File("C:\\apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
@@ -35,13 +40,13 @@ public class WorkspaceManagement {
      */
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
-        if(osName.equals("linux")){
-            DEFAULT_PATH = "MoC\\";
-        }else{
-            DEFAULT_PATH = "C:\\MoC\\";
+        if ("linux".equals(osName)) {
+            defaultPath = "MoC\\";
+        } else {
+            defaultPath = "C:\\MoC\\";
         }
         //load teams
-        File rootFolder = new File(DEFAULT_PATH);
+        File rootFolder = new File(defaultPath);
         if (!rootFolder.exists()) {
             rootFolder.mkdir();
         }
@@ -112,7 +117,7 @@ public class WorkspaceManagement {
      */
     protected String createWorkspace(String teamName) {
         try {
-            new File(DEFAULT_PATH + teamName).mkdirs();
+            new File(defaultPath + teamName).mkdirs();
             teams.add(teamName);
             return "Created workspace for team: " + teamName;
         } catch (Exception ex) {
@@ -129,7 +134,7 @@ public class WorkspaceManagement {
      * not.
      */
     protected String removeWorkspace(String teamName) {
-        File path = new File(DEFAULT_PATH + teamName);
+        File path = new File(defaultPath + teamName);
         if (deleteDirectory(path)) {
             teams.remove(teamName);
             return "Workspace succesfully deleted";
@@ -163,7 +168,7 @@ public class WorkspaceManagement {
      */
     protected String updateFile(String teamName, String filePath, String fileContent) {
         //variables
-        File originalPath = new File(DEFAULT_PATH + "/" + teamName + "/" + filePath);
+        File originalPath = new File(defaultPath + "/" + teamName + "/" + filePath);
         File tempPath = new File(originalPath + ".temp");
         //if the file exists, backup
         if (originalPath.exists()) {
@@ -178,7 +183,7 @@ public class WorkspaceManagement {
         }
         //write the new file
         try {
-            try (PrintWriter writer = new PrintWriter(originalPath, "UTF-8")) {
+            try (PrintWriter writer = new PrintWriter(originalPath/*, "UTF-8"*/)) {
                 writer.printf(fileContent);
             }
         } //If fail to write the new file, restore the backup
@@ -190,7 +195,7 @@ public class WorkspaceManagement {
                 System.err.println("Error while deleting temp file: " + ex1);
             }
             return "Error File not found: " + ex;
-        } catch (UnsupportedEncodingException ex) {
+        } /*catch (UnsupportedEncodingException ex) {
             tempPath.renameTo(originalPath);
             try {
                 Files.delete(tempPath.toPath());
@@ -198,7 +203,7 @@ public class WorkspaceManagement {
                 System.err.println("Error while deleting temp file: " + ex1);
             }
             return "Error Unsupported Encoding: " + ex;
-        }
+        }*/
         try {
             Files.delete(tempPath.toPath());
         } catch (IOException ex1) {
@@ -217,14 +222,14 @@ public class WorkspaceManagement {
      */
     protected String extractChallenge(String challengeName) {
 
-        String challengeZip = DEFAULT_PATH + challengeName + ".zip";
+        String challengeZip = defaultPath + challengeName + ".zip";
         //for all teams
         for (String teamName : teams) {
             try {
                 int bufferSize = 2048;
                 File file = new File(challengeZip);
                 ZipFile zip = new ZipFile(file);
-                String outputPath = DEFAULT_PATH + teamName;
+                String outputPath = defaultPath + teamName;
                 new File(outputPath).mkdir();
                 Enumeration zipFileEntries = zip.entries();
                 //loop through the zip
@@ -336,7 +341,7 @@ public class WorkspaceManagement {
 
     private void beforeMavenInvocation(String workspaceName, String challengeName) throws IOException {
         //create target dir
-        String projectDir = DEFAULT_PATH + workspaceName + "\\" + challengeName;
+        String projectDir = defaultPath + workspaceName + "\\" + challengeName;
         File targetFolder = new File(projectDir + "\\target");
         if (!targetFolder.exists()) {
             targetFolder.mkdir();
