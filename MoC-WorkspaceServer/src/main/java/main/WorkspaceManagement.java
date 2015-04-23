@@ -89,7 +89,7 @@ public class WorkspaceManagement {
             case PUSH_CHALLENGE:
                 return extractChallenge(r.getChallengeName());
             default:
-                return ("error, unknown action: " + r.getAction().name());
+                return "error, unknown action: " + r.getAction().name();
         }
     }
 
@@ -139,7 +139,7 @@ public class WorkspaceManagement {
                 }
             }
         }
-        return (path.delete());
+        return path.delete();
     }
 
     /**
@@ -179,7 +179,7 @@ public class WorkspaceManagement {
             } catch (IOException ex1) {
                 System.err.println("Error while deleting temp file: " + ex1);
             }
-            return ("Error File not found: " + ex);
+            return "Error File not found: " + ex;
         } catch (UnsupportedEncodingException ex) {
             tempPath.renameTo(originalPath);
             try {
@@ -187,7 +187,7 @@ public class WorkspaceManagement {
             } catch (IOException ex1) {
                 System.err.println("Error while deleting temp file: " + ex1);
             }
-            return ("Error Unsupported Encoding: " + ex);
+            return "Error Unsupported Encoding: " + ex;
         }
         try {
             Files.delete(tempPath.toPath());
@@ -241,8 +241,9 @@ public class WorkspaceManagement {
                         }
                     }
                 }
-            } catch (Exception e) {
-                return "Error extracting: " + e.getLocalizedMessage();
+            } catch (Exception ex) {
+                Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+                return "Error extracting: " + ex.getLocalizedMessage();
             }
         }
         return "Extracting successfull";
@@ -273,7 +274,7 @@ public class WorkspaceManagement {
 
     /**
      * Attempts to test all tests for the specified challenge in the specified
-     * workspace. 
+     * workspace.
      *
      * @param workspaceName The name of the workspace which should be used
      * @param challengeName The name of the challenge to be tested
@@ -310,7 +311,7 @@ public class WorkspaceManagement {
             beforeMavenInvocation(workspaceName, challengeName);
             request.setGoals(Arrays.asList("test"));
             Properties p = new Properties();
-            p.setProperty("test", (testFile + "#" + testName));
+            p.setProperty("test", testFile + "#" + testName);
             request.setProperties(p);
 
             MAVEN_INVOKER.execute(request);

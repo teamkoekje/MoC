@@ -1,13 +1,7 @@
 package messaging;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -18,7 +12,8 @@ import workspace.Reply;
 import workspace.Request;
 
 /**
- * //TODO: class description, what does this class do
+ * Connects with the router, listens for requests, handles them and then replies
+ * to them.
  *
  * @author TeamKoekje
  */
@@ -27,12 +22,9 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     private MessagingGateway initGtw;
     private String initMsgId;
 
-    private WorkspaceManagement wsManagement;
-
     private AsynchronousReplier<Request, Reply> replier;
 
     public BrokerGateway() throws Exception {
-        //wsManagement = new WorkspaceManagement();
         initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
         initGtw.setReceivedMessageListener(this);
         initGtw.openConnection();
@@ -49,23 +41,8 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     @Override
     public void onMessage(Message msg) {
         try {
-
             if (msg instanceof BlobMessage) {
-                //TEST
-                /*BlobMessage bm = (BlobMessage) msg;
-                 InputStream is = bm.getInputStream();
-                 OutputStream os = new FileOutputStream(new File("D:\\hin.txt"));
-                 int read = 0;
-                 byte[] bytes = new byte[1024];
-
-                 while ((read = is.read(bytes)) != -1) {
-                 os.write(bytes, 0, read);
-                 }
-                 os.close();
-                 is.close();*/
-                //ENDTEST
             } else {
-
                 System.out.println("Init reply received: " + msg.getJMSCorrelationID());
                 if (msg.getJMSCorrelationID().equals(initMsgId)) {
                     String id = ((TextMessage) msg).getText();
@@ -76,10 +53,9 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
                 }
             }
         } catch (JMSException ex) {
+            Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
             System.err.println(ex.getMessage());
-        }// catch (IOException ex) {
-        //    Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, null, ex);
-        //}
+        }
     }
 
     private void initReplier(String id) {
