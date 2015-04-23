@@ -40,7 +40,7 @@ public class WorkspaceManagement {
      */
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
-        if ("linux".equals(osName)) {
+        if ("linux".equals(osName.toLowerCase())) {
             defaultPath = "MoC";
         } else {
             defaultPath = "C:/MoC/";
