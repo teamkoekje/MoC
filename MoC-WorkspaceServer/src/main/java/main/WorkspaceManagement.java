@@ -19,11 +19,10 @@ import workspace.Request;
 public class WorkspaceManagement {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
-    public static final String defaultPath = "C:\\MoC\\";
+    public static final String DEFAULT_PATH = "C:\\MoC\\";
     private final List<String> teams = new ArrayList<>();
-    // /usr/share/maven
-    private static final File mavenHome = new File("C:\\apache-maven-3.3.1");
-    private static final Invoker invoker = new DefaultInvoker();
+    private static final File MAVEN_HOME = new File("C:\\apache-maven-3.3.1");
+    private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
     private StringBuilder invocationOutput = new StringBuilder();
     // </editor-fold>
@@ -36,14 +35,14 @@ public class WorkspaceManagement {
      */
     protected WorkspaceManagement() {
         //load teams
-        for (File f : new File(defaultPath).listFiles()) {
+        for (File f : new File(DEFAULT_PATH).listFiles()) {
             if (f.isDirectory()) {
                 teams.add(f.getName());
             }
         }
 
-        //invoker.setMavenHome(mavenHome);
-        invoker.setOutputHandler(new InvocationOutputHandler() {
+        MAVEN_INVOKER.setMavenHome(MAVEN_HOME);
+        MAVEN_INVOKER.setOutputHandler(new InvocationOutputHandler() {
             @Override
             public void consumeLine(String string) {
                 invocationOutput.append(string);
@@ -103,7 +102,7 @@ public class WorkspaceManagement {
      */
     protected String createWorkspace(String teamName) {
         try {
-            new File(defaultPath + teamName).mkdirs();
+            new File(DEFAULT_PATH + teamName).mkdirs();
             teams.add(teamName);
             return "Created workspace for team: " + teamName;
         } catch (Exception e) {
@@ -119,7 +118,7 @@ public class WorkspaceManagement {
      * not.
      */
     protected String removeWorkspace(String teamName) {
-        File path = new File(defaultPath + teamName);
+        File path = new File(DEFAULT_PATH + teamName);
         if (deleteDirectory(path)) {
             teams.remove(teamName);
             return "Workspace succesfully deleted";
@@ -153,7 +152,7 @@ public class WorkspaceManagement {
      */
     protected String updateFile(String teamName, String filePath, String fileContent) {
         //variables
-        File originalPath = new File(defaultPath + "/" + teamName + "/" + filePath);
+        File originalPath = new File(DEFAULT_PATH + "/" + teamName + "/" + filePath);
         File tempPath = new File(originalPath + ".temp");
         //if the file exists, backup
         if (originalPath.exists()) {
@@ -207,14 +206,14 @@ public class WorkspaceManagement {
      */
     protected String extractChallenge(String challengeName) {
 
-        String challengeZip = defaultPath + challengeName + ".zip";
+        String challengeZip = DEFAULT_PATH + challengeName + ".zip";
         //for all teams
         for (String teamName : teams) {
             try {
-                int BUFFER = 2048;
+                int bufferSize = 2048;
                 File file = new File(challengeZip);
                 ZipFile zip = new ZipFile(file);
-                String outputPath = defaultPath + teamName;
+                String outputPath = DEFAULT_PATH + teamName;
                 new File(outputPath).mkdir();
                 Enumeration zipFileEntries = zip.entries();
                 //loop through the zip
@@ -229,11 +228,11 @@ public class WorkspaceManagement {
                     if (!entry.isDirectory()) {
                         try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
                             int currentByte;
-                            byte data[] = new byte[BUFFER];
+                            byte data[] = new byte[bufferSize];
 
                             FileOutputStream fos = new FileOutputStream(destFile);
-                            try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
-                                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                            try (BufferedOutputStream dest = new BufferedOutputStream(fos, bufferSize)) {
+                                while ((currentByte = is.read(data, 0, bufferSize)) != -1) {
                                     dest.write(data, 0, currentByte);
                                 }
                                 dest.flush();
@@ -251,8 +250,6 @@ public class WorkspaceManagement {
     // <editor-fold defaultstate="collapsed" desc="build, test (maven invoker)" >
     /**
      * Attempts to build the specified challenge in the specified workspace.
-     * Output is found in:
-     * *\\MoC\\workspaces\\workspaceName\\challengeName\\output.txt
      *
      * @param workspaceName The name of the workspace which should be used
      * @param challengeName The name of the challenge to be build
@@ -264,7 +261,7 @@ public class WorkspaceManagement {
             request.setGoals(Arrays.asList("install"));
             request.setProperties(new Properties());
 
-            invoker.execute(request);
+            MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();
         } catch (IOException | MavenInvocationException ex) {
@@ -275,8 +272,7 @@ public class WorkspaceManagement {
 
     /**
      * Attempts to test all tests for the specified challenge in the specified
-     * workspace. Output is found in:
-     * *\\MoC\\workspaces\\workspaceName\\challengeName\\output.txt
+     * workspace. 
      *
      * @param workspaceName The name of the workspace which should be used
      * @param challengeName The name of the challenge to be tested
@@ -288,7 +284,7 @@ public class WorkspaceManagement {
             request.setGoals(Arrays.asList("test"));
             request.setProperties(new Properties());
 
-            invoker.execute(request);
+            MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();
         } catch (IOException | MavenInvocationException ex) {
@@ -316,7 +312,7 @@ public class WorkspaceManagement {
             p.setProperty("test", (testFile + "#" + testName));
             request.setProperties(p);
 
-            invoker.execute(request);
+            MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();
         } catch (IOException | MavenInvocationException ex) {
@@ -328,7 +324,7 @@ public class WorkspaceManagement {
 
     private void beforeMavenInvocation(String workspaceName, String challengeName) throws IOException {
         //create target dir
-        String projectDir = defaultPath + workspaceName + "\\" + challengeName;
+        String projectDir = DEFAULT_PATH + workspaceName + "\\" + challengeName;
         File targetFolder = new File(projectDir + "\\target");
         if (!targetFolder.exists()) {
             targetFolder.mkdir();
