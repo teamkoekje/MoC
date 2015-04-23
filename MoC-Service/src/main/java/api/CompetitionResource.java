@@ -93,7 +93,7 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}")
-    public void removeCompetition(@PathParam("competitionId") long competitionId) {
+    public void removeCompetition(@PathParam("competitionId") Long competitionId) {
         competitionService.remove(competitionId);
     }
     //</editor-fold>
@@ -191,12 +191,15 @@ public class CompetitionResource {
     /**
      * Creates a new team
      *
+     * @param competitionId
      * @param team team that should be created created
      */
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team")
-    public void createTeam(Team team) {
+    public void createTeam(@PathParam("competitionId") long competitionId, Team team) {
+        Competition competition = competitionService.findById(competitionId);
+        team.setCompetition(competition);
         teamService.create(team);
     }
 
@@ -219,7 +222,7 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}/team/{teamId}")
-    public void removeTeam(@PathParam("teamId") long teamId) {
+    public void removeTeam(@PathParam("t(@PathParameamId") long teamId) {
         teamService.remove(teamId);
     }
 

@@ -39,9 +39,9 @@ public class MavenInvoker {
             }
         });
 
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
         System.out.println("attempting to build: teamA (compilation error)");
-        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
+        System.out.println("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         try {
             build("teamA", "projectToTest");
         } catch (Exception ex) {

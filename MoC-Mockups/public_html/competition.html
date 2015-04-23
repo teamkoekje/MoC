@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MoC</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+        <!-- AngularJS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+        <!-- AngularJS $resource -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-resource.js"></script>
+
+        <link rel="stylesheet" href="css/main.css">
+        <!-- load ace -->
+        <script src="ace-builds/src-noconflict/ace.js"></script>
+        <!-- load ace language tools -->
+        <script src="ace-builds/src-noconflict/ext-language_tools.js"></script>
+        <script>
+            $(window).ready(function () {
+                // trigger extension
+                var editor = ace.edit("editor");
+                editor.session.setMode("ace/mode/java");
+                editor.setTheme("ace/theme/tomorrow");
+                //editor.setTheme("ace/theme/monokai");
+                editor.setShowPrintMargin(false);
+                editor.setReadOnly(false);  // false to make it editable
+
+                // enable autocompletion and snippets
+                editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: false
+                });
+            });
+        </script>
+
+    </head>
+    <body>
+        <div class="container" style="width:100%;">
+            <span style="position: absolute; top: 10px; right: 35px">
+                <span>
+                    hints
+                </span>
+                |
+                <span style="cursor: pointer" onclick="window.open('messages.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=150')">
+                    messages
+                </span>
+            </span>
+            <div class="jumbotron" style='text-align: center'>
+                <h3>
+                    Masters of code
+                </h3>
+                <p>
+                    {{minutes}} minutes left | {{points}} points
+                </p>
+            </div>
+            <div>
+                <div class="row" style="margin-left:0px">
+                    <button class="btn btn-default">Description</button>
+                    <button class="btn btn-default">JavaDoc</button>
+                    <button class="btn btn-default">Read only java file</button>
+                    <button class="btn btn-default">Java file</button>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12" id="wrapperAroundEditor">
+                        <div id="editor"></div>
+                    </div>
+                    <div class="col-xs-6" style='display:none' id="wrapperAroundResults">
+                        <p>
+                            Failed test 1: ERROR ERROR ERROR
+                        </p>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <button class="btn btn-default" onclick="window.open('testPicker.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=150')">Run specific test</button>
+                    </div>
+                    <div class="col-xs-3">
+                        <button class="btn btn-default">Run all tests</button>
+                    </div>
+                    <div class="col-xs-3">
+                        <button class="btn btn-default">Compile</button>
+                    </div>
+                    <div class='col-xs-3'>
+                        <button class="btn btn-default" 
+                                onclick="$('#wrapperAroundEditor').toggleClass('col-xs-12').toggleClass('col-xs-6');
+                                    $('#wrapperAroundResults').toggle()"
+                                >
+                            Show/hide result
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
