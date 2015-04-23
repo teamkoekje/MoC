@@ -35,7 +35,11 @@ public class WorkspaceManagement {
      */
     protected WorkspaceManagement() {
         //load teams
-        for (File f : new File(DEFAULT_PATH).listFiles()) {
+        File rootFolder = new File(DEFAULT_PATH);
+        if (!rootFolder.exists()) {
+            rootFolder.mkdir();
+        }
+        for (File f : rootFolder.listFiles()) {
             if (f.isDirectory()) {
                 teams.add(f.getName());
             }

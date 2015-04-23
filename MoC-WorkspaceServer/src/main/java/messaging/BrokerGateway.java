@@ -26,14 +26,14 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     private AsynchronousReplier<Request, Reply> replier;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public BrokerGateway() throws NamingException, JMSException{
+    public BrokerGateway() throws NamingException, JMSException {
         initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
         initGtw.setReceivedMessageListener(this);
         initGtw.openConnection();
         sendInitMessage();
     }
 
-    private void sendInitMessage() throws JMSException{
+    private void sendInitMessage() throws JMSException {
         Message msg = initGtw.createTextMessage("HELLO SERVER");
         initGtw.sendMessage(msg);
         initMsgId = msg.getJMSMessageID();
@@ -43,20 +43,16 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     @Override
     public void onMessage(Message msg) {
         try {
-            if (msg instanceof BlobMessage) {
-            } else {
-                System.out.println("Init reply received: " + msg.getJMSCorrelationID());
-                if (msg.getJMSCorrelationID().equals(initMsgId)) {
-                    String id = ((TextMessage) msg).getText();
-                    initReplier(id);
-                    System.out.println("Server id: " + id);
-                    initGtw.closeConnection();
-                    initGtw = null;
-                }
+            System.out.println("Init reply received: " + msg.getJMSCorrelationID());
+            if (msg.getJMSCorrelationID().equals(initMsgId)) {
+                String id = ((TextMessage) msg).getText();
+                initReplier(id);
+                System.out.println("Server id: " + id);
+                initGtw.closeConnection();
+                initGtw = null;
             }
         } catch (JMSException ex) {
             Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
-            System.err.println(ex.getMessage());
         }
     }
 
@@ -65,7 +61,8 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
             replier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
             replier.setRequestListener(this);
             replier.start();
-        } catch (Exception ex) {
+        } catch (NamingException | JMSException ex) {
+            Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
             System.err.println(ex.getMessage());
         }
     }
