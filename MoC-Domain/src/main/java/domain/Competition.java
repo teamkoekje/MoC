@@ -50,7 +50,7 @@ public class Competition implements Serializable {
 
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<Round> rounds;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
     private List<Team> teams;
 
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -135,7 +135,7 @@ public class Competition implements Serializable {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
-    
+
     public String getLocation() {
         return location;
     }

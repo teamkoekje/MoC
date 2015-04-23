@@ -32,7 +32,7 @@ public class Team implements Serializable {
     @OneToOne(cascade = CascadeType.PERSIST)
     private final Participant initiatior;
     private String name;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Competition competition;
     //</editor-fold>
 
