@@ -10,6 +10,7 @@ import javax.enterprise.event.Event;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 /**
@@ -27,6 +28,7 @@ public class Round implements Serializable {
     @GeneratedValue
     private long id;
 
+    @OneToOne
     private Challenge challenge;
     private long totalRoundTime;
     private long currentTime;

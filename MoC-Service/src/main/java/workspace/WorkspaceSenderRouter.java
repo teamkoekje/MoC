@@ -8,7 +8,7 @@ import messaging.JMSSettings;
  *
  * @author TeamKoekje
  */
-class WorkspaceSenderRouter {
+public class WorkspaceSenderRouter {
 
     private final List<WorkspaceServer> workspaceServers;
     private Long lastServerId;
@@ -50,9 +50,15 @@ class WorkspaceSenderRouter {
         return workspaceServer;
     }
 
-    void openConnection() {
+    public void openConnection() {
         for (WorkspaceServer workspace : workspaceServers) {
             workspace.getSender().openConnection();
+        }
+    }
+    
+    public void closeConnection(){
+        for (WorkspaceServer workspace : workspaceServers) {
+            workspace.getSender().closeConnection();
         }
     }
 }

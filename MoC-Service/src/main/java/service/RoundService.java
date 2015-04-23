@@ -1,12 +1,10 @@
 package service;
 
-import dao.AbstractDAO;
-import dao.RoundDAO;
 import domain.Round;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
-import javax.inject.Inject;
+import javax.persistence.Query;
 
 /**
  * Service class used to manage rounds of a competition
@@ -15,14 +13,10 @@ import javax.inject.Inject;
  */
 @Stateless
 @RequestScoped
-public class RoundService extends AbstractService<Round> {
+public class RoundService extends GenericService<Round> {
 
-    @Inject
-    private RoundDAO dao;
-
-    @Override
-    protected AbstractDAO getDAO() {
-        return dao;
+    public RoundService() {
+        super(Round.class);
     }
 
     /**
@@ -32,6 +26,8 @@ public class RoundService extends AbstractService<Round> {
      * @return list with rounds that belong to the competition
      */
     public List<Round> findByCompetition(long competitionId) {
-        return dao.findByCompetition(competitionId);
+        Query q = em.createNamedQuery("Round.findByCompetition");
+        q.setParameter("competitionId", competitionId);
+        return q.getResultList();
     }
 }

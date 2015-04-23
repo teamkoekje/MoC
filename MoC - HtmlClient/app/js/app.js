@@ -16,6 +16,10 @@ app.config(['$routeProvider',
                     templateUrl: 'views/apiDemo.html',
                     controller: 'demoController'
                 })
+                 .when('/competitionDemo', {
+                    templateUrl: 'views/competitionDemo.html',
+                    controller: 'competitionController'
+                })
                 .otherwise({redirectTo: '/apiDemo'});
     }
 ]);

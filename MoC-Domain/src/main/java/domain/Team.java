@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -23,6 +24,7 @@ public class Team implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
     @GeneratedValue
+    @XmlAttribute
     private long id;
 
     @OneToMany(cascade = CascadeType.PERSIST)
@@ -31,18 +33,17 @@ public class Team implements Serializable {
     private final Participant initiatior;
     private String name;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    private final Competition competition;
+    private Competition competition;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Team() {
-        this.competition = Competition.getInstance();
         this.initiatior = null;
     }
 
-    public Team(Participant initiatior) {
+    public Team(Participant initiatior, String name) {
         this.initiatior = initiatior;
-        this.competition = Competition.getInstance();
+        this.name = name;
     }
     // </editor-fold>
 
@@ -71,7 +72,15 @@ public class Team implements Serializable {
         return initiatior;
     }
 
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
     //</editor-fold>
+
     // <editor-fold defaultstate="collapsed" desc="methods" >
     /**
      * Function adds a participant to the team.
@@ -106,4 +115,5 @@ public class Team implements Serializable {
         competition.submit(this);
     }
     //</editor-fold>
+
 }

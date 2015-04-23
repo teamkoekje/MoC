@@ -1,20 +1,18 @@
 package workspace;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import messaging.MessagingGateway;
 import messaging.AsynchronousReplier;
 import messaging.IRequestListener;
 
 /**
- * //TODO: class description, what does this class do
+ * Gateway used to communicate with the service module
  *
  * @author TeamKoekje
  */
 public abstract class ServiceGateway {
 
-    MessagingGateway gtw;
-    AsynchronousReplier<Request, Reply> rep;
+    MessagingGateway gateway;
+    AsynchronousReplier<Request, Reply> replier;
     IRequestListener<Request> requestListener;
 
     public ServiceGateway(String serviceReplyQueue) {
@@ -25,21 +23,19 @@ public abstract class ServiceGateway {
                     onServiceRequest((Request) request);
                 }
             };
-
-            // create the serializer
-            rep = new AsynchronousReplier<>(serviceReplyQueue);
-            rep.setRequestListener(requestListener);
+            replier = new AsynchronousReplier<>(serviceReplyQueue);
+            replier.setRequestListener(requestListener);
         } catch (Exception ex) {
-            Logger.getLogger(ServiceGateway.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
 
     void sendReply(Request req, Reply reply) {
-        rep.sendReply(req, reply);
+        replier.sendReply(req, reply);
     }
 
     void start() {
-        rep.start();
+        replier.start();
     }
 
     abstract void onServiceRequest(Request r);

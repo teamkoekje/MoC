@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import service.CompetitionService;
+import service.InvitationService;
 import service.RoundService;
 import service.TeamService;
 
@@ -33,6 +34,9 @@ public class CompetitionResource {
 
     @Inject
     private TeamService teamService;
+
+    @Inject
+    private InvitationService invitationService;
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
@@ -89,7 +93,7 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}")
-    public void removeCompetition(@PathParam("competitionId") long competitionId) {
+    public void removeCompetition(@PathParam("competitionId") Long competitionId) {
         competitionService.remove(competitionId);
     }
     //</editor-fold>
@@ -187,12 +191,15 @@ public class CompetitionResource {
     /**
      * Creates a new team
      *
+     * @param competitionId
      * @param team team that should be created created
      */
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team")
-    public void createTeam(Team team) {
+    public void createTeam(@PathParam("competitionId") long competitionId, Team team) {
+        Competition competition = competitionService.findById(competitionId);
+        team.setCompetition(competition);
         teamService.create(team);
     }
 
@@ -215,7 +222,7 @@ public class CompetitionResource {
      */
     @DELETE
     @Path("/{competitionId}/team/{teamId}")
-    public void removeTeam(@PathParam("teamId") long teamId) {
+    public void removeTeam(@PathParam("t(@PathParameamId") long teamId) {
         teamService.remove(teamId);
     }
 
@@ -230,7 +237,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/invite")
     public void inviteMember(String email, @PathParam("teamId") long teamId) {
-        teamService.inviteMember(email, teamId);
+        invitationService.inviteMember(email, teamId);
     }
 
     /**

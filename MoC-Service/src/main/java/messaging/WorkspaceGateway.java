@@ -1,14 +1,6 @@
-package workspace;
+package messaging;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -17,7 +9,9 @@ import messaging.DestinationType;
 import messaging.GatewayType;
 import messaging.JMSSettings;
 import messaging.MessagingGateway;
-import org.apache.activemq.BlobMessage;
+import workspace.Request;
+import workspace.WorkspaceSenderRouter;
+import workspace.WorkspaceServer;
 
 /**
  * //TODO: class description, what does this class do
@@ -30,7 +24,7 @@ public abstract class WorkspaceGateway {
     private MessagingGateway initGtw;
     private MessagingGateway receiverGtw;
 
-    public WorkspaceGateway(String brokerRequestQueue, String brokerReplyQueue) {
+    public WorkspaceGateway() {
         try {
             router = new WorkspaceSenderRouter();
             initGtw = new MessagingGateway(JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC, JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE);
@@ -58,9 +52,16 @@ public abstract class WorkspaceGateway {
 
             receiverGtw.openConnection();
             initGtw.openConnection();
+            router.openConnection();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
+    }
+    
+    public void closeConnection(){
+        initGtw.closeConnection();
+        receiverGtw.closeConnection();
+        router.closeConnection();
     }
 
     private void processInitMessage(Message msg) {
@@ -81,12 +82,6 @@ public abstract class WorkspaceGateway {
         try {
             ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
-            
-            //TEST
-            //BlobMessage bm = initGtw.createBlobMessage("D:\\School\\Proftaak\\MoC\\MoC-WorkspaceRouter\\hin.txt");
-            //bm.setJMSReplyTo(receiverGtw.getReceiverDestination());
-            //gtw.sendMessage(bm);
-            //ENDTEST
             
             gtw.sendMessage(msg);
             System.out.println("Message sent");
@@ -118,5 +113,5 @@ public abstract class WorkspaceGateway {
         router.openConnection();
     }
 
-    abstract void onWorkspaceMessageReceived(Message message);
+    public abstract void onWorkspaceMessageReceived(Message message);
 }

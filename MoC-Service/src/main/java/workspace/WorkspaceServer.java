@@ -28,7 +28,7 @@ public class WorkspaceServer {
         return this.workspaces.contains(workspaceName);
     }
 
-    MessagingGateway getSender() {
+    public MessagingGateway getSender() {
         return sender;
     }
 
