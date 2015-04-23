@@ -183,7 +183,7 @@ public class WorkspaceManagement {
         }
         //write the new file
         try {
-            try (PrintWriter writer = new PrintWriter(originalPath/*, "UTF-8"*/)) {
+            try (PrintWriter writer = new PrintWriter(originalPath, "UTF-8")) {
                 writer.printf(fileContent);
             }
         } //If fail to write the new file, restore the backup
@@ -195,7 +195,7 @@ public class WorkspaceManagement {
                 System.err.println("Error while deleting temp file: " + ex1);
             }
             return "Error File not found: " + ex;
-        } /*catch (UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             tempPath.renameTo(originalPath);
             try {
                 Files.delete(tempPath.toPath());
@@ -203,7 +203,7 @@ public class WorkspaceManagement {
                 System.err.println("Error while deleting temp file: " + ex1);
             }
             return "Error Unsupported Encoding: " + ex;
-        }*/
+        }
         try {
             Files.delete(tempPath.toPath());
         } catch (IOException ex1) {

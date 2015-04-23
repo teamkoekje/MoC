@@ -98,7 +98,8 @@ public class WorkspaceManagementTest {
             Request updateRequest = new Request(Action.UPDATE, "team c");
             updateRequest.setFilePath("test file.txt");
             updateRequest.setFileContent(newContent);
-            instance.processRequest(updateRequest);
+            String result = instance.processRequest(updateRequest);
+            assertEquals(result, "File succesfully Updated");
             //confirm new data
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(newContent, temp2);
