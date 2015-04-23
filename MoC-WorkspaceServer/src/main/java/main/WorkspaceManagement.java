@@ -19,9 +19,9 @@ import workspace.Request;
 public class WorkspaceManagement {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
-    public static final String DEFAULT_PATH = "C:\\MoC\\";
+    public static final String DEFAULT_PATH = "MoC\\";
     private final List<String> teams = new ArrayList<>();
-    private static final File MAVEN_HOME = new File("C:\\apache-maven-3.3.1");
+    private static final File MAVEN_HOME = new File("apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
     private StringBuilder invocationOutput = new StringBuilder();
