@@ -46,12 +46,12 @@ public class WorkspaceManagementTest {
 
     /**
      * Test of extractChallenge method, of class WorkspaceManagement. This test
- assumes there exists an 'test challenge.zip' under the DEFAULT_PATH of the
- WorkspaceManagement. This zip should contain the following structure: -
- test challenge the top folder - a sub folder second folder pizza.java
- file in second folder some text.txt file in first folder
+     * assumes there exists an 'test challenge.zip' under the DEFAULT_PATH of
+     * the WorkspaceManagement. This zip should contain the following structure:
+     * - test challenge the top folder - a sub folder second folder pizza.java
+     * file in second folder some text.txt file in first folder
      */
-    @Test
+    //@Test
     public void testExtractChallenge() {
         //init
         System.out.println("extracting challenge");

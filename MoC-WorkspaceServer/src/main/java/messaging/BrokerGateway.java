@@ -6,6 +6,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+import javax.naming.NamingException;
 import main.WorkspaceManagement;
 import org.apache.activemq.BlobMessage;
 import workspace.Reply;
@@ -24,14 +25,15 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
 
     private AsynchronousReplier<Request, Reply> replier;
 
-    public BrokerGateway() throws Exception {
+    @SuppressWarnings("LeakingThisInConstructor")
+    public BrokerGateway() throws NamingException, JMSException{
         initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
         initGtw.setReceivedMessageListener(this);
         initGtw.openConnection();
         sendInitMessage();
     }
 
-    private void sendInitMessage() throws Exception {
+    private void sendInitMessage() throws JMSException{
         Message msg = initGtw.createTextMessage("HELLO SERVER");
         initGtw.sendMessage(msg);
         initMsgId = msg.getJMSMessageID();
@@ -72,7 +74,6 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     public void receivedRequest(Request request) {
         System.out.println("Request received: " + request.getAction());
 
-        // String replyMessage = wsManagement.processRequest(request);
         String replyMessage = "hoi";
 
         Reply reply = new Reply(replyMessage);
