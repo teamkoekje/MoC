@@ -51,7 +51,7 @@ public class WorkspaceManagementTest {
  - test challenge the top folder - a sub folder second folder pizza.java
  file in second folder some text.txt file in first folder
      */
-    //@Test
+    @Test
     public void testExtractChallenge() {
         //init
         System.out.println("extracting challenge");

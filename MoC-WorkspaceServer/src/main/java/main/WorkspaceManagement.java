@@ -172,6 +172,7 @@ public class WorkspaceManagement {
         //variables
         File originalPath = new File(defaultPath + teamName + "/" + filePath);
         File tempPath = new File(originalPath + ".temp");
+        String deleteTempFileError = "Error while deleting temp file: ";
         //if the file exists, backup
         if (originalPath.exists()) {
             if (originalPath.renameTo(tempPath)) {
@@ -194,7 +195,7 @@ public class WorkspaceManagement {
             try {
                 Files.delete(tempPath.toPath());
             } catch (IOException ex1) {
-                System.err.println("Error while deleting temp file: " + ex1);
+                System.err.println(deleteTempFileError + ex1);
             }
             return "Error File not found: " + ex;
         } catch (UnsupportedEncodingException ex) {
@@ -202,14 +203,14 @@ public class WorkspaceManagement {
             try {
                 Files.delete(tempPath.toPath());
             } catch (IOException ex1) {
-                System.err.println("Error while deleting temp file: " + ex1);
+                System.err.println(deleteTempFileError + ex1);
             }
             return "Error Unsupported Encoding: " + ex;
         }
         try {
             Files.delete(tempPath.toPath());
         } catch (IOException ex1) {
-            System.err.println("Error while deleting temp file: " + ex1);
+            System.err.println(deleteTempFileError + ex1);
             return "File succesfully Updated but temp file not deleted";
         }
         return "File succesfully Updated";
@@ -224,46 +225,52 @@ public class WorkspaceManagement {
      */
     protected String extractChallenge(String challengeName) {
 
-        String challengeZip = defaultPath + challengeName + ".zip";
+        String challengePath = defaultPath + challengeName + ".zip";
+        File challengeZip = new File(challengePath);
         //for all teams
         for (String teamName : teams) {
             try {
-                int bufferSize = 2048;
-                File file = new File(challengeZip);
-                ZipFile zip = new ZipFile(file);
-                String outputPath = defaultPath + teamName;
-                new File(outputPath).mkdir();
-                Enumeration zipFileEntries = zip.entries();
-                //loop through the zip
-                while (zipFileEntries.hasMoreElements()) {
-                    //create the file/folder
-                    ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
-                    String currentEntry = entry.getName();
-                    File destFile = new File(outputPath, currentEntry);
-                    File destinationParent = destFile.getParentFile();
-                    destinationParent.mkdirs();
-                    //if the entry is a file, write the contents to it
-                    if (!entry.isDirectory()) {
-                        try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
-                            int currentByte;
-                            byte data[] = new byte[bufferSize];
-
-                            FileOutputStream fos = new FileOutputStream(destFile);
-                            try (BufferedOutputStream dest = new BufferedOutputStream(fos, bufferSize)) {
-                                while ((currentByte = is.read(data, 0, bufferSize)) != -1) {
-                                    dest.write(data, 0, currentByte);
-                                }
-                                dest.flush();
-                            }
-                        }
-                    }
-                }
+                extractChallengeToTeam(challengeZip, teamName);
             } catch (Exception ex) {
                 Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 return "Error extracting: " + ex.getLocalizedMessage();
             }
         }
         return "Extracting successfull";
+    }
+
+    private void extractChallengeToTeam(File challengeZip, String teamName) throws IOException {
+        //zip
+        ZipFile zip = new ZipFile(challengeZip);
+        Enumeration zipFileEntries = zip.entries();
+        //output directory
+        String outputPath = defaultPath + teamName;
+        new File(outputPath).mkdir();
+        //loop through the zip
+        while (zipFileEntries.hasMoreElements()) {
+            //create the file/folder
+            ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+            String currentEntry = entry.getName();
+            File destFile = new File(outputPath, currentEntry);
+            File destinationParent = destFile.getParentFile();
+            destinationParent.mkdirs();
+            //if the entry is a file, write the contents to it
+            if (!entry.isDirectory()) {
+                try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
+                    int currentByte;
+                    int bufferSize = 2048;
+                    byte data[] = new byte[bufferSize];
+
+                    FileOutputStream fos = new FileOutputStream(destFile);
+                    try (BufferedOutputStream dest = new BufferedOutputStream(fos, bufferSize)) {
+                        while ((currentByte = is.read(data, 0, bufferSize)) != -1) {
+                            dest.write(data, 0, currentByte);
+                        }
+                        dest.flush();
+                    }
+                }
+            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="build, test (maven invoker)" >
