@@ -41,7 +41,7 @@ public class WorkspaceManagement {
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
         if ("linux".equals(osName)) {
-            defaultPath = "MoC/";
+            defaultPath = "MoC";
         } else {
             defaultPath = "C:/MoC/";
         }
@@ -51,7 +51,7 @@ public class WorkspaceManagement {
             rootFolder.mkdir();
         }
         if(!rootFolder.isDirectory()){
-            throw new IllegalArgumentException("geen directory");
+            throw new IllegalArgumentException("geen directory: " + rootFolder.getAbsolutePath());
         }
         for (File f : rootFolder.listFiles()) {
             if (f.isDirectory()) {
