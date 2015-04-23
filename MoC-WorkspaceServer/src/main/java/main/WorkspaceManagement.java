@@ -20,11 +20,6 @@ public class WorkspaceManagement {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
     private final String defaultPath;
-
-    public String getDefaultPath() {
-        return defaultPath;
-    }
-
     private final List<String> teams = new ArrayList<>();
     private static final File MAVEN_HOME = new File("C:/apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
@@ -50,7 +45,7 @@ public class WorkspaceManagement {
         if (!rootFolder.exists()) {
             rootFolder.mkdir();
         }
-        
+
         for (File f : rootFolder.listFiles()) {
             if (f.isDirectory()) {
                 teams.add(f.getName());
@@ -80,6 +75,12 @@ public class WorkspaceManagement {
         return instance;
     }
     //</editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="getters & setters" >
+    public String getDefaultPath() {
+        return defaultPath;
+    }
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
