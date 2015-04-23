@@ -105,8 +105,9 @@ public class WorkspaceManagement {
             new File(DEFAULT_PATH + teamName).mkdirs();
             teams.add(teamName);
             return "Created workspace for team: " + teamName;
-        } catch (Exception e) {
-            return "Error creating workspace for team: " + teamName + "\n" + e.getLocalizedMessage();
+        } catch (Exception ex) {
+            System.err.println(ex.getLocalizedMessage());
+            return "Error creating workspace for team: " + teamName + "\n" + ex.getLocalizedMessage();
         }
     }
 
