@@ -2,10 +2,11 @@ package service;
 
 import java.io.File;
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.faces.bean.RequestScoped;
-import messaging.BrokerGateway;
-import messaging.JMSSettings;
+import javax.annotation.PreDestroy;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.jms.Message;
+import messaging.WorkspaceGateway;
 import workspace.Action;
 import workspace.Request;
 
@@ -14,21 +15,33 @@ import workspace.Request;
  *
  * @author Astrid
  */
-@Stateless
-@RequestScoped
+@Singleton
+@Startup
 public class WorkspaceService {
 
-    private BrokerGateway gateway;
+    private WorkspaceGateway gateway;
 
     @PostConstruct
     private void init() {
-        gateway = new BrokerGateway(JMSSettings.BROKER_REQUEST, JMSSettings.SERVICE_REPLY);
+        System.out.println("Workspace gateway created");
+        gateway = new WorkspaceGateway() {
+
+            @Override
+            public void onWorkspaceMessageReceived(Message message) {
+                System.out.println("Message received from workspace");
+            }
+        };
+    }
+    
+    @PreDestroy
+    private void preDestroy(){
+        gateway.closeConnection();
     }
 
     public void create(String teamName) {
         System.out.println("Send message: create workspace");
         Request request = new Request(Action.CREATE, teamName);
-        gateway.sendRequest(request);
+        gateway.addWorkspace(request);
     }
 
     public void delete(String teamName) {
