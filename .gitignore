@@ -17,3 +17,7 @@
 /MoC-WorkspaceRouter/target/
 /MoC-WorkspaceServer/target/
 /bytesmessagetest/target/
+/MoC - Framework/target/
+/annotation tests/annotatedProject/target/
+/annotation tests/scannotationsTest/target/
+/annotation tests/scannotationsTest/src/main/resources/annotatedProject/target/
