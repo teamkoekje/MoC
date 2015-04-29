@@ -1,9 +1,13 @@
 package messaging;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -130,6 +134,28 @@ public class MessagingGateway {
 
     public ObjectMessage createObjectMessage(Serializable s) throws JMSException {
         return session.createObjectMessage(s);
+    }
+
+    public BytesMessage zipToByteMessage(String zipPath) {
+        BytesMessage bm = null;
+        try (FileInputStream inputStream = new FileInputStream(zipPath)) {
+            long total = new File(zipPath).length();
+            long current = 0;
+            byte[] buffer = new byte[4096];
+            int read;
+            bm = session.createBytesMessage();
+            while ((read = inputStream.read(buffer)) != -1) {
+                bm.writeBytes(buffer);
+                current += read;
+                System.out.println("Reading from zip: " + current + "/" + total);
+            }
+            bm.reset();
+        } catch (FileNotFoundException | JMSException ex) {
+            System.err.println(ex.getMessage());
+        }catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return bm;
     }
 
     public void openConnection() {

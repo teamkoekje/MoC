@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -118,6 +119,10 @@ public abstract class WorkspaceGateway {
         } else {
             System.out.println("No servers available");
         }
+    }
+
+    public BytesMessage zipToByteMessage(String zipPath) {
+        return receiverGtw.zipToByteMessage(zipPath);
     }
 
     void start() {

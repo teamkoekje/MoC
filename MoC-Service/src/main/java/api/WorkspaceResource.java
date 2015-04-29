@@ -73,6 +73,14 @@ public class WorkspaceResource {
         workspaceService.push(challengeName);
         return null;
     }
+
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/testCreateChallenge/{competitionName}")
+    public String testCreateChallenge(@PathParam("competitionName") String challengeName) {
+        workspaceService.addChallenge("C:\\MoC\\zips","1");
+        return null;
+    }
     
     //</editor-fold>
 }

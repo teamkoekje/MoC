@@ -29,7 +29,8 @@ public class NewMain {
             connection = connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            BytesMessage bm = zipToByteArray("C:\\Users\\Casper\\Desktop\\test.zip");
+            BytesMessage bm = zipToByteMessage("C:\\Users\\Casper\\Desktop\\test.zip");
+            
             bytesMessageToFile("C:\\Users\\Casper\\Desktop\\test2.zip", bm);
 
         } catch (NamingException | JMSException | IOException ex) {
@@ -39,7 +40,7 @@ public class NewMain {
         System.exit(0);
     }
 
-    private static BytesMessage zipToByteArray(String zipPath) throws JMSException, IOException {
+    private static BytesMessage zipToByteMessage(String zipPath) throws JMSException, IOException {
         long total = new File(zipPath).length();
         long current = 0;
         byte[] buffer = new byte[4096];

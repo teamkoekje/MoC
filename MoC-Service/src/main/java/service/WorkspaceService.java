@@ -77,4 +77,10 @@ public class WorkspaceService {
         request.setChallengeName(challengeName);
         gateway.broadcast(request);
     }
+    
+    public void addChallenge(String path, String teamName){
+        Request request = new Request(Action.TRANSFER_CHALLENGE, teamName);
+        request.setChallengeZip(gateway.zipToByteMessage(path));
+        gateway.sendRequest(request);
+    }
 }

@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import javax.jms.BytesMessage;
+import javax.jms.JMSException;
 import org.apache.maven.shared.invoker.*;
 import workspace.Request;
 
@@ -105,6 +107,8 @@ public class WorkspaceManagement {
                 return removeWorkspace(r.getTeamName());
             case PUSH_CHALLENGE:
                 return extractChallenge(r.getChallengeName());
+            case TRANSFER_CHALLENGE:
+                return makeZipFromChallenge("C:\\MoC\\comps\\1\\zips", r.getChallengeZip());
             default:
                 return "error, unknown action: " + r.getAction().name();
         }
@@ -274,6 +278,27 @@ public class WorkspaceManagement {
                 }
                 dest.flush();
             }
+        }
+    }
+
+    private static String makeZipFromChallenge(String outputFile, BytesMessage bm) {
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            long total = bm.getBodyLength();
+            long current = 0;
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = bm.readBytes(buffer)) != -1) {
+                current += read;
+                outputStream.write(buffer);
+                System.out.println("Writing to zip: " + current + "/" + total);
+            }
+            return "Zip created";
+        } catch (FileNotFoundException | JMSException ex) {
+            System.err.println(ex.getLocalizedMessage());
+            return "Error while creating zip";
+        } catch (IOException ex){
+            System.err.println(ex.getLocalizedMessage());
+            return "Error while creating zip";
         }
     }
 

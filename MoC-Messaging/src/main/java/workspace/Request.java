@@ -1,6 +1,7 @@
 package workspace;
 
 import java.io.Serializable;
+import javax.jms.BytesMessage;
 
 /**
  * This class represents an object that tells a specific workspace to perform a
@@ -17,6 +18,7 @@ public class Request implements Serializable {
     private String filePath;
     private String fileContent;
     private String challengeName;
+    private BytesMessage challengeZip;
 
     public Request(Action action, String teamName) {
         this.action = action;
@@ -69,6 +71,14 @@ public class Request implements Serializable {
 
     public void setChallengeName(String challengeName) {
         this.challengeName = challengeName;
+    }
+
+    public BytesMessage getChallengeZip() {
+        return challengeZip;
+    }
+
+    public void setChallengeZip(BytesMessage challengeZip) {
+        this.challengeZip = challengeZip;
     }
 
 }
