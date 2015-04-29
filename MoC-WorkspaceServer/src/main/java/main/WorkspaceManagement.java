@@ -107,8 +107,6 @@ public class WorkspaceManagement {
                 return removeWorkspace(r.getTeamName());
             case PUSH_CHALLENGE:
                 return extractChallenge(r.getChallengeName());
-            case TRANSFER_CHALLENGE:
-                return makeZipFromChallenge("C:\\MoC\\comps\\1\\zips", r.getChallengeZip());
             default:
                 return "error, unknown action: " + r.getAction().name();
         }

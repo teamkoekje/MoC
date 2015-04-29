@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.jms.Message;
 import java.util.HashMap;
 import java.util.Map;
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
@@ -12,7 +13,7 @@ import javax.naming.NamingException;
 /**
  * @param <REQUEST>
  * @param <REPLY>
- * 
+ *
  * @author TeamKoekje
  */
 public class AsynchronousReplier<REQUEST, REPLY> {
@@ -42,14 +43,18 @@ public class AsynchronousReplier<REQUEST, REPLY> {
      * @throws javax.naming.NamingException
      * @throws javax.jms.JMSException
      */
-    public AsynchronousReplier(String requestReceiverQueue) throws NamingException, JMSException  {
+    public AsynchronousReplier(String requestReceiverQueue) throws NamingException, JMSException {
         super();
         gateway = new MessagingGateway(requestReceiverQueue, DestinationType.QUEUE, GatewayType.RECEIVER);
         gateway.setReceivedMessageListener(new MessageListener() {
 
             @Override
             public void onMessage(Message message) {
-                onRequest((ObjectMessage) message);
+                if (message instanceof BytesMessage) {
+                    
+                } else {
+                    onRequest((ObjectMessage) message);
+                }
             }
         });
         this.activeRequests = new HashMap<>();

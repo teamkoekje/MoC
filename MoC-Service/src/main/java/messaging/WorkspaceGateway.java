@@ -1,5 +1,9 @@
 package messaging;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -13,6 +17,7 @@ import workspace.Reply;
 import workspace.Request;
 import workspace.WorkspaceSenderRouter;
 import workspace.WorkspaceServer;
+import workspace.ZipRequest;
 
 /**
  * //TODO: class description, what does this class do
@@ -45,7 +50,7 @@ public abstract class WorkspaceGateway {
                     if (message instanceof ObjectMessage) {
                         try {
                             ObjectMessage objMsg = (ObjectMessage) message;
-                            Reply reply = (Reply)objMsg.getObject();
+                            Reply reply = (Reply) objMsg.getObject();
                             System.out.println("Message received: " + reply.getMessage());
                         } catch (JMSException ex) {
                             Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,10 +108,10 @@ public abstract class WorkspaceGateway {
             System.out.println("Workspace not found on available servers");
         }
     }
-    
-    public synchronized void broadcast(Request request){
+
+    public synchronized void broadcast(Request request) {
         List<WorkspaceServer> servers = router.getAllServers();
-        for(WorkspaceServer server : servers){
+        for (WorkspaceServer server : servers) {
             sendRequest(request, server.getSender());
         }
     }
@@ -121,8 +126,34 @@ public abstract class WorkspaceGateway {
         }
     }
 
-    public BytesMessage zipToByteMessage(String zipPath) {
-        return receiverGtw.zipToByteMessage(zipPath);
+    public void sendZipFile(String zipPath) {
+
+        BytesMessage bm = null;
+        try (FileInputStream inputStream = new FileInputStream(zipPath)) {
+            long total = new File(zipPath).length();
+            long current = 0;
+            byte[] buffer = new byte[4096];
+            int read;
+            bm = receiverGtw.createBytesMessage();
+            while ((read = inputStream.read(buffer)) != -1) {
+                bm.writeBytes(buffer);
+                current += read;
+                System.out.println("Reading from zip: " + current + "/" + total);
+            }
+            bm.reset();
+        } catch (FileNotFoundException | JMSException ex) {
+            System.err.println(ex.getMessage());
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+
+        List<WorkspaceServer> servers = router.getAllServers();
+        for (WorkspaceServer server : servers) {
+            server.getSender().sendMessage(bm);
+        }
+        
+        Request request = new ZipRequest(buffer);
+
     }
 
     void start() {
