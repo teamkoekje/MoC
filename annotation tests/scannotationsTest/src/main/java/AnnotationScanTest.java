@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import org.scannotation.*;
 
 /**
@@ -35,6 +38,7 @@ public class AnnotationScanTest {
             String exampleToPrintPath = System.getProperty("user.dir") + "\\src\\main\\example to print";
             System.out.println("\nPrinting folder structure as a participant would see it:\n" + exampleToPrintPath + "\n");
             listVisibleStructureForParticipant(1, new File(exampleToPrintPath));
+            System.out.println(listStructureJSON(new File(exampleToPrintPath)).build());
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
@@ -52,6 +56,27 @@ public class AnnotationScanTest {
         } else {
             System.out.println("No classes using the annotation: " + classname + " - If there should be, does the annotation have @Retention(RetentionPolicy.RUNTIME)?");
         }
+    }
+
+    private static JsonArrayBuilder listFileJSON(File file) {
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for (File f : file.listFiles()) {
+            if (f.isDirectory()) {
+                jsonArrayBuilder.add(listStructureJSON(f));
+            } else if (isVisible(f.getName())) {
+                jsonArrayBuilder.add(f.getName());
+            }
+        }
+        return jsonArrayBuilder;
+    }
+
+    private static JsonObjectBuilder listStructureJSON(File folderToShow) {
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        String temp = folderToShow.getName();
+        if ((folderToShow.isFile() && isVisible(temp) || folderToShow.isDirectory())) {
+            jsonObjectBuilder.add(temp, listFileJSON(folderToShow));
+        }
+        return jsonObjectBuilder;
     }
 
     private static void listVisibleStructureForParticipant(int indent, File folderToShow) {
@@ -82,4 +107,5 @@ public class AnnotationScanTest {
         }
         return false;
     }
+
 }
