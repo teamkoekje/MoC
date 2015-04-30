@@ -1,12 +1,14 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * The Challenge class represents a coding challenge that can be given during a
@@ -23,6 +25,7 @@ public class Challenge implements Serializable {
     private String name;
     private int difficulty;
 
+    @OneToMany
     private List<Hint> hints;
     // </editor-fold>
 
@@ -33,10 +36,15 @@ public class Challenge implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="constructor" >
     protected Challenge() {
         this.name = "Not set yet";
+        this.hints = new ArrayList<>();
     }
 
     public Challenge(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name can't be null");
+        }
         this.name = name;
+        this.hints = new ArrayList<>();
     }
     // </editor-fold>
 
@@ -76,24 +84,6 @@ public class Challenge implements Serializable {
         this.difficulty = difficulty;
     }
 
-    public boolean addHint(Hint h) {
-        if (!hints.contains(h)) {
-            hints.add(h);
-            hintsChanged();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Gets a list of hints
-     *
-     * @return List of hints
-     */
-    public List<Hint> getHints() {
-        return hints;
-    }
-
     public Iterator<Hint> hintsIterator() {
         return hints.iterator();
     }
@@ -102,4 +92,13 @@ public class Challenge implements Serializable {
         Collections.sort(hints, new HintComparator());
     }
     //</editor-fold>
+
+    public boolean addHint(Hint h) {
+        if (!hints.contains(h)) {
+            hints.add(h);
+            hintsChanged();
+            return true;
+        }
+        return false;
+    }
 }

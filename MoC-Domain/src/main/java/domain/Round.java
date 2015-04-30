@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
+import javax.inject.Inject;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,7 +38,8 @@ public class Round implements Serializable {
     private int roundOrder;
     private RoundState roundState;
 
-    @Transient
+    @Inject
+    @Any
     private Event<RoundEndedEvent> endedEvent;
     //to fire: endedEvent.fire(new RoundEndedEvent(this));
     //to listen to it, define a method in a listener class:
@@ -53,6 +56,12 @@ public class Round implements Serializable {
     }
 
     public Round(Challenge challenge, long roundTime) {
+        if (challenge == null) {
+            throw new IllegalArgumentException("Challenge can't be null");
+        }
+        if (roundTime <= 0) {
+            throw new IllegalArgumentException("RoundTime must be positive");
+        }
         init();
         this.challenge = challenge;
         this.totalRoundTime = roundTime;

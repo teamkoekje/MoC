@@ -152,7 +152,7 @@ public abstract class WorkspaceGateway {
             server.getSender().sendMessage(bm);
         }
         
-        Request request = new ZipRequest(buffer);
+        //Request request = new ZipRequest(buffer);
 
     }
 

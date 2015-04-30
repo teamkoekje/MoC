@@ -1,22 +1,49 @@
 package domain;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * The Hint class represents a hint that can be shown during a challenge. It
  * contains a string with the content of the hint and a set time in seconds when
  * the hint should be released.
- * 
+ *
  * @author TeamKoekje
  */
-public class Hint {
+@Entity
+public class Hint implements Serializable{
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
+    @Id
+    @GeneratedValue
+    private long id;
+
     private String content;
     private long time;
     private boolean published;
     //</editor-fold>
 
+    public Hint() {
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
+    /**
+     * Create a new hint
+     *
+     * @param content the content of the hint
+     * @param time the time when the hint will be released after the rounds has
+     * started in seconds
+     */
     public Hint(String content, long time) {
+        if (content == null) {
+            throw new IllegalArgumentException("Content can't be null");
+        }
+        if (time <= 0) {
+            throw new IllegalArgumentException("Time must be positive");
+        }
+        this.time = time;
         this.content = content;
         this.published = false;
     }
