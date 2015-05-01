@@ -21,58 +21,56 @@ public class WorkspaceResource {
     //<editor-fold defaultstate="collapsed" desc="Workspace">
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{teamName}/create")
-    public void create(@PathParam("teamName") String teamName) {
-        workspaceService.create(teamName);
-    }
-    
-    @POST
-    @Consumes("application/xml,application/json")
-    @Path("/{teamName}/delete")
-    public void delete(@PathParam("teamName") String teamName) {
-        workspaceService.delete(teamName);
+    @Path("/{competitionName}/{teamName}/create")
+    public void create(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
+        workspaceService.create(competitionName, teamName);
     }
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{teamName}/update")
-    public void update(String filePath, @PathParam("teamName") String teamName) {
-        workspaceService.update(filePath, "", teamName);
+    @Path("/{competitionName}/{teamName}/delete")
+    public void delete(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
+        workspaceService.delete(competitionName, teamName);
     }
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{teamName}/compile")
-    public boolean compile(String artifactName, @PathParam("teamName") String teamName) {
-        System.out.println("compiling");
-        artifactName = "";
-        workspaceService.compile(artifactName, teamName);
+    @Path("/{competitionName}/{teamName}/update")
+    public void update(String filePath, @PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
+        workspaceService.update(competitionName, teamName, filePath, "");
+    }
+
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{competitionName}/{teamName}/{challangeName}/compile")
+    public boolean compile(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
+        workspaceService.compile(competitionName, teamName, challangeName);
         return false;
     }
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{teamName}/test")
-    public String testAll(String artifactName, @PathParam("teamName") String teamName) {
-        workspaceService.testAll(artifactName, teamName);
+    @Path("/{competitionName}/{teamName}/{challangeName}/test")
+    public String testAll(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
+        workspaceService.testAll(competitionName, teamName, challangeName);
         return null;
     }
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{teamName}/test/{testName}")
-    public String test(String artifactName, @PathParam("teamName") String teamName, @PathParam("testName") String testName) {
-        workspaceService.test(artifactName, teamName, testName);
+    @Path("/{competitionName}/{teamName}/{challangeName}/test/{testName}")
+    public String test(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName, @PathParam("testName") String testName) {
+        workspaceService.test(competitionName, teamName, challangeName, testName);
         return null;
     }
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/push/{challengeName}")
-    public String pushChallenge(@PathParam("challengeName") String challengeName) {
-        workspaceService.push(challengeName);
+    @Path("/{competitionName}/{challengeName}/push")
+    public String pushChallenge(@PathParam("competitionName") String competitionName, @PathParam("challengeName") String challengeName) {
+        workspaceService.push(competitionName, challengeName);
         return null;
     }
-    
+
     //</editor-fold>
 }

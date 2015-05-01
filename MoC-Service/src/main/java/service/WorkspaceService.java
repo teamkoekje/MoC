@@ -8,7 +8,16 @@ import javax.ejb.Startup;
 import javax.jms.Message;
 import messaging.WorkspaceGateway;
 import workspace.Action;
+import workspace.CompileRequest;
+import workspace.CreateRequest;
+import workspace.DeleteRequest;
+import workspace.FileRequest;
+import workspace.FolderStructureRequest;
+import workspace.PushRequest;
 import workspace.Request;
+import workspace.TestAllRequest;
+import workspace.TestRequest;
+import workspace.UpdateRequest;
 
 /**
  * Service class used to manage users
@@ -32,53 +41,46 @@ public class WorkspaceService {
             }
         };
     }
-    
+
     @PreDestroy
-    private void preDestroy(){
+    private void preDestroy() {
         gateway.closeConnection();
     }
 
-    public void create(String teamName) {
+    public void create(String competitionName, String teamName) {
         System.out.println("Send message: create workspace");
-        Request request = new Request(Action.CREATE, teamName);
-        gateway.addWorkspace(request);
+        gateway.addWorkspace(new CreateRequest(competitionName, teamName));
     }
 
-    public void delete(String teamName) {
-        Request request = new Request(Action.DELETE, teamName);
-        gateway.sendRequest(request);
+    public void delete(String competitionName, String teamName) {
+        gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
     }
 
-    public void update(String filePath, String fileContent, String teamName) {
-        Request request = new Request(Action.UPDATE, teamName);
-        request.setFilePath("test challenge/some text.txt");
-        request.setFileContent("hooi");
-        gateway.sendRequest(request);
+    public void update(String competitionName, String teamName, String filePath, String fileContent) {
+        gateway.sendRequestToTeam(new UpdateRequest(competitionName, teamName, filePath, fileContent));
     }
 
-    public void compile(String artifactName, String teamName) {
-        Request request = new Request(Action.COMPILE, teamName);
-        gateway.sendRequest(request);
+    public void compile(String competition, String teamname, String challengeName) {
+        gateway.sendRequestToTeam(new CompileRequest(competition, teamname, challengeName));
     }
 
-    public void testAll(String artifactName, String teamName) {
-        Request request = new Request(Action.TESTALL, teamName);
-        gateway.sendRequest(request);
+    public void testAll(String competition, String teamname, String challengeName) {
+        gateway.sendRequestToTeam(new TestAllRequest(competition, teamname, challengeName));
     }
 
-    public void test(String artifactName, String teamName, String testName) {
-        Request request = new Request(Action.TEST, teamName);
-        request.setTestName(testName);
-        gateway.sendRequest(request);
+    public void test(String competition, String teamname, String challengeName, String testName) {
+        gateway.sendRequestToTeam(new TestRequest(competition, teamname, challengeName, testName));
     }
 
-    public void push(String challengeName) {
-        Request request = new Request(Action.PUSH_CHALLENGE, "");
-        request.setChallengeName(challengeName);
-        gateway.broadcast(request);
+    public void push(String competitionName, String challengeName) {
+        gateway.broadcast(new PushRequest(competitionName, challengeName));
     }
-    
-    public void addChallenge(String path){
-        gateway.sendZipFile(path);
+
+    public void folderStructure(String competitionName, String challengeName, String teamname) {
+        gateway.sendRequestToTeam(new FolderStructureRequest(competitionName, challengeName, teamname));
+    }
+
+    public void file(String competitionName, String teamname, String filePath) {
+        gateway.sendRequestToTeam(new FileRequest(competitionName, teamname, filePath));
     }
 }

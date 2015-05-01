@@ -26,7 +26,7 @@
                     hints
                 </span>
                 |
-                <span style="cursor: pointer" onclick="window.open('messages.html', 'toolbar=no, scrollbars=no, resizable=no', 'width=400, height=150')">
+                <span style="cursor: pointer" onclick="$('#messageWrapper').toggle();">
                     messages
                 </span>
             </span>
@@ -39,7 +39,7 @@
                 <p>
                     Congratulations, your team was 1st this round!
                 </p>
-                <div style="  width: 300px;display: table;text-align: left;margin: 0 auto;">
+                <div style="  width: 400px;margin: 0 auto;">
                     <div class="row">
                         <div class="col-xs-2">
                             1
@@ -62,15 +62,32 @@
                             420 points
                         </div>
                     </div>
-                </div>
-                
-                <br><br>
-                
-                <p style='font-size: 40px'>
-                    Waiting for next round
+
                     <br><br>
-                    {{time}}
-                </p>
+
+                    <p style='font-size: 40px'>
+                        Waiting for next round
+                        <br><br>
+                        {{time}}
+                    </p>
+
+                    <div id="messageWrapper" style="display:none">
+                        <div class="first" style="width: 75px;margin-left:7%;">Messages</div>
+                        <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
+                            <ul id="messageList" style="text-align: left">
+                                <li>
+                                    lalalalalala
+                                </li>
+                                <li>
+                                    lkfndsklfnsdaklnfdsklnfjsdklfnjksdnfksdafklsadfiosdfodsjoidviodjfiodsiofjdsijspovsdjifdiosfiosdfisdfoisedjfisdjifsdiof
+                                </li>
+                                <li>
+                                    Shrek is love, shrek is life
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

@@ -27,6 +27,18 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>MoC</groupId>
+            <artifactId>MoCFramework</artifactId>
+            <version>1.0-final</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.scannotation</groupId>
+            <artifactId>scannotation</artifactId>
+            <version>1.0.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

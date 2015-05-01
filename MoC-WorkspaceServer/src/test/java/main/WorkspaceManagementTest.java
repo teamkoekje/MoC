@@ -7,8 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import workspace.Action;
-import workspace.Request;
+import workspace.CreateRequest;
+import workspace.DeleteRequest;
+import workspace.PushRequest;
+import workspace.UpdateRequest;
 
 /**
  *
@@ -26,11 +28,12 @@ public class WorkspaceManagementTest {
     public void testCreateAndRemoveWorkspace() {
         //init
         String teamName = "testTeam";
+        String competitionName = "testCompetition";
         WorkspaceManagement instance = new WorkspaceManagement();
         System.out.println("creating workspace");
         //create
-        Request createRequest = new Request(Action.CREATE, teamName);
-        instance.processRequest(createRequest);
+        CreateRequest cr = new CreateRequest(competitionName, teamName);
+        instance.processRequest(cr);
         //confirm
         File f = new File(instance.getDefaultPath() + teamName);
         assertTrue(f.exists());
@@ -38,8 +41,8 @@ public class WorkspaceManagementTest {
         assertEquals(f.listFiles().length, 0);
         //remove
         System.out.println("removing workspace");
-        Request removeRequest = new Request(Action.DELETE, teamName);
-        instance.processRequest(removeRequest);
+        DeleteRequest dr = new DeleteRequest(competitionName, teamName);
+        instance.processRequest(dr);
         //confirm
         assertFalse(f.exists());
     }
@@ -55,18 +58,21 @@ public class WorkspaceManagementTest {
     public void testExtractChallenge() {
         //init
         System.out.println("extracting challenge");
+        String competitionName = "testCompetition";
         WorkspaceManagement instance = new WorkspaceManagement();
-        instance.createWorkspace("team a");
-        instance.createWorkspace("team b");
+        CreateRequest cr = new CreateRequest(competitionName, "team 1");
+        CreateRequest cr2 = new CreateRequest(competitionName, "team 2");
+        instance.processRequest(cr);
+        instance.processRequest(cr2);
+        
         //extract (push)
-        Request extractRequest = new Request(Action.PUSH_CHALLENGE, "");
-        extractRequest.setChallengeName("test challenge");
-        instance.processRequest(extractRequest);
+        PushRequest pr = new PushRequest(competitionName, "test challenge");
+        instance.processRequest(pr);
         //confirm
-        File teamAFile1 = new File(instance.getDefaultPath() + "team a/test challenge/some text.txt");
-        File teamAFile2 = new File(instance.getDefaultPath() + "team a/test challenge/a sub folder/pizza.java");
-        File teamBFile1 = new File(instance.getDefaultPath() + "team b/test challenge/some text.txt");
-        File teamBFile2 = new File(instance.getDefaultPath() + "team b/test challenge/a sub folder/pizza.java");
+        File teamAFile1 = new File(instance.getDefaultPath() + "/testCompetition/team a/test challenge/some text.txt");
+        File teamAFile2 = new File(instance.getDefaultPath() + "/testCompetition/team a/test challenge/a sub folder/pizza.java");
+        File teamBFile1 = new File(instance.getDefaultPath() + "/testCompetition/team b/test challenge/some text.txt");
+        File teamBFile2 = new File(instance.getDefaultPath() + "/testCompetition/team b/test challenge/a sub folder/pizza.java");
         assertTrue(teamAFile1.exists());
         assertTrue(teamAFile2.exists());
         assertTrue(teamBFile1.exists());
@@ -81,11 +87,13 @@ public class WorkspaceManagementTest {
         System.out.println("updating file");
         try {
             //init
+            String competitionName = "testCompitition";
             String originalContent = "this is test text";
             String newContent = "new content";
             WorkspaceManagement instance = new WorkspaceManagement();
-            instance.createWorkspace("team c");
-            File f = new File(instance.getDefaultPath() + "team c/test file.txt");
+            CreateRequest cr = new CreateRequest(competitionName, "team c");
+            instance.processRequest(cr);
+            File f = new File(instance.getDefaultPath() + "/testCompitition/team c/test file.txt");
             f.createNewFile();
             FileWriter fw = new FileWriter(f);
             try (BufferedWriter bw = new BufferedWriter(fw)) {
@@ -95,10 +103,8 @@ public class WorkspaceManagementTest {
             String temp = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(temp, originalContent);
             //update
-            Request updateRequest = new Request(Action.UPDATE, "team c");
-            updateRequest.setFilePath("test file.txt");
-            updateRequest.setFileContent(newContent);
-            String result = instance.processRequest(updateRequest);
+            UpdateRequest ur = new UpdateRequest(competitionName, "team c", "test file.txt", newContent);
+            String result = instance.processRequest(ur);
             assertEquals(result, "File succesfully Updated");
             //confirm new data
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));

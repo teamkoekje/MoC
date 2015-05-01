@@ -1,5 +1,6 @@
 package main;
 
+import file.FileManagement;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -7,10 +8,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
 import org.apache.maven.shared.invoker.*;
+import workspace.CompileRequest;
+import workspace.CreateRequest;
+import workspace.DeleteRequest;
+import workspace.FileRequest;
+import workspace.FolderStructureRequest;
+import workspace.PushRequest;
 import workspace.Request;
+import workspace.TestAllRequest;
+import workspace.TestRequest;
+import workspace.UpdateRequest;
 
 /**
  * Singleton class used to keep track, create, remove, update, build and test
@@ -38,9 +46,9 @@ public class WorkspaceManagement {
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
         if ("linux".equalsIgnoreCase(osName)) {
-            defaultPath = "MoC";
+            defaultPath = "MoC" + File.pathSeparator;
         } else {
-            defaultPath = "C:/MoC/";
+            defaultPath = "C:/MoC" + File.pathSeparator;
         }
         //load teams
         File rootFolder = new File(defaultPath);
@@ -94,19 +102,38 @@ public class WorkspaceManagement {
     public String processRequest(Request r) {
         switch (r.getAction()) {
             case COMPILE:
-                return buildWorkspace(r.getTeamName(), r.getChallengeName());
+                CompileRequest compileRequest = (CompileRequest) r;
+                return buildWorkspace(compileRequest.getTeamName(), compileRequest.getChallengeName());
             case TEST:
-                return test(r.getTeamName(), r.getChallengeName(), r.getTestFile(), r.getTestName());
+                TestRequest testRequest= (TestRequest) r;
+                return test(testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName(), testRequest.getTestName());
             case TESTALL:
-                return testAll(r.getTeamName(), r.getChallengeName());
+                TestAllRequest testAllRequest = (TestAllRequest) r;
+                return testAll(testAllRequest.getTeamName(), testAllRequest.getChallengeName());
             case UPDATE:
-                return updateFile(r.getTeamName(), r.getFilePath(), r.getFileContent());
+                UpdateRequest updateRequest = (UpdateRequest) r;
+                return updateFile(updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent());
             case CREATE:
-                return createWorkspace(r.getTeamName());
+                CreateRequest createRequest = (CreateRequest) r;
+                return createWorkspace(createRequest.getTeamName());
             case DELETE:
-                return removeWorkspace(r.getTeamName());
+                DeleteRequest deleteRequest = (DeleteRequest) r;
+                return removeWorkspace(deleteRequest.getTeamName());
             case PUSH_CHALLENGE:
-                return extractChallenge(r.getChallengeName());
+                PushRequest pushRequest = (PushRequest) r;
+                return extractChallenge(pushRequest.getChallengeName());
+            case FOLDER_STRUCTURE:
+                FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
+                String folderPath = 
+                        defaultPath + 
+                        folderStructureRequest.getCompetition() + File.pathSeparator + 
+                        folderStructureRequest.getChallengeName() + File.pathSeparator + 
+                        folderStructureRequest.getTeamName();
+                return FileManagement.getInstance("some jar").getFolderJSON(folderPath);
+            case FILE:
+                FileRequest fileRequest = (FileRequest) r;
+                return FileManagement.getInstance("some jar").getFileJSON(fileRequest.getFilepath());
+            // private final String defaultJar = defaultPath + "/annotionframework/annotatedProject-1.0.jar"
             default:
                 return "error, unknown action: " + r.getAction().name();
         }
@@ -276,27 +303,6 @@ public class WorkspaceManagement {
                 }
                 dest.flush();
             }
-        }
-    }
-
-    private static String makeZipFromChallenge(String outputFile, BytesMessage bm) {
-        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-            long total = bm.getBodyLength();
-            long current = 0;
-            byte[] buffer = new byte[4096];
-            int read;
-            while ((read = bm.readBytes(buffer)) != -1) {
-                current += read;
-                outputStream.write(buffer);
-                System.out.println("Writing to zip: " + current + "/" + total);
-            }
-            return "Zip created";
-        } catch (FileNotFoundException | JMSException ex) {
-            System.err.println(ex.getLocalizedMessage());
-            return "Error while creating zip";
-        } catch (IOException ex){
-            System.err.println(ex.getLocalizedMessage());
-            return "Error while creating zip";
         }
     }
 
