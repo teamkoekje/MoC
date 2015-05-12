@@ -2,7 +2,11 @@ package service;
 
 import domain.Invitation;
 import domain.Team;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.SecureRandom;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -51,25 +55,22 @@ public class InvitationService extends GenericService<Invitation> {
             /*
              email content            
              */
-            message.setText("<html>");
-            message.setText("<body>");
-            message.setText("<div class='wrap' style='color: #333333; font - family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;'>");
-            message.setText("<div class='header' style='text - align:center;'>");
-            message.setText("<h1>You have been Invited to" + /* teamname */ "Team X" + "</h1>");
-            message.setText("<hr>");
-            message.setText("</div>");
-            message.setText("<div class='content' style='margin - left:25%;'>");
-            message.setText("<p><a href='http://www.google.nl/?token=" + /* token */ "Token" + "'> Click here </a> to accept of decline this invite</p>");
-            message.setText("<p>or paste this url in your browser: http://www.google.nl/?token=" + /* token */ "Token" + " </p>");
-            message.setText("</div>");
-            message.setText("<hr>");
-            message.setText("<div class='footer' style='margin - left:25%;'>");
-            message.setText("Masters of Code");
-            message.setText("</div>");
-            message.setText("</div>");
-            message.setText("</body>");
-            message.setText("</html>");
+            //get mail.html file to string
+            URL url = new URL("https://localhost:8080/MoC-Service/mail.html");
+            URLConnection con = url.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String line;
+            StringBuilder mail = new StringBuilder();
+            while ((line = in.readLine()) != null) {
+                mail.append(line);
+            }
 
+            //replace #token
+            // mail.replace(start, end, line);
+            //replace #teamname
+            // mail.replace(start, end, line);
+            //set Content
+            message.setContent(mail, "text/html");
             /*
              end email content
              */
