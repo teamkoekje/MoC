@@ -1,6 +1,7 @@
 package service;
 
 import domain.Invitation;
+import domain.Team;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import javax.annotation.Resource;
@@ -29,23 +30,49 @@ public class InvitationService extends GenericService<Invitation> {
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
      */
-    public void inviteMember(String email, long teamId) {
-        //Generate token
-        //String token = generateToken();
-        //Team t = new Team(new Participant());
-        //Team t = teamDao.findById(teamId);
-        //Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
-        //invitationDao.create(invite);
-        //send email
+    public void inviteMember(String email, long teamId) throws MessagingException {
+        // Generate token
+        //   String token = generateToken();
+        //    Team t = new Team(new Participant());
+        //    Team t = teamDao.findById(teamId);
+        //    Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
+        //    invitationDao.create(invite);
+        //    send email
 
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("c.linschooten@gmail.com"));//this doesnt work as the injected session will override it
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse("c.linschooten@gmail.com"));
-            message.setSubject("BEEEERRRRR!!");
-            message.setText("Let's have a beer party sometime.");
 
+            message.setSubject("You have been Invited");
+            message.setHeader("Content-Type", "text/html");
+
+            /*
+             email content            
+             */
+            message.setText("<html>");
+            message.setText("<body>");
+            message.setText("<div class='wrap' style='color: #333333; font - family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;'>");
+            message.setText("<div class='header' style='text - align:center;'>");
+            message.setText("<h1>You have been Invited to" + /* teamname */ "Team X" + "</h1>");
+            message.setText("<hr>");
+            message.setText("</div>");
+            message.setText("<div class='content' style='margin - left:25%;'>");
+            message.setText("<p><a href='http://www.google.nl/?token=" + /* token */ "Token" + "'> Click here </a> to accept of decline this invite</p>");
+            message.setText("<p>or paste this url in your browser: http://www.google.nl/?token=" + /* token */ "Token" + " </p>");
+            message.setText("</div>");
+            message.setText("<hr>");
+            message.setText("<div class='footer' style='margin - left:25%;'>");
+            message.setText("Masters of Code");
+            message.setText("</div>");
+            message.setText("</div>");
+            message.setText("</body>");
+            message.setText("</html>");
+
+            /*
+             end email content
+             */
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (Exception ex) {
