@@ -9,20 +9,26 @@ package workspace;
  *
  * @author Luc
  */
-public class PushRequest extends Request{
-    
-    private String challangeName;
+public class PushRequest extends Request {
 
-    public PushRequest(String competition, String challangeName) {
+    private String challengeName;
+    private final byte[] data;
+
+    public PushRequest(String competition, String challengeName, byte[] data) {
         super(Action.PUSH_CHALLENGE, competition);
-        this.challangeName = challangeName;
+        this.challengeName = challengeName;
+        this.data = data;
     }
 
     public String getChallengeName() {
-        return challangeName;
+        return challengeName;
     }
 
-    public void setChallangeName(String challangeName) {
-        this.challangeName = challangeName;
+    public void setChallengeName(String challangeName) {
+        this.challengeName = challangeName;
+    }
+
+    public byte[] getData() {
+        return data;
     }
 }

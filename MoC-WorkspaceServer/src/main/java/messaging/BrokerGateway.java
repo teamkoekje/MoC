@@ -17,7 +17,7 @@ import workspace.Request;
  *
  * @author TeamKoekje
  */
-public class BrokerGateway implements IRequestListener<Request>, MessageListener {
+public class BrokerGateway implements IRequestListener<Request> {
 
     private MessagingGateway initGtw;
     private String initMsgId;
@@ -28,7 +28,12 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     @SuppressWarnings("LeakingThisInConstructor")
     public BrokerGateway() throws NamingException, JMSException {
         initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
-        initGtw.setReceivedMessageListener(this);
+        initGtw.setReceivedMessageListener(new MessageListener() {
+            @Override
+            public void onMessage(Message msg) {
+                onInitReply(msg);
+            }
+        });
         initGtw.openConnection();
         sendInitMessage();
     }
@@ -40,8 +45,7 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
         System.out.println("Init request send: " + initMsgId);
     }
 
-    @Override
-    public void onMessage(Message msg) {
+    public void onInitReply(Message msg) {
         try {
             System.out.println("Init reply received: " + msg.getJMSCorrelationID());
             if (msg.getJMSCorrelationID().equals(initMsgId)) {

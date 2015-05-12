@@ -13,8 +13,8 @@ public class FileRequest extends TeamRequest{
     
     private String filepath;
 
-    public FileRequest(String competition, String teamname, String filepath) {
-        super(Action.FILE, competition, teamname);
+    public FileRequest(String competition, String teamName, String filepath) {
+        super(Action.FILE, competition, teamName);
         this.filepath = filepath;
     }
 
