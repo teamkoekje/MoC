@@ -34,7 +34,7 @@ public class InvitationService extends GenericService<Invitation> {
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
      */
-    public void inviteMember(String email, long teamId) throws MessagingException {
+    public void inviteMember(String email, long teamId) {
         // Generate token
         //   String token = generateToken();
         //    Team t = new Team(new Participant());
