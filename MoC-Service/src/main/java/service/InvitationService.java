@@ -34,20 +34,21 @@ public class InvitationService extends GenericService<Invitation> {
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
      */
-    public void inviteMember(String email, long teamId) {
-        // Generate token
-        //   String token = generateToken();
-        //    Team t = new Team(new Participant());
-        //    Team t = teamDao.findById(teamId);
+    public void inviteMember(String email, long teamId, Long competitionId) {
+        //Generate token
+        String token = generateToken();
+        
+        //Get Teamname
+        //  Team t = new Team(new Participant());
+        //  Team t = teamDao.findById(teamId);
         //    Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
         //    invitationDao.create(invite);
         //    send email
-
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("c.linschooten@gmail.com"));//this doesnt work as the injected session will override it
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("c.linschooten@gmail.com"));
+                    InternetAddress.parse(email));
 
             message.setSubject("You have been Invited");
             message.setHeader("Content-Type", "text/html");
@@ -56,19 +57,25 @@ public class InvitationService extends GenericService<Invitation> {
              email content            
              */
             //get mail.html file to string
-            URL url = new URL("https://localhost:8080/MoC-Service/mail.html");
+            URL url = new URL("http://localhost:8080/MoC-Service/mail.html");
             URLConnection con = url.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String line;
-            StringBuilder mail = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             while ((line = in.readLine()) != null) {
-                mail.append(line);
+                sb.append(line);
             }
+            String mail = sb.toString();
 
+            //replace #competitionId/team/#teamId/join/#token
+            //replace #competitionId
+            mail = mail.replaceAll("#competitionId", String.valueOf(competitionId));
+            //replace #teamId
+            mail = mail.replaceAll("#teamId", String.valueOf(teamId));
             //replace #token
-            // mail.replace(start, end, line);
+            mail = mail.replaceAll("#token", token);
             //replace #teamname
-            // mail.replace(start, end, line);
+            mail = mail.replaceAll("#teamname", String.valueOf(teamId));
             //set Content
             message.setContent(mail, "text/html");
             /*
