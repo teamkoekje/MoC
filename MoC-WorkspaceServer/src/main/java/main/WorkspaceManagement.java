@@ -48,7 +48,7 @@ public class WorkspaceManagement {
         if ("linux".equalsIgnoreCase(osName)) {
             defaultPath = "MoC" + File.pathSeparator;
         } else {
-            defaultPath = "C:/MoC" + File.pathSeparator;
+            defaultPath = "C:/MoC/";
         }
         //load teams
         File rootFolder = new File(defaultPath);
@@ -105,7 +105,7 @@ public class WorkspaceManagement {
                 CompileRequest compileRequest = (CompileRequest) r;
                 return buildWorkspace(compileRequest.getTeamName(), compileRequest.getChallengeName());
             case TEST:
-                TestRequest testRequest= (TestRequest) r;
+                TestRequest testRequest = (TestRequest) r;
                 return test(testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName(), testRequest.getTestName());
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
@@ -121,14 +121,14 @@ public class WorkspaceManagement {
                 return removeWorkspace(deleteRequest.getTeamName());
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return extractChallenge(pushRequest.getChallengeName());
+                return extractChallenge(pushRequest.getChallengeName(), pushRequest.getData());
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                String folderPath = 
-                        defaultPath + 
-                        folderStructureRequest.getCompetition() + File.pathSeparator + 
-                        folderStructureRequest.getChallengeName() + File.pathSeparator + 
-                        folderStructureRequest.getTeamName();
+                String folderPath
+                        = defaultPath
+                        + folderStructureRequest.getCompetition() + File.pathSeparator
+                        + folderStructureRequest.getChallengeName() + File.pathSeparator
+                        + folderStructureRequest.getTeamName();
                 return FileManagement.getInstance("some jar").getFolderJSON(folderPath);
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
@@ -252,9 +252,21 @@ public class WorkspaceManagement {
      * @param challengeName The challenge to extract
      * @return A string indicating the success of the extraction
      */
-    protected String extractChallenge(String challengeName) {
+    protected String extractChallenge(String challengeName, byte[] data) {
 
         String challengePath = defaultPath + challengeName + ".zip";
+
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(challengePath);
+            fos.write(data);
+            fos.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         File challengeZip = new File(challengePath);
         //for all teams
         for (String teamName : teams) {

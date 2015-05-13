@@ -13,8 +13,8 @@ public class FolderStructureRequest extends TeamRequest{
     
     private String challengeName;
 
-    public FolderStructureRequest(String competition, String challengeName, String teamname) {
-        super(Action.FOLDER_STRUCTURE, competition, teamname);
+    public FolderStructureRequest(String competition, String challengeName, String teamName) {
+        super(Action.FOLDER_STRUCTURE, competition, teamName);
         this.challengeName = challengeName;
     }
 
