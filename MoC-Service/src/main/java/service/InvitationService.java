@@ -33,8 +33,22 @@ public class InvitationService extends GenericService<Invitation> {
      *
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
+     * @param competitionId
+     * 
+     * 
      */
     public void inviteMember(String email, long teamId, Long competitionId) {
+        /*
+        
+        Todo:
+        - save token and invited user in the database
+        - get teamname by teamId
+        - set status on invited
+        
+        */
+        
+        
+        
         //Generate token
         String token = generateToken();
         
@@ -48,7 +62,7 @@ public class InvitationService extends GenericService<Invitation> {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("c.linschooten@gmail.com"));//this doesnt work as the injected session will override it
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(email));
+                    InternetAddress.parse("robin.avoorts@gmail.com"));
 
             message.setSubject("You have been Invited");
             message.setHeader("Content-Type", "text/html");
@@ -69,13 +83,13 @@ public class InvitationService extends GenericService<Invitation> {
 
             //replace #competitionId/team/#teamId/join/#token
             //replace #competitionId
-            mail = mail.replaceAll("#competitionId", String.valueOf(competitionId));
+            mail = mail.replace("#competitionId", String.valueOf(competitionId));
             //replace #teamId
-            mail = mail.replaceAll("#teamId", String.valueOf(teamId));
+            mail = mail.replace("#teamId", String.valueOf(teamId));
             //replace #token
-            mail = mail.replaceAll("#token", token);
+            mail = mail.replace("#token", token);
             //replace #teamname
-            mail = mail.replaceAll("#teamname", String.valueOf(teamId));
+            mail = mail.replace("#teamname", String.valueOf(teamId));
             //set Content
             message.setContent(mail, "text/html");
             /*
