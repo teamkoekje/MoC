@@ -1,8 +1,10 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,36 +16,43 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Table(name = "MOC_USER")
 public class User implements Serializable {
 
-    @Id
+//    @Id
     @GeneratedValue
     @XmlAttribute
     private long id;
+    
+    @Id
+    private String username;
 
     private String email;
     private String password;
     private String name;
     private String organisation;
-    private String username;
-    
-    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL) 
+
+    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL)
     private List<Team> teams;
 
-    public User(long id){
-        this.id = id;
-    }
-    public User() {
+    @ElementCollection
+    protected final List<String> userGroups = new ArrayList<>();
 
+    public User(long id) {
+        this.id = id;
+        this.userGroups.add(UserGroup.USER);
     }
-    
-       public List<Team> getTeams() {
+
+    protected User() {
+        this.userGroups.add(UserGroup.USER);
+    }
+
+    public List<Team> getTeams() {
         return teams;
     }
-    
-    public void addTeam(Team team){
+
+    public void addTeam(Team team) {
         this.teams.add(team);
     }
 
-    public void removeTeam(Team team){
+    public void removeTeam(Team team) {
         this.teams.remove(team);
     }
 
