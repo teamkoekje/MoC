@@ -59,6 +59,15 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         $scope.user.username = "Memphizx";
         $scope.user.name = "Robin van der Avoort";
         $scope.user.organisation = "Fontys";
+        
+        
+        var ws = new WebSocket('ws://localhost:5051/MoC-Service/ws/api');
+        ws.onopen = function () {
+            console.log("opening ws connection");
+        };
+        ws.onmessage = function (msg) {
+            console.log(msg);
+        };
     }
 ]);
 
