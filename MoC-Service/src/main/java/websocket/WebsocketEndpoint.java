@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
@@ -15,9 +14,7 @@ import javax.websocket.server.ServerEndpoint;
  *
  * @author Robin
  */
-@ServerEndpoint(
-        value = "/ws/api"
-)
+@ServerEndpoint(value = "/ws/api")
 public class WebsocketEndpoint {
 
     static Map<String, ArrayList<Session>> peers = new HashMap<>();
@@ -49,13 +46,13 @@ public class WebsocketEndpoint {
             }
         }
     }
-    
-    public void sendToUser(String msg, String username){
-        try{
-            for(Session session : peers.get(username)){
+
+    public void sendToUser(String msg, String username) {
+        try {
+            for (Session session : peers.get(username)) {
                 session.getBasicRemote().sendObject(msg);
             }
-        }catch (EncodeException | IOException e) {
+        } catch (EncodeException | IOException e) {
             e.printStackTrace();
         }
     }

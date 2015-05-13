@@ -21,3 +21,5 @@
 /annotation tests/annotatedProject/target/
 /annotation tests/scannotationsTest/target/
 /annotation tests/scannotationsTest/src/main/resources/annotatedProject/target/
+/MoCtestproject/target/
+/temp/MoC-WorkspaceServer/target/
