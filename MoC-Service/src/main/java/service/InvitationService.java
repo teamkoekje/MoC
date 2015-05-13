@@ -33,8 +33,22 @@ public class InvitationService extends GenericService<Invitation> {
      *
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
+     * @param competitionId
+     * 
+     * 
      */
     public void inviteMember(String email, long teamId, Long competitionId) {
+        /*
+        
+        Todo:
+        - save token and invited user in the database
+        - get teamname by teamId
+        - set status on invited
+        
+        */
+        
+        
+        
         //Generate token
         String token = generateToken();
         
