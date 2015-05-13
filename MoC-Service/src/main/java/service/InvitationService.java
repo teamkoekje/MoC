@@ -53,8 +53,7 @@ public class InvitationService extends GenericService<Invitation> {
         String token = generateToken();
         
         //Get Teamname
-        //  Team t = new Team(new Participant());
-        //  Team t = teamDao.findById(teamId);
+        
         //    Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
         //    invitationDao.create(invite);
         //    send email
