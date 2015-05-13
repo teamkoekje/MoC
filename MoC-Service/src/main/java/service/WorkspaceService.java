@@ -5,8 +5,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Inject;
 import javax.jms.Message;
 import messaging.WorkspaceGateway;
+import websocket.WebsocketEndpoint;
 import workspace.Action;
 import workspace.CompileRequest;
 import workspace.CreateRequest;
@@ -29,6 +31,9 @@ import workspace.UpdateRequest;
 public class WorkspaceService {
 
     private WorkspaceGateway gateway;
+    
+    @Inject
+    private WebsocketEndpoint websocketEndpoint;
 
     @PostConstruct
     private void init() {
@@ -38,6 +43,7 @@ public class WorkspaceService {
             @Override
             public void onWorkspaceMessageReceived(Message message) {
                 System.out.println("Message received from workspace");
+                websocketEndpoint.sendToUser("testmessage", "username");
             }
         };
     }
