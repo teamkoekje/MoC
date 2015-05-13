@@ -1,13 +1,9 @@
 package messaging;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -58,7 +54,7 @@ public class MessagingGateway {
         this.consumer = session.createConsumer(receiverDestination);
     }
 
-    public MessagingGateway(String destinationName, String destinationType, GatewayType type) throws NamingException, JMSException{
+    public MessagingGateway(String destinationName, String destinationType, GatewayType type) throws NamingException, JMSException {
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         props.setProperty(Context.PROVIDER_URL, JMSSettings.URL_ACTIVE_MQ);
@@ -81,12 +77,12 @@ public class MessagingGateway {
                 break;
         }
     }
-    
-    public BlobMessage createBlobMessage(String file) throws JMSException, IOException{
-        return ((ActiveMQSession)session).createBlobMessage(new File(file));
+
+    public BlobMessage createBlobMessage(String file) throws JMSException, IOException {
+        return ((ActiveMQSession) session).createBlobMessage(new File(file));
     }
-    
-    public BytesMessage createBytesMessage() throws JMSException{
+
+    public BytesMessage createBytesMessage() throws JMSException {
         return session.createBytesMessage();
     }
 
@@ -99,7 +95,7 @@ public class MessagingGateway {
             return false;
         }
     }
-    
+
     public boolean sendMessage(Message msg, Destination n) {
         try {
             producer.send(n, msg);
@@ -157,6 +153,18 @@ public class MessagingGateway {
             consumer.setMessageListener(listener);
         } catch (JMSException ex) {
             System.err.println(ex.getMessage());
+        }
+    }
+
+    public void confirmMessage(boolean success) {
+        try {
+            if (success) {
+                session.commit();
+            } else {
+                session.rollback();
+            }
+        } catch (Exception ex) {
+            System.err.println(ex.getLocalizedMessage());
         }
     }
 
