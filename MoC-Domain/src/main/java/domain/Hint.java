@@ -13,7 +13,7 @@ import javax.persistence.Id;
  * @author TeamKoekje
  */
 @Entity
-public class Hint implements Serializable{
+public class Hint implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
@@ -25,10 +25,10 @@ public class Hint implements Serializable{
     private boolean published;
     //</editor-fold>
 
-    public Hint() {
+    // <editor-fold defaultstate="collapsed" desc="Constructor" >
+    protected Hint() {
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Constructor" >
     /**
      * Create a new hint
      *
