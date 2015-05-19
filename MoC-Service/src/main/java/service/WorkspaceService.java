@@ -81,13 +81,13 @@ public class WorkspaceService {
     }
 
     public void push(String competitionName, String challengeName) {
-        try {
-            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
+//        try {
+//            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
             System.out.println("pushing challenge");
-            gateway.broadcast(new PushRequest(competitionName, challengeName, data));
-        } catch (IOException ex) {
-            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            gateway.broadcast(new PushRequest(competitionName, challengeName));
+//        } catch (IOException ex) {
+//            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public void folderStructure(String competitionName, String challengeName, String teamname) {

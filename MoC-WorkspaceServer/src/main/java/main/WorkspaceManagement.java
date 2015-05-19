@@ -135,7 +135,7 @@ public class WorkspaceManagement {
                 return removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName());
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return extractChallenge(pushRequest.getChallengeName(), pushRequest.getData());
+                return extractChallengeToTeam(pushRequest.getChallengeName(), pushRequest.getCompetition());
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath
