@@ -159,6 +159,18 @@ public class CompetitionResource {
     public void removeRound(@PathParam("roundId") long roundId) {
         roundService.remove(roundId);
     }
+
+    /**
+     * Starts a round
+     *
+     * @param round the round that should be started
+     */
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{competitionId}/round/start")
+    public void startRound(Round round) {
+        //round.start(); idk
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Teams">
@@ -237,8 +249,8 @@ public class CompetitionResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/invite")
-    public void inviteMember(String email, @PathParam("teamId") long teamId) {
-        invitationService.inviteMember(email, teamId);
+    public void inviteMember(String email, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
+        invitationService.inviteMember(email, teamId, competitionId);
     }
 
     /**

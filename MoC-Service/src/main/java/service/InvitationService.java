@@ -1,7 +1,12 @@
 package service;
 
 import domain.Invitation;
+import domain.Team;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.SecureRandom;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -28,24 +33,67 @@ public class InvitationService extends GenericService<Invitation> {
      *
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
+     * @param competitionId
+     * 
+     * 
      */
-    public void inviteMember(String email, long teamId) {
+    public void inviteMember(String email, long teamId, Long competitionId) {
+        /*
+        
+        Todo:
+        - save token and invited user in the database
+        - get teamname by teamId
+        - set status on invited
+        
+        */
+        
+        
+        
         //Generate token
-        //String token = generateToken();
-        //Team t = new Team(new Participant());
-        //Team t = teamDao.findById(teamId);
-        //Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
-        //invitationDao.create(invite);
-        //send email
-
+        String token = generateToken();
+        
+        //Get Teamname
+        
+        //    Invitation invite = new Invitation(t, "c.linschooten@gmail.com", token);
+        //    invitationDao.create(invite);
+        //    send email
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("c.linschooten@gmail.com"));//this doesnt work as the injected session will override it
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("c.linschooten@gmail.com"));
-            message.setSubject("BEEEERRRRR!!");
-            message.setText("Let's have a beer party sometime.");
+                    InternetAddress.parse("robin.avoorts@gmail.com"));
 
+            message.setSubject("You have been Invited");
+            message.setHeader("Content-Type", "text/html");
+
+            /*
+             email content            
+             */
+            //get mail.html file to string
+            URL url = new URL("http://localhost:8080/MoC-Service/mail.html");
+            URLConnection con = url.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String line;
+            StringBuilder sb = new StringBuilder();
+            while ((line = in.readLine()) != null) {
+                sb.append(line);
+            }
+            String mail = sb.toString();
+
+            //replace #competitionId/team/#teamId/join/#token
+            //replace #competitionId
+            mail = mail.replace("#competitionId", String.valueOf(competitionId));
+            //replace #teamId
+            mail = mail.replace("#teamId", String.valueOf(teamId));
+            //replace #token
+            mail = mail.replace("#token", token);
+            //replace #teamname
+            mail = mail.replace("#teamname", String.valueOf(teamId));
+            //set Content
+            message.setContent(mail, "text/html");
+            /*
+             end email content
+             */
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (Exception ex) {

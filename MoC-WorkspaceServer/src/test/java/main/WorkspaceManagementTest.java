@@ -74,7 +74,8 @@ public class WorkspaceManagementTest {
         instance.processRequest(cr2);
 
         //extract (push)
-        PushRequest pr = new PushRequest(competitionName, "test challenge");
+        byte[] data = null;
+        PushRequest pr = new PushRequest(competitionName, "test challenge", data);
         instance.processRequest(pr);
         //confirm
         File f = new File(instance.getDefaultPath()

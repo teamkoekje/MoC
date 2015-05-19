@@ -1,20 +1,24 @@
 package service;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Inject;
 import javax.jms.Message;
 import messaging.WorkspaceGateway;
-import workspace.Action;
+import websocket.WebsocketEndpoint;
 import workspace.CompileRequest;
 import workspace.CreateRequest;
 import workspace.DeleteRequest;
 import workspace.FileRequest;
 import workspace.FolderStructureRequest;
 import workspace.PushRequest;
-import workspace.Request;
 import workspace.TestAllRequest;
 import workspace.TestRequest;
 import workspace.UpdateRequest;
@@ -29,6 +33,9 @@ import workspace.UpdateRequest;
 public class WorkspaceService {
 
     private WorkspaceGateway gateway;
+    
+    @Inject
+    private WebsocketEndpoint we;
 
     @PostConstruct
     private void init() {
@@ -38,6 +45,7 @@ public class WorkspaceService {
             @Override
             public void onWorkspaceMessageReceived(Message message) {
                 System.out.println("Message received from workspace");
+                we.send("testmessage");
             }
         };
     }
@@ -73,7 +81,13 @@ public class WorkspaceService {
     }
 
     public void push(String competitionName, String challengeName) {
-        gateway.broadcast(new PushRequest(competitionName, challengeName));
+        try {
+            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
+            System.out.println("pushing challenge");
+            gateway.broadcast(new PushRequest(competitionName, challengeName, data));
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void folderStructure(String competitionName, String challengeName, String teamname) {

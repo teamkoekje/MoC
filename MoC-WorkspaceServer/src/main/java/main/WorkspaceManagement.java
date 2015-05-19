@@ -51,7 +51,7 @@ public class WorkspaceManagement {
         if ("linux".equalsIgnoreCase(osName)) {
             defaultPath = "MoC" + File.pathSeparator;
         } else {
-            defaultPath = "C:/MoC" + File.pathSeparator;
+            defaultPath = "C:/MoC/";
         }
         //load teams           
         File rootFolder = new File(defaultPath);
@@ -135,7 +135,7 @@ public class WorkspaceManagement {
                 return removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName());
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return extractChallengeToTeam(pushRequest.getChallengeName(), pushRequest.getCompetition());
+                return extractChallenge(pushRequest.getChallengeName(), pushRequest.getData());
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath

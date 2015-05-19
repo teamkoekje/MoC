@@ -17,7 +17,7 @@ import workspace.Request;
  *
  * @author TeamKoekje
  */
-public class BrokerGateway implements IRequestListener<Request>, MessageListener {
+public class BrokerGateway implements IRequestListener<Request> {
 
     private MessagingGateway initGtw;
     private String initMsgId;
@@ -28,20 +28,17 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
     @SuppressWarnings("LeakingThisInConstructor")
     public BrokerGateway() throws NamingException, JMSException {
         initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
-        initGtw.setReceivedMessageListener(this);
+        initGtw.setReceivedMessageListener(new MessageListener() {
+            @Override
+            public void onMessage(Message msg) {
+                onInitReply(msg);
+            }
+        });
         initGtw.openConnection();
         sendInitMessage();
     }
 
-    private void sendInitMessage() throws JMSException {
-        Message msg = initGtw.createTextMessage("HELLO SERVER");
-        initGtw.sendMessage(msg);
-        initMsgId = msg.getJMSMessageID();
-        System.out.println("Init request send: " + initMsgId);
-    }
-
-    @Override
-    public void onMessage(Message msg) {
+    private void onInitReply(Message msg) {
         try {
             System.out.println("Init reply received: " + msg.getJMSCorrelationID());
             if (msg.getJMSCorrelationID().equals(initMsgId)) {
@@ -68,15 +65,23 @@ public class BrokerGateway implements IRequestListener<Request>, MessageListener
         }
     }
 
-    @Override
-    public void receivedRequest(Request request) {
-        System.out.println("Request received: " + request.getAction());
-
-        String replyMessage = "hoi";
-        
-        Reply reply = new Reply(wm.processRequest(request));
-        //Reply reply = new Reply(replyMessage);
-        replier.sendReply(request, reply);
+    private void sendInitMessage() throws JMSException {
+        Message msg = initGtw.createTextMessage("HELLO SERVER");
+        initGtw.sendMessage(msg);
+        initMsgId = msg.getJMSMessageID();
+        System.out.println("Init request send: " + initMsgId);
     }
 
+    @Override
+    public synchronized void receivedRequest(Request request) {
+        System.out.println("Request received on workspace server: " + request.getAction());
+        Reply reply = new Reply(wm.processRequest(request));
+        //TODO:
+        //if (threads available in pool)
+        //  create new correct thread and run it
+        //  confirm message with MessagingGateway.confirmMessage(true)
+        //else
+        //  rollback message using MessagingGateway.confirmMessage(false)
+        replier.sendReply(request, reply);
+    }
 }

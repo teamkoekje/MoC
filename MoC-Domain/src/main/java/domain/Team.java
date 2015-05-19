@@ -2,6 +2,7 @@ package domain;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.enterprise.inject.spi.CDI;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,7 +58,9 @@ public class Team implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters" >
     public long getId() {
+        CDI.current().select(EventManager.class).get();
         return id;
+        
     }
 
     public String getName() {
@@ -123,5 +126,4 @@ public class Team implements Serializable {
         competition.submit(this);
     }
     //</editor-fold>
-
 }
