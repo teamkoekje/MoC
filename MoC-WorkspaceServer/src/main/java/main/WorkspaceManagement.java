@@ -30,7 +30,10 @@ public class WorkspaceManagement {
 
     // <editor-fold defaultstate="collapsed" desc="variables" >
     private final String defaultPath;
-    private final List<String> teams = new ArrayList<>();
+    /**
+     * Key: Competition name Value: ArrayList<String> with team names
+     */
+    private final HashMap<String, ArrayList<String>> teams = new HashMap<>();
     private static final File MAVEN_HOME = new File("C:/apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
@@ -50,15 +53,26 @@ public class WorkspaceManagement {
         } else {
             defaultPath = "C:/MoC" + File.pathSeparator;
         }
-        //load teams
+        //load teams           
         File rootFolder = new File(defaultPath);
         if (!rootFolder.exists()) {
             rootFolder.mkdir();
-        }
-
-        for (File f : rootFolder.listFiles()) {
-            if (f.isDirectory()) {
-                teams.add(f.getName());
+            File competitionFolder = new File(defaultPath + File.pathSeparator + "Competitions");
+            if (!competitionFolder.exists()) {
+                competitionFolder.mkdir();
+            }
+            for (File f : competitionFolder.listFiles()) {
+                if (f.isDirectory()) {
+                    String competitionName = f.getName();
+                    if (!teams.containsKey(competitionName)) {
+                        teams.put(competitionName, new ArrayList());
+                    }
+                    ArrayList<String> tempList = teams.get(competitionName);
+                    for (File f2 : f.listFiles()) {
+                        tempList.add(f2.getName());
+                    }
+                    teams.put(competitionName, tempList);
+                }
             }
         }
 
@@ -103,36 +117,61 @@ public class WorkspaceManagement {
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
-                return buildWorkspace(compileRequest.getTeamName(), compileRequest.getChallengeName());
+                return buildWorkspace(compileRequest.getCompetition(), compileRequest.getTeamName(), compileRequest.getChallengeName());
             case TEST:
-                TestRequest testRequest= (TestRequest) r;
-                return test(testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName(), testRequest.getTestName());
+                TestRequest testRequest = (TestRequest) r;
+                return test(testRequest.getCompetition(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName());
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
-                return testAll(testAllRequest.getTeamName(), testAllRequest.getChallengeName());
+                return testAll(testAllRequest.getCompetition(), testAllRequest.getTeamName(), testAllRequest.getChallengeName());
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
-                return updateFile(updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent());
+                return updateFile(updateRequest.getCompetition(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent());
             case CREATE:
                 CreateRequest createRequest = (CreateRequest) r;
-                return createWorkspace(createRequest.getTeamName());
+                return createWorkspace(createRequest.getCompetition(), createRequest.getTeamName());
             case DELETE:
                 DeleteRequest deleteRequest = (DeleteRequest) r;
-                return removeWorkspace(deleteRequest.getTeamName());
+                return removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName());
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return extractChallenge(pushRequest.getChallengeName());
+                return extractChallengeToTeam(pushRequest.getChallengeName(), pushRequest.getCompetition());
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                String folderPath = 
-                        defaultPath + 
-                        folderStructureRequest.getCompetition() + File.pathSeparator + 
-                        folderStructureRequest.getChallengeName() + File.pathSeparator + 
-                        folderStructureRequest.getTeamName();
-                return FileManagement.getInstance("some jar").getFolderJSON(folderPath);
+                String folderPath
+                        = defaultPath
+                        + File.pathSeparator
+                        + "Competitions"
+                        + File.pathSeparator
+                        + folderStructureRequest.getCompetition()
+                        + File.pathSeparator
+                        + "Teams"
+                        + File.pathSeparator
+                        + folderStructureRequest.getTeamName()
+                        + File.pathSeparator
+                        + folderStructureRequest.getChallengeName();
+                String jarPathForFolder
+                        = folderPath
+                        + File.pathSeparator
+                        + folderStructureRequest.getChallengeName() + ".jar";
+                return FileManagement.getInstance(jarPathForFolder).getFolderJSON(folderPath);
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
-                return FileManagement.getInstance("some jar").getFileJSON(fileRequest.getFilepath());
+                String jarPathForFile
+                        = defaultPath
+                        + File.pathSeparator
+                        + "Competitions"
+                        + File.pathSeparator
+                        + fileRequest.getCompetition()
+                        + File.pathSeparator
+                        + "Teams"
+                        + File.pathSeparator
+                        + fileRequest.getTeamName()
+                        + File.pathSeparator
+                        + fileRequest.getChallangeName()
+                        + File.pathSeparator
+                        + fileRequest.getChallangeName() + ".jar";
+                return FileManagement.getInstance(jarPathForFile).getFileJSON(fileRequest.getFilepath());
             // private final String defaultJar = defaultPath + "/annotionframework/annotatedProject-1.0.jar"
             default:
                 return "error, unknown action: " + r.getAction().name();
@@ -143,13 +182,25 @@ public class WorkspaceManagement {
     /**
      * Creates a workspace for the specified team
      *
+     * @param competitionName Name of the competition
      * @param teamName Name of the team
      * @return A String indicating the success or failure the workspace creation
      */
-    protected String createWorkspace(String teamName) {
+    protected String createWorkspace(String competitionName, String teamName) {
         try {
-            new File(defaultPath + teamName).mkdirs();
-            teams.add(teamName);
+            File teamFolder = new File(defaultPath
+                    + File.pathSeparator
+                    + "Competitions"
+                    + File.pathSeparator
+                    + competitionName
+                    + File.pathSeparator
+                    + "Teams"
+                    + File.pathSeparator
+                    + teamName);
+            teamFolder.mkdirs();
+            ArrayList<String> tempList = teams.get(competitionName);
+            tempList.add(teamName);
+            teams.put(competitionName, tempList);
             return "Created workspace for team: " + teamName;
         } catch (Exception ex) {
             System.err.println(ex.getLocalizedMessage());
@@ -160,14 +211,26 @@ public class WorkspaceManagement {
     /**
      * Removes the workspace of the specified team
      *
+     * @param competitionName The competition name where the team needs to be
+     * removed from
      * @param teamName The workspace name to remove
      * @return A String indicating whether the workspace has been removed or
      * not.
      */
-    protected String removeWorkspace(String teamName) {
-        File path = new File(defaultPath + teamName);
-        if (deleteDirectory(path)) {
-            teams.remove(teamName);
+    protected String removeWorkspace(String competitionName, String teamName) {
+        File teamFolder = new File(defaultPath
+                + File.pathSeparator
+                + "Competitions"
+                + File.pathSeparator
+                + competitionName
+                + File.pathSeparator
+                + "Teams"
+                + File.pathSeparator
+                + teamName);
+        if (deleteDirectory(teamFolder)) {
+            ArrayList<String> tempList = teams.get(competitionName);
+            tempList.remove(teamName);
+            teams.put(competitionName, tempList);
             return "Workspace succesfully deleted";
         } else {
             return "Error while deleting workspace";
@@ -197,9 +260,18 @@ public class WorkspaceManagement {
      * @param fileContent The new content of the file
      * @return A String indicating the success of the update
      */
-    protected String updateFile(String teamName, String filePath, String fileContent) {
+    protected String updateFile(String competitionName, String teamName, String filePath, String fileContent) {
         //variables
-        File originalPath = new File(defaultPath + teamName + "/" + filePath);
+        File teamFolder = new File(defaultPath
+                + File.pathSeparator
+                + "Competitions"
+                + File.pathSeparator
+                + competitionName
+                + File.pathSeparator
+                + "Teams"
+                + File.pathSeparator
+                + teamName);
+        File originalPath = new File(teamFolder.getAbsolutePath() + File.pathSeparator + filePath);
         File tempPath = new File(originalPath + ".temp");
         String deleteTempFileError = "Error while deleting temp file: ";
         //if the file exists, backup
@@ -249,17 +321,24 @@ public class WorkspaceManagement {
     /**
      * Extracts the specified challenge to all workspaces
      *
+     * @param competitionName The name of the competition
      * @param challengeName The challenge to extract
      * @return A string indicating the success of the extraction
      */
-    protected String extractChallenge(String challengeName) {
-
-        String challengePath = defaultPath + challengeName + ".zip";
-        File challengeZip = new File(challengePath);
+    protected String extractChallengeToTeam(String challengeName, String competitionName) {
+        File challengeZip = new File(defaultPath
+                + File.pathSeparator
+                + "Competitions"
+                + File.pathSeparator
+                + competitionName
+                + File.pathSeparator
+                + "Challenges"
+                + File.pathSeparator
+                + challengeName + ".zip");
         //for all teams
-        for (String teamName : teams) {
+        for (String teamName : teams.get(competitionName)) {
             try {
-                extractChallengeToTeam(challengeZip, teamName);
+                extractChallenge(challengeZip, teamName);
             } catch (Exception ex) {
                 Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 return "Error extracting: " + ex.getLocalizedMessage();
@@ -268,13 +347,18 @@ public class WorkspaceManagement {
         return "Extracting successfull";
     }
 
-    private void extractChallengeToTeam(File challengeZip, String teamName) throws IOException {
+    private void extractChallenge(File challengeZip, String teamName) throws IOException {
         //zip
         ZipFile zip = new ZipFile(challengeZip);
         Enumeration zipFileEntries = zip.entries();
         //output directory
-        String outputPath = defaultPath + teamName;
-        new File(outputPath).mkdir();
+        String outputPath = challengeZip.getParent()
+                + File.pathSeparator
+                + "Teams"
+                + File.pathSeparator
+                + teamName
+                + File.pathSeparator
+                + challengeZip.getParentFile().getName();
         //loop through the zip
         while (zipFileEntries.hasMoreElements()) {
             //create the file/folder
@@ -314,9 +398,9 @@ public class WorkspaceManagement {
      * @param challengeName The name of the challenge to be build
      * @return A String with the build output.
      */
-    protected String buildWorkspace(String workspaceName, String challengeName) {
+    protected String buildWorkspace(String competitionName, String teamName, String challengeName) {
         try {
-            beforeMavenInvocation(workspaceName, challengeName);
+            beforeMavenInvocation(competitionName, teamName, challengeName);
             request.setGoals(Arrays.asList("install"));
             request.setProperties(new Properties());
 
@@ -337,9 +421,9 @@ public class WorkspaceManagement {
      * @param challengeName The name of the challenge to be tested
      * @return A String indicating the test report
      */
-    protected String testAll(String workspaceName, String challengeName) {
+    protected String testAll(String competitionName, String teamName, String challengeName) {
         try {
-            beforeMavenInvocation(workspaceName, challengeName);
+            beforeMavenInvocation(competitionName, teamName, challengeName);
             request.setGoals(Arrays.asList("test"));
             request.setProperties(new Properties());
 
@@ -357,15 +441,16 @@ public class WorkspaceManagement {
      * Attempts to test a specific test for the specified challenge in the
      * specified workspace.
      *
-     * @param workspaceName The name of the workspace which should be used
+     * @param competitionName
      * @param challengeName The name of the challenge to be tested
+     * @param teamName
      * @param testFile The file to test
      * @param testName The name of the test to test
      * @return
      */
-    protected String test(String workspaceName, String challengeName, String testFile, String testName) {
+    protected String test(String competitionName, String teamName, String challengeName, String testFile, String testName) {
         try {
-            beforeMavenInvocation(workspaceName, challengeName);
+            beforeMavenInvocation(competitionName, teamName, challengeName);
             request.setGoals(Arrays.asList("test"));
             Properties p = new Properties();
             p.setProperty("test", testFile + "#" + testName);
@@ -381,10 +466,20 @@ public class WorkspaceManagement {
         }
     }
 
-    private void beforeMavenInvocation(String workspaceName, String challengeName) throws IOException {
+    private void beforeMavenInvocation(String competitionName, String teamName, String challengeName) throws IOException {
         //create target dir
-        String projectDir = defaultPath + workspaceName + "/" + challengeName;
-        File targetFolder = new File(projectDir + "/target");
+        File projectDir = new File(defaultPath
+                + File.pathSeparator
+                + "Competitions"
+                + File.pathSeparator
+                + competitionName
+                + File.pathSeparator
+                + "Teams"
+                + File.pathSeparator
+                + teamName
+                + File.pathSeparator
+                + challengeName);
+        File targetFolder = new File(projectDir.getAbsoluteFile() + File.pathSeparator + "target");
         if (!targetFolder.exists()) {
             targetFolder.mkdir();
         }

@@ -12,11 +12,13 @@ package workspace;
 public class TestRequest extends TeamRequest{
     
     private String challangeName;
+    private String testFile;
     private String testName;
 
-    public TestRequest(String competition, String teamname, String challangeName, String testName) {
+    public TestRequest(String competition, String teamname, String challangeName, String testFile, String testName) {
         super(Action.TEST, competition, teamname);
         this.challangeName = challangeName;
+        this.testFile = testFile;
         this.testName = testName;
     }
 
@@ -35,6 +37,12 @@ public class TestRequest extends TeamRequest{
     public void setTestName(String testName) {
         this.testName = testName;
     }
-    
-    
+
+    public String getTestFile() {
+        return testFile;
+    }
+
+    public void setTestFile(String testFile) {
+        this.testFile = testFile;
+    }
 }

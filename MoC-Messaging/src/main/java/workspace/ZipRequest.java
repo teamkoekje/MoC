@@ -12,7 +12,7 @@ public class ZipRequest extends Request {
 
 
     public ZipRequest(byte[] data) {
-        super(Action.UPLOAD_CHALLENGE);
+        super(Action.UPLOAD_CHALLENGE, "");
         this.data = data;
     }
 

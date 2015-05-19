@@ -12,9 +12,11 @@ package workspace;
 public class FileRequest extends TeamRequest{
     
     private String filepath;
+    private String challangeName;
 
-    public FileRequest(String competition, String teamname, String filepath) {
+    public FileRequest(String competition, String teamname, String challangeName, String filepath) {
         super(Action.FILE, competition, teamname);
+        this.challangeName = challangeName;
         this.filepath = filepath;
     }
 
@@ -24,5 +26,13 @@ public class FileRequest extends TeamRequest{
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+    }
+
+    public String getChallangeName() {
+        return challangeName;
+    }
+
+    public void setChallangeName(String challangeName) {
+        this.challangeName = challangeName;
     }
 }
