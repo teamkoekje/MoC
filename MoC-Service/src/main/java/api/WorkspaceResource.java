@@ -28,7 +28,7 @@ public class WorkspaceResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/create")
     public void create(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
-        workspaceService.create(competitionName, teamName, "USERNAME");
+        workspaceService.create(competitionName, teamName, request.getUserPrincipal().getName());
     }
 
     @POST
@@ -36,7 +36,7 @@ public class WorkspaceResource {
     @Path("/{competitionName}/{teamName}/delete")
     public void delete(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
         System.out.println(request.getUserPrincipal().getName());
-        workspaceService.delete(competitionName, teamName, "USERNAME");
+        workspaceService.delete(competitionName, teamName, request.getUserPrincipal().getName());
     }
 
     @POST

@@ -1,10 +1,9 @@
 package websocket;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
@@ -17,66 +16,34 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint(value = "/ws/api")
 public class WebsocketEndpoint {
-    
-    static HashMap<Session, String> peers = new HashMap<>();
- 
+
+    static HashMap<String, Session> peers = new HashMap<>();
+
     @OnOpen
     public void openConnection(Session session) {
-        try {
-            if (session.getUserPrincipal() == null) {
-                return;
-            }
-            if (!peers.containsKey(session)) {
-                peers.put(session, null);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        Principal p = session.getUserPrincipal();
+        if (p != null) {
+            peers.put(p.getName(), session);
         }
     }
- 
+
     @OnClose
     public void closedConnection(Session session) {
-        if (peers.containsKey(session)) {
-            peers.remove(session);
+        Principal p = session.getUserPrincipal();
+        if (p != null) {
+            peers.remove(p.getName());
         }
     }
- 
+
     public static void broadCast(String msg) {
-        try {
-            Iterator<Session> keySetIterator = peers.keySet().iterator();
-
-            while(keySetIterator.hasNext()){
-                Session s = keySetIterator.next();
-                s.getBasicRemote().sendObject(msg);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        for (Session s : peers.values()) {
+            s.getAsyncRemote().sendObject(msg);
         }
     }
 
-    public void sendToUser(String msg, String correlation) {
-        try {
-            Iterator<Session> keySetIterator = peers.keySet().iterator();
-
-            while(keySetIterator.hasNext()){
-                Session s = keySetIterator.next();
-                if(peers.get(s).equals(correlation)){
-                    s.getBasicRemote().sendObject(msg);
-                }
-            }
-        } catch (EncodeException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void setCorrelationId(String username, String correlation){
-        Iterator<Session> keySetIterator = peers.keySet().iterator();
-
-        while(keySetIterator.hasNext()){
-            Session s = keySetIterator.next();
-            if(s.getUserPrincipal().getName().equals(username)){
-                peers.replace(s, correlation);
-            }
-        }
+    public void sendToUser(String msg, String username) {
+        Session s = peers.get(username);
+        s.getAsyncRemote().sendObject(msg);
+        System.out.println("Message send to user: " + username);
     }
 }
