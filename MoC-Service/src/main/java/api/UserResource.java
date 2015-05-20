@@ -3,9 +3,9 @@ package api;
 import domain.User;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +24,7 @@ import service.UserService;
  *
  * @author Astrid
  */
+@Stateless
 @Path("user")
 @DeclareRoles({"User", "Admin"})
 public class UserResource {
@@ -39,7 +40,7 @@ public class UserResource {
      */
     @GET
     @Produces("application/xml,application/json")
-    @RolesAllowed("Admin")
+    //@RolesAllowed("Admin")
     public List<User> getUsers() {
         return userService.findAll();
     }
@@ -65,8 +66,7 @@ public class UserResource {
      */
     @POST
     @Consumes("application/xml,application/json")
-    //@RolesAllowed("Admin")
-    @DenyAll
+    @PermitAll
     public void createUser(User user) {
         userService.create(user);
     }
