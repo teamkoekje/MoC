@@ -13,6 +13,7 @@ import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 import javax.websocket.Session;
 import messaging.WorkspaceGateway;
@@ -23,6 +24,7 @@ import workspace.DeleteRequest;
 import workspace.FileRequest;
 import workspace.FolderStructureRequest;
 import workspace.PushRequest;
+import workspace.Reply;
 import workspace.TestAllRequest;
 import workspace.TestRequest;
 import workspace.UpdateRequest;
@@ -50,20 +52,23 @@ public class WorkspaceService {
 
             @Override
             public void onWorkspaceMessageReceived(Message message) {
-                sendReplyMessage(message);
+                System.out.println("OnWorkspaceMessageReceived");
+                if (message instanceof ObjectMessage) {
+                    try {
+                        String username = requests.get(message.getJMSCorrelationID());
+                        ObjectMessage objMsg = (ObjectMessage) message;
+                        Reply reply = (Reply) objMsg.getObject();
+                        System.out.println("Message received from workspace: " + reply.getMessage());
+                        System.out.println("Sending reply to user: " + username);
+                        we.sendToUser(reply.getMessage(), username);
+                        System.out.println("Message sent to client");
+                    } catch (JMSException ex) {
+                        Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
             }
         };
-    }
-
-    private void sendReplyMessage(Message message) {
-        try {
-            System.out.println("Message received from workspace: " + ((TextMessage) message).getText());
-            String username = requests.get(message.getJMSCorrelationID());
-            we.sendToUser(((TextMessage) message).getText(), username);
-            System.out.println("Message sent to client");
-        } catch (JMSException ex) {
-            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @PreDestroy
@@ -99,8 +104,8 @@ public class WorkspaceService {
         gateway.sendRequestToTeam(new TestAllRequest(competition, teamName, challengeName));
     }
 
-    public void test(String competition, String teamName, String challengeName, String testName) {
-        gateway.sendRequestToTeam(new TestRequest(competition, teamName, challengeName, testName));
+    public void test(String competition, String teamName, String challengeName, String testFile, String testName) {
+        gateway.sendRequestToTeam(new TestRequest(competition, teamName, challengeName, testFile, testName));
     }
 
     public void push(String competitionName, String challengeName) {
