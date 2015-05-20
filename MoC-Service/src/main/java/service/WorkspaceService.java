@@ -10,7 +10,9 @@ import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.TextMessage;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
 import workspace.CompileRequest;
@@ -33,7 +35,7 @@ import workspace.UpdateRequest;
 public class WorkspaceService {
 
     private WorkspaceGateway gateway;
-
+    
     @Inject
     private WebsocketEndpoint we;
 
@@ -44,8 +46,13 @@ public class WorkspaceService {
 
             @Override
             public void onWorkspaceMessageReceived(Message message) {
-                System.out.println("Message received from workspace");
-                we.send("testmessage");
+                try {
+                    System.out.println("Message received from workspace: " + ((TextMessage)message).getText());
+                    we.sendToUser(((TextMessage)message).getText(), message.getJMSCorrelationID());
+                    System.out.println("Message sent to client");
+                } catch (JMSException ex) {
+                    Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
     }
@@ -55,15 +62,19 @@ public class WorkspaceService {
         gateway.closeConnection();
     }
 
-    public void create(String competitionName, String teamName) {
+    public void create(String competitionName, String teamName, String username) {
         System.out.println("Send message: create workspace");
-        for (int i = 0; i < 100; i++) {
-            gateway.addWorkspace(new CreateRequest(competitionName, teamName + i));
+        String s = gateway.addWorkspace(new CreateRequest(competitionName, teamName));
+        if(s != null){
+            we.setCorrelationId(username, s);
         }
     }
 
-    public void delete(String competitionName, String teamName) {
-        gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
+    public void delete(String competitionName, String teamName, String username) {
+        String s = gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
+        if(s != null){
+            we.setCorrelationId(username, s);
+        }
     }
 
     public void update(String competitionName, String teamName, String filePath, String fileContent) {
@@ -78,25 +89,25 @@ public class WorkspaceService {
         gateway.sendRequestToTeam(new TestAllRequest(competition, teamname, challengeName));
     }
 
-    public void test(String competition, String teamname, String challengeName, String testName) {
-        gateway.sendRequestToTeam(new TestRequest(competition, teamname, challengeName, testName));
+    public void test(String competition, String teamname, String challengeName, String testFile, String testName) {
+        gateway.sendRequestToTeam(new TestRequest(competition, teamname, challengeName, testFile, testName));
     }
 
     public void push(String competitionName, String challengeName) {
-        try {
-            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
+//        try {
+//            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
             System.out.println("pushing challenge");
-            gateway.broadcast(new PushRequest(competitionName, challengeName, data));
-        } catch (IOException ex) {
-            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            gateway.broadcast(new PushRequest(competitionName, challengeName));
+//        } catch (IOException ex) {
+//            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public void folderStructure(String competitionName, String challengeName, String teamname) {
         gateway.sendRequestToTeam(new FolderStructureRequest(competitionName, challengeName, teamname));
     }
 
-    public void file(String competitionName, String teamname, String filePath) {
-        gateway.sendRequestToTeam(new FileRequest(competitionName, teamname, filePath));
+    public void file(String competitionName, String teamname, String challengeName, String filePath) {
+        gateway.sendRequestToTeam(new FileRequest(competitionName, teamname, challengeName, filePath));
     }
 }

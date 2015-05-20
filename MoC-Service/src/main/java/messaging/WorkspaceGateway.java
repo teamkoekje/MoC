@@ -83,24 +83,28 @@ public abstract class WorkspaceGateway {
 
     }
 
-    private void sendRequest(Request request, MessagingGateway gtw) {
+    private String sendRequest(Request request, MessagingGateway gtw) {
         try {
             ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
-
+            String s = msg.getJMSMessageID();
+            msg.setJMSCorrelationID(s);
             gtw.sendMessage(msg);
             System.out.println("Message sent");
+            return s;
         } catch (JMSException ex) {
             System.err.println(ex.getMessage());
+            return null;
         }
     }
 
-    public synchronized void sendRequestToTeam(TeamRequest request) {
+    public synchronized String sendRequestToTeam(TeamRequest request) {
         WorkspaceServer ws = router.getServerByWorkspaceName(request.getTeamName());
         if (ws != null) {
-            sendRequest(request, ws.getSender());
+            return sendRequest(request, ws.getSender());
         } else {
             System.out.println("Workspace not found on available servers");
+            return null;
         }
     }
     
@@ -111,13 +115,14 @@ public abstract class WorkspaceGateway {
         }
     }
 
-    public synchronized void addWorkspace(TeamRequest request) {
+    public synchronized String addWorkspace(TeamRequest request) {
         WorkspaceServer ws = router.getServerWithLeastWorkspaces();
         if (ws != null) {
             ws.addWorkspace(request.getTeamName());
-            sendRequest(request, ws.getSender());
+            return sendRequest(request, ws.getSender());
         } else {
             System.out.println("No servers available");
+            return null;
         }
     }
 

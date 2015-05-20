@@ -35,7 +35,15 @@ public class WorkspaceManagementTest {
         CreateRequest cr = new CreateRequest(competitionName, teamName);
         instance.processRequest(cr);
         //confirm
-        File f = new File(instance.getDefaultPath() + teamName);
+        File f = new File(instance.getDefaultPath()
+                + File.separator
+                + "Competitions"
+                + File.separator
+                + competitionName
+                + File.separator
+                + "Teams"
+                + File.separator
+                + teamName);
         assertTrue(f.exists());
         assertTrue(f.isDirectory());
         assertEquals(f.listFiles().length, 0);
@@ -64,23 +72,31 @@ public class WorkspaceManagementTest {
         CreateRequest cr2 = new CreateRequest(competitionName, "team 2");
         instance.processRequest(cr);
         instance.processRequest(cr2);
-        
+
         //extract (push)
-        byte[] data = null;
-        PushRequest pr = new PushRequest(competitionName, "test challenge", data);
+        //byte[] data = null;
+        PushRequest pr = new PushRequest(competitionName, "test challenge");
         instance.processRequest(pr);
         //confirm
-        File teamAFile1 = new File(instance.getDefaultPath() + "/testCompetition/team a/test challenge/some text.txt");
-        File teamAFile2 = new File(instance.getDefaultPath() + "/testCompetition/team a/test challenge/a sub folder/pizza.java");
-        File teamBFile1 = new File(instance.getDefaultPath() + "/testCompetition/team b/test challenge/some text.txt");
-        File teamBFile2 = new File(instance.getDefaultPath() + "/testCompetition/team b/test challenge/a sub folder/pizza.java");
+        File f = new File(instance.getDefaultPath()
+                + File.separator
+                + "Competitions"
+                + File.separator
+                + competitionName
+                + File.separator
+                + "Teams"
+                + File.separator);
+        File teamAFile1 = new File(f.getAbsolutePath() + "/team a/test challenge/some text.txt");
+        File teamAFile2 = new File(f.getAbsolutePath() + "/team a/test challenge/a sub folder/pizza.java");
+        File teamBFile1 = new File(f.getAbsolutePath() + "/team b/test challenge/some text.txt");
+        File teamBFile2 = new File(f.getAbsolutePath() + "/team b/test challenge/a sub folder/pizza.java");
         assertTrue(teamAFile1.exists());
         assertTrue(teamAFile2.exists());
         assertTrue(teamBFile1.exists());
         assertTrue(teamBFile2.exists());
         //cleanup
-        instance.removeWorkspace("team a");
-        instance.removeWorkspace("team b");
+        instance.removeWorkspace(competitionName, "team a");
+        instance.removeWorkspace(competitionName, "team b");
     }
 
     @Test
@@ -94,8 +110,18 @@ public class WorkspaceManagementTest {
             WorkspaceManagement instance = new WorkspaceManagement();
             CreateRequest cr = new CreateRequest(competitionName, "team c");
             instance.processRequest(cr);
-            File f = new File(instance.getDefaultPath() + "/testCompitition/team c/test file.txt");
-            f.createNewFile();
+            File f = new File(instance.getDefaultPath()
+                    + File.separator
+                    + "Competitions"
+                    + File.separator
+                    + competitionName
+                    + File.separator
+                    + "Teams"
+                    + File.separator
+                    + "team c"
+                    + File.separator
+                    + "test file.txt");
+            assertTrue(f.createNewFile());
             FileWriter fw = new FileWriter(f);
             try (BufferedWriter bw = new BufferedWriter(fw)) {
                 bw.write(originalContent);
@@ -111,7 +137,7 @@ public class WorkspaceManagementTest {
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(newContent, temp2);
             //cleanup
-            instance.removeWorkspace("team c");
+            instance.removeWorkspace(competitionName, "team c");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
