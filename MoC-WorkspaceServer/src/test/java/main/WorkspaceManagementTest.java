@@ -1,5 +1,6 @@
 package main;
 
+import Management.WorkspaceManagement;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +17,7 @@ import workspace.UpdateRequest;
  *
  * @author Casper
  */
-public class WorkspaceManagementTest {
+public class WorkspaceManagementTest extends WorkspaceManagement{
 
     public WorkspaceManagementTest() {
     }
@@ -29,7 +30,7 @@ public class WorkspaceManagementTest {
         //init
         String teamName = "testTeam";
         String competitionName = "testCompetition";
-        WorkspaceManagement instance = new WorkspaceManagement();
+        WorkspaceManagement instance = getInstance();
         System.out.println("creating workspace");
         //create
         CreateRequest cr = new CreateRequest(competitionName, teamName);
@@ -65,9 +66,9 @@ public class WorkspaceManagementTest {
     //@Test
     public void testExtractChallenge() {
         //init
-        System.out.println("extracting challenge");
+        /*System.out.println("extracting challenge");
         String competitionName = "testCompetition";
-        WorkspaceManagement instance = new WorkspaceManagement();
+        WorkspaceManagement instance = getInstance();
         CreateRequest cr = new CreateRequest(competitionName, "team 1");
         CreateRequest cr2 = new CreateRequest(competitionName, "team 2");
         instance.processRequest(cr);
@@ -96,7 +97,7 @@ public class WorkspaceManagementTest {
         assertTrue(teamBFile2.exists());
         //cleanup
         instance.removeWorkspace(competitionName, "team a");
-        instance.removeWorkspace(competitionName, "team b");
+        instance.removeWorkspace(competitionName, "team b");*/
     }
 
     @Test
@@ -107,7 +108,7 @@ public class WorkspaceManagementTest {
             String competitionName = "testCompitition";
             String originalContent = "this is test text";
             String newContent = "new content";
-            WorkspaceManagement instance = new WorkspaceManagement();
+            WorkspaceManagement instance = getInstance();
             CreateRequest cr = new CreateRequest(competitionName, "team c");
             instance.processRequest(cr);
             File f = new File(instance.getDefaultPath()
@@ -137,7 +138,7 @@ public class WorkspaceManagementTest {
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(newContent, temp2);
             //cleanup
-            instance.removeWorkspace(competitionName, "team c");
+            removeWorkspace(competitionName, "team c");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

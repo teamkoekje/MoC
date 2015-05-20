@@ -1,6 +1,5 @@
-package main;
+package Management;
 
-import file.FileManagement;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -49,7 +48,7 @@ public class WorkspaceManagement {
     protected WorkspaceManagement() {
         String osName = System.getProperty("os.name");
         if ("linux".equalsIgnoreCase(osName)) {
-            defaultPath = "MoC" + File.pathSeparator;
+            defaultPath = "MoC" + File.separator;
         } else {
             defaultPath = "C:/MoC/";
         }
@@ -57,7 +56,7 @@ public class WorkspaceManagement {
         File rootFolder = new File(defaultPath);
         if (!rootFolder.exists()) {
             rootFolder.mkdir();
-            File competitionFolder = new File(defaultPath + File.pathSeparator + "Competitions");
+            File competitionFolder = new File(defaultPath + File.separator + "Competitions");
             if (!competitionFolder.exists()) {
                 competitionFolder.mkdir();
             }
@@ -140,36 +139,36 @@ public class WorkspaceManagement {
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath
                         = defaultPath
-                        + File.pathSeparator
+                        + File.separator
                         + "Competitions"
-                        + File.pathSeparator
+                        + File.separator
                         + folderStructureRequest.getCompetition()
-                        + File.pathSeparator
+                        + File.separator
                         + "Teams"
-                        + File.pathSeparator
+                        + File.separator
                         + folderStructureRequest.getTeamName()
-                        + File.pathSeparator
+                        + File.separator
                         + folderStructureRequest.getChallengeName();
                 String jarPathForFolder
                         = folderPath
-                        + File.pathSeparator
+                        + File.separator
                         + folderStructureRequest.getChallengeName() + ".jar";
                 return FileManagement.getInstance(jarPathForFolder).getFolderJSON(folderPath);
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 String jarPathForFile
                         = defaultPath
-                        + File.pathSeparator
+                        + File.separator
                         + "Competitions"
-                        + File.pathSeparator
+                        + File.separator
                         + fileRequest.getCompetition()
-                        + File.pathSeparator
+                        + File.separator
                         + "Teams"
-                        + File.pathSeparator
+                        + File.separator
                         + fileRequest.getTeamName()
-                        + File.pathSeparator
+                        + File.separator
                         + fileRequest.getChallangeName()
-                        + File.pathSeparator
+                        + File.separator
                         + fileRequest.getChallangeName() + ".jar";
                 return FileManagement.getInstance(jarPathForFile).getFileJSON(fileRequest.getFilepath());
             // private final String defaultJar = defaultPath + "/annotionframework/annotatedProject-1.0.jar"
@@ -189,16 +188,19 @@ public class WorkspaceManagement {
     protected String createWorkspace(String competitionName, String teamName) {
         try {
             File teamFolder = new File(defaultPath
-                    + File.pathSeparator
+                    + File.separator
                     + "Competitions"
-                    + File.pathSeparator
+                    + File.separator
                     + competitionName
-                    + File.pathSeparator
+                    + File.separator
                     + "Teams"
-                    + File.pathSeparator
+                    + File.separator
                     + teamName);
             teamFolder.mkdirs();
             ArrayList<String> tempList = teams.get(competitionName);
+            if(tempList == null){
+                tempList = new ArrayList<>();
+            }
             tempList.add(teamName);
             teams.put(competitionName, tempList);
             return "Created workspace for team: " + teamName;
@@ -219,13 +221,13 @@ public class WorkspaceManagement {
      */
     protected String removeWorkspace(String competitionName, String teamName) {
         File teamFolder = new File(defaultPath
-                + File.pathSeparator
+                + File.separator
                 + "Competitions"
-                + File.pathSeparator
+                + File.separator
                 + competitionName
-                + File.pathSeparator
+                + File.separator
                 + "Teams"
-                + File.pathSeparator
+                + File.separator
                 + teamName);
         if (deleteDirectory(teamFolder)) {
             ArrayList<String> tempList = teams.get(competitionName);
@@ -263,15 +265,15 @@ public class WorkspaceManagement {
     protected String updateFile(String competitionName, String teamName, String filePath, String fileContent) {
         //variables
         File teamFolder = new File(defaultPath
-                + File.pathSeparator
+                + File.separator
                 + "Competitions"
-                + File.pathSeparator
+                + File.separator
                 + competitionName
-                + File.pathSeparator
+                + File.separator
                 + "Teams"
-                + File.pathSeparator
+                + File.separator
                 + teamName);
-        File originalPath = new File(teamFolder.getAbsolutePath() + File.pathSeparator + filePath);
+        File originalPath = new File(teamFolder.getAbsolutePath() + File.separator + filePath);
         File tempPath = new File(originalPath + ".temp");
         String deleteTempFileError = "Error while deleting temp file: ";
         //if the file exists, backup
@@ -327,13 +329,13 @@ public class WorkspaceManagement {
      */
     protected String extractChallengeToTeam(String challengeName, String competitionName) {
         File challengeZip = new File(defaultPath
-                + File.pathSeparator
+                + File.separator
                 + "Competitions"
-                + File.pathSeparator
+                + File.separator
                 + competitionName
-                + File.pathSeparator
+                + File.separator
                 + "Challenges"
-                + File.pathSeparator
+                + File.separator
                 + challengeName + ".zip");
         //for all teams
         for (String teamName : teams.get(competitionName)) {
@@ -353,11 +355,11 @@ public class WorkspaceManagement {
         Enumeration zipFileEntries = zip.entries();
         //output directory
         String outputPath = challengeZip.getParent()
-                + File.pathSeparator
+                + File.separator
                 + "Teams"
-                + File.pathSeparator
+                + File.separator
                 + teamName
-                + File.pathSeparator
+                + File.separator
                 + challengeZip.getParentFile().getName();
         //loop through the zip
         while (zipFileEntries.hasMoreElements()) {
@@ -469,17 +471,17 @@ public class WorkspaceManagement {
     private void beforeMavenInvocation(String competitionName, String teamName, String challengeName) throws IOException {
         //create target dir
         File projectDir = new File(defaultPath
-                + File.pathSeparator
+                + File.separator
                 + "Competitions"
-                + File.pathSeparator
+                + File.separator
                 + competitionName
-                + File.pathSeparator
+                + File.separator
                 + "Teams"
-                + File.pathSeparator
+                + File.separator
                 + teamName
-                + File.pathSeparator
+                + File.separator
                 + challengeName);
-        File targetFolder = new File(projectDir.getAbsoluteFile() + File.pathSeparator + "target");
+        File targetFolder = new File(projectDir.getAbsoluteFile() + File.separator + "target");
         if (!targetFolder.exists()) {
             targetFolder.mkdir();
         }
