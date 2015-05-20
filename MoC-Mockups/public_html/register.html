@@ -10,7 +10,7 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdncom/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
         <!-- AngularJS -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
@@ -22,26 +22,69 @@
             $(window).ready(function () {
                 $("#registerForm").submit(function (event) {
                     event.preventDefault();
+                    var user = {
+                        username: $("#usernameInput").val(),
+                        email: $("#emailInput").val(),
+                        password: $("#passwordInput").val(),
+                        name: $("#nameInput").val(),
+                        organisation: $("#organisationInput").val()
+                    };
+                    console.log(JSON.stringify(user));
                     $.ajax({
-                        url: "http://localhost:8080/MoC-Service/api/user",
-                        data: {
-                            username: $("#usernameInput").val(),
-                            email: $("#emailInput").val(),
-                            password: $("#passwordInput").val(),
-                            name: $("#nameInput").val(),
-                            organisation: $("#organisationInput").val()
-                        },
+                        dataType: 'json',
                         crossDomain: true,
-                        type: "post"
+                        contentType: 'application/json; charset=UTF-8',
+                        type: "post",
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        url: "http://localhost:8080/MoC-Service/api/user",
+                        data: JSON.stringify(user)
                     }).success(function (data) {
                         console.log("success");
                         console.log(data);
+                        if (window.params().token && window.params().competitionId && window.params().teamId) {
+                            $.ajax({
+                                dataType: 'json',
+                                crossDomain: true,
+                                contentType: 'application/json; charset=UTF-8',
+                                type: "post",
+                                xhrFields: {
+                                    withCredentials: true
+                                },
+                                //Not yet tested
+                                url: "http://localhost:8080/MoC-Service/api/competition/" +
+                                        window.params().competitionId +
+                                        "/team/" +
+                                        window.params().teamId +
+                                        "/join/" +
+                                        window.params().token,
+                                data: JSON.stringify(user)
+                            }).success(function (data) {
+                                console.log(data);
+                            }).error(function (data) {
+                                console.log(data);
+                            });
+                        }
                     }).error(function (data) {
                         console.log("error");
                         console.log(data);
+                        alert(data.responseJSON.message);
                     });
                 });
             });
+
+            window.params = function () {
+                var result = {};
+                var searchString = location.search.substring(1, location.search.length);
+                var pairs = searchString.split("&");
+                for (var i in pairs) {
+                    var pair = pairs[i].split("=");
+                    result[pair[0]] = pair[1];
+                }
+                return result;
+            };
+            // http://localhost:8080/register.html?token=#token&competitionId=#competitionId&teamId=#teamId
         </script>
     </head>
     <body>

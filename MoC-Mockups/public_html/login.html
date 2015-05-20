@@ -25,9 +25,10 @@
                     location.href = this.href;
                 });
 
-                $("#loginForm").submit(function () {
+                $("#loginForm").submit(function (event) {
+                    event.preventDefault();
                     $.ajax({
-                        url: "xxx", //Astrid is ermee bezig
+                        url: "http://localhost:8080/MoC-Service/api/user/login",
                         data: {
                             username: $("#usernameInput").val(),
                             password: $("#passwordInput").val()

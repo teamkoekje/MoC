@@ -1,13 +1,21 @@
-package messaging;
+package Messaging;
 
+import Management.WorkspaceManagement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
-import main.WorkspaceManagement;
+import messaging.AsynchronousReplier;
+import messaging.DestinationType;
+import messaging.IRequestListener;
+import messaging.JMSSettings;
+import messaging.MessagingGateway;
 import workspace.Reply;
 import workspace.Request;
 
@@ -17,59 +25,59 @@ import workspace.Request;
  *
  * @author TeamKoekje
  */
-public class BrokerGateway implements IRequestListener<Request> {
+@Singleton
+@Startup
+//@Stateless
+public class BrokerGateway implements IRequestListener<Request> {   
 
-    private MessagingGateway initGtw;
+    private MessagingGateway registerGateway;
     private String initMsgId;
     private final WorkspaceManagement wm = WorkspaceManagement.getInstance();
 
     private AsynchronousReplier<Request, Reply> replier;
 
-    @SuppressWarnings("LeakingThisInConstructor")
-    public BrokerGateway() throws NamingException, JMSException {
-        initGtw = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
-        initGtw.setReceivedMessageListener(new MessageListener() {
-            @Override
-            public void onMessage(Message msg) {
-                onInitReply(msg);
-            }
-        });
-        initGtw.openConnection();
-        sendInitMessage();
+    @PostConstruct
+    private void init() {
+        try {
+            registerGateway = new MessagingGateway(JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE, JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC);
+            registerGateway.setReceivedMessageListener(new MessageListener() {
+                @Override
+                public void onMessage(Message msg) {
+                    onRegisterReply(msg);
+                }
+            });
+            registerGateway.openConnection();
+            register();
+        } catch (NamingException | JMSException ex) {
+            Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    private void onInitReply(Message msg) {
+    private void register() throws JMSException {
+        System.out.println("registering");
+        Message msg = registerGateway.createTextMessage("HELLO SERVER");
+        registerGateway.sendMessage(msg);
+        initMsgId = msg.getJMSMessageID();
+        System.out.println("Init request send: " + initMsgId);
+    }
+
+    private void onRegisterReply(Message msg) {
+        System.out.println("on register reply");
         try {
             System.out.println("Init reply received: " + msg.getJMSCorrelationID());
             if (msg.getJMSCorrelationID().equals(initMsgId)) {
                 String id = ((TextMessage) msg).getText();
-                initReplier(id);
+                replier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
+                replier.setRequestListener(this);
+                replier.start();
                 System.out.println("Server id: " + id);
-                initGtw.closeConnection();
-                initGtw = null;
+                registerGateway.closeConnection();
+                registerGateway = null;
             }
-        } catch (JMSException ex) {
+        } catch (JMSException | NamingException ex) {
             Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
             System.err.println(ex.getMessage());
         }
-    }
-
-    private void initReplier(String id) {
-        try {
-            replier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
-            replier.setRequestListener(this);
-            replier.start();
-        } catch (NamingException | JMSException ex) {
-            Logger.getLogger(BrokerGateway.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
-            System.err.println(ex.getMessage());
-        }
-    }
-
-    private void sendInitMessage() throws JMSException {
-        Message msg = initGtw.createTextMessage("HELLO SERVER");
-        initGtw.sendMessage(msg);
-        initMsgId = msg.getJMSMessageID();
-        System.out.println("Init request send: " + initMsgId);
     }
 
     @Override
