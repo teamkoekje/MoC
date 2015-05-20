@@ -6,15 +6,15 @@
         </session-timeout>
     </session-config>
     <login-config>
-        <auth-method>BASIC</auth-method>
+        <auth-method>DIGEST</auth-method>
         <realm-name>MoCRealm</realm-name>
     </login-config>
     <security-role>
-        <description/>
+        <description>Admin</description>
         <role-name>Admin</role-name>
     </security-role>
     <security-role>
-        <description/>
+        <description>User</description>
         <role-name>User</role-name>
     </security-role>
 </web-app>

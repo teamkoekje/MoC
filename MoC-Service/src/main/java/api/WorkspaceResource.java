@@ -66,7 +66,7 @@ public class WorkspaceResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/{challangeName}/test/{testFile}/{testName}")
     public String test(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName,@PathParam("testFile") String testFile, @PathParam("testName") String testName) {
-        workspaceService.test(competitionName, teamName, challangeName, testFile, testName);
+        workspaceService.test(competitionName, teamName, challangeName, testName);
         return null;
     }
 

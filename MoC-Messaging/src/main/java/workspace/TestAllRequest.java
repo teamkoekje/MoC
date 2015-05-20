@@ -13,18 +13,12 @@ public class TestAllRequest extends TeamRequest{
     
     private String challengeName;
 
-    public TestAllRequest(String competition, String teamname, String challengeName) {
-        super(Action.TESTALL, competition, teamname);
+    public TestAllRequest(String competition, String teamName, String challengeName) {
+        super(Action.TESTALL, competition, teamName);
         this.challengeName = challengeName;
     }
 
     public String getChallengeName() {
         return challengeName;
     }
-
-    public void setChallengeName(String challangeName) {
-        this.challengeName = challangeName;
-    }
-    
-    
 }

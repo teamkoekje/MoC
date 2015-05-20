@@ -11,12 +11,12 @@ package workspace;
  */
 public class FileRequest extends TeamRequest{
     
-    private String filepath;
-    private String challangeName;
+    private final String filepath;
+    private final String challengeName;
 
-    public FileRequest(String competition, String teamname, String challangeName, String filepath) {
-        super(Action.FILE, competition, teamname);
-        this.challangeName = challangeName;
+    public FileRequest(String competition, String teamName, String challengeName, String filepath) {
+        super(Action.FILE, competition, teamName);
+        this.challengeName = challengeName;
         this.filepath = filepath;
     }
 
@@ -24,15 +24,7 @@ public class FileRequest extends TeamRequest{
         return filepath;
     }
 
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
-    }
-
-    public String getChallangeName() {
-        return challangeName;
-    }
-
-    public void setChallangeName(String challangeName) {
-        this.challangeName = challangeName;
+    public String getChallengeName() {
+        return challengeName;
     }
 }

@@ -8,6 +8,10 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class CompetitionService extends GenericService<Competition> {
 
+    /*
+    - 1 Timer update alle lopende competities.
+    - Lopende competities worden bij het opstarten van de service opgehaald en in een lijstje gestopt
+    */
     public CompetitionService() {
         super(Competition.class);
     }

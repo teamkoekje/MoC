@@ -1,8 +1,9 @@
 <div style="width:40%; float:left;">
-    <h1>Login / Logout</h1>
-    <a ng-click="login()">Login</a><br>
-    <a ng-click="logout()">Logout</a>
-
+    <div ng-controller="loginController">
+        <h1>Login / Logout</h1>
+        <button ng-click="login()">Login</button><br>
+        <button ng-click="logout()">Logout</button>
+    </div>
 
     <h1>Create user</h1>
     <form name="createUserForm" ng-submit="createUser()">

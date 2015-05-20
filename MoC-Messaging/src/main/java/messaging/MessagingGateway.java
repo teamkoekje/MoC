@@ -88,7 +88,7 @@ public class MessagingGateway {
 
     public boolean sendMessage(Message msg) {
         try {
-            System.out.println("sending message: " + ((TextMessage)msg).getText());
+            //System.out.println("sending message: " + ((TextMessage)msg).getText());
             producer.send(msg);
             return true;
         } catch (JMSException ex) {

@@ -3,6 +3,7 @@ package api;
 import domain.User;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -64,7 +65,8 @@ public class UserResource {
      */
     @POST
     @Consumes("application/xml,application/json")
-    @PermitAll
+    //@RolesAllowed("Admin")
+    @DenyAll
     public void createUser(User user) {
         userService.create(user);
     }
@@ -104,6 +106,8 @@ public class UserResource {
         try {
             request.getSession();
             request.login(username, password);
+            System.out.println("User: " + request.isUserInRole("User"));
+            System.out.println("Admin: " + request.isUserInRole("Admin"));
             System.out.println("Logged in user: " + request.getRemoteUser());
         } catch (ServletException ex) {
             System.err.println(ex.getMessage());
@@ -124,11 +128,13 @@ public class UserResource {
 
     @POST
     @Path("/logout")
-    @RolesAllowed({"Normal", "Admin"})
+    @RolesAllowed({"User", "Admin"})
     public String logout(
             @Context HttpServletRequest request) {
         try {
-            System.out.println("logged in user: " + request.getRemoteUser());
+            System.out.println("User: " + request.isUserInRole("User"));
+            System.out.println("Admin: " + request.isUserInRole("Admin"));
+            System.out.println("logged out user: " + request.getRemoteUser());
             request.getSession().invalidate();
             request.logout();
         } catch (ServletException ex) {

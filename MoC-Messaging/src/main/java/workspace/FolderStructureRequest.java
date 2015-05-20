@@ -11,7 +11,7 @@ package workspace;
  */
 public class FolderStructureRequest extends TeamRequest{
     
-    private String challengeName;
+    private final String challengeName;
 
     public FolderStructureRequest(String competition, String challengeName, String teamName) {
         super(Action.FOLDER_STRUCTURE, competition, teamName);
@@ -20,9 +20,5 @@ public class FolderStructureRequest extends TeamRequest{
 
     public String getChallengeName() {
         return challengeName;
-    }
-
-    public void setChallengeName(String challengeName) {
-        this.challengeName = challengeName;
     }
 }

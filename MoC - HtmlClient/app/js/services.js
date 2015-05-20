@@ -11,7 +11,7 @@ var services = angular.module('mocServices', ['ngResource']);
 //    $httpProvider.defaults.withCredentials = true;
 //});
 
-var baseUrl = 'http://localhost\\:5051/MoC-Service/api';
+var baseUrl = 'http://localhost\\:8080/MoC-Service/api';
 
 services.factory('user', ['$resource',
     function ($resource) {

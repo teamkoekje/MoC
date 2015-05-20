@@ -11,18 +11,14 @@ package workspace;
  */
 public class CompileRequest extends TeamRequest{
     
-    private String challengeName;
+    private final String challengeName;
 
-    public CompileRequest(String competition, String teamname, String challengeName) {
-        super(Action.COMPILE, competition, teamname);
+    public CompileRequest(String competition, String teamName, String challengeName) {
+        super(Action.COMPILE, competition, teamName);
         this.challengeName = challengeName;
     }
 
     public String getChallengeName() {
         return challengeName;
-    }
-
-    public void setChallengeName(String challengeName) {
-        this.challengeName = challengeName;
     }
 }
