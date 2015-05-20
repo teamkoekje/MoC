@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="0" passed="0">
+  <reporter-output>
+  </reporter-output>
+  <suite name="main.WorkspaceManagementTest" duration-ms="10" started-at="2015-05-20T10:31:20Z" finished-at="2015-05-20T10:31:20Z">
+    <groups>
+    </groups>
+    <test name="Command line test" duration-ms="10" started-at="2015-05-20T10:31:20Z" finished-at="2015-05-20T10:31:20Z">
+    </test> <!-- Command line test -->
+  </suite> <!-- main.WorkspaceManagementTest -->
+</testng-results>
