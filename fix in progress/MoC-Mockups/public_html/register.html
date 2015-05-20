@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MoC</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+        <!-- AngularJS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+        <!-- AngularJS $resource -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-resource.js"></script>
+
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        <div class="container" style="width:100%;text-align: center">
+            <div class="jumbotron">
+                <h3 style="text-align: center">
+                    Masters of code
+                </h3>
+            </div>
+            <div style="text-align:center">
+                <p>
+                    You are invited to {{teamname}}
+                </p>
+                <form style="display:inline-block;text-align: left" id='registerForm'>
+                    <div class="row">
+                        <label class="col-xs-4" for="emailInput" style="">Email:</label>
+                        <div class="col-xs-8">
+                            <input required class="form-control" type="email" id="emailInput" placeholder="Email" style=""/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-4" for="passwordInput" style="">Password:</label>
+                        <div class="col-xs-8">
+                            <input required class="form-control" type="password" id="passwordInput" placeholder="password" style=""/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-4" for="nameInput" style="">Name:</label>
+                        <div class="col-xs-8">
+                            <input required class="form-control" type="text" id="nameInput" placeholder="name" style=""/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-4" for="organisationInput" style="">Organisation:</label>
+                        <div class="col-xs-8">
+                            <input required class="form-control" type="text" id="organisationInput" placeholder="Organisation" style=""/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class='col-xs-4'><!--Had to do something to get this open space--></div>
+                        <div class="col-xs-8">
+                            <input type="submit" class="btn btn-default" value="Register"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

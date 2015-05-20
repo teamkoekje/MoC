@@ -1,0 +1,54 @@
+<h1>Create competition</h1>
+<form name="createUserForm" ng-submit="createCompetition()">
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td><input type="text" ng-model="competition.name" required></td>
+        </tr>
+        <tr>
+            <td>Date: </td>
+            <td><input type="date" ng-model="competitionDate" required></td>
+        </tr>
+        <tr>
+            <td>Starttime: </td>
+            <td><input type="time" ng-model="startTime" required></td>
+        </tr>
+        <tr>
+            <td>Endtime: </td>
+            <td><input type="time" ng-model="endTime" required></td>
+        </tr>
+        <tr>
+            <td>Location </td>
+            <td><input type="text" ng-model="competition.location"></td>
+        </tr>
+
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Create competition"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<h1>Competition: </h1>
+<table border="1" cellpadding="3px">
+    <tr>
+        <td>Name</td>
+        <td>Date</td>
+        <td>Starttime</td>
+        <td>Endtime</td>
+        <td>Location</td>
+        <td>Delete</td>
+    </tr>
+    <tr ng-repeat="competition in competitions">
+        <td>{{competition.name}}</td>
+        <td>{{competition.competitionDate | date : 'dd-MM-yyyy'}}</td>
+        <td>{{competition.startTime | date : 'HH:mm'}}</td>
+        <td>{{competition.endTime | date : 'HH:mm'}}</td>
+        <td>{{competition.location}}</td>
+        <td><input type="submit" value="X" ng-click="deleteCompetition(competition.id)"></td>
+    </tr>
+
+</table>
+<ul >
+</ul>

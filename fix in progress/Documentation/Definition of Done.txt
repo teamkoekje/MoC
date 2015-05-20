@@ -1,0 +1,19 @@
+----------------------------------------------
+ DEFINITION OF DONE
+----------------------------------------------
+- JavaDoc written (packages, Classes, public methods)
+- Code and documentation written in English
+- Code complies to design
+- Unit tests written and passing
+	- Test coverage: 80% (sonar)
+	- Tests passing: 100%
+- No major errors according to the default sonar configuration
+- Code reviewed
+	- Consistency
+	- Complies to coding standards
+	- Code does what the name implies
+- Code commited (with release note)
+- Java SE8 / JEE 7 compliant
+- Use of 3rd part libraries only after approval product owner
+- Complies to all relevant non-functional requirements
+- VersionOne updated

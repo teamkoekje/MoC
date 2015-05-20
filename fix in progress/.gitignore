@@ -1,0 +1,25 @@
+/MoC-Service/target/
+/MoC-Domain/target/
+/MoC-Messaging/target/
+/MoC-WorkspaceModule/target/
+/MoC - HtmlClient/nbproject/private/
+/MoC - HtmlClient/node_modules
+/MoC - HtmlClient/app/bower_components
+/MoC-WorkspaceMessaging/target/
+/projectToTest/target/
+/MavenInvokerTest/target/
+/MavenInvokerTest/MoC/workspaces/teamA/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamB/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamC/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamD/projectToTest/target/
+/MavenInvokerTest/MoC/workspaces/teamE/projectToTest/target/
+/MoC-Workspace/target/
+/MoC-WorkspaceRouter/target/
+/MoC-WorkspaceServer/target/
+/bytesmessagetest/target/
+/MoC - Framework/target/
+/annotation tests/annotatedProject/target/
+/annotation tests/scannotationsTest/target/
+/annotation tests/scannotationsTest/src/main/resources/annotatedProject/target/
+/MoCtestproject/target/
+/temp/MoC-WorkspaceServer/target/
