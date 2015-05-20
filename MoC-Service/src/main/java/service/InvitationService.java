@@ -25,7 +25,7 @@ public class InvitationService extends GenericService<Invitation> {
     private Session session; //mailing session
 
     private final SecureRandom random = new SecureRandom();
-    
+
     @Inject
     private CompetitionService competitionService;
 
@@ -44,15 +44,19 @@ public class InvitationService extends GenericService<Invitation> {
      *
      */
     public void inviteMember(String email, long teamId, Long competitionId) {
-
+        /*
+        TODO:
+        Catch errors
+         */
+        
         //Generate token
         String token = generateToken();
 
         //Get Team
         Team team = null;
-        Competition comp = competitionService.findById(competitionId);              
-        
-        List < Team > teams = comp.getTeams();
+        Competition comp = competitionService.findById(competitionId);
+
+        List< Team> teams = comp.getTeams();
         for (Team allTeams : teams) {
             if (allTeams.getId() == teamId) {
                 team = allTeams;
