@@ -89,25 +89,25 @@ public class WorkspaceService {
         gateway.sendRequestToTeam(new TestAllRequest(competition, teamname, challengeName));
     }
 
-    public void test(String competition, String teamname, String challengeName, String testName) {
-        gateway.sendRequestToTeam(new TestRequest(competition, teamname, challengeName, testName));
+    public void test(String competition, String teamname, String challengeName, String testFile, String testName) {
+        gateway.sendRequestToTeam(new TestRequest(competition, teamname, challengeName, testFile, testName));
     }
 
     public void push(String competitionName, String challengeName) {
-        try {
-            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
+//        try {
+//            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
             System.out.println("pushing challenge");
-            gateway.broadcast(new PushRequest(competitionName, challengeName, data));
-        } catch (IOException ex) {
-            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            gateway.broadcast(new PushRequest(competitionName, challengeName));
+//        } catch (IOException ex) {
+//            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public void folderStructure(String competitionName, String challengeName, String teamname) {
         gateway.sendRequestToTeam(new FolderStructureRequest(competitionName, challengeName, teamname));
     }
 
-    public void file(String competitionName, String teamname, String filePath) {
-        gateway.sendRequestToTeam(new FileRequest(competitionName, teamname, filePath));
+    public void file(String competitionName, String teamname, String challengeName, String filePath) {
+        gateway.sendRequestToTeam(new FileRequest(competitionName, teamname, challengeName, filePath));
     }
 }
