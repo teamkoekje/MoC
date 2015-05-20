@@ -25,8 +25,4 @@ public abstract class Request implements Serializable {
     public String getCompetition() {
         return competition;
     }
-
-    public void setCompetition(String competition) {
-        this.competition = competition;
-    }
 }

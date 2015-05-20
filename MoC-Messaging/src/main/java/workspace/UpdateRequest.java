@@ -11,11 +11,11 @@ package workspace;
  */
 public class UpdateRequest extends TeamRequest{
     
-    private String filePath;
-    private String fileContent;
+    private final String filePath;
+    private final String fileContent;
 
-    public UpdateRequest(String competition, String teamname, String filePath, String fileContent) {
-        super(Action.UPDATE, competition, teamname);
+    public UpdateRequest(String competition, String teamName, String filePath, String fileContent) {
+        super(Action.UPDATE, competition, teamName);
         this.filePath = filePath;
         this.fileContent = fileContent;
     }
@@ -24,15 +24,7 @@ public class UpdateRequest extends TeamRequest{
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
     public String getFileContent() {
         return fileContent;
-    }
-
-    public void setFileContent(String fileContent) {
-        this.fileContent = fileContent;
     }
 }

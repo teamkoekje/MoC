@@ -11,18 +11,20 @@ package workspace;
  */
 public class PushRequest extends Request {
 
-    private String challengeName;
-
-    public PushRequest(String competition, String challengeName) {
+    private final String challengeName;
+    private final byte[] data;
+    
+    public PushRequest(String competition, String challengeName, byte[] data) {
         super(Action.PUSH_CHALLENGE, competition);
         this.challengeName = challengeName;
+        this.data = data;
     }
 
     public String getChallengeName() {
         return challengeName;
     }
 
-    public void setChallengeName(String challangeName) {
-        this.challengeName = challangeName;
-    }
+    public byte[] getData() {
+        return data;
+    } 
 }

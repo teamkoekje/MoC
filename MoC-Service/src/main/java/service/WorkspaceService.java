@@ -81,33 +81,33 @@ public class WorkspaceService {
         gateway.sendRequestToTeam(new UpdateRequest(competitionName, teamName, filePath, fileContent));
     }
 
-    public void compile(String competition, String teamname, String challengeName) {
-        gateway.sendRequestToTeam(new CompileRequest(competition, teamname, challengeName));
+    public void compile(String competition, String teamName, String challengeName) {
+        gateway.sendRequestToTeam(new CompileRequest(competition, teamName, challengeName));
     }
 
-    public void testAll(String competition, String teamname, String challengeName) {
-        gateway.sendRequestToTeam(new TestAllRequest(competition, teamname, challengeName));
+    public void testAll(String competition, String teamName, String challengeName) {
+        gateway.sendRequestToTeam(new TestAllRequest(competition, teamName, challengeName));
     }
 
-    public void test(String competition, String teamname, String challengeName, String testFile, String testName) {
-        gateway.sendRequestToTeam(new TestRequest(competition, teamname, challengeName, testFile, testName));
+    public void test(String competition, String teamName, String challengeName, String testName) {
+        gateway.sendRequestToTeam(new TestRequest(competition, teamName, challengeName, testName));
     }
 
     public void push(String competitionName, String challengeName) {
-//        try {
-//            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
+        try {
+            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
             System.out.println("pushing challenge");
-            gateway.broadcast(new PushRequest(competitionName, challengeName));
-//        } catch (IOException ex) {
-//            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+            gateway.broadcast(new PushRequest(competitionName, challengeName, data));
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void folderStructure(String competitionName, String challengeName, String teamname) {
-        gateway.sendRequestToTeam(new FolderStructureRequest(competitionName, challengeName, teamname));
+    public void folderStructure(String competitionName, String challengeName, String teamName) {
+        gateway.sendRequestToTeam(new FolderStructureRequest(competitionName, challengeName, teamName));
     }
 
-    public void file(String competitionName, String teamname, String challengeName, String filePath) {
-        gateway.sendRequestToTeam(new FileRequest(competitionName, teamname, challengeName, filePath));
+    public void file(String competitionName, String teamName, String challengeName, String filePath) {
+        gateway.sendRequestToTeam(new FileRequest(competitionName, teamName, challengeName, filePath));
     }
 }

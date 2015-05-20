@@ -11,7 +11,7 @@ package workspace;
  */
 public abstract class TeamRequest extends Request {
 
-    private String teamName;
+    private final String teamName;
 
     public TeamRequest(Action action, String competition, String teamName) {
         super(action, competition);
@@ -20,9 +20,5 @@ public abstract class TeamRequest extends Request {
 
     public String getTeamName() {
         return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
     }
 }
