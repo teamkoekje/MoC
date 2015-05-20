@@ -11,20 +11,38 @@ package workspace;
  */
 public class TestRequest extends TeamRequest{
     
-    private final String challengeName;
-    private final String testName;
+    private String challangeName;
+    private String testFile;
+    private String testName;
 
-    public TestRequest(String competition, String teamName, String challengeName, String testName) {
-        super(Action.TEST, competition, teamName);
-        this.challengeName = challengeName;
+    public TestRequest(String competition, String teamname, String challangeName, String testFile, String testName) {
+        super(Action.TEST, competition, teamname);
+        this.challangeName = challangeName;
+        this.testFile = testFile;
         this.testName = testName;
     }
 
     public String getChallengeName() {
-        return challengeName;
+        return challangeName;
+    }
+
+    public void setChallangeName(String challangeName) {
+        this.challangeName = challangeName;
     }
 
     public String getTestName() {
         return testName;
+    }
+
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+
+    public String getTestFile() {
+        return testFile;
+    }
+
+    public void setTestFile(String testFile) {
+        this.testFile = testFile;
     }
 }
