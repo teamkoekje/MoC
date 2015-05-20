@@ -87,11 +87,9 @@ public abstract class WorkspaceGateway {
         try {
             ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
-            String s = msg.getJMSMessageID();
-            msg.setJMSCorrelationID(s);
             gtw.sendMessage(msg);
             System.out.println("Message sent");
-            return s;
+            return msg.getJMSMessageID();
         } catch (JMSException ex) {
             System.err.println(ex.getMessage());
             return null;

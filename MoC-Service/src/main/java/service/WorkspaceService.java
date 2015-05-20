@@ -3,6 +3,7 @@ package service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
+import javax.websocket.Session;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
 import workspace.CompileRequest;
@@ -35,7 +37,9 @@ import workspace.UpdateRequest;
 public class WorkspaceService {
 
     private WorkspaceGateway gateway;
-    
+
+    private final HashMap<String, String> requests = new HashMap<>();
+
     @Inject
     private WebsocketEndpoint we;
 
@@ -46,15 +50,20 @@ public class WorkspaceService {
 
             @Override
             public void onWorkspaceMessageReceived(Message message) {
-                try {
-                    System.out.println("Message received from workspace: " + ((TextMessage)message).getText());
-                    we.sendToUser(((TextMessage)message).getText(), message.getJMSCorrelationID());
-                    System.out.println("Message sent to client");
-                } catch (JMSException ex) {
-                    Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                sendReplyMessage(message);
             }
         };
+    }
+
+    private void sendReplyMessage(Message message) {
+        try {
+            System.out.println("Message received from workspace: " + ((TextMessage) message).getText());
+            String username = requests.get(message.getJMSCorrelationID());
+            we.sendToUser(((TextMessage) message).getText(), username);
+            System.out.println("Message sent to client");
+        } catch (JMSException ex) {
+            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @PreDestroy
@@ -64,16 +73,17 @@ public class WorkspaceService {
 
     public void create(String competitionName, String teamName, String username) {
         System.out.println("Send message: create workspace");
-        String s = gateway.addWorkspace(new CreateRequest(competitionName, teamName));
-        if(s != null){
-            we.setCorrelationId(username, s);
+        String messageId = gateway.addWorkspace(new CreateRequest(competitionName, teamName));
+        System.out.println("MessageId: " + messageId);
+        if (messageId != null) {
+            this.requests.put(messageId, username);
         }
     }
 
     public void delete(String competitionName, String teamName, String username) {
-        String s = gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
-        if(s != null){
-            we.setCorrelationId(username, s);
+        String messageId = gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
+        if (messageId != null) {
+            this.requests.put(messageId, username);
         }
     }
 
