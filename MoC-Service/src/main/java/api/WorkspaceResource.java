@@ -2,10 +2,12 @@ package api;
 
 import java.io.File;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 import service.WorkspaceService;
 
 /**
@@ -17,20 +19,24 @@ public class WorkspaceResource {
 
     @Inject
     private WorkspaceService workspaceService;
+    
+    @Context
+    private HttpServletRequest request;
 
     //<editor-fold defaultstate="collapsed" desc="Workspace">
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/create")
     public void create(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
-        workspaceService.create(competitionName, teamName);
+        workspaceService.create(competitionName, teamName, "USERNAME");
     }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/delete")
     public void delete(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
-        workspaceService.delete(competitionName, teamName);
+        System.out.println(request.getUserPrincipal().getName());
+        workspaceService.delete(competitionName, teamName, "USERNAME");
     }
 
     @POST

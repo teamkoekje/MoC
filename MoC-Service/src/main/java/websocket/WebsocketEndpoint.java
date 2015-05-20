@@ -3,7 +3,8 @@ package websocket;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
@@ -16,71 +17,66 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint(value = "/ws/api")
 public class WebsocketEndpoint {
-
-    static Map<String, ArrayList<Session>> peers = new HashMap<>();
-
-    private Session wsSession;
-
+    
+    static HashMap<Session, String> peers = new HashMap<>();
+ 
     @OnOpen
     public void openConnection(Session session) {
-        if (session.getUserPrincipal() == null) {
-            return;
+        try {
+            if (session.getUserPrincipal() == null) {
+                return;
+            }
+            if (!peers.containsKey(session)) {
+                peers.put(session, null);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        addValues(session.getUserPrincipal().getName(), session);
-
-        this.wsSession = session;
-
-        send("New session started "
-                + this.wsSession.getId()
-                + " by user with username: "
-                + session.getUserPrincipal().getName());
     }
-
+ 
     @OnClose
     public void closedConnection(Session session) {
-        for (String key : peers.keySet()) {
-            for (Session s : peers.get(key)) {
-                if (s == session) {
-                    peers.get(key).remove(session);
-                }
+        if (peers.containsKey(session)) {
+            peers.remove(session);
+        }
+    }
+ 
+    public static void broadCast(String msg) {
+        try {
+            Iterator<Session> keySetIterator = peers.keySet().iterator();
+
+            while(keySetIterator.hasNext()){
+                Session s = keySetIterator.next();
+                s.getBasicRemote().sendObject(msg);
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
-    public void sendToUser(String msg, String username) {
+    public void sendToUser(String msg, String correlation) {
         try {
-            for (Session session : peers.get(username)) {
-                session.getBasicRemote().sendObject(msg);
+            Iterator<Session> keySetIterator = peers.keySet().iterator();
+
+            while(keySetIterator.hasNext()){
+                Session s = keySetIterator.next();
+                if(peers.get(s).equals(correlation)){
+                    s.getBasicRemote().sendObject(msg);
+                }
             }
         } catch (EncodeException | IOException e) {
             e.printStackTrace();
         }
     }
+    
+    public void setCorrelationId(String username, String correlation){
+        Iterator<Session> keySetIterator = peers.keySet().iterator();
 
-    public void send(String msg) {
-        try {
-            for (String key : peers.keySet()) {
-                for (Session session : peers.get(key)) {
-                    session.getBasicRemote().sendObject(msg);
-                }
+        while(keySetIterator.hasNext()){
+            Session s = keySetIterator.next();
+            if(s.getUserPrincipal().getName().equals(username)){
+                peers.replace(s, correlation);
             }
-        } catch (EncodeException | IOException e) {
-            e.printStackTrace();
         }
-    }
-
-    private void addValues(String key, Session value) {
-        ArrayList tempList;
-        if (peers.containsKey(key)) {
-            tempList = peers.get(key);
-            if (tempList == null) {
-                tempList = new ArrayList();
-            }
-            tempList.add(value);
-        } else {
-            tempList = new ArrayList();
-            tempList.add(value);
-        }
-        peers.put(key, tempList);
     }
 }

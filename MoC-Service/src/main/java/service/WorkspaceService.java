@@ -10,7 +10,9 @@ import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.TextMessage;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
 import workspace.CompileRequest;
@@ -44,8 +46,13 @@ public class WorkspaceService {
 
             @Override
             public void onWorkspaceMessageReceived(Message message) {
-                System.out.println("Message received from workspace");
-                we.send("testmessage");
+                try {
+                    System.out.println("Message received from workspace: " + ((TextMessage)message).getText());
+                    we.sendToUser(((TextMessage)message).getText(), message.getJMSCorrelationID());
+                    System.out.println("Message sent to client");
+                } catch (JMSException ex) {
+                    Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
     }
@@ -55,13 +62,19 @@ public class WorkspaceService {
         gateway.closeConnection();
     }
 
-    public void create(String competitionName, String teamName) {
+    public void create(String competitionName, String teamName, String username) {
         System.out.println("Send message: create workspace");
-        gateway.addWorkspace(new CreateRequest(competitionName, teamName));
+        String s = gateway.addWorkspace(new CreateRequest(competitionName, teamName));
+        if(s != null){
+            we.setCorrelationId(username, s);
+        }
     }
 
-    public void delete(String competitionName, String teamName) {
-        gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
+    public void delete(String competitionName, String teamName, String username) {
+        String s = gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
+        if(s != null){
+            we.setCorrelationId(username, s);
+        }
     }
 
     public void update(String competitionName, String teamName, String filePath, String fileContent) {
