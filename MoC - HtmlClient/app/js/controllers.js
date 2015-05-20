@@ -2,8 +2,7 @@
 
 var controllers = angular.module('mocControllers', []);
 
-controllers.controller('loginController', ['$scope', '$cookies',
-    function ($scope, $cookies) {
+controllers.controller('loginController', ['$scope', function ($scope) {
         $scope.logout = function () {
             $.ajax({
                 type: "POST",
@@ -13,11 +12,11 @@ controllers.controller('loginController', ['$scope', '$cookies',
                 }
             }).success(function (data) {
                 console.log("Logged out succesfully");
-                $cookies.user = undefined;
+                //$cookies.user = undefined;
                 location.href = "#/login";
             }).error(function (data) {
                 console.log("Error while logging out");
-                $cookies.user = undefined;
+                //$cookies.user = undefined;
                 console.log(data);
             });
         };
@@ -26,17 +25,17 @@ controllers.controller('loginController', ['$scope', '$cookies',
         $scope.login = function () {
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8080/KwebbelBackEnd/api/users/login",
+                url: "http://localhost:8080/MoC-Service/api/user/login",
                 data: {
-                    username: $scope.username,
-                    password: $scope.password
+                    username: "Memphizx",
+                    password: "welkom123"
                 },
                 xhrFields: {
                     withCredentials: true
                 }
             }).success(function (data) {
                 console.log("Logged in succesfully: " + $scope.username);
-                $cookies.user = $scope.username;
+                //$cookies.user = $scope.username;
                 location.href = "#/personal";
 
             }).error(function (data) {
@@ -106,7 +105,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         $scope.user.organisation = "Fontys";
         
         
-        var ws = new WebSocket('ws://localhost:5051/MoC-Service/ws/api');
+        var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
         ws.onopen = function () {
             console.log("opening ws connection");
         };

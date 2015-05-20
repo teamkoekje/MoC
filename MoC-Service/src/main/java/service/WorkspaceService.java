@@ -33,7 +33,7 @@ import workspace.UpdateRequest;
 public class WorkspaceService {
 
     private WorkspaceGateway gateway;
-    
+
     @Inject
     private WebsocketEndpoint we;
 
@@ -57,7 +57,9 @@ public class WorkspaceService {
 
     public void create(String competitionName, String teamName) {
         System.out.println("Send message: create workspace");
-        gateway.addWorkspace(new CreateRequest(competitionName, teamName));
+        for (int i = 0; i < 100; i++) {
+            gateway.addWorkspace(new CreateRequest(competitionName, teamName + i));
+        }
     }
 
     public void delete(String competitionName, String teamName) {

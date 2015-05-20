@@ -58,7 +58,7 @@ public class Team implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Getters & Setters" >
     public long getId() {
-        CDI.current().select(EventManager.class).get();
+        //CDI.current().select(EventManager.class).get();
         return id;
         
     }
