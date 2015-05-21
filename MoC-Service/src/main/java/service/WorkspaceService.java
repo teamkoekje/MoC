@@ -18,6 +18,7 @@ import javax.jms.TextMessage;
 import javax.websocket.Session;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
+import workspace.Action;
 import workspace.CompileRequest;
 import workspace.CreateRequest;
 import workspace.DeleteRequest;
@@ -25,6 +26,7 @@ import workspace.FileRequest;
 import workspace.FolderStructureRequest;
 import workspace.PushRequest;
 import workspace.Reply;
+import workspace.SysInfoRequest;
 import workspace.TestAllRequest;
 import workspace.TestRequest;
 import workspace.UpdateRequest;
@@ -58,15 +60,18 @@ public class WorkspaceService {
                         String username = requests.get(message.getJMSCorrelationID());
                         ObjectMessage objMsg = (ObjectMessage) message;
                         Reply reply = (Reply) objMsg.getObject();
-                        System.out.println("Message received from workspace: " + reply.getMessage());
-                        System.out.println("Sending reply to user: " + username);
-                        we.sendToUser(reply.getMessage(), username);
-                        System.out.println("Message sent to client");
+                        if (reply.getMessage().startsWith("[SYSINFO]")) {
+                            System.out.println(reply.getMessage());
+                        } else {
+                            System.out.println("Message received from workspace: " + reply.getMessage());
+                            System.out.println("Sending reply to user: " + username);
+                            we.sendToUser(reply.getMessage(), username);
+                            System.out.println("Message sent to client");
+                        }
                     } catch (JMSException ex) {
                         Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-
             }
         };
     }
@@ -113,8 +118,10 @@ public class WorkspaceService {
             byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
             System.out.println("pushing challenge");
             gateway.broadcast(new PushRequest(competitionName, challengeName, data));
+
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkspaceService.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -124,5 +131,9 @@ public class WorkspaceService {
 
     public void file(String competitionName, String teamName, String challengeName, String filePath) {
         gateway.sendRequestToTeam(new FileRequest(competitionName, teamName, challengeName, filePath));
+    }
+
+    public void sysInfo() {
+        gateway.broadcast(new SysInfoRequest(Action.SYSINFO));
     }
 }
