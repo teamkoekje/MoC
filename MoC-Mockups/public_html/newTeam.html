@@ -18,6 +18,76 @@
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-resource.js"></script>
 
         <link rel="stylesheet" href="css/main.css">
+        <script>
+            $(window).ready(function () {
+                loadCompetitions();
+                $("#newTeamForm").submit(function (event) {
+                    event.preventDefault();
+                    createTeam();
+                });
+            });
+
+            function loadCompetitions() {
+                $.ajax({
+                    url: "http://localhost:8080/MoC-Service/api/competition",
+                    type: "GET",
+                    crossDomain: true,
+                    xhrFields: {
+                        withCredentials: true
+                    }
+                }).success(function (data) {
+                    console.log("success");
+                    console.log(data);
+
+                    $("#competitionSelect").find('option').remove();
+                    $.each(data, function (key, value) {
+                        $('#competitionSelect')
+                                .append($("<option></option>")
+                                        .attr("value", value.id)
+                                        .text(value.name));
+                        console.log(value);
+                    });
+                }).error(function (data) {
+                    console.log("error");
+                    console.log(data);
+                });
+            }
+
+            function createTeam() {
+                var teamName = $("#teamNameInput").val();
+                if (teamName == null || teamName.trim().length < 1) {
+                    teamName = prompt("Fill in a team name");
+                    $("#teamNameInput").val(teamName);
+                    if (teamName == null || teamName.trim().length < 1) {
+                        alert("No team name entered");
+                        return;
+                    }
+                }
+                teamName.trim();
+                var competitionID = $('#competitionSelect').val();
+                if (competitionID == null || competitionID == "") {
+                    alert("You didn't select a competition");
+                    return;
+                }
+                $.ajax({
+                    url: "http://localhost:8080/MoC-Service/api/competition/" + competitionID + "/team",
+                    type: "POST",
+                    crossDomain: true,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {
+                        teamName: teamName
+                    }
+                }).success(function (data) {
+                    console.log("success");
+                    console.log(data);
+                }).error(function (data) {
+                    console.log("error");
+                    console.log(data);
+                })
+            }
+        </script>
     </head>
     <body>
         <div class="container" style="width:100%;">
@@ -26,7 +96,7 @@
                     Masters of code
                 </h3>
             </div>
-            <form class="form-horizontal">
+            <form id="newTeamForm" class="form-horizontal">
                 <div class="form-group">
                     <label class='col-xs-4' for="teamNameInput" style="">Team name:</label>
                     <div class='col-xs-8'>
@@ -35,12 +105,6 @@
                 </div>
                 <div class="form-group" style='padding-right:15px;padding-left:15px'>
                     <select class="form-control" size="10" id="competitionSelect" >
-                        <option>
-                            Competition 1
-                        </option>
-                        <option>
-                            Competition 2
-                        </option>
                     </select>
                 </div>
                 <div class="form-group" style='padding-right:15px;padding-left:15px'>

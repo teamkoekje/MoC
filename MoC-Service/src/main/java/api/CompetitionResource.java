@@ -5,19 +5,26 @@ import domain.Round;
 import domain.Team;
 import domain.User;
 import java.util.List;
+import javafx.scene.media.Media;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import service.CompetitionService;
 import service.InvitationService;
 import service.RoundService;
 import service.TeamService;
+import service.UserService;
 
 /**
  * API used to manage competitions, round and teams
@@ -38,6 +45,9 @@ public class CompetitionResource {
 
     @Inject
     private InvitationService invitationService;
+
+    @Inject
+    private UserService userService;
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
@@ -205,16 +215,28 @@ public class CompetitionResource {
     /**
      * Creates a new team
      *
+     * @param request
      * @param competitionId
-     * @param team team that should be created created
+     * @param teamName
+     * @return
      */
     @POST
-    @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team")
-    public void createTeam(@PathParam("competitionId") long competitionId, Team team) {
-        Competition competition = competitionService.findById(competitionId);
-        team.setCompetition(competition);
-        teamService.createTeam(team);
+    @Produces(MediaType.TEXT_PLAIN)
+    @RolesAllowed({"User", "Admin"})
+    public Response createTeam(@Context HttpServletRequest request, @PathParam("competitionId") long competitionId, @FormParam("teamName") String teamName) {
+        try {
+            User user = userService.findById(request.getRemoteUser());
+            Team team = new Team(user, teamName);
+            Competition competition = competitionService.findById(competitionId);
+            team.setCompetition(competition);
+            teamService.createTeam(team);
+            Team createdTeam = teamService.findById(team.getId());
+            return Response.ok(createdTeam.getName()).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Response.serverError().entity(ex.getMessage()).build();
+        }
     }
 
     /**
@@ -245,7 +267,9 @@ public class CompetitionResource {
      * Invites a member to a certain team
      *
      * @param email email address of the person that should be invited
+     * @param competitionId
      * @param teamId id of the team that the person should be invited to
+     * @return
      */
     @POST
     @Consumes("application/xml,application/json")
@@ -253,15 +277,15 @@ public class CompetitionResource {
     public Response inviteMember(String email, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
         if (email == null || email.isEmpty()) {
             return Response.serverError().entity("no email").build();
-        }else if (competitionService.findById(competitionId)== null ) {
+        } else if (competitionService.findById(competitionId) == null) {
             return Response.serverError().entity("Competition not found").build();
         } else if (teamService.findById(teamId) == null) {
             return Response.serverError().entity("Team not found").build();
-        }else{
+        } else {
             invitationService.inviteMember(email, teamId, competitionId);
             return Response.ok("Invite send").build();
         }
-       
+
     }
 
     /**
