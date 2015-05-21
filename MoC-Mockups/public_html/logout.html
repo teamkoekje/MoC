@@ -25,14 +25,11 @@
                     location.href = this.href;
                 });
 
-                $("#loginForm").submit(function (event) {
+                $("#logoutBtn").click(function (event) {
+                    console.log(event)
                     event.preventDefault();
                     $.ajax({
-                        url: "http://localhost:8080/MoC-Service/api/user/login",
-                        data: {
-                            username: $("#usernameInput").val(),
-                            password: $("#passwordInput").val()
-                        },
+                        url: "http://localhost:8080/MoC-Service/api/user/logout",
                         crossDomain: true,
                         type: "post",
                         xhrFields: {
@@ -42,10 +39,12 @@
                         console.log("success");
                         console.log(data);
                         alert(data);
+                        location.href = "login.html";
                     }).error(function (data) {
                         console.log("error");
                         console.log(data);
-                        alert(data);
+                        alert(data.responseText);
+                        location.reload();
                     });
                 });
             });
@@ -61,23 +60,7 @@
                 </h3>
             </div>
             <div style="text-align:center">
-                <p>
-                    You are invited to {{teamname}}
-                </p>
-                <form style="display:inline-block;text-align: left" id="loginForm">
-                    <div class="form-group">
-                        <label for="usernameInput" style="">Username:</label>
-                        <input required type="text" class="form-control" id="usernameInput" placeholder="username" style="display: table-cell"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordInput" style="">Password:</label>
-                        <input required type="password" class="form-control" id="passwordInput" placeholder="password" style="display: table-cell"/>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-default" value="Log in"/>
-                        <a style="" href="register.html"><span class="btn btn-default">Register</span></a>
-                    </div>
-                </form>
+                <button id="logoutBtn" class="btn btn-default">Confirm logging out</button>
             </div>
         </div>
     </body>
