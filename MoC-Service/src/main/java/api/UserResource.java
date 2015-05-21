@@ -62,7 +62,7 @@ public class UserResource {
     }
 
     /**
-     * Check if a username is available (create call takes <User> as parameter
+     * Check if a username is available (create call takes User as parameter)
      * and that errors when you submit a user with invalid username
      *
      * @param username
@@ -86,6 +86,7 @@ public class UserResource {
      * Creates a new user
      *
      * @param user user that should be created
+     * @return 
      */
     @POST
     @Consumes("application/xml,application/json")
@@ -104,6 +105,7 @@ public class UserResource {
      * Updates a user
      *
      * @param user user with updated information
+     * @return 
      */
     @POST
     @Consumes("application/xml,application/json")
