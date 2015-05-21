@@ -18,6 +18,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import service.UserService;
 
 /**
@@ -60,15 +62,42 @@ public class UserResource {
     }
 
     /**
+     * Check if a username is available (create call takes <User> as parameter
+     * and that errors when you submit a user with invalid username
+     *
+     * @param username
+     * @return
+     */
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @PermitAll
+    @Path("/username")
+    public Response checkUsername(@FormParam("username") String username) {
+        if (username == null || username.isEmpty()) {
+            return Response.serverError().entity("Invalid username").build();
+        } else if (userService.findById(username) != null) {
+            return Response.serverError().entity("Username in use already").build();
+        } else {
+            return Response.ok("Username is available").build();
+        }
+    }
+
+    /**
      * Creates a new user
      *
      * @param user user that should be created
      */
     @POST
     @Consumes("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    public void createUser(User user) {
+    public Response createUser(User user) {
         userService.create(user);
+        User createdUser = userService.findById(user.getUsername());
+        if (createdUser == null) {
+            return Response.serverError().entity("Error creating user").build();
+        }
+        return Response.ok(user).build();
     }
 
     /**
@@ -78,10 +107,12 @@ public class UserResource {
      */
     @POST
     @Consumes("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
     @RolesAllowed({"User", "Admin"})
-    public void updateUser(User user) {
+    public Response updateUser(User user) {
         userService.edit(user);
+        return Response.ok(userService.findById(user.getUsername())).build();
     }
 
     /**
@@ -95,11 +126,11 @@ public class UserResource {
     public void deleteUser(@PathParam("userId") Long userId) {
         userService.remove(userId);
     }
-    
+
     @POST
     @Path("/login")
     @PermitAll
-    public String login(
+    public Response login(
             @FormParam("username") String username,
             @FormParam("password") String password,
             @Context HttpServletRequest request) {
@@ -111,16 +142,16 @@ public class UserResource {
             System.out.println("Logged in user: " + request.getRemoteUser());
         } catch (ServletException ex) {
             System.err.println(ex.getMessage());
-            return ex.getMessage();
+            return Response.serverError().entity(ex.getMessage()).build();
         }
-        return "Logged in as " + username;
+        return Response.ok("Logged in as " + username).build();
     }
 
     @GET
-    @Path("/isLoggedIn/{username}")
+    @Path("/isLoggedIn/")
     @PermitAll
     public boolean isLoggedIn(
-            @PathParam("username") String username,
+            @FormParam("username") String username,
             @Context HttpServletRequest request) {
         System.out.println("Checking if user is logged in: " + username);
         return username.equals(request.getRemoteUser());
@@ -128,8 +159,9 @@ public class UserResource {
 
     @POST
     @Path("/logout")
+    @Produces(MediaType.TEXT_PLAIN)
     @RolesAllowed({"User", "Admin"})
-    public String logout(
+    public Response logout(
             @Context HttpServletRequest request) {
         try {
             System.out.println("User: " + request.isUserInRole("User"));
@@ -139,9 +171,9 @@ public class UserResource {
             request.logout();
         } catch (ServletException ex) {
             System.err.println(ex.getMessage());
-            return ex.getMessage();
+            return Response.serverError().entity(ex.getMessage()).build();
         }
-        return "Logged out!";
+        return Response.ok("Logged out!").build();
     }
     //</editor-fold>
 }

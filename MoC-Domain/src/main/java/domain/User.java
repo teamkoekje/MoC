@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "MOC_USER")
@@ -25,6 +26,7 @@ public class User implements Serializable {
     private String username;
 
     private String email;
+    @XmlTransient
     private String password;
     private String name;
     private String organisation;
