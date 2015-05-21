@@ -26,20 +26,35 @@
             //http://ace.c9.io/#nav=howto
             var editor;
             $(window).ready(function () {
+                initEditor("editor");
+            });
+            
+            /**
+             * Create the ace editor
+             * @param {String} editorID The element ID of the element that becomes the ace editor
+             */
+            function initEditor(editorID) {
                 // trigger extension
-                editor = ace.edit("editor");
+                editor = ace.edit(editorID);
+                // we're using java
                 editor.session.setMode("ace/mode/java");
+                // light theme
                 editor.setTheme("ace/theme/tomorrow");
-                //editor.setTheme("ace/theme/monokai");
+                // dark theme
+                // editor.setTheme("ace/theme/monokai");
+                // ugly vertical line has to be removed
                 editor.setShowPrintMargin(false);
-                editor.setReadOnly(false); // false to make it editable
-                editor.$blockScrolling = Infinity; //to fix warning
+                // false to make it editable
+                editor.setReadOnly(false); 
+                //to fix warning (was shown in console to set to infinity) also infinity is a real global JS variable
+                editor.$blockScrolling = Infinity; 
                 // enable autocompletion and snippets
                 editor.setOptions({
                     enableBasicAutocompletion: true,
                     enableSnippets: true,
                     enableLiveAutocompletion: false
                 });
+                // handle going fullscreen
                 $("#wrapperAroundEditor").on(
                         'webkitfullscreenchange mozfullscreenchange fullscreenchange',
                         function () {
@@ -59,10 +74,12 @@
                             }
                             editor.resize();
                         });
-            });
+            }
+            
             function getTextFromEditor() {
                 return editor.getSession.getValue();
             }
+            
             function getSelectionFromEditor() {
                 return editor.session.getTextRange(editor.getSelectionRange());
             }
@@ -77,14 +94,17 @@
                 } else if (elem.webkitRequestFullscreen) {
                     elem.webkitRequestFullscreen();
                 } else {
-                    alert("Full screen is not supported");
+                    alert("Full screen is not supported, recommended webbrowser to use is Google Chrome");
                 }
             }
 
             function fullScreenEditor() {
+                //Hide the side panels
                 $('#wrapperMessages').hide();
                 $('#wrapperAroundResults').hide();
+                //Make sure the editor will use full width
                 $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                //Set the editor full screen
                 fullScreenElement($('#wrapperAroundEditor')[0]);
             }
 
@@ -171,19 +191,6 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xs-6" style='display:none' id="wrapperAroundResults">
-                        <div class="first" style="width: 50px;margin-left:7%;">Result</div>
-                        <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
-                            <ul id="resultList">
-                                <li>
-                                    Result 1
-                                </li>
-                                <li>
-                                    Result 2
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                     <div class="col-xs-6" style="display:none" id="wrapperTests">
                         <div class="first" style="width: 40px;margin-left:7%;">Tests</div>
                         <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
@@ -231,4 +238,3 @@
         </div>
     </body>
 </html>
-

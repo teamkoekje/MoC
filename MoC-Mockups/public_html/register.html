@@ -19,7 +19,41 @@
 
         <link rel="stylesheet" href="css/main.css">
         <script>
+            /**
+             * Checks the usernameInput field to see if the username is valid
+             * @returns No return value
+             */
+            function checkUsername() {
+                var username = $("#usernameInput").val();
+                if (username.length < 1) {
+                    $("#showUsernameError").show();
+                    $("#submitBtn").prop("disabled", true);
+                    return;
+                }
+                $.ajax({
+                    crossDomain: true,
+                    type: "post",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    url: "http://localhost:8080/MoC-Service/api/user/username/",
+                    data: {
+                        username: username
+                    }
+                }).success(function (data) {
+                    console.log(data);
+                    $("#showUsernameError").hide();
+                    $("#submitBtn").prop("disabled", false);
+                }).error(function (data) {
+                    console.log(data.statusText);
+                    $("#showUsernameError").show();
+                    $("#submitBtn").prop("disabled", true);
+                });
+            }
             $(window).ready(function () {
+                $("#usernameInput").on('input', function (e) {
+                    checkUsername();
+                });
                 $("#registerForm").submit(function (event) {
                     event.preventDefault();
                     var user = {
@@ -29,7 +63,6 @@
                         name: $("#nameInput").val(),
                         organisation: $("#organisationInput").val()
                     };
-                    console.log(JSON.stringify(user));
                     $.ajax({
                         dataType: 'json',
                         crossDomain: true,
@@ -52,7 +85,7 @@
                                 xhrFields: {
                                     withCredentials: true
                                 },
-                                //Not yet tested
+                                //Not yet fully tested
                                 url: "http://localhost:8080/MoC-Service/api/competition/" +
                                         window.params().competitionId +
                                         "/team/" +
@@ -62,9 +95,14 @@
                                 data: JSON.stringify(user)
                             }).success(function (data) {
                                 console.log(data);
+                                //TODO:
+                                // joining teams needs to be tested so disabled redirect here while testing
+                                // location.href = "afterRegistration.html";
                             }).error(function (data) {
                                 console.log(data);
                             });
+                        } else {
+                            location.href = "afterRegistration.html";
                         }
                     }).error(function (data) {
                         console.log("error");
@@ -74,6 +112,10 @@
                 });
             });
 
+            /**
+             * Get the parameters from the URL and put them in a map
+             * @returns Map with URL parameters
+             */
             window.params = function () {
                 var result = {};
                 var searchString = location.search.substring(1, location.search.length);
@@ -105,6 +147,13 @@
                             <input required class="form-control" type="text" id="usernameInput" placeholder="Username" style=""/>
                         </div>
                     </div>
+                    <div class="row" id="showUsernameError" style="display:none">
+                        <div class="col-xs-4"><!--We need some spacing here--></div>
+                        <label class="col-xs-8" for="usernameInput" style="color:red">
+                            Invalid username
+                        </label>
+                    </div>
+
                     <div class="row">
                         <label class="col-xs-4" for="emailInput" style="">Email:</label>
                         <div class="col-xs-8">
@@ -132,7 +181,7 @@
                     <div class="row">
                         <div class='col-xs-4'><!--Had to do something to get this open space--></div>
                         <div class="col-xs-8">
-                            <input type="submit" class="btn btn-default" value="Register"/>
+                            <input disabled id="submitBtn" type="submit" class="btn btn-default" value="Register"/>
                         </div>
                     </div>
                 </form>
