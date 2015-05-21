@@ -13,11 +13,15 @@ public abstract class Request implements Serializable {
     private final Action action;
     private String competition;
 
-    public Request(Action action, String competition) {
+    protected Request(Action action, String competition) {
         this.action = action;
         this.competition = competition;
     }
-
+    
+    protected Request(Action action){
+        this.action = action;
+    }
+    
     public Action getAction() {
         return action;
     }
