@@ -1,7 +1,11 @@
 package Management;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -171,6 +175,8 @@ public class WorkspaceManagement {
                         + File.separator
                         + fileRequest.getChallangeName() + ".jar";
                 return FileManagement.getInstance(jarPathForFile).getFileJSON(fileRequest.getFilepath());
+            case SYSINFO:
+                return systemInformation();
             // private final String defaultJar = defaultPath + "/annotionframework/annotatedProject-1.0.jar"
             default:
                 return "error, unknown action: " + r.getAction().name();
@@ -198,7 +204,7 @@ public class WorkspaceManagement {
                     + teamName);
             teamFolder.mkdirs();
             ArrayList<String> tempList = teams.get(competitionName);
-            if(tempList == null){
+            if (tempList == null) {
                 tempList = new ArrayList<>();
             }
             tempList.add(teamName);
@@ -389,6 +395,42 @@ public class WorkspaceManagement {
                 }
                 dest.flush();
             }
+        }
+    }
+
+    public String systemInformation() {
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            NumberFormat format = NumberFormat.getInstance();
+            StringBuilder sb = new StringBuilder();
+            
+            long maxMemory = runtime.maxMemory();
+            long allocatedMemory = runtime.totalMemory();
+            long freeMemory = runtime.freeMemory();
+            int amountProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
+            double cpuUsage = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
+            long freeSpace = new File("/").getFreeSpace();
+            long usableSpace = new File("/").getUsableSpace();
+            long totalSpace = new File("/").getTotalSpace();
+            String IP = InetAddress.getLocalHost().getHostAddress();
+            
+            sb.append("[SYSINFO]");
+            sb.append("free diskspace: " + format.format(freeSpace) + ";");
+            sb.append("allocated diskspace: " + format.format(usableSpace) + ";");
+            sb.append("total diskspace: " + format.format(totalSpace) + ";");
+            
+            sb.append("free memory: " + format.format(freeMemory / 1024) + ";");
+            sb.append("allocated memory: " + format.format(allocatedMemory / 1024) + ";");
+            sb.append("max memory: " + format.format(maxMemory / 1024) + ";");
+            sb.append("total free memory: " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + ";");
+            
+            sb.append("processor amount: " + amountProcessors + ";");
+            sb.append("cpu usage: " + cpuUsage + ";");
+            
+            return sb.toString();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+            return "[SYSINFO] NULL";
         }
     }
 
