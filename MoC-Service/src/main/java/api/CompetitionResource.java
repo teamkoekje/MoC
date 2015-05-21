@@ -13,6 +13,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import service.CompetitionService;
 import service.InvitationService;
 import service.RoundService;
@@ -249,8 +250,18 @@ public class CompetitionResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/team/{teamId}/invite")
-    public void inviteMember(String email, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
-        invitationService.inviteMember(email, teamId, competitionId);
+    public Response inviteMember(String email, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
+        if (email == null || email.isEmpty()) {
+            return Response.serverError().entity("no email").build();
+        }else if (competitionService.findById(competitionId)== null ) {
+            return Response.serverError().entity("Competition not found").build();
+        } else if (teamService.findById(teamId) == null) {
+            return Response.serverError().entity("Team not found").build();
+        }else{
+            invitationService.inviteMember(email, teamId, competitionId);
+            return Response.ok("Invite send").build();
+        }
+       
     }
 
     /**
