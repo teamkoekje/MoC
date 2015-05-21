@@ -148,10 +148,10 @@ public class UserResource {
     }
 
     @GET
-    @Path("/isLoggedIn/")
+    @Path("/isLoggedIn/{username}")
     @PermitAll
     public boolean isLoggedIn(
-            @FormParam("username") String username,
+            @PathParam("username") String username,
             @Context HttpServletRequest request) {
         System.out.println("Checking if user is logged in: " + username);
         return username.equals(request.getRemoteUser());
