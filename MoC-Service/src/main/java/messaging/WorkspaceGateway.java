@@ -123,6 +123,17 @@ public abstract class WorkspaceGateway {
             return null;
         }
     }
+    
+    public String deleteWorkspace(TeamRequest request) {
+         WorkspaceServer ws = router.getServerByWorkspaceName(request.getTeamName());
+        if (ws != null) {
+            ws.deleteWorkspace(request.getTeamName());
+            return sendRequest(request, ws.getSender());
+        } else {
+            System.out.println("Workspace not found");
+            return null;
+        }
+    }
 
     void start() {
         router.openConnection();

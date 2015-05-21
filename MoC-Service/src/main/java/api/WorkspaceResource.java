@@ -19,7 +19,7 @@ public class WorkspaceResource {
 
     @Inject
     private WorkspaceService workspaceService;
-    
+
     @Context
     private HttpServletRequest request;
 
@@ -28,46 +28,48 @@ public class WorkspaceResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/create")
     public void create(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
-        workspaceService.create(competitionName, teamName, request.getUserPrincipal().getName());
+        String messageId = workspaceService.create(competitionName, teamName);
+        workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/delete")
     public void delete(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
-        System.out.println(request.getUserPrincipal().getName());
-        workspaceService.delete(competitionName, teamName, request.getUserPrincipal().getName());
+        String messageId = workspaceService.delete(competitionName, teamName);
+        workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/update")
     public void update(String filePath, @PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName) {
-        workspaceService.update(competitionName, teamName, filePath, "");
+        String messageId = workspaceService.update(competitionName, teamName, filePath, "");
+        workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/{challangeName}/compile")
-    public boolean compile(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
-        workspaceService.compile(competitionName, teamName, challangeName);
-        return false;
+    public void compile(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
+        String messageId = workspaceService.compile(competitionName, teamName, challangeName);
+        workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/{challangeName}/test")
-    public String testAll(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
-        workspaceService.testAll(competitionName, teamName, challangeName);
-        return null;
+    public void testAll(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
+        String messageId = workspaceService.testAll(competitionName, teamName, challangeName);
+        workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionName}/{teamName}/{challengeName}/test/{testFile}/{testName}")
-    public String test(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challengeName") String challengeName,@PathParam("testFile") String testFile, @PathParam("testName") String testName) {
-        workspaceService.test(competitionName, teamName, challengeName, testFile, testName);
-        return null;
+    public void test(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challengeName") String challengeName, @PathParam("testFile") String testFile, @PathParam("testName") String testName) {
+        String messageId = workspaceService.test(competitionName, teamName, challengeName, testFile, testName);
+        workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST

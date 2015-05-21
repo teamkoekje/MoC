@@ -3,6 +3,7 @@ package service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,8 +15,8 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
-import javax.jms.TextMessage;
-import javax.websocket.Session;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
 import workspace.CompileRequest;
@@ -76,36 +77,35 @@ public class WorkspaceService {
         gateway.closeConnection();
     }
 
-    public void create(String competitionName, String teamName, String username) {
-        System.out.println("Send message: create workspace");
-        String messageId = gateway.addWorkspace(new CreateRequest(competitionName, teamName));
-        System.out.println("MessageId: " + messageId);
-        if (messageId != null) {
+    public void storeRequestMessage(String messageId, String username) {
+        if (username != null && messageId != null) {
             this.requests.put(messageId, username);
+            System.out.println("Request message send with id: " + messageId + " from user: " + username);
         }
     }
 
-    public void delete(String competitionName, String teamName, String username) {
-        String messageId = gateway.sendRequestToTeam(new DeleteRequest(competitionName, teamName));
-        if (messageId != null) {
-            this.requests.put(messageId, username);
-        }
+    public String create(String competitionName, String teamName) {
+        return gateway.addWorkspace(new CreateRequest(competitionName, teamName));
     }
 
-    public void update(String competitionName, String teamName, String filePath, String fileContent) {
-        gateway.sendRequestToTeam(new UpdateRequest(competitionName, teamName, filePath, fileContent));
+    public String delete(String competitionName, String teamName) {
+       return gateway.deleteWorkspace(new DeleteRequest(competitionName, teamName));
     }
 
-    public void compile(String competition, String teamName, String challengeName) {
-        gateway.sendRequestToTeam(new CompileRequest(competition, teamName, challengeName));
+    public String update(String competitionName, String teamName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new UpdateRequest(competitionName, teamName, filePath, fileContent));
     }
 
-    public void testAll(String competition, String teamName, String challengeName) {
-        gateway.sendRequestToTeam(new TestAllRequest(competition, teamName, challengeName));
+    public String compile(String competition, String teamName, String challengeName) {
+        return gateway.sendRequestToTeam(new CompileRequest(competition, teamName, challengeName));
     }
 
-    public void test(String competition, String teamName, String challengeName, String testFile, String testName) {
-        gateway.sendRequestToTeam(new TestRequest(competition, teamName, challengeName, testFile, testName));
+    public String testAll(String competition, String teamName, String challengeName) {
+        return gateway.sendRequestToTeam(new TestAllRequest(competition, teamName, challengeName));
+    }
+
+    public String test(String competition, String teamName, String challengeName, String testFile, String testName) {
+        return gateway.sendRequestToTeam(new TestRequest(competition, teamName, challengeName, testFile, testName));
     }
 
     public void push(String competitionName, String challengeName) {

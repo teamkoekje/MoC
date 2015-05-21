@@ -23,8 +23,8 @@ public class WorkspaceServer {
         this.workspaces = new ArrayList<>();
         sender = new MessagingGateway(queue, DestinationType.QUEUE, GatewayType.SENDER);
     }
-    
-    public boolean containsWorkspace(String workspaceName){
+
+    public boolean containsWorkspace(String workspaceName) {
         return this.workspaces.contains(workspaceName);
     }
 
@@ -36,8 +36,12 @@ public class WorkspaceServer {
         return workspaces;
     }
 
-    public void addWorkspace(String w) {
-        this.workspaces.add(w);
+    public void addWorkspace(String teamName) {
+        this.workspaces.add(teamName);
+    }
+
+    public void deleteWorkspace(String teamName) {
+        this.workspaces.remove(teamName);
     }
 
     public Long getId() {
@@ -59,4 +63,5 @@ public class WorkspaceServer {
     public int getNumberOfWorkspaces() {
         return workspaces.size();
     }
+
 }

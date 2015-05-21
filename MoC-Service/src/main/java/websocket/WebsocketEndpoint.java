@@ -1,10 +1,7 @@
 package websocket;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.Iterator;
-import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
