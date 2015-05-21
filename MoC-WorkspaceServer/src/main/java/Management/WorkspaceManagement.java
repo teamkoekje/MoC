@@ -138,7 +138,7 @@ public class WorkspaceManagement {
                 return removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName());
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return extractChallengeToTeam(pushRequest.getChallengeName(), pushRequest.getCompetition());
+                return extractChallengeToTeam(pushRequest.getData(), pushRequest.getChallengeName(), pushRequest.getCompetition());
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath
@@ -333,7 +333,7 @@ public class WorkspaceManagement {
      * @param challengeName The challenge to extract
      * @return A string indicating the success of the extraction
      */
-    protected String extractChallengeToTeam(String challengeName, String competitionName) {
+    protected String extractChallengeToTeam(byte[] data, String challengeName, String competitionName) {
         File challengeZip = new File(defaultPath
                 + File.separator
                 + "Competitions"
