@@ -71,8 +71,8 @@ public class UserResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @PermitAll
-    @Path("/username/{username}")
-    public Response checkUsername(@PathParam("username")String username) {
+    @Path("/username")
+    public Response checkUsername(@FormParam("username") String username) {
         if (username == null || username.isEmpty()) {
             return Response.serverError().entity("Invalid username").build();
         } else if (userService.findById(username) != null) {
