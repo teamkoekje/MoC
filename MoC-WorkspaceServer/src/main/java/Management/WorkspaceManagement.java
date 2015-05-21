@@ -342,7 +342,9 @@ public class WorkspaceManagement {
                 + File.separator
                 + "Challenges"
                 + File.separator
-                + challengeName + ".zip");
+                + challengeName + ".zip");		
+        //write zip to Competition server folder
+        writeZipToCompetition(data, challengeZip);
         //for all teams
         for (String teamName : teams.get(competitionName)) {
             try {
@@ -396,6 +398,20 @@ public class WorkspaceManagement {
                 dest.flush();
             }
         }
+    }
+	
+	private void writeZipToCompetition(byte[] data, File challengeZip) {
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(challengeZip);
+            fos.write(data);
+            fos.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public String systemInformation() {
