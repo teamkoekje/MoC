@@ -19,8 +19,6 @@ import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import org.apache.activemq.ActiveMQSession;
-import org.apache.activemq.BlobMessage;
 
 /**
  * This class is responsible for actually sending messages from one point to
@@ -76,10 +74,6 @@ public class MessagingGateway {
                 this.consumer = session.createConsumer(receiverDestination);
                 break;
         }
-    }
-
-    public BlobMessage createBlobMessage(String file) throws JMSException, IOException {
-        return ((ActiveMQSession) session).createBlobMessage(new File(file));
     }
 
     public BytesMessage createBytesMessage() throws JMSException {

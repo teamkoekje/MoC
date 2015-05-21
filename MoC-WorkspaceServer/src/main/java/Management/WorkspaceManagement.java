@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.shared.invoker.*;
 import workspace.CompileRequest;
 import workspace.CreateRequest;
@@ -143,7 +144,6 @@ public class WorkspaceManagement {
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath
                         = defaultPath
-                        + File.separator
                         + "Competitions"
                         + File.separator
                         + folderStructureRequest.getCompetition()
@@ -157,6 +157,7 @@ public class WorkspaceManagement {
                         = folderPath
                         + File.separator
                         + folderStructureRequest.getChallengeName() + ".jar";
+                System.out.println(jarPathForFolder);
                 return FileManagement.getInstance(jarPathForFolder).getFolderJSON(folderPath);
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
@@ -334,21 +335,25 @@ public class WorkspaceManagement {
      * @return A string indicating the success of the extraction
      */
     protected String extractChallengeToTeam(byte[] data, String challengeName, String competitionName) {
-        File challengeZip = new File(defaultPath
+        File challengePath = new File(defaultPath
                 + File.separator
                 + "Competitions"
                 + File.separator
                 + competitionName
                 + File.separator
-                + "Challenges"
-                + File.separator
-                + challengeName + ".zip");		
-        //write zip to Competition server folder
-        writeZipToCompetition(data, challengeZip);
-        //for all teams
+                + "Challenges");
+        
+        challengePath.mkdirs();
+        
+        File challengeZip = new File(challengePath.getAbsoluteFile() + File.separator + challengeName +".zip");
+
+//write to server        
+        writeZipToCompetition(data, challengeZip.getAbsolutePath());
+
+//for all teams
         for (String teamName : teams.get(competitionName)) {
             try {
-                extractChallenge(challengeZip, teamName);
+                extractChallenge(challengeZip, teamName, competitionName);
             } catch (Exception ex) {
                 Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 return "Error extracting: " + ex.getLocalizedMessage();
@@ -357,18 +362,23 @@ public class WorkspaceManagement {
         return "Extracting successfull";
     }
 
-    private void extractChallenge(File challengeZip, String teamName) throws IOException {
+    private void extractChallenge(File challengeZip, String teamName, String competitionName) throws IOException {
+        File challengePath = new File(defaultPath
+                + File.separator
+                + "Competitions"
+                + File.separator
+                + competitionName);
         //zip
         ZipFile zip = new ZipFile(challengeZip);
         Enumeration zipFileEntries = zip.entries();
         //output directory
-        String outputPath = challengeZip.getParent()
+        String outputPath = challengePath
                 + File.separator
                 + "Teams"
                 + File.separator
                 + teamName
                 + File.separator
-                + challengeZip.getParentFile().getName();
+                + FilenameUtils.removeExtension(challengeZip.getName());
         //loop through the zip
         while (zipFileEntries.hasMoreElements()) {
             //create the file/folder
@@ -399,8 +409,9 @@ public class WorkspaceManagement {
             }
         }
     }
-	
-	private void writeZipToCompetition(byte[] data, File challengeZip) {
+
+    private void writeZipToCompetition(byte[] data, String challengeZip) {
+
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(challengeZip);
@@ -419,7 +430,7 @@ public class WorkspaceManagement {
             Runtime runtime = Runtime.getRuntime();
             NumberFormat format = NumberFormat.getInstance();
             StringBuilder sb = new StringBuilder();
-            
+
             long maxMemory = runtime.maxMemory();
             long allocatedMemory = runtime.totalMemory();
             long freeMemory = runtime.freeMemory();
@@ -429,20 +440,20 @@ public class WorkspaceManagement {
             long usableSpace = new File("/").getUsableSpace();
             long totalSpace = new File("/").getTotalSpace();
             String IP = InetAddress.getLocalHost().getHostAddress();
-            
+
             sb.append("[SYSINFO]");
             sb.append("free diskspace: " + format.format(freeSpace) + ";");
             sb.append("allocated diskspace: " + format.format(usableSpace) + ";");
             sb.append("total diskspace: " + format.format(totalSpace) + ";");
-            
+
             sb.append("free memory: " + format.format(freeMemory / 1024) + ";");
             sb.append("allocated memory: " + format.format(allocatedMemory / 1024) + ";");
             sb.append("max memory: " + format.format(maxMemory / 1024) + ";");
             sb.append("total free memory: " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + ";");
-            
+
             sb.append("processor amount: " + amountProcessors + ";");
             sb.append("cpu usage: " + cpuUsage + ";");
-            
+
             return sb.toString();
         } catch (UnknownHostException ex) {
             Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);

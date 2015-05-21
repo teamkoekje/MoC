@@ -57,6 +57,7 @@ public class FileManagement {
 
     private FileManagement(String filepath) {
         try {
+            System.out.println(filepath);
             db = new AnnotationDB();
             URL testJarUrl = new URL("file:///" + filepath);
             db.scanArchives(testJarUrl);

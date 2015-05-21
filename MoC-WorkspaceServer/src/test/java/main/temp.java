@@ -17,9 +17,9 @@ import workspace.UpdateRequest;
  *
  * @author Casper
  */
-public class WorkspaceManagementTest extends WorkspaceManagement{
+public class temp extends WorkspaceManagement{
 
-    public WorkspaceManagementTest() {
+    public temp() {
     }
 
     /**
