@@ -26,7 +26,6 @@
                     event.preventDefault();
                     location.href = this.href;
                 });
-
                 $("#inviteForm").submit(function (event) {
                     event.preventDefault();
                     $.ajax({
@@ -37,7 +36,52 @@
                                 window.params().teamId +
                                 "/invite",
                         data: {
-                            email: $("#emailInput").val(),
+                            email: $("#emailInput").val()
+                        },
+                        crossDomain: true,
+                        type: "post",
+                        xhrFields: {
+                            withCredentials: true
+                        }
+                    }).success(function (data) {
+                        console.log("success");
+                        console.log(data);
+                    }).error(function (data) {
+                        console.log("error");
+                        console.log(data.responseText);
+                    });
+                });
+                $("#maakDataForm").submit(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        contentType: 'application/json; charset=UTF-8',
+                        url: 'http://localhost:8080/MoC-Service/api/competition/',
+                        data: {
+                            name: "comp1",
+                            competitionDate: "10/10/2010",
+                            startingTime: "10:00",
+                            endTime: "11:00",
+                            location: "eindhoven"
+                        },
+                        crossDomain: true,
+                        type: "post",
+                        xhrFields: {
+                            withCredentials: true
+                        }
+                    }).success(function (data) {
+                        console.log("success");
+                        console.log(data);
+                    }).error(function (data) {
+                        console.log("error");
+                        console.log(data.responseText);
+                    });
+
+                    $.ajax({
+                        contentType: 'application/json; charset=UTF-8',
+                        url: 'http://localhost:8080/MoC-Service/api/competition/1/team',
+                        data: {
+                            initiator: "aanmaker",
+                            name: "testTeam1"
                         },
                         crossDomain: true,
                         type: "post",
@@ -53,7 +97,6 @@
                     });
                 });
             });
-
             /**
              * Get the parameters from the URL and put them in a map
              * @returns Map with URL parameters
@@ -67,8 +110,7 @@
                     result[pair[0]] = pair[1];
                 }
                 return result;
-            };
-        </script>
+            };</script>
 
     </head>
     <body>
@@ -119,7 +161,12 @@
 
                     <br><br>
 
+                    <form style="display:inline-block;text-align: left" id="maakDataForm">
 
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-default" value="Maak data aan"/>
+                        </div>
+                    </form>
 
                 </div>
             </div>
