@@ -1,0 +1,90 @@
+form label{
+    padding-right: 10px;
+}
+
+form input:not([type="submit"]){
+    margin-bottom: 5px;
+}
+
+#menubar{
+    float: left;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#menubar li{
+    text-align: left;
+    display: inline;
+    cursor: pointer;
+}
+
+#menubar li:hover{
+    background-color: gray;
+}
+
+#menubar a{
+    text-decoration: none;
+    color: black;
+}
+
+.wrapper {
+    margin-bottom:10px;
+}
+.first {
+    position:relative;
+    border-bottom:none;
+    width: 30px;
+    margin-left: 5px;
+    padding: 0px 30px 0px 5px;
+    margin-bottom: -10px;
+    border-radius:5px 5px 0 0;
+    background: white;
+    z-index: 1;
+}
+.second {
+    border-radius:0 5px 5px 5px;
+    border:2px solid black;
+    padding:10px;
+    z-index: 0;
+}
+
+.list-group li:nth-child(even){
+    background-color: #222;
+}
+.list-group li:nth-child(odd){
+    background-color: #333;
+}
+.colcontainer
+{
+    width: auto;
+    overflow:hidden;
+}
+#editor { 
+    margin: 0;
+    position: relative; /*default is absolute but that makes the editor full screen*/
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+#messageList{
+    list-style: none;
+    margin-bottom: 0px;
+    padding:0;
+}
+#messageList li:not(:last-child){
+    word-break: break-all;
+    margin-bottom: 3px;
+    border-bottom: #333 1px solid;
+}
+
+.withBorder{
+    border-radius: 0 5px 5px 5px;
+    border: 2px solid black;
+    padding: 10px;
+}
+
+.jumbotron{
+    padding:20px !important;
+}

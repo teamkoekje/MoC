@@ -57,7 +57,7 @@ public class UserResource {
     @Produces("application/xml,application/json")
     @Path("/{userId}")
     @PermitAll
-    public User getUserById(@PathParam("userId") Long userId) {
+    public User getUserById(@PathParam("userId") String userId) {
         return userService.findById(userId);
     }
 

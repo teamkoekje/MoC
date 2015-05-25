@@ -3,6 +3,29 @@
 var controllers = angular.module('mocControllers', []);
 
 controllers.controller('loginController', ['$scope', function ($scope) {
+
+        $scope.login = function () {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/MoC-Service/api/user/login",
+                data: {
+                    username: $scope.username,
+                    password: $scope.password
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+            }).success(function (data) {
+                console.log("Logged in succesfully: " + $scope.username);
+                //$cookies.user = $scope.username;
+                location.href = "#/competitions";
+
+            }).error(function (data) {
+                console.log("Error while logging in");
+                console.log(data);
+            });
+        };
+
         $scope.logout = function () {
             $.ajax({
                 type: "POST",
@@ -20,29 +43,27 @@ controllers.controller('loginController', ['$scope', function ($scope) {
                 console.log(data);
             });
         };
+    }
+]);
 
-
-        $scope.login = function () {
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:8080/MoC-Service/api/user/login",
-                data: {
-                    username: "Memphizx",
-                    password: "welkom123"
-                },
-                xhrFields: {
-                    withCredentials: true
-                }
-            }).success(function (data) {
-                console.log("Logged in succesfully: " + $scope.username);
-                //$cookies.user = $scope.username;
-                location.href = "#/personal";
-
-            }).error(function (data) {
-                console.log("Error while logging in");
-                console.log(data);
+controllers.controller('registerController', ['$scope', 'user',
+    function ($scope, $user) {
+        $scope.register = function () {
+            console.log("Create User");
+            $scope.user.$save(function () {
+                loadData();
             });
+            $scope.user = new $user();
+            
+            location.href = "#/login";
         };
+        
+        $scope.user = new $user();
+        $scope.user.email = "robin@robin.nl";
+        $scope.user.password = "welkom123";
+        $scope.user.username = "Memphizx";
+        $scope.user.name = "Robin van der Avoort";
+        $scope.user.organisation = "Fontys";
     }
 ]);
 
@@ -88,8 +109,8 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
                 $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
             }
         };
-        
-        $scope.refreshTeams = function() {
+
+        $scope.refreshTeams = function () {
             if ($scope.selected_competition !== undefined) {
                 $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
             }
@@ -103,8 +124,8 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         $scope.user.username = "Memphizx";
         $scope.user.name = "Robin van der Avoort";
         $scope.user.organisation = "Fontys";
-        
-        
+
+
         var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
         ws.onopen = function () {
             console.log("opening ws connection");
@@ -114,6 +135,54 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         };
     }
 ]);
+
+controllers.controller('competitionsController', ['$scope', 'competition',
+    function ($scope, $competition) {
+        $scope.selectCompetition = function (id) {
+            console.log("Select competition with id: " + id);
+            $scope.competition = $competition.get({competitionId: id});
+        };
+
+        $scope.isSelected = function (competitionId) {
+            return $scope.competition.id === competitionId;
+        };
+
+        loadData = function () {
+            $scope.competitions = $competition.query();
+
+            //TODO: Get the first competition in the list (don't use hard-coded id)
+            $scope.competition = $competition.get({competitionId: 4});
+        };
+
+        loadData();
+    }
+]);
+
+controllers.controller('teamsController', ['$scope', 'user', 'team',
+    function ($scope, $user, $team) {
+
+        $scope.selectTeam = function (competitionId, teamId) {
+            console.log("Select team with id: " + teamId);
+            $scope.team = $team.get({competitionId: competitionId, teamId: teamId});
+        };
+
+        $scope.isSelected = function (teamId) {
+            return $scope.team.id === teamId;
+        };
+
+        loadData = function () {
+            $scope.user = $user.get({userId: 'Strike'});
+
+            //TODO: Get the first team in the list (don't use hard-coded id)
+            $scope.team = $team.get({competitionId: 1, teamId: 1});
+        };
+
+        loadData();
+    }
+]);
+
+
+
 
 controllers.controller('competitionController', ['$scope', 'competition',
     function ($scope, $competition) {

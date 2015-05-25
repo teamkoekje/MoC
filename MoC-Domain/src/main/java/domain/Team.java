@@ -37,7 +37,6 @@ public class Team implements Serializable {
     private List<User> participants;
     
     @ManyToOne
-    @XmlElement
     private final User initiator;
     
     private String name;

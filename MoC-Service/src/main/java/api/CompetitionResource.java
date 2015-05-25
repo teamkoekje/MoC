@@ -5,7 +5,6 @@ import domain.Round;
 import domain.Team;
 import domain.User;
 import java.util.List;
-import javafx.scene.media.Media;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

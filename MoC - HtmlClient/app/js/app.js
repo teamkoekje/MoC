@@ -12,11 +12,27 @@ var app = angular.module('mocApp', [
 app.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider
+                .when('/login', {
+                    templateUrl: 'views/login.html',
+                    controller: 'loginController'
+                })
+                .when('/register', {
+                    templateUrl: 'views/register.html',
+                    controller: 'registerController'
+                })
+                .when('/competitions', {
+                    templateUrl: 'views/competitions.html',
+                    controller: 'competitionsController'
+                })
+                .when('/teams', {
+                    templateUrl: 'views/teams.html',
+                    controller: 'teamsController'
+                })
                 .when('/apiDemo', {
                     templateUrl: 'views/apiDemo.html',
                     controller: 'demoController'
                 })
-                 .when('/competitionDemo', {
+                .when('/competitionDemo', {
                     templateUrl: 'views/competitionDemo.html',
                     controller: 'competitionController'
                 })

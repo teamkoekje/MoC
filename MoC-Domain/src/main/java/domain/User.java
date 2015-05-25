@@ -49,6 +49,10 @@ public class User implements Serializable {
     public List<Team> getTeams() {
         return teams;
     }
+    
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
 
     public void addTeam(Team team) {
         this.teams.add(team);

@@ -1,0 +1,51 @@
+
+<div style="text-align:center">
+    <p>
+        You are invited to {{teamname}}
+    </p>
+    <form style="display:inline-block;text-align: left" id='registerForm' ng-submit="register()">
+        <div class="row">
+            <label class="col-xs-4" for="usernameInput" style="">Username: </label>
+            <div class="col-xs-8">
+                <input ng-model="user.username" required class="form-control" type="text" id="usernameInput" placeholder="Username" style=""/>
+            </div>
+        </div>
+        <div class="row" id="showUsernameError" style="display:none">
+            <div class="col-xs-4"><!--We need some spacing here--></div>
+            <label class="col-xs-8" for="usernameInput" style="color:red">
+                Invalid username
+            </label>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-4" for="emailInput" style="">Email:</label>
+            <div class="col-xs-8">
+                <input ng-model="user.email" required class="form-control" type="email" id="emailInput" placeholder="Email" style=""/>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-4" for="passwordInput" style="">Password:</label>
+            <div class="col-xs-8">
+                <input ng-model="user.password" required class="form-control" type="password" id="passwordInput" placeholder="password" style=""/>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-4" for="nameInput" style="">Name:</label>
+            <div class="col-xs-8">
+                <input ng-model="user.name" required class="form-control" type="text" id="nameInput" placeholder="name" style=""/>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-xs-4" for="organisationInput" style="">Organisation:</label>
+            <div class="col-xs-8">
+                <input ng-model="user.organisation" required class="form-control" type="text" id="organisationInput" placeholder="Organisation" style=""/>
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-xs-4'><!--Had to do something to get this open space--></div>
+            <div class="col-xs-8">
+                <input id="submitBtn" type="submit" class="btn btn-default" value="Register"/>
+            </div>
+        </div>
+    </form>
+</div>

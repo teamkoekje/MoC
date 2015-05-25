@@ -1,0 +1,115 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#competitions">Competitions</a></li>
+    <li role="presentation"><a href="#teams">My Teams</a></li>
+</ul>
+
+
+<br>
+
+<div class="row">
+    <div class="col-xs-6">
+        <h4>Active Competitions</h4>
+        <div class="list-group" style="max-height:200px; overflow:auto;">
+            <a ng-click="selectCompetition(competition.id)" class="list-group-item" ng-class="{active : isSelected(competition.id)}" ng-repeat="competition in competitions" style="cursor:pointer;">
+                {{competition.name}}
+            </a>
+        </div>
+
+        <h4>Future Competitions</h4>
+        <div class="list-group" style="max-height:200px; overflow:auto;">
+            <a href="#" class="list-group-item">Competition 1</a>
+            <a href="#" class="list-group-item">Competition 2</a>
+            <a href="#" class="list-group-item">Competition 3</a>
+            <a href="#" class="list-group-item">Competition 4</a>
+            <a href="#" class="list-group-item">Competition 5</a>
+            <a href="#" class="list-group-item">Competition 6</a>
+            <a href="#" class="list-group-item">Competition 7</a>
+            <a href="#" class="list-group-item">Competition 8</a>
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Competition info</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <strong>
+                            Name:<br>
+                            Date:<br>
+                            Starts at:
+                        </strong>
+                    </div>
+                    <div class="col-xs-8">
+                        {{competition.name}}<br>
+                        {{competition.competitionDate | date : 'mediumDate'}}<br>
+                        {{competition.startTime | date : 'shortTime' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Challenges</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="challenge in competition.challenges">
+                            <td>{{challenge.name}}</td>
+                            <td>{{challenge.time}}</td>
+                        </tr>
+                        <tr>
+                            <td>Challenge 2</td>
+                            <td>40 min</td>
+                        </tr>
+                        <tr>
+                            <td>Challenge 3</td>
+                            <td>20 min</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Teams</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Team 1</td>
+                            <td>5.000</td>
+                        </tr>
+                        <tr>
+                            <td>Team 2</td>
+                            <td>4.500</td>
+                        </tr>
+                        <tr>
+                            <td>Team 3</td>
+                            <td>3.750</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
