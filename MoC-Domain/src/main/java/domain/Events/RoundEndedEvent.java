@@ -1,35 +1,22 @@
 package domain.Events;
 
 import domain.Round;
-import java.io.Serializable;
 
 /**
  *
  * @author TeamKoekje
  */
-public class RoundEndedEvent implements Serializable {
+public class RoundEndedEvent extends CompetitionEvent {
 
-    //<editor-fold defaultstate="collapsed" desc="variables">
-    private Round endedRound;
-    //</code-fold>
+    private final Round round;
 
-    //<editor-fold defaultstate="collapsed" desc="constructor(s)">
-    public RoundEndedEvent() {
+    public RoundEndedEvent(Round round) {
+        super(EventType.ROUND_ENDED);
+        this.round = round;
     }
 
-    public RoundEndedEvent(Round endedRound) {
-        this.endedRound = endedRound;
-    }
-    //</code-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="getters & setters">
     public Round getEndedRound() {
-        return endedRound;
+        return round;
     }
-
-    public void setEndedRound(Round endedRound) {
-        this.endedRound = endedRound;
-    }
-    //</code-fold>
 
 }

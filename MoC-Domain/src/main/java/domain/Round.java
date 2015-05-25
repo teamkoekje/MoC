@@ -1,10 +1,13 @@
 package domain;
 
+import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Any;
@@ -211,7 +214,6 @@ public class Round implements Serializable {
             throw new IllegalArgumentException("Cannot stop a round that has not been started yet.");
         } else {
             roundState = RoundState.ENDED;
-            endedEvent.fire(new RoundEndedEvent(this));
         }
     }
 
@@ -252,23 +254,27 @@ public class Round implements Serializable {
 
     //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Events" >
-    public void secondExpired() {
+    public List<CompetitionEvent> update() {
+        List<CompetitionEvent> events = new ArrayList<>();
+        
         if (roundState == RoundState.ONGOING) {
             currentTime++;
             if (currentTime >= totalRoundTime) {
                 stop();
+                events.add(new RoundEndedEvent(this));
             }
             Iterator<Hint> hintsIterator = challenge.hintsIterator();
             while (hintsIterator.hasNext()) {
                 Hint h = hintsIterator.next();
                 if (!h.isPublished()) {
                     if (currentTime >= h.getTime()) {
-                        hintReleasedEvent.fire(new HintReleasedEvent(h));
+                        events.add(new HintReleasedEvent(h));
                         h.setPublished(true);
                     }
                 }
             }
         }
+        return events;
     }
 
     // </editor-fold>

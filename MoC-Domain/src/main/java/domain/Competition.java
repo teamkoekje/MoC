@@ -1,12 +1,12 @@
 package domain;
 
+import domain.Events.CompetitionEndedEvent;
+import domain.Events.CompetitionEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
@@ -48,15 +47,12 @@ public class Competition implements Serializable {
     private int maxTeamSize;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    private List<Round> rounds;
+    private final List<Round> rounds = new ArrayList<>();
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
-    private List<Team> teams;
+    private final List<Team> teams = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Round currentRound;
-
-    @Transient
-    private final Runnable timerRunnable;
 
     private final NewsFeed newsFeed;
     //</editor-fold>    
@@ -64,16 +60,6 @@ public class Competition implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     public Competition() {
         newsFeed = new NewsFeed();
-        timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (Calendar.getInstance().after(startTime) && currentRound != null) {
-                    currentRound.secondExpired();
-                }
-            }
-        };
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(timerRunnable, 0, 1, TimeUnit.SECONDS);
     }
 
     public Competition(String name, Date competitionDate, Date startingTime, Date endTime, String location) {
@@ -84,17 +70,6 @@ public class Competition implements Serializable {
         this.location = location;
 
         newsFeed = new NewsFeed();
-        timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (Calendar.getInstance().after(startTime) && currentRound != null) {
-                    currentRound.secondExpired();
-                }
-            }
-        };
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(timerRunnable, 0, 1, TimeUnit.SECONDS);
     }
     //</editor-fold>    
 
@@ -173,6 +148,15 @@ public class Competition implements Serializable {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
+    public List<CompetitionEvent> update() {
+        if (Calendar.getInstance().after(startTime) && currentRound != null) {
+            return currentRound.update();
+        }
+        List<CompetitionEvent> events = new ArrayList<>();
+        events.add(new CompetitionEndedEvent(this));
+        return events;
+    }
+
     /**
      * Function adds a challenge to the competition.
      *
@@ -180,7 +164,7 @@ public class Competition implements Serializable {
      * @param time time in seconds allowed for completing the challenge
      */
     public void addChallenge(Challenge challenge, int time) {
-        //unneeded? SHOULD be add round, but we already create/remove/edit rounds using RoundService/DAO
+        rounds.add(new Round(challenge, time));
     }
 
     /**
@@ -189,7 +173,12 @@ public class Competition implements Serializable {
      * @param challenge challenge that has to be removed
      */
     public void removeChallenge(Challenge challenge) {
-        //unneeded? SHOULD be remove round, but we already create/remove/edit rounds using RoundService/DAO
+        for (Round r : rounds) {
+            if (r.getChallenge() == challenge) {
+                rounds.remove(r);
+                return;
+            }
+        }
     }
 
     /**
@@ -208,7 +197,7 @@ public class Competition implements Serializable {
      * @param team team that needs to be added
      */
     public void addTeam(Team team) {
-        //unneeded? we already create/remove/edit rounds using TeamService/DAO
+        teams.add(team);
     }
 
     /**
@@ -217,7 +206,7 @@ public class Competition implements Serializable {
      * @param team team that needs to be removed
      */
     public void removeTeam(Team team) {
-        //unneeded? we already create/remove/edit rounds using TeamService/DAO
+        teams.remove(team);
 
     }
 
@@ -238,10 +227,10 @@ public class Competition implements Serializable {
         }
         return false;
     }
-    
-    public boolean participantIsInTeam(User p){
-        for(Team t : teams){
-            if(t.getParticipants().contains(p)){
+
+    public boolean participantIsInTeam(User p) {
+        for (Team t : teams) {
+            if (t.getParticipants().contains(p)) {
                 return true;
             }
         }

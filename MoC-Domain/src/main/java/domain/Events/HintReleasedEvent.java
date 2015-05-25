@@ -1,35 +1,21 @@
 package domain.Events;
 
 import domain.Hint;
-import java.io.Serializable;
 
 /**
  * 
  * @author TeamKoekje
  */
-public class HintReleasedEvent implements Serializable {
+public class HintReleasedEvent extends CompetitionEvent {
 
-    //<editor-fold defaultstate="collapsed" desc="variables">
-    private Hint releasedHint;
-    //</code-fold>
+    private final Hint hint;
 
-    //<editor-fold defaultstate="collapsed" desc="constructor(s)">
-    public HintReleasedEvent() {
+    public HintReleasedEvent(Hint hint) {
+        super(EventType.HINT_RELEASED);
+        this.hint = hint;
     }
 
-    public HintReleasedEvent(Hint releasedHint) {
-        this.releasedHint = releasedHint;
-    }
-    //</code-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="getters & setters">
     public Hint getReleasedHint() {
-        return releasedHint;
+        return hint;
     }
-
-    public void setReleasedHint(Hint releasedHint) {
-        this.releasedHint = releasedHint;
-    }
-    //</code-fold>
-
 }

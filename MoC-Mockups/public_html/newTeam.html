@@ -72,6 +72,7 @@
                 $.ajax({
                     url: "http://localhost:8080/MoC-Service/api/competition/" + competitionID + "/team",
                     type: "POST",
+                    contentType: 'application/json; charset=UTF-8',
                     crossDomain: true,
                     xhrFields: {
                         withCredentials: true
