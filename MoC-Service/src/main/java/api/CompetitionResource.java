@@ -215,19 +215,18 @@ public class CompetitionResource {
      * Creates a new team
      *
      * @param request
-     * @param competitionId
-     * @param teamName
+     * @param t
      * @return
      */
     @POST
     @Path("/{competitionId}/team")
     @Produces(MediaType.TEXT_PLAIN)
     @RolesAllowed({"User", "Admin"})
-    public Response createTeam(@Context HttpServletRequest request, @PathParam("competitionId") long competitionId, @FormParam("teamName") String teamName) {
+    public Response createTeam(@Context HttpServletRequest request, Team t) {
         try {
             User user = userService.findById(request.getRemoteUser());
-            Team team = new Team(user, teamName);
-            Competition competition = competitionService.findById(competitionId);
+            Team team = new Team(user, t.getName());
+            Competition competition = competitionService.findById(t.getCompetition().getId());
             team.setCompetition(competition);
             teamService.createTeam(team);
             Team createdTeam = teamService.findById(team.getId());

@@ -54,10 +54,10 @@ controllers.controller('registerController', ['$scope', 'user',
                 loadData();
             });
             $scope.user = new $user();
-            
+
             location.href = "#/login";
         };
-        
+
         $scope.user = new $user();
         $scope.user.email = "robin@robin.nl";
         $scope.user.password = "welkom123";
@@ -181,39 +181,24 @@ controllers.controller('teamsController', ['$scope', 'user', 'team',
     }
 ]);
 
+controllers.controller('newTeamController', ['$scope', 'competition', 'team',
+    function ($scope, $competition, $team) {
 
-
-
-controllers.controller('competitionController', ['$scope', 'competition',
-    function ($scope, $competition) {
-        $scope.createCompetition = function () {
-            console.log("Create Competition");
-            $scope.competition.competitionDate = new Date($scope.competitionDate);
-            $scope.competition.startTime = new Date($scope.competitionDate + " " + $scope.startTime);
-            $scope.competition.endTime = new Date($scope.competitionDate + " " + $scope.endTime);
-            $scope.competition.$save(function () {
-                loadData();
+        $scope.createTeam = function () {
+            console.log("Create Team");
+            console.log($scope.team);
+            console.log($scope.team.competition.id);
+            $scope.team.$save({competitionId: $scope.team.competition.id}, function () {
+                location.href = "#/teams";
             });
-            $scope.competition = new $competition();
-        };
-
-        $scope.deleteCompetition = function (competitionId) {
-            console.log("Delete Competition: " + competitionId);
-            $competition.delete({competitionId: competitionId}, function () {
-                loadData();
-            });
+            $scope.team = new $team();
         };
 
         loadData = function () {
             $scope.competitions = $competition.query();
+            $scope.team = new $team();
         };
+
         loadData();
-        $scope.competition = new $competition();
-        $scope.competition.name = "TestCompetition";
-        $scope.competitionDate = "2015-04-23";
-        $scope.startTime = "13:37";
-        $scope.endTime = "17:00";
-        $scope.competition.location = "CookieJar - Fontys";
     }
 ]);
-     
