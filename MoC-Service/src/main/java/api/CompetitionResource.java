@@ -61,6 +61,28 @@ public class CompetitionResource {
     }
 
     /**
+     * Gets all active competitions
+     *
+     * @return list with competitions
+     */
+    @GET
+    @Produces("application/xml,application/json")
+    public List<Competition> getActiveCompetitions() {
+        return competitionService.getActiveCompetitions();
+    }
+
+    /**
+     * Gets all future competitions
+     *
+     * @return list with competitions
+     */
+    @GET
+    @Produces("application/xml,application/json")
+    public List<Competition> getFutureCompetitions() {
+        return competitionService.geFutureCompetitions();
+    }
+
+    /**
      * Gets a competition with a certain id
      *
      * @param competitionId id of the competition
