@@ -40,15 +40,6 @@ public class Round implements Serializable {
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
-
-    @Inject
-    @Any
-    private Event<RoundEndedEvent> endedEvent;
-    //to fire: endedEvent.fire(new RoundEndedEvent(this));
-    //to listen to it, define a method in a listener class:
-    //  public void endedHandler(@Observes RoundEndedEvent event){/* do stuff */}
-    @Transient
-    private Event<HintReleasedEvent> hintReleasedEvent;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
@@ -301,7 +292,6 @@ public class Round implements Serializable {
         while (hintsIterator.hasNext()) {
             Hint h = hintsIterator.next();
             if (!h.isPublished()) {
-                hintReleasedEvent.fire(new HintReleasedEvent(h));
                 h.setPublished(true);
                 return true;
             }

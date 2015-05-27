@@ -9,11 +9,7 @@ public class CompetitionEvent {
     protected CompetitionEvent(EventType type) {
         this.type = type;
     }
-    
-    public CompetitionEvent(){
-        this.type = EventType.NONE;
-    }
-    
+        
     public EventType getType(){
         return type;
     }
