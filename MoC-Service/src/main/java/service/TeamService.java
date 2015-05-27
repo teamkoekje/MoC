@@ -19,7 +19,7 @@ public class TeamService extends GenericService<Team> {
 
     public void createTeam(Team team) {
         Competition c = team.getCompetition();
-        if (!c.participantIsInTeam(team.getInitiator())) {
+        if (!c.participantIsInTeam(team.getOwner())) {
             this.create(team);
         }
     }

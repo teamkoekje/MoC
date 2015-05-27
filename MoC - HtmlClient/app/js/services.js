@@ -40,7 +40,7 @@ services.factory('competitions', ['$resource',
 services.factory('team', ['$resource',
     function ($resource) {
         return{
-            all: $resource(baseUrl + '/competition/:competitionId/team/:teamId', {competitionId: '@competitionId', teamId: '@teamId'}, {remove: {method: 'DELETE'}}),
+            all: $resource(baseUrl + '/team/:teamId', {teamId: '@teamId'}, {remove: {method: 'DELETE'}}),
             byUser: $resource(baseUrl + '/team/user/:userId', {userId: 'userId'}),
             participants: $resource(baseUrl + '/user/team/:teamId', {teamId: 'teamId'})
         };

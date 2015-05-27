@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -36,23 +37,22 @@ public class Team implements Serializable {
     private final List<User> participants = new ArrayList<>();
 
     @ManyToOne
-    private final User initiator;
+    private User owner;
 
     private String name;
     
     @ManyToOne
+    @XmlElement
     private Competition competition;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Team() {
-        this.initiator = null;
     }
 
-    public Team(User initiator, String name) {
-        this.initiator = initiator;
-        this.participants.add(initiator);
+    public Team(String name, Competition competition) {
         this.name = name;
+        this.competition = competition;
     }
     // </editor-fold>
 
@@ -75,16 +75,17 @@ public class Team implements Serializable {
         return participants;
     }
 
-    public User getInitiator() {
-        return initiator;
+    public User getOwner() {
+        return owner;
+    }
+    
+    public void setOwner(User owner){
+        this.participants.add(owner);
+        this.owner = owner;
     }
 
     public Competition getCompetition() {
         return competition;
-    }
-
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
     }
     //</editor-fold>
 

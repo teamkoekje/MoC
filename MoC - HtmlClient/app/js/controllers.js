@@ -165,7 +165,7 @@ controllers.controller('teamsController', ['$scope', 'team',
 
         $scope.selectTeam = function (competitionId, teamId) {
             console.log("Select team with id: " + teamId);
-            $scope.team = $team.all.get({competitionId: competitionId, teamId: teamId});
+            $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
         };
 
@@ -178,7 +178,7 @@ controllers.controller('teamsController', ['$scope', 'team',
             $scope.teams = $team.byUser.query({userId: 'Strike'});
 
             //TODO: Get the first team in the list (don't use hard-coded id)
-            $scope.team = $team.all.get({competitionId: 1, teamId: 1});
+            $scope.team = $team.all.get({teamId: 1});
         };
 
         loadData();
@@ -192,15 +192,15 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
             console.log("Create Team");
             console.log($scope.team);
             console.log($scope.team.competition.id);
-            $scope.team.$save({competitionId: $scope.team.competition.id}, function () {
+            $scope.team.$save(function () {
                 location.href = "#/teams";
             });
-            $scope.team = new $team();
+            $scope.team = new $team.all();
         };
 
         loadData = function () {
             $scope.competitions = $competition.query();
-            $scope.team = new $team();
+            $scope.team = new $team.all();
         };
 
         loadData();

@@ -206,80 +206,36 @@ public class CompetitionResource {
 
     //<editor-fold defaultstate="collapsed" desc="Teams">
     /**
-     * Gets all teams of a certain competition
-     *
-     * @param competitionId id of the competition
-     * @return list with teams
-     */
-    @GET
-    @Produces("application/xml,application/json")
-    @Path("/{competitionId}/team")
-    public List<Team> getTeams(@PathParam("competitionId") long competitionId) {
-        Competition c = competitionService.findById(competitionId);
-        return teamService.findByCompetition(c);
-    }
 
-    /**
-     * Gets a team with a certain id
-     *
-     * @param teamId id of the team
-     * @return
-     */
-    @GET
-    @Produces("application/xml,application/json")
-    @Path("/{competitionId}/team/{teamId}")
-    public Team getTeamById(@PathParam("teamId") long teamId) {
-        return teamService.findById(teamId);
-    }
 
-    /**
-     * Creates a new team
-     *
-     * @param request
-     * @param t
-     * @return
-     */
-    @POST
-    @Path("/{competitionId}/team")
-    @Produces(MediaType.TEXT_PLAIN)
-    @RolesAllowed({"User", "Admin"})
-    public Response createTeam(@Context HttpServletRequest request, Team t) {
-        try {
-            User user = userService.findById(request.getRemoteUser());
-            Team team = new Team(user, t.getName());
-            Competition competition = competitionService.findById(t.getCompetition().getId());
-            team.setCompetition(competition);
-            teamService.createTeam(team);
-            Team createdTeam = teamService.findById(team.getId());
-            return Response.ok(createdTeam.getName()).build();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return Response.serverError().entity(ex.getMessage()).build();
-        }
-    }
 
-    /**
-     * Updates a team
-     *
-     * @param team team with the updated information
-     */
-    @POST
-    @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/team/update")
-    public void editTeam(Team team) {
-        teamService.edit(team);
-    }
+//    /**
+//     * Creates a new team
+//     *
+//     * @param request
+//     * @param t
+//     * @return
+//     */
+//    @POST
+//    @Path("/{competitionId}/team")
+//    @Produces(MediaType.TEXT_PLAIN)
+//    @RolesAllowed({"User", "Admin"})
+//    public Response createTeam(@Context HttpServletRequest request, Team t) {
+//        try {
+//            User user = userService.findById(request.getRemoteUser());
+//            Team team = new Team(user, t.getName());
+//            Competition competition = competitionService.findById(t.getCompetition().getId());
+//            team.setCompetition(competition);
+//            teamService.createTeam(team);
+//            Team createdTeam = teamService.findById(team.getId());
+//            return Response.ok(createdTeam.getName()).build();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return Response.serverError().entity(ex.getMessage()).build();
+//        }
+//    }
 
-    /**
-     * Deletes a team
-     *
-     * @param teamId id of the team that should be deleted
-     */
-    @DELETE
-    @Path("/{competitionId}/team/{teamId}")
-    public void removeTeam(@PathParam("teamId") long teamId) {
-        teamService.remove(teamId);
-    }
+   
 
     //<editor-fold defaultstate="collapsed" desc="Invites">
     /**

@@ -27,7 +27,7 @@ public class TestDataService {
 
     @Inject
     TeamService teamService;
-    
+
     @Inject
     InvitationService invitationService;
 
@@ -59,16 +59,16 @@ public class TestDataService {
         Competition c2 = new Competition("Competition2", yesterday, new Date(), new Date(), "Fontys");
         Competition c3 = new Competition("Competition3", tomorrow, new Date(), new Date(), "Fontys");
 
-        Team t1 = new Team(u1, "Team1");
-        Team t2 = new Team(u2, "Team2");
-        Team t3 = new Team(u1, "Team3");
-        
+        Team t1 = new Team("Team1", c1);
+        Team t2 = new Team("Team2", c1);
+        Team t3 = new Team("Team3", c2);
+
+        t1.setOwner(u1);
+        t2.setOwner(u2);
+        t3.setOwner(u1);
+
         t1.addParticipant(u2);
         t2.addParticipant(u1);
-
-        t1.setCompetition(c1);
-        t2.setCompetition(c1);
-        t3.setCompetition(c2);
 
         teamService.create(t1);
         teamService.create(t2);
@@ -81,7 +81,7 @@ public class TestDataService {
         competitionService.create(c1);
         competitionService.create(c2);
         competitionService.create(c3);
-        
+
         invitationService.inviteMember("a.belder@student.fontys.nl", t1.getId(), c1.getId());
     }
 }
