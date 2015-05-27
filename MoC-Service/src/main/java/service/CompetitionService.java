@@ -3,6 +3,8 @@ package service;
 import domain.Competition;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
+import domain.Events.HintReleasedEvent;
+import domain.Events.RoundEndedEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,13 +37,17 @@ public class CompetitionService extends GenericService<Competition> {
         System.out.println("Hallo event: " + event.getType());
         switch (event.getType()) {
             case ROUND_ENDED:
+                RoundEndedEvent ree = (RoundEndedEvent) event;
+                //TODO: Edit in database
                 break;
             case COMPETITION_ENDED:
                 CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
-                System.out.println("competition ended: " + cee.getCompetition().getName());
                 competitions.remove(cee.getCompetition());
+                //TODO: Edit in database
                 break;
             case HINT_RELEASED:
+                HintReleasedEvent hre = (HintReleasedEvent) event;
+                //TODO: Send the released hint to the newsfeed
                 break;
             default:
                 throw new AssertionError(event.getType().name());

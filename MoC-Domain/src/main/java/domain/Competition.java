@@ -2,8 +2,11 @@ package domain;
 
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
+import domain.Events.HintReleasedEvent;
+import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -149,12 +152,38 @@ public class Competition implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     public List<CompetitionEvent> update() {
-        if (Calendar.getInstance().after(startTime) && currentRound != null) {
-            return currentRound.update();
+        if (currentRound != null) {
+            List<CompetitionEvent> events = currentRound.update();
+            for (CompetitionEvent event : events) {
+                switch (event.getType()) {
+                    case ROUND_ENDED:
+                        RoundEndedEvent ree = (RoundEndedEvent) event;
+                        System.out.println("Round ended: " + ree.getEndedRound().getChallenge().getName());                        
+                        //if there is another round, set it as current
+                        int nextRoundOrder = ree.getEndedRound().getRoundOrder() + 1;
+                        if (rounds.size() > nextRoundOrder) {
+                            currentRound = rounds.get(nextRoundOrder);
+                        //oterwise, tell the calling service the entire competition has ended
+                        } else {
+                            currentRound = null;
+                            ArrayList<CompetitionEvent> temp = new ArrayList<>();
+                            temp.add(new CompetitionEndedEvent(this));
+                            return temp;
+                        }
+                        break;
+                    case COMPETITION_ENDED:
+                        throw new IllegalArgumentException("Received a CompetitionEndedEvent from a round - should never happen");
+                    case HINT_RELEASED:
+                        HintReleasedEvent hre = (HintReleasedEvent) event;
+                        System.out.println("Hint released: " + hre.getReleasedHint().getContent());
+                        break;
+                    default:
+                        throw new AssertionError(event.getType().name());
+                }
+            }
+            return events;
         }
-        List<CompetitionEvent> events = new ArrayList<>();
-        events.add(new CompetitionEndedEvent(this));
-        return events;
+        return new ArrayList<>();
     }
 
     /**
