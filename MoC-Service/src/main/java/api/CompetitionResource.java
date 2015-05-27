@@ -61,25 +61,24 @@ public class CompetitionResource {
     }
 
     /**
-     * Gets all active competitions
-     *
-     * @return list with competitions
-     */
-    @GET
-    @Produces("application/xml,application/json")
-    public List<Competition> getActiveCompetitions() {
-        return competitionService.getActiveCompetitions();
-    }
-
-    /**
      * Gets all future competitions
      *
      * @return list with competitions
      */
     @GET
     @Produces("application/xml,application/json")
-    public List<Competition> getFutureCompetitions() {
-        return competitionService.geFutureCompetitions();
+    @Path("/type/{type}")
+    public List<Competition> getCompetitionsByType(@PathParam("type") String type) {
+        List<Competition> competitions = null;
+        switch (type) {
+            case "active":
+                competitions = competitionService.getActiveCompetitions();
+                break;
+            case "future":
+                competitions = competitionService.geFutureCompetitions();
+                break;
+        }
+        return competitions;
     }
 
     /**

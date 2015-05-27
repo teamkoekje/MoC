@@ -6,6 +6,7 @@ import domain.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 @Stateless
@@ -15,10 +16,10 @@ public class TeamService extends GenericService<Team> {
     public TeamService() {
         super(Team.class);
     }
-    
-    public void createTeam(Team team){
+
+    public void createTeam(Team team) {
         Competition c = team.getCompetition();
-        if(!c.participantIsInTeam(team.getInitiator())){
+        if (!c.participantIsInTeam(team.getInitiator())) {
             this.create(team);
         }
     }
@@ -56,6 +57,16 @@ public class TeamService extends GenericService<Team> {
      */
     public void leaveTeam(User user, long teamId) {
         throw new UnsupportedOperationException();
+    }
+
+    public Team findByUsername(String username) {
+        Query q = em.createNamedQuery("Team.findByUsername");
+        q.setParameter("username", username);
+        try {
+            return (Team) q.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 
 }

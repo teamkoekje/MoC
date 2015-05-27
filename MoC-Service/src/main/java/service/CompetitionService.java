@@ -2,6 +2,7 @@ package service;
 
 import domain.Competition;
 import domain.Events.CompetitionEvent;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -109,6 +110,7 @@ public class CompetitionService extends GenericService<Competition> {
                 //date is before today. so its not an future competition
             }
         }
+        
         return futureCompetitions;
     }
 

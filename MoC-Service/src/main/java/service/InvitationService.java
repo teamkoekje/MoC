@@ -27,7 +27,7 @@ public class InvitationService extends GenericService<Invitation> {
     private final SecureRandom random = new SecureRandom();
 
     @Inject
-    private CompetitionService competitionService;
+    CompetitionService competitionService;
 
     public InvitationService() {
         super(Invitation.class);

@@ -27,8 +27,11 @@ public class TestDataService {
 
     @Inject
     TeamService teamService;
+    
+    @Inject
+    InvitationService invitationService;
 
-    //@PostConstruct
+    @PostConstruct
     private void init() {
         System.out.println("Generating test data");
 
@@ -59,6 +62,9 @@ public class TestDataService {
         Team t1 = new Team(u1, "Team1");
         Team t2 = new Team(u2, "Team2");
         Team t3 = new Team(u1, "Team3");
+        
+        t1.addParticipant(u2);
+        t2.addParticipant(u1);
 
         t1.setCompetition(c1);
         t2.setCompetition(c1);
@@ -75,5 +81,7 @@ public class TestDataService {
         competitionService.create(c1);
         competitionService.create(c2);
         competitionService.create(c3);
+        
+        invitationService.inviteMember("a.belder@student.fontys.nl", t1.getId(), c1.getId());
     }
 }
