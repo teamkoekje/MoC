@@ -1,5 +1,6 @@
 package api;
 
+import domain.Team;
 import domain.User;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
@@ -20,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import service.TeamService;
 import service.UserService;
 
 /**
@@ -33,6 +35,9 @@ public class UserResource {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private TeamService teamService;
 
     //<editor-fold defaultstate="collapsed" desc="User">
     /**
@@ -58,7 +63,17 @@ public class UserResource {
     @Path("/{userId}")
     @PermitAll
     public User getUserById(@PathParam("userId") String userId) {
+        User u = userService.findById(userId);
         return userService.findById(userId);
+    }
+
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("team/{teamId}")
+    @PermitAll
+    public List<User> getUsersByTeam(@PathParam("teamId") long teamId) {
+        Team t = teamService.findById(teamId);
+        return t.getParticipants();
     }
 
     /**
@@ -86,7 +101,7 @@ public class UserResource {
      * Creates a new user
      *
      * @param user user that should be created
-     * @return 
+     * @return
      */
     @POST
     @Consumes("application/xml,application/json")
@@ -105,7 +120,7 @@ public class UserResource {
      * Updates a user
      *
      * @param user user with updated information
-     * @return 
+     * @return
      */
     @POST
     @Consumes("application/xml,application/json")

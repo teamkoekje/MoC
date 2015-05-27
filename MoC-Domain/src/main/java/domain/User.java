@@ -8,9 +8,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
@@ -31,8 +32,11 @@ public class User implements Serializable {
     private String name;
     private String organisation;
 
-    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL)
-    private List<Team> teams;
+//    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL)
+//    private List<Team> teams;
+    
+    @ManyToMany(mappedBy = "participants", cascade = CascadeType.ALL)
+    private final List<Team> teams = new ArrayList<>();
 
     @ElementCollection
     protected final List<String> userGroups = new ArrayList<>();
@@ -48,10 +52,6 @@ public class User implements Serializable {
 
     public List<Team> getTeams() {
         return teams;
-    }
-    
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
     }
 
     public void addTeam(Team team) {

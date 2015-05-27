@@ -54,10 +54,10 @@ controllers.controller('registerController', ['$scope', 'user',
                 loadData();
             });
             $scope.user = new $user();
-            
+
             location.href = "#/login";
         };
-        
+
         $scope.user = new $user();
         $scope.user.email = "robin@robin.nl";
         $scope.user.password = "welkom123";
@@ -136,8 +136,8 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
     }
 ]);
 
-controllers.controller('competitionsController', ['$scope', 'competition',
-    function ($scope, $competition) {
+controllers.controller('competitionsController', ['$scope', 'competition', 'competitions',
+    function ($scope, $competition, $competitions) {
         $scope.selectCompetition = function (id) {
             console.log("Select competition with id: " + id);
             $scope.competition = $competition.get({competitionId: id});
@@ -149,6 +149,8 @@ controllers.controller('competitionsController', ['$scope', 'competition',
 
         loadData = function () {
             $scope.competitions = $competition.query();
+            $scope.activeCompetitions = $competitions.query({type: "active"});
+            $scope.futureCompetitions = $competitions.query({type: "future"});
 
             //TODO: Get the first competition in the list (don't use hard-coded id)
             $scope.competition = $competition.get({competitionId: 4});
@@ -158,12 +160,13 @@ controllers.controller('competitionsController', ['$scope', 'competition',
     }
 ]);
 
-controllers.controller('teamsController', ['$scope', 'user', 'team',
-    function ($scope, $user, $team) {
+controllers.controller('teamsController', ['$scope', 'team',
+    function ($scope, $team) {
 
         $scope.selectTeam = function (competitionId, teamId) {
             console.log("Select team with id: " + teamId);
-            $scope.team = $team.get({competitionId: competitionId, teamId: teamId});
+            $scope.team = $team.all.get({competitionId: competitionId, teamId: teamId});
+            $scope.participants = $team.participants.query({teamId: teamId});
         };
 
         $scope.isSelected = function (teamId) {
@@ -171,49 +174,35 @@ controllers.controller('teamsController', ['$scope', 'user', 'team',
         };
 
         loadData = function () {
-            $scope.user = $user.get({userId: 'Strike'});
+            //$scope.user = $user.get({userId: 'Strike'});
+            $scope.teams = $team.byUser.query({userId: 'Strike'});
 
             //TODO: Get the first team in the list (don't use hard-coded id)
-            $scope.team = $team.get({competitionId: 1, teamId: 1});
+            $scope.team = $team.all.get({competitionId: 1, teamId: 1});
         };
 
         loadData();
     }
 ]);
 
+controllers.controller('newTeamController', ['$scope', 'competition', 'team',
+    function ($scope, $competition, $team) {
 
-
-
-controllers.controller('competitionController', ['$scope', 'competition',
-    function ($scope, $competition) {
-        $scope.createCompetition = function () {
-            console.log("Create Competition");
-            $scope.competition.competitionDate = new Date($scope.competitionDate);
-            $scope.competition.startTime = new Date($scope.competitionDate + " " + $scope.startTime);
-            $scope.competition.endTime = new Date($scope.competitionDate + " " + $scope.endTime);
-            $scope.competition.$save(function () {
-                loadData();
+        $scope.createTeam = function () {
+            console.log("Create Team");
+            console.log($scope.team);
+            console.log($scope.team.competition.id);
+            $scope.team.$save({competitionId: $scope.team.competition.id}, function () {
+                location.href = "#/teams";
             });
-            $scope.competition = new $competition();
-        };
-
-        $scope.deleteCompetition = function (competitionId) {
-            console.log("Delete Competition: " + competitionId);
-            $competition.delete({competitionId: competitionId}, function () {
-                loadData();
-            });
+            $scope.team = new $team();
         };
 
         loadData = function () {
             $scope.competitions = $competition.query();
+            $scope.team = new $team();
         };
+
         loadData();
-        $scope.competition = new $competition();
-        $scope.competition.name = "TestCompetition";
-        $scope.competitionDate = "2015-04-23";
-        $scope.startTime = "13:37";
-        $scope.endTime = "17:00";
-        $scope.competition.location = "CookieJar - Fontys";
     }
 ]);
-     

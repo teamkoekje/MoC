@@ -9,22 +9,19 @@
 <div class="row">
     <div class="col-xs-6">
         <h4>Active Competitions</h4>
+        <div ng-show="activeCompetitions.length == 0">There are currently no active competitions.</div>
         <div class="list-group" style="max-height:200px; overflow:auto;">
-            <a ng-click="selectCompetition(competition.id)" class="list-group-item" ng-class="{active : isSelected(competition.id)}" ng-repeat="competition in competitions" style="cursor:pointer;">
+            <a ng-click="selectCompetition(competition.id)" class="list-group-item" ng-class="{active : isSelected(competition.id)}" ng-repeat="competition in activeCompetitions" style="cursor:pointer;">
                 {{competition.name}}
             </a>
         </div>
 
         <h4>Future Competitions</h4>
+        <div ng-show="futureCompetitions.length == 0">There are currently no future competitions.</div>
         <div class="list-group" style="max-height:200px; overflow:auto;">
-            <a href="#" class="list-group-item">Competition 1</a>
-            <a href="#" class="list-group-item">Competition 2</a>
-            <a href="#" class="list-group-item">Competition 3</a>
-            <a href="#" class="list-group-item">Competition 4</a>
-            <a href="#" class="list-group-item">Competition 5</a>
-            <a href="#" class="list-group-item">Competition 6</a>
-            <a href="#" class="list-group-item">Competition 7</a>
-            <a href="#" class="list-group-item">Competition 8</a>
+            <a ng-click="selectCompetition(competition.id)" class="list-group-item" ng-class="{active : isSelected(competition.id)}" ng-repeat="competition in futureCompetitions" style="cursor:pointer;">
+                {{competition.name}}
+            </a>
         </div>
     </div>
 

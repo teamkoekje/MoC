@@ -30,11 +30,20 @@ services.factory('competition', ['$resource',
     }
 ]);
 
+services.factory('competitions', ['$resource',
+    function ($resource) {
+        return $resource(baseUrl + '/competition/type/:type', {type: '@type'}, {
+        });
+    }
+]);
+
 services.factory('team', ['$resource',
     function ($resource) {
-        return $resource(baseUrl + '/competition/:competitionId/team/:teamId', {competitionId: '@competitionId', teamId: '@teamId'}, {
-            remove: {method: 'DELETE'}
-        });
+        return{
+            all: $resource(baseUrl + '/competition/:competitionId/team/:teamId', {competitionId: '@competitionId', teamId: '@teamId'}, {remove: {method: 'DELETE'}}),
+            byUser: $resource(baseUrl + '/team/user/:userId', {userId: 'userId'}),
+            participants: $resource(baseUrl + '/user/team/:teamId', {teamId: 'teamId'})
+        };
     }
 ]);
 

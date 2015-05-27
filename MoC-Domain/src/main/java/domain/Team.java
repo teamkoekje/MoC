@@ -1,17 +1,17 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import javax.enterprise.inject.spi.CDI;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -21,10 +21,9 @@ import javax.xml.bind.annotation.XmlElement;
  * @author TeamKoekje
  */
 @Entity
-@NamedQuery(
-        name = "Team.findByCompetition",
-        query = "SELECT t FROM Team t WHERE t.competition = :competition"
-)
+@NamedQueries({
+    @NamedQuery(name = "Team.findByCompetition",
+            query = "SELECT t FROM Team t WHERE t.competition = :competition")})
 public class Team implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
@@ -33,13 +32,14 @@ public class Team implements Serializable {
     @XmlAttribute
     private long id;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    private List<User> participants;
-    
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private final List<User> participants = new ArrayList<>();
+
     @ManyToOne
     private final User initiator;
-    
+
     private String name;
+    
     @ManyToOne
     private Competition competition;
     //</editor-fold>
@@ -51,6 +51,7 @@ public class Team implements Serializable {
 
     public Team(User initiator, String name) {
         this.initiator = initiator;
+        this.participants.add(initiator);
         this.name = name;
     }
     // </editor-fold>
@@ -59,7 +60,7 @@ public class Team implements Serializable {
     public long getId() {
         //CDI.current().select(EventManager.class).get();
         return id;
-        
+
     }
 
     public String getName() {
@@ -72,10 +73,6 @@ public class Team implements Serializable {
 
     public List<User> getParticipants() {
         return participants;
-    }
-
-    public void setParticipants(List<User> participants) {
-        this.participants = participants;
     }
 
     public User getInitiator() {
@@ -106,7 +103,7 @@ public class Team implements Serializable {
         }
         return false;
     }
-    
+
     /**
      * Function removes a participant from the team.
      *

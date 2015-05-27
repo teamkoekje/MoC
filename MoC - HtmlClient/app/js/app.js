@@ -28,6 +28,10 @@ app.config(['$routeProvider',
                     templateUrl: 'views/teams.html',
                     controller: 'teamsController'
                 })
+                .when('/newteam', {
+                    templateUrl: 'views/newteam.html',
+                    controller: 'newTeamController'
+                })
                 .when('/apiDemo', {
                     templateUrl: 'views/apiDemo.html',
                     controller: 'demoController'

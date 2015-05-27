@@ -3,6 +3,7 @@ package service;
 import domain.Competition;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
+import java.awt.BorderLayout;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class CompetitionService extends GenericService<Competition> {
                 //date is before today. so its not an future competition
             }
         }
+        
         return futureCompetitions;
     }
 
