@@ -4,6 +4,7 @@ import domain.Competition;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,6 +75,34 @@ public class CompetitionService extends GenericService<Competition> {
             this.edit(c);
         }
         return result;
+    }
+
+    public List<Competition> getActiveCompetitions() {
+        List<Competition> activeCompetitions = new ArrayList();
+        for (Competition c : competitions) {
+            if (c.getCurrentRound() != null) {
+                activeCompetitions.add(c);
+            } else {
+                //empty round. so its not an active competition
+            }
+        }
+        return activeCompetitions;
+    }
+
+    public List<Competition> geFutureCompetitions() {
+        List<Competition> futureCompetitions = new ArrayList();
+        Date currentDate = new Date();
+        currentDate.setTime(System.currentTimeMillis());
+        
+        
+        for (Competition c : competitions) {
+            if (c.getCompetitionDate().after(currentDate)) {
+                futureCompetitions.add(c);
+            } else {
+                //date is before today. so its not an future competition
+            }
+        }
+        return futureCompetitions;
     }
 
 }
