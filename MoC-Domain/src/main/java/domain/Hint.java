@@ -21,8 +21,7 @@ public class Hint implements Serializable {
     private long id;
 
     private String content;
-    private long time;
-    private boolean published;
+    private long releaseTime;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
@@ -43,30 +42,12 @@ public class Hint implements Serializable {
         if (time <= 0) {
             throw new IllegalArgumentException("Time must be positive");
         }
-        this.time = time;
+        this.releaseTime = time;
         this.content = content;
-        this.published = false;
     }
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
-    /**
-     * Gets whether this Hint is published or not.
-     *
-     * @return
-     */
-    public boolean isPublished() {
-        return published;
-    }
-
-    /**
-     * Sets whether this Hint has been published or not
-     *
-     * @param published Whether the boolean has been published or not.
-     */
-    public void setPublished(boolean published) {
-        this.published = published;
-    }
 
     /**
      * Function returns the content of the hint.
@@ -83,7 +64,7 @@ public class Hint implements Serializable {
      * @return time in seconds
      */
     public long getTime() {
-        return time;
+        return releaseTime;
     }
 
     /**
@@ -92,7 +73,7 @@ public class Hint implements Serializable {
      * @param time the time in seconds
      */
     public void setTime(long time) {
-        this.time = time;
+        this.releaseTime = time;
     }
 
     //</editor-fold>    

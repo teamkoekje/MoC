@@ -1,6 +1,7 @@
 package service;
 
 import domain.Competition;
+import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -21,15 +22,11 @@ import javax.inject.Inject;
 public class CompetitionService extends GenericService<Competition> {
 
     private List<Competition> competitions = new ArrayList<>();
-    Timer timer;
+    private Timer timer;
 
     @Inject
     @Any
     Event<CompetitionEvent> competitionEvent;
-    /*
-     - 1 Timer update alle lopende competities.
-     - Lopende competities worden bij het opstarten van de service opgehaald en in een lijstje gestopt
-     */
 
     public CompetitionService() {
         super(Competition.class);
@@ -41,27 +38,23 @@ public class CompetitionService extends GenericService<Competition> {
             case ROUND_ENDED:
                 break;
             case COMPETITION_ENDED:
-                //System.out.println("competitions found: " + this.findAll().size());
+                CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
+                System.out.println("competition ended: " + cee.getCompetition().getName());
+                competitions.remove(cee.getCompetition());
                 break;
             case HINT_RELEASED:
                 break;
-            case NONE:
-                break;
             default:
                 throw new AssertionError(event.getType().name());
-
         }
     }
 
-    class RemindTask extends TimerTask {
-
+    private class CompetitionUpdateTask extends TimerTask {
         @Override
         public void run() {
-
             for (Competition c : competitions) {
-                System.out.println("updating competitie" + c.getName());
+                System.out.println("updating competition" + c.getName());
                 for (CompetitionEvent e : c.update()) {
-                    //System.out.println("Firing event" + e.getType());
                     competitionEvent.fire(e);
                 }
             }
@@ -73,7 +66,7 @@ public class CompetitionService extends GenericService<Competition> {
         System.out.println("Init of competitionService");
         competitions = findAll();
         timer = new Timer();
-        //timer.scheduleAtFixedRate(new RemindTask(), 1000, 1000);
+        timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
     }
 
     public boolean joinTeam(String email, String token, long competitionId, long teamId) {

@@ -24,14 +24,16 @@ public class Challenge implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     private String name;
     private int difficulty;
+    private long suggestedDuration;
 
     @OneToMany
     private List<Hint> hints;
-    // </editor-fold>
-
+    
     @Id
     @GeneratedValue
     private Long id;
+    // </editor-fold>
+
 
     // <editor-fold defaultstate="collapsed" desc="constructor" >
     protected Challenge() {
@@ -84,8 +86,16 @@ public class Challenge implements Serializable {
         this.difficulty = difficulty;
     }
 
-    public Iterator<Hint> hintsIterator() {
-        return hints.iterator();
+    public long getSuggestedDuration() {
+        return suggestedDuration;
+    }
+
+    public void setSuggestedDuration(long suggestedDuration) {
+        this.suggestedDuration = suggestedDuration;
+    }
+    
+    public List<Hint> getHintsCopy() {
+        return new ArrayList<>(hints);
     }
 
     private void hintsChanged() {
