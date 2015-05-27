@@ -1,6 +1,5 @@
 package api;
 
-import domain.Competition;
 import domain.Team;
 import domain.User;
 import java.util.List;
@@ -19,7 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import service.TeamService;
 import service.UserService;
 
@@ -40,9 +38,9 @@ public class TeamResource {
 
     //<editor-fold defaultstate="collapsed" desc="Team">
     /**
-     * Gets all users
+     * Gets all teams
      *
-     * @return list with users
+     * @return list with teams
      */
     @GET
     @Produces("application/xml,application/json")
@@ -60,20 +58,32 @@ public class TeamResource {
     @GET
     @Produces("application/xml,application/json")
     @Path("/{teamId}")
-    @PermitAll
+    @RolesAllowed({"User", "Admin"})
     public Team getTeamById(@PathParam("teamId") long teamId) {
         return teamService.findById(teamId);
     }
 
+    /**
+     * Get all teams that a certain user is a member of
+     *
+     * @param username username of the user
+     * @return list with teams of the user
+     */
     @GET
     @Produces("application/xml,application/json")
     @Path("/user/{username}")
-    @PermitAll
+    @RolesAllowed({"User", "Admin"})
     public List<Team> getTeamsByUsername(@PathParam("username") String username) {
         User u = userService.findById(username);
         return u.getTeams();
     }
 
+    /**
+     * Create a new team
+     *
+     * @param request request with authentication info
+     * @param team team that should be created
+     */
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @RolesAllowed({"User", "Admin"})

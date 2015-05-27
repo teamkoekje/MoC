@@ -56,6 +56,7 @@ public class CompetitionService extends GenericService<Competition> {
     }
 
     private class CompetitionUpdateTask extends TimerTask {
+
         @Override
         public void run() {
             for (Competition c : competitions) {
@@ -72,7 +73,7 @@ public class CompetitionService extends GenericService<Competition> {
         System.out.println("Init of competitionService");
         competitions = findAll();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
+        //timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
     }
 
     public boolean joinTeam(String email, String token, long competitionId, long teamId) {
@@ -86,7 +87,7 @@ public class CompetitionService extends GenericService<Competition> {
 
     public List<Competition> getActiveCompetitions() {
         List<Competition> activeCompetitions = new ArrayList();
-        for (Competition c : competitions) {
+        for (Competition c : findAll()) {
             if (c.getCurrentRound() != null) {
                 activeCompetitions.add(c);
             } else {
@@ -101,15 +102,14 @@ public class CompetitionService extends GenericService<Competition> {
         Date currentDate = new Date();
         currentDate.setTime(System.currentTimeMillis());
         
-        
-        for (Competition c : competitions) {
+        for (Competition c : findAll()) {
             if (c.getCompetitionDate().after(currentDate)) {
                 futureCompetitions.add(c);
             } else {
                 //date is before today. so its not an future competition
             }
         }
-        
+
         return futureCompetitions;
     }
 

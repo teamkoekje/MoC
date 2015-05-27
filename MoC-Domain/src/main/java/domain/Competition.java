@@ -6,8 +6,6 @@ import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -30,7 +28,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Entity
 public class Competition implements Serializable {
 
-    // <editor-fold defaultstate="collapsed" desc="variables" >
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
     @GeneratedValue
     @XmlAttribute
@@ -49,12 +47,13 @@ public class Competition implements Serializable {
     private int minTeamSize;
     private int maxTeamSize;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL)
     private final List<Round> rounds = new ArrayList<>();
+    
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
     private final List<Team> teams = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     private Round currentRound;
 
     private final NewsFeed newsFeed;
@@ -139,6 +138,14 @@ public class Competition implements Serializable {
 
     public List<Round> getRounds() {
         return rounds;
+    }
+    
+    public List<Challenge> getChallenges() {
+        List<Challenge> challenges = new ArrayList<>();
+        for(Round r : rounds){
+            challenges.add(r.getChallenge());
+        }
+        return challenges;
     }
 
     public List<Team> getTeams() {

@@ -1,23 +1,18 @@
 package api;
 
+import domain.Challenge;
 import domain.Competition;
 import domain.Round;
-import domain.Team;
 import domain.User;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import service.CompetitionService;
 import service.InvitationService;
@@ -155,6 +150,14 @@ public class CompetitionResource {
     public Round getRoundById(@PathParam("roundId") long roundId) {
         return roundService.findById(roundId);
     }
+    
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/{competitionId}/challenges")
+    public List<Challenge> getChallengesByCompetition(@PathParam("competitionId") long competitionId) {
+        Competition c = competitionService.findById(competitionId);
+        return c.getChallenges();
+    }
 
     /**
      * Creates a new round
@@ -206,8 +209,6 @@ public class CompetitionResource {
 
     //<editor-fold defaultstate="collapsed" desc="Teams">
     /**
-
-
 
 //    /**
 //     * Creates a new team

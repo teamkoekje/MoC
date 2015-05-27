@@ -40,6 +40,6 @@ app.config(['$routeProvider',
                     templateUrl: 'views/competitionDemo.html',
                     controller: 'competitionController'
                 })
-                .otherwise({redirectTo: '/apiDemo'});
+                .otherwise({redirectTo: '/login'});
     }
 ]);

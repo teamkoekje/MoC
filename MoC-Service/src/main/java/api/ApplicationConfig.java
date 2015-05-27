@@ -19,6 +19,7 @@ public class ApplicationConfig extends Application {
      * out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(api.ChallengeResource.class);
         resources.add(api.CompetitionResource.class);
         resources.add(api.RestResponseFilter.class);
         resources.add(api.TeamResource.class);

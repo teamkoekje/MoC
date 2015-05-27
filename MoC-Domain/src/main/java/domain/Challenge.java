@@ -3,8 +3,8 @@ package domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,20 +22,19 @@ import javax.persistence.OneToMany;
 public class Challenge implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String name;
     private int difficulty;
     private long suggestedDuration;
 
-    @OneToMany
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
     private List<Hint> hints;
-    
-    @Id
-    @GeneratedValue
-    private Long id;
     // </editor-fold>
 
-
-    // <editor-fold defaultstate="collapsed" desc="constructor" >
+    // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Challenge() {
         this.name = "Not set yet";
         this.hints = new ArrayList<>();
@@ -55,33 +54,14 @@ public class Challenge implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Function returns the name of the challenge.
-     *
-     * @return name of the challenge
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Function returns the difficulty of the challenge.
-     *
-     * @return difficulty of the challenge
-     */
     public int getDifficulty() {
         return difficulty;
     }
 
-    /**
-     * Function sets the difficulty of the challenge.
-     *
-     * @param difficulty
-     */
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
@@ -93,7 +73,7 @@ public class Challenge implements Serializable {
     public void setSuggestedDuration(long suggestedDuration) {
         this.suggestedDuration = suggestedDuration;
     }
-    
+
     public List<Hint> getHintsCopy() {
         return new ArrayList<>(hints);
     }

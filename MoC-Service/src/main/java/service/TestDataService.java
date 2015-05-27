@@ -1,5 +1,6 @@
 package service;
 
+import domain.Challenge;
 import domain.Competition;
 import domain.Team;
 import domain.User;
@@ -30,6 +31,9 @@ public class TestDataService {
 
     @Inject
     InvitationService invitationService;
+    
+    @Inject
+    ChallengeService challengeService;
 
     @PostConstruct
     private void init() {
@@ -78,10 +82,17 @@ public class TestDataService {
         c1.addTeam(t2);
         c2.addTeam(t3);
 
+        Challenge ch1 = new Challenge("Challenge 1");
+        Challenge ch2 = new Challenge("Challenge 2");
+        
+
+        c1.addChallenge(ch1, 600);
+        c1.addChallenge(ch2, 1200);
+
         competitionService.create(c1);
         competitionService.create(c2);
         competitionService.create(c3);
-        
-     //   invitationService.inviteMember("daan.goumans@hotmail.com", t1.getId(), c1.getId());
+
+        //   invitationService.inviteMember("daan.goumans@hotmail.com", t1.getId(), c1.getId());
     }
 }

@@ -4,16 +4,16 @@ import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
@@ -32,20 +32,22 @@ public class Round implements Serializable {
     @GeneratedValue
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Challenge challenge;
-    private List<Hint> hintsCopy;
-
+    
     private long duration;
+    
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar startTime;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar endTime;
 
-
+    private List<Hint> hintsCopy;
+    
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
+   
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
@@ -141,11 +143,13 @@ public class Round implements Serializable {
      */
     public long getRemainingTime() {
         //get the Duration between the current and end time, then retrieve it's seconds.
-        return Duration.between(Instant.now(), endTime.toInstant()).getSeconds();
+//        return Duration.between(Instant.now(), endTime.toInstant()).getSeconds();
+        return 0;
     }
 
     protected long elapsedTime() {
-        return Duration.between(startTime.toInstant(), Instant.now()).getSeconds();
+        //return Duration.between(startTime.toInstant(), Instant.now()).getSeconds();
+        return 0;
     }
 
     /**

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * The Hint class represents a hint that can be shown during a challenge. It
@@ -22,6 +23,9 @@ public class Hint implements Serializable {
 
     private String content;
     private long releaseTime;
+    
+    @ManyToOne
+    private Challenge challenge;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
