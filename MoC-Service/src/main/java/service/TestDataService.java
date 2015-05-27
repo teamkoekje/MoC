@@ -81,7 +81,7 @@ public class TestDataService {
         competitionService.create(c1);
         competitionService.create(c2);
         competitionService.create(c3);
-
-        invitationService.inviteMember("a.belder@student.fontys.nl", t1.getId(), c1.getId());
+        
+     //   invitationService.inviteMember("daan.goumans@hotmail.com", t1.getId(), c1.getId());
     }
 }
