@@ -4,19 +4,18 @@ import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.enterprise.event.Event;
-import javax.enterprise.inject.Any;
-import javax.inject.Inject;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.Temporal;
 
 /**
  * The Round class represents a round within a Masters of Code competition. A
@@ -35,18 +34,34 @@ public class Round implements Serializable {
 
     @OneToOne
     private Challenge challenge;
-    private long totalRoundTime;
-    private long currentTime;
+    private List<Hint> hintsCopy;
+
+    private long duration;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Calendar startTime;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Calendar endTime;
+
+
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    public Round() {
+    protected Round() {
         init();
         challenge = null;
-        totalRoundTime = 0;
+        duration = -1;
+    }
+
+    public Round(Challenge challenge) {
+        if (challenge == null) {
+            throw new IllegalArgumentException("Challenge can't be null");
+        }
+        init();
+        this.challenge = challenge;
+        this.duration = challenge.getSuggestedDuration();
     }
 
     public Round(Challenge challenge, long roundTime) {
@@ -58,13 +73,12 @@ public class Round implements Serializable {
         }
         init();
         this.challenge = challenge;
-        this.totalRoundTime = roundTime;
+        this.duration = roundTime;
     }
 
     private void init() {
         this.submittedTeams = new HashSet<>();
         this.roundState = RoundState.NOT_STARTED;
-        this.currentTime = 0;
     }
     //</editor-fold>
 
@@ -88,21 +102,16 @@ public class Round implements Serializable {
     }
 
     /**
-     * Gets the total amount of roundTime for this round, in seconds.
-     *
-     * @return An integer indicating the total time for this Round.
-     */
-    public long getTotalTime() {
-        return totalRoundTime;
-    }
-
-    /**
      * Sets the total amount of time for this Round, in seconds.
      *
      * @param time The total amount of time availble for this Round.
      */
-    public void setTime(long time) {
-        this.totalRoundTime = time;
+    public void setDuration(long time) {
+        this.duration = time;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 
     /**
@@ -131,7 +140,12 @@ public class Round implements Serializable {
      * @return the remaining roundTime in seconds
      */
     public long getRemainingTime() {
-        return totalRoundTime - currentTime;
+        //get the Duration between the current and end time, then retrieve it's seconds.
+        return Duration.between(Instant.now(), endTime.toInstant()).getSeconds();
+    }
+
+    protected long elapsedTime() {
+        return Duration.between(startTime.toInstant(), Instant.now()).getSeconds();
     }
 
     /**
@@ -191,6 +205,11 @@ public class Round implements Serializable {
      */
     public void start() {
         if (roundState == RoundState.NOT_STARTED) {
+            //set the start time, end time and the hints to be released
+            startTime = Calendar.getInstance();
+            endTime = Calendar.getInstance();
+            endTime.add(Calendar.SECOND, (int) duration);
+            hintsCopy = challenge.getHintsCopy();
             roundState = RoundState.ONGOING;
         } else {
             throw new IllegalArgumentException("The round has already started.");
@@ -247,21 +266,19 @@ public class Round implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Events" >
     public List<CompetitionEvent> update() {
         List<CompetitionEvent> events = new ArrayList<>();
-        
         if (roundState == RoundState.ONGOING) {
-            currentTime++;
-            if (currentTime >= totalRoundTime) {
+            //stop the round if it ended
+            if (getRemainingTime() <= 0) {
                 stop();
                 events.add(new RoundEndedEvent(this));
             }
-            Iterator<Hint> hintsIterator = challenge.hintsIterator();
-            while (hintsIterator.hasNext()) {
-                Hint h = hintsIterator.next();
-                if (!h.isPublished()) {
-                    if (currentTime >= h.getTime()) {
-                        events.add(new HintReleasedEvent(h));
-                        h.setPublished(true);
-                    }
+
+            //loop through hints and release + remove any expired ones
+            for (int i = hintsCopy.size() - 1; i >= 0; i++) {
+                Hint h = hintsCopy.get(i);
+                if (elapsedTime() >= h.getTime()) {
+                    events.add(new HintReleasedEvent(h));
+                    hintsCopy.remove(i);
                 }
             }
         }
@@ -276,8 +293,8 @@ public class Round implements Serializable {
      * @param seconds the amount to increase the remaining roundTime with in
      * seconds
      */
-    public void increaseTime(int seconds) {
-        totalRoundTime += seconds;
+    public void increaseDuration(int seconds) {
+        endTime.add(Calendar.SECOND, seconds);
     }
 
     /**
@@ -287,16 +304,13 @@ public class Round implements Serializable {
      *
      * @return
      */
-    public boolean releaseNextHint() {
-        Iterator<Hint> hintsIterator = challenge.hintsIterator();
-        while (hintsIterator.hasNext()) {
-            Hint h = hintsIterator.next();
-            if (!h.isPublished()) {
-                h.setPublished(true);
-                return true;
-            }
+    public HintReleasedEvent releaseNextHint() {
+        if (hintsCopy.size() > 0) {
+            Hint h = hintsCopy.get(0);
+            hintsCopy.remove(0);
+            return new HintReleasedEvent(h);
         }
-        return false;
+        return null;
     }
 
     /**

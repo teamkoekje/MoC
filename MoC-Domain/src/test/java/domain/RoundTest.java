@@ -14,29 +14,12 @@ public class RoundTest {
     public RoundTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
         Challenge c = new Challenge("Challenge1");
         r = new Round(c, 100);
     }
 
-    @After
-    public void tearDown() {
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
     @Test
     public void createRoundTest() {
         Round r;
@@ -54,7 +37,7 @@ public class RoundTest {
         try {
             r = new Round(c, 1);
             assertEquals(r.getChallenge(), c);
-            assertEquals(r.getTotalTime(), 1);
+            assertEquals(r.getDuration(), 1);
         } catch (IllegalArgumentException ex) {
             fail("Unexpected IllegalArgumentException");
 
