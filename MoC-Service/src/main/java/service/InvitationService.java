@@ -69,7 +69,7 @@ public class InvitationService extends GenericService<Invitation> {
         //Send email
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("c.linschooten@gmail.com"));//this doesnt work as the injected session will override it
+            message.setFrom(new InternetAddress("TeamKoekje@gmail.com"));//this doesnt work as the injected session will override it
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(email));
 
@@ -80,9 +80,13 @@ public class InvitationService extends GenericService<Invitation> {
              email content            
              */
             //get mail.html file to string
-            URL url = new URL("http://localhost:8080/MoC-Service/mail.html");
+            URL url = new URL("http://daangoumans.nl/etc/MoC/mail.html");
             URLConnection con = url.openConnection();
+            
+            
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            
+            
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = in.readLine()) != null) {
