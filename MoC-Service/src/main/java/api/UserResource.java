@@ -1,5 +1,6 @@
 package api;
 
+import domain.Invitation;
 import domain.Team;
 import domain.User;
 import java.util.List;
@@ -80,6 +81,21 @@ public class UserResource {
     public List<Team> getTeamsFromUser(@PathParam("username") String username) {
         User u = userService.findById(username);
         return u.getTeams();
+    }
+    
+    /**
+     * Get all invitations for a certain user
+     *
+     * @param username username of the user
+     * @return list with invitations of the user
+     */
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/{username}/invitations")
+    //@RolesAllowed({"User", "Admin"})
+    public List<Invitation> getInvitationsFromUser(@PathParam("username") String username) {
+        User u = userService.findById(username);
+        return invitationService.findByEmail(u.getEmail());
     }
 
     /**

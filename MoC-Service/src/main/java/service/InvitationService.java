@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
@@ -118,6 +119,12 @@ public class InvitationService extends GenericService<Invitation> {
         Query q = em.createNamedQuery("Invitation.findByToken");
         q.setParameter("token", token);
         return (Invitation) q.getSingleResult();
+    }
+    
+    public List<Invitation> findByEmail(String email) {
+        Query q = em.createNamedQuery("Invitation.findByEmail");
+        q.setParameter("email", email);
+        return (List<Invitation>) q.getResultList();
     }
     
     /**

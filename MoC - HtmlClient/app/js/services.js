@@ -1,29 +1,23 @@
 /* global angular */
 
 'use strict';
-
 /* Services */
 
 var services = angular.module('mocServices', ['ngResource']);
-
 services.config(function ($httpProvider) {
     $httpProvider.defaults.withCredentials = true;
 });
-
-
-
 var baseUrl = 'http://localhost\\:8080/MoC-Service/api';
-
 services.factory('user', ['$resource',
     function ($resource) {
         return{
             all: $resource(baseUrl + '/user/:userId', {userId: '@userId'}, {remove: {method: 'DELETE'}}),
             register: $resource(baseUrl + '/user/register/:token', {token: '@token'}),
-            teams: $resource(baseUrl + '/user/:userId/teams', {userId: '@userId'})
+            teams: $resource(baseUrl + '/user/:userId/teams', {userId: '@userId'}),
+            invitations: $resource(baseUrl + '/user/:userId/invitations', {userId: '@userId'})
         };
     }
 ]);
-
 services.factory('competition', ['$resource',
     function ($resource) {
         return{
@@ -35,7 +29,6 @@ services.factory('competition', ['$resource',
         };
     }
 ]);
-
 services.factory('team', ['$resource',
     function ($resource) {
         return{
@@ -45,7 +38,6 @@ services.factory('team', ['$resource',
         };
     }
 ]);
-
 services.factory('workspace', ['$resource',
     function ($resource) {
         return $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'});

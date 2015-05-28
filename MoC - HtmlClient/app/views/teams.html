@@ -16,12 +16,14 @@
         </div>
 
         <h4>Invitations</h4>
-        <div class="list-group" style="max-height:200px; overflow:auto;">
-            <a href="#" class="list-group-item">Team 1</a>
-            <a href="#" class="list-group-item">Team 2</a>
-            <a href="#" class="list-group-item">Team 3</a>
+        <div ng-show="invitations.length === 0">You are currently not invited to any teams.</div>
+        <div ng-show="invitations.length > 0" class="list-group" style="max-height:200px; overflow:auto;">
+            <a ng-click="selectInvitations(invitation.id)" class="list-group-item" ng-repeat="invitation in invitations" style="cursor:pointer;">
+                {{invitation.team_id}}
+            </a>
+
         </div>
-        
+        <br>
         <a href="#newteam"><span class="btn btn-default">Create new team</span></a>
     </div>
 

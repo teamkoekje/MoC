@@ -18,7 +18,9 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Invitation.findByToken",
-            query = "SELECT inv FROM Invitation inv WHERE inv.token = :token")})
+            query = "SELECT inv FROM Invitation inv WHERE inv.token = :token"),
+    @NamedQuery(name = "Invitation.findByEmail",
+            query = "SELECT inv FROM Invitation inv WHERE inv.email = :email")})
 public class Invitation implements Serializable {
 
     /**

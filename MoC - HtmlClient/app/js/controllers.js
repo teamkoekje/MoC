@@ -46,7 +46,7 @@ controllers.controller('loginController', ['$scope', function ($scope) {
     }
 ]);
 
-controllers.controller('registerController', ['$scope','$routeParams', 'user',
+controllers.controller('registerController', ['$scope', '$routeParams', 'user',
     function ($scope, $routeParams, $user) {
         $scope.register = function () {
             console.log("Create User");
@@ -173,7 +173,7 @@ controllers.controller('teamsController', ['$scope', 'team', 'user',
 
         loadData = function () {
             $scope.teams = $user.teams.query({userId: 'Strike'});
-
+            $scope.invitations = $user.invitations.query({userId: 'Strike'});
             //TODO: Get the first team in the list (don't use hard-coded id)
             $scope.selectTeam(1);
         };
