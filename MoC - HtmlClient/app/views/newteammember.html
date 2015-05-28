@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation"><a href="#competitions">Competitions</a></li>
-    <li role="presentation" class="active"><a href="#teams">My Teams</a></li>
+    <li role="presentation"><a href="#users">users</a></li>
+    <li role="presentation" class="active"><a href="#inviteUsers">Invite Users</a></li>
 </ul>
 
 
@@ -21,6 +21,29 @@
 <hr>
 <br>
 
+
+
+<!--
+
+todo
+
+teamlijst/id ophalen
+controller fixen zodat email en id erin mee komt
+
+invite sturen
+
+-->
+
+
+<div class="form-group">
+
+    <label for="competitionInput" style="">teams</label><br>
+
+    <select id="competitionInput" ng-model="team" 
+            ng-options="competition as competition.name for competition in competitions"></select>
+</div>
+
+
 <div id="newUserPanel">
 
     <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
@@ -32,17 +55,17 @@
     </form>
 
 
-    <div class="form-group">
 
-        <label for="existingInput" style="">Existing user:</label><br>
-
-        <select id="competitionInput" ng-model="team.competition" ng-options="competition as competition.name for competition in competitions"></select>
-    </div>
 
 
 </div>
 <div id="existingUserPanel">
-    existing user panel
+    <div class="form-group">
+
+        <label for="existingInput" style="">Existing user:</label><br>
+
+        <select id="existingInput" ng-model="user" ng-options="user as user.name for user in users"></select>
+    </div>
 </div>
 
 

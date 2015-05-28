@@ -46,7 +46,7 @@ app.config(['$routeProvider',
                 })
                 .when('/newteammember', {
                     templateUrl: 'views/newteammember.html',
-                    controller: ''
+                    controller: 'inviteUserController'
                 })
                 .otherwise({redirectTo: '/login'});
     }
