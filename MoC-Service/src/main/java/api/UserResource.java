@@ -66,14 +66,20 @@ public class UserResource {
         User u = userService.findById(userId);
         return userService.findById(userId);
     }
-
+    
+    /**
+     * Get all teams that a certain user is a member of
+     *
+     * @param username username of the user
+     * @return list with teams of the user
+     */
     @GET
     @Produces("application/xml,application/json")
-    @Path("team/{teamId}")
-    @PermitAll
-    public List<User> getUsersByTeam(@PathParam("teamId") long teamId) {
-        Team t = teamService.findById(teamId);
-        return t.getParticipants();
+    @Path("/{username}/teams")
+    //@RolesAllowed({"User", "Admin"})
+    public List<Team> getTeamsFromUser(@PathParam("username") String username) {
+        User u = userService.findById(username);
+        return u.getTeams();
     }
 
     /**

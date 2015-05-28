@@ -31,7 +31,7 @@ public class TestDataService {
 
     @Inject
     InvitationService invitationService;
-    
+
     @Inject
     ChallengeService challengeService;
 
@@ -55,13 +55,15 @@ public class TestDataService {
         userService.create(u2);
 
         Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
         cal.add(Calendar.DATE, -1);
         Date yesterday = cal.getTime();
         cal.add(Calendar.DATE, +2);
         Date tomorrow = cal.getTime();
-        Competition c1 = new Competition("Competition1", new Date(), new Date(), new Date(), "Fontys");
+        Competition c1 = new Competition("Competition1", tomorrow, new Date(), new Date(), "Fontys");
         Competition c2 = new Competition("Competition2", yesterday, new Date(), new Date(), "Fontys");
-        Competition c3 = new Competition("Competition3", tomorrow, new Date(), new Date(), "Fontys");
+        Competition c3 = new Competition("Competition3", today, new Date(), new Date(), "Fontys");
+        Competition c4 = new Competition("Competition4", tomorrow, new Date(), new Date(), "Fontys");
 
         Team t1 = new Team("Team1", c1);
         Team t2 = new Team("Team2", c1);
@@ -73,7 +75,7 @@ public class TestDataService {
 
         t1.addParticipant(u2);
         t2.addParticipant(u1);
-        
+
         teamService.create(t1);
         teamService.create(t2);
         teamService.create(t3);
@@ -84,7 +86,6 @@ public class TestDataService {
 
         Challenge ch1 = new Challenge("Challenge 1");
         Challenge ch2 = new Challenge("Challenge 2");
-        
 
         c1.addChallenge(ch1, 600);
         c1.addChallenge(ch2, 1200);
@@ -92,6 +93,7 @@ public class TestDataService {
         competitionService.create(c1);
         competitionService.create(c2);
         competitionService.create(c3);
+        competitionService.create(c4);
 
         //   invitationService.inviteMember("daan.goumans@hotmail.com", t1.getId(), c1.getId());
     }

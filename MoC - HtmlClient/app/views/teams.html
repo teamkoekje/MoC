@@ -10,7 +10,7 @@
     <div class="col-xs-6">
         <h4>My Teams</h4>
         <div class="list-group" style="max-height:200px; overflow:auto;">
-            <a ng-click="selectTeam(team.competition.id, team.id)" class="list-group-item" ng-class="{active : isSelected(team.id)}" ng-repeat="team in teams" style="cursor:pointer;">
+            <a ng-click="selectTeam(team.id)" class="list-group-item" ng-class="{active : isSelected(team.id)}" ng-repeat="team in teams" style="cursor:pointer;">
                 {{team.name}}
             </a>
         </div>
@@ -36,13 +36,13 @@
                         <strong>
                             Name:<br>
                             Competition:<br>
-                            Team leader:
+                            Team owner
                         </strong>
                     </div>
                     <div class="col-xs-8">
                         {{team.name}}<br>
                         {{team.competition.name}}<br>
-                        {{team.initiator}}
+                        {{team.owner.username}}
                     </div>
                 </div>
             </div>

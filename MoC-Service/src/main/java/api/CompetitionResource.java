@@ -3,6 +3,7 @@ package api;
 import domain.Challenge;
 import domain.Competition;
 import domain.Round;
+import domain.Team;
 import domain.User;
 import java.util.List;
 import javax.inject.Inject;
@@ -55,25 +56,18 @@ public class CompetitionResource {
         return competitionService.findAll();
     }
 
-    /**
-     * Gets all future competitions
-     *
-     * @return list with competitions
-     */
     @GET
     @Produces("application/xml,application/json")
-    @Path("/type/{type}")
-    public List<Competition> getCompetitionsByType(@PathParam("type") String type) {
-        List<Competition> competitions = null;
-        switch (type) {
-            case "active":
-                competitions = competitionService.getActiveCompetitions();
-                break;
-            case "future":
-                competitions = competitionService.geFutureCompetitions();
-                break;
-        }
-        return competitions;
+    @Path("/active")
+    public List<Competition> getActiveCompetitions() {
+        return competitionService.getActiveCompetitions();
+    }
+
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/future")
+    public List<Competition> getFutureCompetitions() {
+        return competitionService.geFutureCompetitions();
     }
 
     /**
@@ -150,13 +144,21 @@ public class CompetitionResource {
     public Round getRoundById(@PathParam("roundId") long roundId) {
         return roundService.findById(roundId);
     }
-    
+
     @GET
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/challenges")
     public List<Challenge> getChallengesByCompetition(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);
         return c.getChallenges();
+    }
+    
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/{competitionId}/teams")
+    public List<Team> getTeamsByCompetition(@PathParam("competitionId") long competitionId) {
+        Competition c = competitionService.findById(competitionId);
+        return c.getTeams();
     }
 
     /**
@@ -209,14 +211,10 @@ public class CompetitionResource {
 
     //<editor-fold defaultstate="collapsed" desc="Teams">
     /**
-
-//    /**
-//     * Creates a new team
-//     *
-//     * @param request
-//     * @param t
-//     * @return
-//     */
+     *
+     * // /** // * Creates a new team // * // * @param request // * @param t //
+     * * @return //
+     */
 //    @POST
 //    @Path("/{competitionId}/team")
 //    @Produces(MediaType.TEXT_PLAIN)
@@ -235,9 +233,6 @@ public class CompetitionResource {
 //            return Response.serverError().entity(ex.getMessage()).build();
 //        }
 //    }
-
-   
-
     //<editor-fold defaultstate="collapsed" desc="Invites">
     /**
      * Invites a member to a certain team

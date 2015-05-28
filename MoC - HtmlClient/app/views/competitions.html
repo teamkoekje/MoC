@@ -41,8 +41,8 @@
                     </div>
                     <div class="col-xs-8">
                         {{competition.name}}<br>
-                        {{competition.competitionDate | date : 'mediumDate'}}<br>
-                        {{competition.startTime | date : 'shortTime' }}
+                        {{competition.competitionDate| date : 'mediumDate'}}<br>
+                        {{competition.startTime| date : 'shortTime' }}
                     </div>
                 </div>
             </div>
@@ -53,25 +53,20 @@
                 <h3 class="panel-title">Challenges</h3>
             </div>
             <div class="panel-body">
-                <table class="table table-condensed">
+                <div ng-show="challenges.length === 0">No challenges have been added to this competition yet.</div>
+                <table ng-show="challenges.length > 0" class="table table-condensed">
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Difficulty</th>
                             <th>Duration</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="challenge in competition.challenges">
+                        <tr ng-repeat="challenge in challenges">
                             <td>{{challenge.name}}</td>
-                            <td>{{challenge.time}}</td>
-                        </tr>
-                        <tr>
-                            <td>Challenge 2</td>
-                            <td>40 min</td>
-                        </tr>
-                        <tr>
-                            <td>Challenge 3</td>
-                            <td>20 min</td>
+                            <td>{{challenge.difficulty}}</td>
+                            <td>{{challenge.suggestedDuration}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -83,25 +78,20 @@
                 <h3 class="panel-title">Teams</h3>
             </div>
             <div class="panel-body">
-                <table class="table table-condensed">
+                <div ng-show="challenges.length === 0">No teams have been added to this competition yet.</div>
+                <table ng-show="challenges.length > 0" class="table table-condensed">
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Owner</th>
                             <th>Points</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Team 1</td>
-                            <td>5.000</td>
-                        </tr>
-                        <tr>
-                            <td>Team 2</td>
-                            <td>4.500</td>
-                        </tr>
-                        <tr>
-                            <td>Team 3</td>
-                            <td>3.750</td>
+                        <tr ng-repeat="team in teams">
+                            <td>{{team.name}}</td>
+                            <td>{{team.owner.username}}</td>
+                            <td>{{team.points}}</td>
                         </tr>
                     </tbody>
                 </table>
