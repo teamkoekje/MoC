@@ -33,7 +33,7 @@ public class Team implements Serializable {
     @XmlAttribute
     private long id;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     private final List<User> participants = new ArrayList<>();
 
     @ManyToOne
@@ -80,7 +80,7 @@ public class Team implements Serializable {
     }
     
     public void setOwner(User owner){
-        this.participants.add(owner);
+        addParticipant(owner);
         this.owner = owner;
     }
 
@@ -100,6 +100,7 @@ public class Team implements Serializable {
     public boolean addParticipant(User participant) {
         if (!participants.contains(participant)) {
             participants.add(participant);
+            participant.addTeam(this);
             return true;
         }
         return false;

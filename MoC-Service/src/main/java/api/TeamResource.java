@@ -72,7 +72,7 @@ public class TeamResource {
     @GET
     @Produces("application/xml,application/json")
     @Path("/user/{username}")
-    @RolesAllowed({"User", "Admin"})
+    //@RolesAllowed({"User", "Admin"})
     public List<Team> getTeamsByUsername(@PathParam("username") String username) {
         User u = userService.findById(username);
         return u.getTeams();

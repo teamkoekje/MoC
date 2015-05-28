@@ -73,7 +73,7 @@ public class TestDataService {
 
         t1.addParticipant(u2);
         t2.addParticipant(u1);
-
+        
         teamService.create(t1);
         teamService.create(t2);
         teamService.create(t3);
