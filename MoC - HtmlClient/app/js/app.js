@@ -44,6 +44,10 @@ app.config(['$routeProvider',
                     templateUrl: 'views/competition.html',
                     controller: 'competitionController'
                 })
+                .when('/newteammember', {
+                    templateUrl: 'views/newteammember.html',
+                    controller: ''
+                })
                 .otherwise({redirectTo: '/login'});
     }
 ]);

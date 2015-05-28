@@ -1,0 +1,64 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"><a href="#competitions">Competitions</a></li>
+    <li role="presentation" class="active"><a href="#teams">My Teams</a></li>
+</ul>
+
+
+<br>
+
+<h4>Add team member</h4>
+
+
+<form name="radioButtons">
+    <label for="newUserCheckbox">New user</label>
+    <input name="xxx" type="radio" id="newUserRadioButton" checked>
+    <br/><br/>
+    <label for="existingUserCheckbox">Existing user</label>
+    <input name="xxx" id="existingUserRadioButton" type="radio">
+</form>
+
+<br>
+<hr>
+<br>
+
+<div id="newUserPanel">
+
+    <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
+        <div class="form-group">
+            <label for="emailInput" style="">email</label>
+            <input required type="email" class="form-control" id="emailInput" placeholder="Email" ng-model="email" style="display: table-cell"/>
+            <input type="submit" class="btn btn-default" value="Invite user"/>
+        </div>
+    </form>
+
+
+    <div class="form-group">
+
+        <label for="existingInput" style="">Existing user:</label><br>
+
+        <select id="competitionInput" ng-model="team.competition" ng-options="competition as competition.name for competition in competitions"></select>
+    </div>
+
+
+</div>
+<div id="existingUserPanel">
+    existing user panel
+</div>
+
+
+
+<script>
+            $(window).ready(function () {
+                $('#existingUserPanel').hide();
+                $('input[type="radio"]').on('click', function () {
+                    if ($(this).attr('id') == 'newUserRadioButton') {
+                        $('#existingUserPanel').hide();
+                        $('#newUserPanel').show();
+                    }
+                    else {
+                        $('#newUserPanel').hide();
+                        $('#existingUserPanel').show();
+                    }
+                });
+            });
+</script>
