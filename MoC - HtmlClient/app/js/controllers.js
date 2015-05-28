@@ -51,14 +51,13 @@ controllers.controller('registerController', ['$scope', 'user',
         $scope.register = function () {
             console.log("Create User");
             $scope.user.$save(function () {
-                loadData();
+                $scope.user = new $user.all();
+                 location.href = "#/login";
+                //loadData();
             });
-            $scope.user = new $user();
-
-            location.href = "#/login";
         };
 
-        $scope.user = new $user();
+        $scope.user = new $user.all();
         $scope.user.email = "robin@robin.nl";
         $scope.user.password = "welkom123";
         $scope.user.username = "Memphizx";
@@ -200,7 +199,7 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         };
 
         loadData = function () {
-            $scope.competitions = $competition.query();
+            $scope.competitions = $competition.all.query();
             $scope.team = new $team.all();
         };
 
