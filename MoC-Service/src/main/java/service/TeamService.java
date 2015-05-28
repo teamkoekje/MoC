@@ -1,17 +1,25 @@
 package service;
 
 import domain.Competition;
+import domain.Invitation;
 import domain.Team;
 import domain.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 @Stateless
 @RequestScoped
 public class TeamService extends GenericService<Team> {
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private InvitationService invitationService;
 
     public TeamService() {
         super(Team.class);
@@ -43,10 +51,16 @@ public class TeamService extends GenericService<Team> {
      * @param token string to verify if the user is allowed to join the team
      * @param teamId id of the team that the user should join
      */
-    public void joinTeam(User user, String token, long teamId) {
-        Team t = this.findById(teamId);
-
-        throw new UnsupportedOperationException();
+    public void joinTeam(User user, String token) {
+        Invitation inv = invitationService.findByToken(token);
+        Team team = inv.getTeam();
+        
+        boolean result = team.addParticipant(user);
+        inv.setState(Invitation.InvitationState.ACCEPTED);
+        if (result) {
+            this.edit(team);
+            this.invitationService.edit(inv);
+        }
     }
 
     /**

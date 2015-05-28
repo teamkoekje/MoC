@@ -44,6 +44,15 @@ public class User implements Serializable {
         this.id = id;
         this.userGroups.add(UserGroup.USER);
     }
+    
+     public User(String username, String email, String password, String name, String organisation ) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.organisation = organisation;
+        this.userGroups.add(UserGroup.USER);
+    }
 
     protected User() {
         this.userGroups.add(UserGroup.USER);

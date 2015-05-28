@@ -18,6 +18,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import service.InvitationService;
 import service.TeamService;
 import service.UserService;
 
@@ -35,7 +37,11 @@ public class TeamResource {
 
     @Inject
     private UserService userService;
+    
+    @Inject
+    private InvitationService invitationService;
 
+    
     //<editor-fold defaultstate="collapsed" desc="Team">
     /**
      * Gets all teams
@@ -63,7 +69,6 @@ public class TeamResource {
         return teamService.findById(teamId);
     }
 
-    
     @GET
     @Produces("application/xml,application/json")
     @Path("/{teamId}/users")
@@ -111,5 +116,57 @@ public class TeamResource {
         teamService.remove(teamId);
     }
 
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Invites">
+    /**
+     * Invites a member to a certain team
+     *
+     * @param email email address of the person that should be invited
+     * @param competitionId
+     * @param teamId id of the team that the person should be invited to
+     * @return
+     */
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{teamId}/invite")
+    public Response inviteMember(String email, @PathParam("teamId") long teamId) {
+        if (email == null || email.isEmpty()) {
+            return Response.serverError().entity("no email").build();
+        } else if (teamService.findById(teamId) == null) {
+            return Response.serverError().entity("Team not found").build();
+        } else {
+            invitationService.inviteMember(email, teamId);
+            return Response.ok("Invite send").build();
+        }
+
+    }
+
+    /**
+     * Lets a user join a certain team
+     *
+     * @param user user that should join the team
+     * @param token string to verify if the user is allowed to join the team
+     * @param competitionId id of the competition that the team belongs to
+     * @param teamId id of the team that the user should join
+     */
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/join/{token}")
+    public void joinTeam(User user, @PathParam("token") String token) {
+        teamService.joinTeam(user, token);
+    }
+
+    /**
+     * Lets a user leave a certain team
+     *
+     * @param user user that should leave the team
+     * @param teamId id of the team that the user should leave
+     */
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{teamId}/leave")
+    public void leaveTeam(User user, @PathParam("teamId") long teamId) {
+        teamService.leaveTeam(user, teamId);
+    }
     //</editor-fold>
 }

@@ -233,59 +233,6 @@ public class CompetitionResource {
 //            return Response.serverError().entity(ex.getMessage()).build();
 //        }
 //    }
-    //<editor-fold defaultstate="collapsed" desc="Invites">
-    /**
-     * Invites a member to a certain team
-     *
-     * @param email email address of the person that should be invited
-     * @param competitionId
-     * @param teamId id of the team that the person should be invited to
-     * @return
-     */
-    @POST
-    @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/team/{teamId}/invite")
-    public Response inviteMember(String email, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
-        if (email == null || email.isEmpty()) {
-            return Response.serverError().entity("no email").build();
-        } else if (competitionService.findById(competitionId) == null) {
-            return Response.serverError().entity("Competition not found").build();
-        } else if (teamService.findById(teamId) == null) {
-            return Response.serverError().entity("Team not found").build();
-        } else {
-            invitationService.inviteMember(email, teamId, competitionId);
-            return Response.ok("Invite send").build();
-        }
-
-    }
-
-    /**
-     * Lets a user join a certain team
-     *
-     * @param user user that should join the team
-     * @param token string to verify if the user is allowed to join the team
-     * @param competitionId id of the competition that the team belongs to
-     * @param teamId id of the team that the user should join
-     */
-    @POST
-    @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/team/{teamId}/join/{token}")
-    public void joinTeam(User user, @PathParam("token") String token, @PathParam("competitionId") long competitionId, @PathParam("teamId") long teamId) {
-        competitionService.joinTeam(user.getEmail(), "token", competitionId, teamId);
-    }
-
-    /**
-     * Lets a user leave a certain team
-     *
-     * @param user user that should leave the team
-     * @param teamId id of the team that the user should leave
-     */
-    @POST
-    @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/team/{teamId}/leave")
-    public void leaveTeam(User user, @PathParam("teamId") long teamId) {
-        teamService.leaveTeam(user, teamId);
-    }
-    //</editor-fold>
+    
     //</editor-fold>
 }
