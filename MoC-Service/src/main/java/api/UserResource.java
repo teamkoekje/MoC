@@ -102,7 +102,7 @@ public class UserResource {
             return Response.ok("Username is available").build();
         }
     }
-
+    
     /**
      * Creates a new user
      *
@@ -113,8 +113,29 @@ public class UserResource {
     @Consumes("application/xml,application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-     @Path("/{token}")
-    public Response createUser(@PathParam("token") String token, User user) {
+    @Path("/register")
+    public Response createUser(User user) {
+        userService.create(user);
+        User createdUser = userService.findById(user.getUsername());
+        if (createdUser == null) {
+            return Response.serverError().entity("Error creating user").build();
+        }
+        return Response.ok(user).build();
+    }
+
+    /**
+     * Creates a new user with a token for a invitation
+     *
+     * @param token token of the invitation for a team
+     * @param user user that should be created
+     * @return
+     */
+    @POST
+    @Consumes("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/register/{token}")
+    public Response createUserWithToken(@PathParam("token") String token, User user) {
         userService.create(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {

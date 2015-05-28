@@ -18,6 +18,7 @@ services.factory('user', ['$resource',
     function ($resource) {
         return{
             all: $resource(baseUrl + '/user/:userId', {userId: '@userId'}, {remove: {method: 'DELETE'}}),
+            register: $resource(baseUrl + '/user/register/:token', {token: '@token'}),
             teams: $resource(baseUrl + '/user/:userId/teams', {userId: '@userId'})
         };
     }

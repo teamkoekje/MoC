@@ -46,18 +46,15 @@ controllers.controller('loginController', ['$scope', function ($scope) {
     }
 ]);
 
-controllers.controller('registerController', ['$scope', 'user',
-    function ($scope, $user) {
+controllers.controller('registerController', ['$scope','$routeParams', 'user',
+    function ($scope, $routeParams, $user) {
         $scope.register = function () {
             console.log("Create User");
             $scope.user.$save(function () {
-                $scope.user = new $user.all();
                 location.href = "#/login";
-                //loadData();
             });
         };
-
-        $scope.user = new $user.all();
+        $scope.user = new $user.register({token: $routeParams.token});
         $scope.user.email = "robin@robin.nl";
         $scope.user.password = "welkom123";
         $scope.user.username = "Memphizx";
