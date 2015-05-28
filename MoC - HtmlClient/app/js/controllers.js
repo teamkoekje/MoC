@@ -146,12 +146,16 @@ controllers.controller('competitionsController', ['$scope', 'competition',
         };
 
         loadData = function () {
-            $scope.competitions = $competition.all.query();
-            $scope.activeCompetitions = $competition.active.query();
-            $scope.futureCompetitions = $competition.future.query();
-
-            //TODO: Get the first competition in the list (don't use hard-coded id)
-            $scope.selectCompetition(4);
+            $scope.activeCompetitions = $competition.active.query(function () {
+                if (!$scope.competition && $scope.activeCompetitions.length > 0) {
+                    $scope.selectCompetition($scope.activeCompetitions[0].id);
+                }
+            });
+            $scope.futureCompetitions = $competition.future.query(function () {
+                if (!$scope.competition && $scope.futureCompetitions.length > 0) {
+                    $scope.selectCompetition($scope.futureCompetitions[0].id);
+                }
+            });
         };
 
         loadData();
@@ -172,10 +176,11 @@ controllers.controller('teamsController', ['$scope', 'team', 'user',
         };
 
         loadData = function () {
-            $scope.teams = $user.teams.query({userId: 'Strike'});
+            $scope.teams = $team.myTeams.query(function () {
+                $scope.selectTeam($scope.teams[0].id);
+            });
+            //TODO: Don't use hardcoded user
             $scope.invitations = $user.invitations.query({userId: 'Strike'});
-            //TODO: Get the first team in the list (don't use hard-coded id)
-            $scope.selectTeam(1);
         };
 
         loadData();

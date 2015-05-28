@@ -9,16 +9,16 @@
 <div class="row">
     <div class="col-xs-6">
         <h4>My Teams</h4>
-        <div class="list-group" style="max-height:200px; overflow:auto;">
+        <div class="list-group" id="teams" style="max-height:200px; overflow:auto;">
             <a ng-click="selectTeam(team.id)" class="list-group-item" ng-class="{active : isSelected(team.id)}" ng-repeat="team in teams" style="cursor:pointer;">
                 {{team.name}}
             </a>
         </div>
-
+        
         <h4>Invitations</h4>
         <div ng-show="invitations.length === 0">You are currently not invited to any teams.</div>
         <div ng-show="invitations.length > 0" class="list-group" style="max-height:200px; overflow:auto;">
-            <a ng-click="selectInvitations(invitation.id)" class="list-group-item" ng-repeat="invitation in invitations" style="cursor:pointer;">
+            <a ng-click="selectInvitations(invitation.id)" class="list-group-item" ng-repeat="invitation in invitations" style="cursor:pointer;" \>
                 {{invitation.team_id}}
             </a>
 

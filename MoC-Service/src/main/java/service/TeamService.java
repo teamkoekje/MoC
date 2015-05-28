@@ -51,14 +51,5 @@ public class TeamService extends GenericService<Team> {
         throw new UnsupportedOperationException();
     }
 
-    public Team findByUsername(String username) {
-        Query q = em.createNamedQuery("Team.findByUsername");
-        q.setParameter("username", username);
-        try {
-            return (Team) q.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
-    }
 
 }

@@ -78,6 +78,26 @@ public class TeamResource {
     }
 
     /**
+     * Gets the teams of the logged in user
+     *
+     * @param request
+     * @return a user
+     */
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/myTeams")
+    @RolesAllowed({"User"})
+    public List<Team> getMyTeams(@Context HttpServletRequest request) {
+        String username = request.getRemoteUser();
+        if (username != null) {
+            User u = userService.findById(username);
+            return u.getTeams();
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Create a new team
      *
      * @param request request with authentication info

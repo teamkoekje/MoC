@@ -33,7 +33,7 @@ services.factory('team', ['$resource',
     function ($resource) {
         return{
             all: $resource(baseUrl + '/team/:teamId', {teamId: '@teamId'}, {remove: {method: 'DELETE'}}),
-            byUser: $resource(baseUrl + '/eam/user/:userId', {userId: 'userId'}),
+            myTeams: $resource(baseUrl + '/team/myTeams'),
             participants: $resource(baseUrl + '/team/:teamId/users', {teamId: 'teamId'})
         };
     }
