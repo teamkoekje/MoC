@@ -255,10 +255,10 @@ public class Competition implements Serializable {
         currentRound.submit(toSubmit);
     }
 
-    public boolean joinTeam(String email, String token, long teamId) {
+    public boolean joinTeam(User user, long teamId) {
         for (Team t : teams) {
             if (t.getId() == teamId) {
-                //t.addParticipant(user);
+                t.addParticipant(user);
             }
         }
         return false;
