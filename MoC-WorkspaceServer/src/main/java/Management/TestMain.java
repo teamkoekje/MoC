@@ -27,7 +27,8 @@ public class TestMain {
      */
     public static void main(String[] args) {
         WorkspaceManagement wm = WorkspaceManagement.getInstance();
-        CreateRequest cr = new CreateRequest("competition1", "team1");
+        System.out.println(wm.systemInformation());
+        /*CreateRequest cr = new CreateRequest("competition1", "team1");
         //wm.processRequest(cr);
 
         Path path = Paths.get("C:/challenge1.zip");
@@ -41,7 +42,7 @@ public class TestMain {
         //wm.processRequest(pr);
 
         FolderStructureRequest fsr = new FolderStructureRequest("competition1", "challenge1", "team1");
-        //System.out.println(wm.processRequest(fsr));
+        //System.out.println(wm.processRequest(fsr));*/
     }
 
 }

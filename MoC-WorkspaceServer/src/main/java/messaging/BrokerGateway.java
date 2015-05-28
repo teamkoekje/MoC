@@ -83,6 +83,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                 replier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
                 replier.setRequestListener(this);
                 replier.start();
+                wm.setServerId(id);
                 System.out.println("Server id: " + id);
                 registerGateway.closeConnection();
                 registerGateway = null;

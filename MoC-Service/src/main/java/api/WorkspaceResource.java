@@ -84,7 +84,7 @@ public class WorkspaceResource {
     @Consumes("application/xml,application/json")
     @Path("/sysinfo")
     public void sysInfo() {
-        workspaceService.sysInfo();
+        workspaceService.sysInfo(request.getUserPrincipal().getName());
     }
 
     //</editor-fold>
