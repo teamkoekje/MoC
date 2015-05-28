@@ -15,15 +15,16 @@ public class SysInfoAggregate {
     private Request request;
     private ArrayList<Reply> replies;
     private int nrExpectedReplies;
-    private Reply bestReply = null;
     private IReplyListener<Request, Reply> replyListener;
+    private String username;
 
-    public SysInfoAggregate(Request request, int nrExpectedReplies, IReplyListener<Request, Reply> listener) {
+    public SysInfoAggregate(Request request, int nrExpectedReplies, String username, IReplyListener<Request, Reply> listener) {
         super();
         this.request = request;
         this.replies = new ArrayList<>();
         this.nrExpectedReplies = nrExpectedReplies;
         this.replyListener = listener;
+        this.username = username;
     }
 
     public void addReply(Reply reply) {
@@ -35,12 +36,22 @@ public class SysInfoAggregate {
 
     private void notifyListener() {
         if (replyListener != null) {
-            String s = "";
+            String s = "{";
+            int i = 0;
             for (Reply r : replies) {
-                s += r.getMessage();
+                if(i < replies.size()){
+                    s += r.getMessage() + ",";
+                    i++;
+                }else{
+                    s += r.getMessage() + "}";
+                }
             }
             BroadcastReply reply = new BroadcastReply(s);
             replyListener.onReply(request, reply);
         }
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

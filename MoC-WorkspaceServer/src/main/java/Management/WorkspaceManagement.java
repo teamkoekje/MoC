@@ -43,6 +43,7 @@ public class WorkspaceManagement {
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
     private StringBuilder invocationOutput = new StringBuilder();
+    private String serverId;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
@@ -108,6 +109,14 @@ public class WorkspaceManagement {
     // <editor-fold defaultstate="collapsed" desc="getters & setters" >
     public String getDefaultPath() {
         return defaultPath;
+    }
+    
+    public String getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
     }
     // </editor-fold>
 
@@ -370,7 +379,7 @@ public class WorkspaceManagement {
             long totalSpace = new File("/").getTotalSpace();
             String IP = InetAddress.getLocalHost().getHostAddress();
 
-            sb.append("[SYSINFO]");
+            /*sb.append("[SYSINFO]");
             sb.append("IP: " + IP + ";");
             sb.append("free diskspace: " + format.format(freeSpace) + ";");
             sb.append("allocated diskspace: " + format.format(usableSpace) + ";");
@@ -383,9 +392,23 @@ public class WorkspaceManagement {
 
             sb.append("processor amount: " + amountProcessors + ";");
             sb.append("cpu usage: " + cpuUsage + ";");
-            sb.append("workspaces: " + teams.size() + ";");
+            sb.append("workspaces: " + teams.size() + ";");*/
             
 
+            sb.append("\"" + getServerId() + "\":{");
+            sb.append("\"IP\": \"" + IP + "\",");
+            sb.append("\"freediskspace\": \"" + format.format(freeSpace) + "\",");
+            sb.append("\"allocateddiskspace\": \"" + format.format(usableSpace) + "\",");
+            sb.append("\"totaldiskspace\": \"" + format.format(totalSpace) + "\",");
+            sb.append("\"freememory\": \"" + format.format(freeMemory / 1024) + "\",");
+            sb.append("\"allocatedmemory\": \"" + format.format(allocatedMemory / 1024) + "\",");
+            sb.append("\"maxmemory\": \"" + format.format(maxMemory / 1024) + "\",");
+            sb.append("\"totalfreememory\": \"" + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + "\",");
+            sb.append("\"processoramount\": \"" + amountProcessors + "\",");
+            sb.append("\"cpuusage\": \"" + cpuUsage + "\",");
+            sb.append("\"workspaces\": \"" + teams.size() + "\"");
+            sb.append("}");
+            
             return sb.toString();
         } catch (UnknownHostException ex) {
             Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);

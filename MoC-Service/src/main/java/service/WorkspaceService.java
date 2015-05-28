@@ -66,7 +66,6 @@ public class WorkspaceService {
                         ObjectMessage objMsg = (ObjectMessage) message;
                         Reply reply = (Reply) objMsg.getObject();
                         if (reply.getAction() == Action.BROADCAST) {
-                            System.out.println(reply.getMessage());
                             sia.addReply(reply);
                         } else {
                             System.out.println("Message received from workspace: " + reply.getMessage());
@@ -138,15 +137,17 @@ public class WorkspaceService {
         gateway.sendRequestToTeam(new FileRequest(competitionName, teamName, challengeName, filePath));
     }
 
-    public void sysInfo() {
+    public void sysInfo(final String username) {
         SysInfoRequest sir = new SysInfoRequest(Action.SYSINFO);
         numberOfBroadcastMessages = gateway.broadcast(sir);
-        sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, new IReplyListener<Request, Reply>() {
+        sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, username, new IReplyListener<Request, Reply>() {
 
             @Override
             public void onReply(Request request, Reply reply) {
-                System.out.println("All servers responded to the broadcast");
+                System.out.println("All servers responded to the broadcast: ");
                 System.out.println(reply.getMessage());
+                we.sendToUser(reply.getMessage(), username);
+                // TODO: Think of something in case a server drops out.
             }
         });
     }
