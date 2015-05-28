@@ -80,5 +80,12 @@ public class WorkspaceResource {
         return null;
     }
 
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/sysinfo")
+    public void sysInfo() {
+        workspaceService.sysInfo();
+    }
+
     //</editor-fold>
 }

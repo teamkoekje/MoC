@@ -33,8 +33,7 @@ public class temp extends WorkspaceManagement{
         WorkspaceManagement instance = getInstance();
         System.out.println("creating workspace");
         //create
-        CreateRequest cr = new CreateRequest(competitionName, teamName);
-        instance.processRequest(cr);
+        instance.createWorkspace(competitionName, teamName);
         //confirm
         File f = new File(instance.getDefaultPath()
                 + File.separator
@@ -50,8 +49,7 @@ public class temp extends WorkspaceManagement{
         assertEquals(f.listFiles().length, 0);
         //remove
         System.out.println("removing workspace");
-        DeleteRequest dr = new DeleteRequest(competitionName, teamName);
-        instance.processRequest(dr);
+        instance.removeWorkspace(competitionName, teamName);
         //confirm
         assertFalse(f.exists());
     }
@@ -109,8 +107,7 @@ public class temp extends WorkspaceManagement{
             String originalContent = "this is test text";
             String newContent = "new content";
             WorkspaceManagement instance = getInstance();
-            CreateRequest cr = new CreateRequest(competitionName, "team c");
-            instance.processRequest(cr);
+            instance.createWorkspace(competitionName, "team c");
             File f = new File(instance.getDefaultPath()
                     + File.separator
                     + "Competitions"
@@ -131,8 +128,7 @@ public class temp extends WorkspaceManagement{
             String temp = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(temp, originalContent);
             //update
-            UpdateRequest ur = new UpdateRequest(competitionName, "team c", "test file.txt", newContent);
-            String result = instance.processRequest(ur);
+            String result = instance.updateFile(competitionName, "team c", "test file.txt", newContent);
             assertEquals(result, "File succesfully Updated");
             //confirm new data
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));

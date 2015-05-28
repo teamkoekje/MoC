@@ -106,11 +106,12 @@ public abstract class WorkspaceGateway {
         }
     }
     
-    public synchronized void broadcast(Request request){
+    public synchronized int broadcast(Request request){
         List<WorkspaceServer> servers = router.getAllServers();
         for(WorkspaceServer server : servers){
             sendRequest(request, server.getSender());
         }
+        return servers.size();
     }
 
     public synchronized String addWorkspace(TeamRequest request) {

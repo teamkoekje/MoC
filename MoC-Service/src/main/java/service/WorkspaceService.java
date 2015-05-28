@@ -3,6 +3,7 @@ package service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +15,8 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import messaging.IReplyListener;
+import messaging.SysInfoAggregate;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
 import workspace.Action;
@@ -24,6 +27,7 @@ import workspace.FileRequest;
 import workspace.FolderStructureRequest;
 import workspace.PushRequest;
 import workspace.Reply;
+import workspace.Request;
 import workspace.SysInfoRequest;
 import workspace.TestAllRequest;
 import workspace.TestRequest;
@@ -41,6 +45,9 @@ public class WorkspaceService {
     private WorkspaceGateway gateway;
 
     private final HashMap<String, String> requests = new HashMap<>();
+    
+    private int numberOfBroadcastMessages;
+    private SysInfoAggregate sia;
 
     @Inject
     private WebsocketEndpoint we;
@@ -58,8 +65,9 @@ public class WorkspaceService {
                         String username = requests.get(message.getJMSCorrelationID());
                         ObjectMessage objMsg = (ObjectMessage) message;
                         Reply reply = (Reply) objMsg.getObject();
-                        if (reply.getMessage().startsWith("[SYSINFO]")) {
+                        if (reply.getAction() == Action.BROADCAST) {
                             System.out.println(reply.getMessage());
+                            sia.addReply(reply);
                         } else {
                             System.out.println("Message received from workspace: " + reply.getMessage());
                             System.out.println("Sending reply to user: " + username);
@@ -131,6 +139,15 @@ public class WorkspaceService {
     }
 
     public void sysInfo() {
-        gateway.broadcast(new SysInfoRequest(Action.SYSINFO));
+        SysInfoRequest sir = new SysInfoRequest(Action.SYSINFO);
+        numberOfBroadcastMessages = gateway.broadcast(sir);
+        sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, new IReplyListener<Request, Reply>() {
+
+            @Override
+            public void onReply(Request request, Reply reply) {
+                System.out.println("All servers responded to the broadcast");
+                System.out.println(reply.getMessage());
+            }
+        });
     }
 }

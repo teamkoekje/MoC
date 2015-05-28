@@ -32,10 +32,6 @@ app.config(['$routeProvider',
                     templateUrl: 'views/newteam.html',
                     controller: 'newTeamController'
                 })
-                .when('/editor', {
-                    templateUrl: 'views/editor.html',
-                    controller: 'editorController'
-                })
                 .when('/apiDemo', {
                     templateUrl: 'views/apiDemo.html',
                     controller: 'demoController'
