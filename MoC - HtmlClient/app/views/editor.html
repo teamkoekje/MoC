@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+
+        <!-- load ace -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
+        
+        <script>
+            //http://ace.c9.io/#nav=howto
+            var editor;
+            $(window).ready(function () {
+                initEditor("editor");
+            });
+            
+            /**
+             * Create the ace editor
+             * @param {String} editorID The element ID of the element that becomes the ace editor
+             */
+            function initEditor(editorID) {
+                // trigger extension
+                editor = ace.edit(editorID);
+                // we're using java
+                editor.session.setMode("ace/mode/java");
+                // light theme
+                editor.setTheme("ace/theme/tomorrow");
+                // dark theme
+                // editor.setTheme("ace/theme/monokai");
+                // ugly vertical line has to be removed
+                editor.setShowPrintMargin(false);
+                // false to make it editable
+                editor.setReadOnly(false); 
+                //to fix warning (was shown in console to set to infinity) also infinity is a real global JS variable
+                editor.$blockScrolling = Infinity; 
+                // enable autocompletion and snippets
+                editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true,
+                    enableLiveAutocompletion: false
+                });
+                // handle going fullscreen
+                $("#wrapperAroundEditor").on(
+                        'webkitfullscreenchange mozfullscreenchange fullscreenchange',
+                        function () {
+                            var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+                            if (isFullScreen) {
+                                editor.setTheme("ace/theme/monokai");
+                                $("#wrapperAroundEditor").css({
+                                    paddingRight: '0px',
+                                    paddingLeft: '0px'
+                                });
+                            } else {
+                                editor.setTheme("ace/theme/tomorrow");
+                                $("#wrapperAroundEditor").css({
+                                    paddingRight: '15px',
+                                    paddingLeft: '15px'
+                                });
+                            }
+                            editor.resize();
+                        });
+            }
+            
+            function getTextFromEditor() {
+                return editor.getSession.getValue();
+            }
+            
+            function getSelectionFromEditor() {
+                return editor.session.getTextRange(editor.getSelectionRange());
+            }
+
+            function fullScreenElement(elem) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else {
+                    alert("Full screen is not supported, recommended webbrowser to use is Google Chrome");
+                }
+            }
+
+            function fullScreenEditor() {
+                //Hide the side panels
+                $('#wrapperMessages').hide();
+                $('#wrapperAroundResults').hide();
+                //Make sure the editor will use full width
+                $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                //Set the editor full screen
+                fullScreenElement($('#wrapperAroundEditor')[0]);
+            }
+
+            function toggleMessages() {
+                if ($('#wrapperMessages').is(":visible")) {
+                    $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                    $('#wrapperMessages').hide();
+                } else {
+                    $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                    $('#wrapperMessages').show();
+                }
+                $('#wrapperAroundResults').hide();
+                $('#wrapperTests').hide();
+                editor.resize();
+            }
+
+            function toggleTests() {
+                if ($('#wrapperTests').is(":visible")) {
+                    $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                    $('#wrapperTests').hide();
+                } else {
+                    $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                    $('#wrapperTests').show();
+                }
+                $('#wrapperAroundResults').hide();
+                $('#wrapperMessages').hide();
+                editor.resize();
+            }
+
+            function toggleResults() {
+                if ($('#wrapperAroundResults').is(":visible")) {
+                    $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                    $('#wrapperAroundResults').hide();
+                } else {
+                    $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                    $('#wrapperAroundResults').show();
+                }
+                $('#wrapperMessages').hide();
+                $('#wrapperTests').hide();
+                editor.resize();
+            }
+        </script>
+
+        <div class="container" style="width:100%;">
+            <span style="position: absolute; top: 10px; right: 35px">
+                <span>
+                    hints
+                </span>
+                |
+                <span style="cursor: pointer" onclick="toggleMessages();">
+                    messages
+                </span>
+            </span>
+            <div class="jumbotron" style='text-align: center'>
+                <h3>
+                    Masters of code
+                </h3>
+                <p>
+                    {{minutes}} minutes left | {{points}} points
+                </p>
+            </div>
+            <div>
+                <div class="row" style="margin-left:0px">
+                    <button class="btn btn-default">Description</button>
+                    <button class="btn btn-default">JavaDoc</button>
+                    <button class="btn btn-default">Read only java file</button>
+                    <button class="btn btn-default">Java file</button>
+                </div>
+                <div class="row" style='height: 350px'>
+                    <div class="col-xs-12" id="wrapperAroundEditor" style='height: 100%;'>
+                        <div id="editor" style='height:100%'>Class test{}</div>
+                    </div>
+                    <div class="col-xs-6" style='display:none' id="wrapperAroundResults">
+                        <div class="first" style="width: 50px;margin-left:7%;">Result</div>
+                        <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
+                            <ul id="resultList">
+                                <li>
+                                    Result 1
+                                </li>
+                                <li>
+                                    Result 2
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-6" style="display:none" id="wrapperTests">
+                        <div class="first" style="width: 40px;margin-left:7%;">Tests</div>
+                        <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
+                            <select class="form-control" size="6" style="width: 100%">
+                                <option>
+                                    This is a test
+                                </option>
+                                <option>
+                                    This is another test
+                                </option>
+                                <option>
+                                    And lets have one more test
+                                </option>
+                            </select>
+                            <br>
+                            <button class="btn btn-default">
+                                Run test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <button class="btn btn-default" onclick="toggleTests();">Run specific test</button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="btn btn-default">Run all tests</button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="btn btn-default">Compile</button>
+                    </div>
+                    <div class='col-xs-2'>
+                        <button class="btn btn-default" 
+                                onclick="toggleResults()"
+                                >
+                            Show/hide result
+                        </button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button class="btn btn-default" onclick="fullScreenEditor()">Fullscreen</button>
+                    </div>
+                </div>
+            </div>
+        </div>

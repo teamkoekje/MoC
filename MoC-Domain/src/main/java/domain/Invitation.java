@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * Used to keep track of invitations sent out by teams to people they wish to
@@ -14,6 +16,9 @@ import javax.persistence.ManyToOne;
  * @author TeamKoekje
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "Invitation.findByToken",
+            query = "SELECT inv FROM Invitation inv WHERE inv.token = :token")})
 public class Invitation implements Serializable {
 
     /**
@@ -65,6 +70,10 @@ public class Invitation implements Serializable {
 
     public void setState(InvitationState state) {
         this.invitationState = state;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     public String getEmail() {

@@ -32,6 +32,10 @@ app.config(['$routeProvider',
                     templateUrl: 'views/newteam.html',
                     controller: 'newTeamController'
                 })
+                .when('/editor', {
+                    templateUrl: 'views/editor.html',
+                    controller: 'editorController'
+                })
                 .when('/apiDemo', {
                     templateUrl: 'views/apiDemo.html',
                     controller: 'demoController'
@@ -40,6 +44,10 @@ app.config(['$routeProvider',
                     templateUrl: 'views/competitionDemo.html',
                     controller: 'competitionController'
                 })
-                .otherwise({redirectTo: '/apiDemo'});
+                .when('/competition', {
+                    templateUrl: 'views/competition.html',
+                    controller: 'competitionController'
+                })
+                .otherwise({redirectTo: '/login'});
     }
 ]);

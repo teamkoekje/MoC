@@ -16,6 +16,7 @@ import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.persistence.Query;
 
 @Stateless
 @RequestScoped
@@ -28,6 +29,9 @@ public class InvitationService extends GenericService<Invitation> {
 
     @Inject
     CompetitionService competitionService;
+
+    @Inject
+    TeamService teamService;
 
     public InvitationService() {
         super(Invitation.class);
@@ -43,26 +47,21 @@ public class InvitationService extends GenericService<Invitation> {
      *
      *
      */
-    public void inviteMember(String email, long teamId, Long competitionId) {
+    public void inviteMember(String email, long teamId) {
         /*
-        TODO:
-        Catch errors
+         TODO:
+         Catch errors
          */
-        
+
         //Generate token
         String token = generateToken();
 
         //Get Team
-        Team team = null;
-        Competition comp = competitionService.findById(competitionId);
+        Team team = teamService.findById(teamId);
 
-        List< Team> teams = comp.getTeams();
-        for (Team allTeams : teams) {
-            if (allTeams.getId() == teamId) {
-                team = allTeams;
-            }
-        }
-
+        Competition comp = team.getCompetition();
+        
+//        }
         //Create invite
         Invitation invite = new Invitation(team, email, token);
 
@@ -82,11 +81,9 @@ public class InvitationService extends GenericService<Invitation> {
             //get mail.html file to string
             URL url = new URL("http://daangoumans.nl/etc/MoC/mail.html");
             URLConnection con = url.openConnection();
-            
-            
+
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            
-            
+
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = in.readLine()) != null) {
@@ -96,7 +93,7 @@ public class InvitationService extends GenericService<Invitation> {
 
             //replace #competitionId/team/#teamId/join/#token
             //replace #competitionId
-            mail = mail.replace("#competitionId", String.valueOf(competitionId));
+            mail = mail.replace("#competitionId", String.valueOf(comp.getId()));
             //replace #teamId
             mail = mail.replace("#teamId", String.valueOf(teamId));
             //replace #token
@@ -122,5 +119,12 @@ public class InvitationService extends GenericService<Invitation> {
     private String generateToken() {
         return new BigInteger(130, random).toString(32);
     }
+
+    public Invitation findByToken(String token) {
+        Query q = em.createNamedQuery("Invitation.findByToken");
+        q.setParameter("token", token);
+        return (Invitation)q.getSingleResult();
+    }
+
  //</editor-fold>
 }

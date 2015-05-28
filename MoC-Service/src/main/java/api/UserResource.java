@@ -66,14 +66,20 @@ public class UserResource {
         User u = userService.findById(userId);
         return userService.findById(userId);
     }
-
+    
+    /**
+     * Get all teams that a certain user is a member of
+     *
+     * @param username username of the user
+     * @return list with teams of the user
+     */
     @GET
     @Produces("application/xml,application/json")
-    @Path("team/{teamId}")
-    @PermitAll
-    public List<User> getUsersByTeam(@PathParam("teamId") long teamId) {
-        Team t = teamService.findById(teamId);
-        return t.getParticipants();
+    @Path("/{username}/teams")
+    //@RolesAllowed({"User", "Admin"})
+    public List<Team> getTeamsFromUser(@PathParam("username") String username) {
+        User u = userService.findById(username);
+        return u.getTeams();
     }
 
     /**
@@ -107,11 +113,15 @@ public class UserResource {
     @Consumes("application/xml,application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response createUser(User user) {
+     @Path("/{token}")
+    public Response createUser(@PathParam("token") String token, User user) {
         userService.create(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {
             return Response.serverError().entity("Error creating user").build();
+        }
+        if (token != null){
+            teamService.joinTeam(user,token);
         }
         return Response.ok(user).build();
     }

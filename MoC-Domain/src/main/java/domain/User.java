@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
@@ -43,6 +42,15 @@ public class User implements Serializable {
 
     public User(long id) {
         this.id = id;
+        this.userGroups.add(UserGroup.USER);
+    }
+    
+     public User(String username, String email, String password, String name, String organisation ) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.organisation = organisation;
         this.userGroups.add(UserGroup.USER);
     }
 
