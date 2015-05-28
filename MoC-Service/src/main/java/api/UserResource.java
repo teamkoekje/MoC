@@ -21,7 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import service.TeamService;
+import service.InvitationService;
 import service.UserService;
 
 /**
@@ -37,7 +37,7 @@ public class UserResource {
     private UserService userService;
 
     @Inject
-    private TeamService teamService;
+    private InvitationService invitationService;
 
     //<editor-fold defaultstate="collapsed" desc="User">
     /**
@@ -121,7 +121,7 @@ public class UserResource {
             return Response.serverError().entity("Error creating user").build();
         }
         if (token != null){
-            teamService.joinTeam(user,token);
+            invitationService.acceptInvitation(user,token);
         }
         return Response.ok(user).build();
     }

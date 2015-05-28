@@ -37,11 +37,10 @@ public class TeamResource {
 
     @Inject
     private UserService userService;
-    
+
     @Inject
     private InvitationService invitationService;
 
-    
     //<editor-fold defaultstate="collapsed" desc="Team">
     /**
      * Gets all teams
@@ -122,7 +121,6 @@ public class TeamResource {
      * Invites a member to a certain team
      *
      * @param email email address of the person that should be invited
-     * @param competitionId
      * @param teamId id of the team that the person should be invited to
      * @return
      */
@@ -131,14 +129,13 @@ public class TeamResource {
     @Path("/{teamId}/invite")
     public Response inviteMember(String email, @PathParam("teamId") long teamId) {
         if (email == null || email.isEmpty()) {
-            return Response.serverError().entity("no email").build();
+            return Response.serverError().entity("No email").build();
         } else if (teamService.findById(teamId) == null) {
             return Response.serverError().entity("Team not found").build();
         } else {
             invitationService.inviteMember(email, teamId);
             return Response.ok("Invite send").build();
         }
-
     }
 
     /**
@@ -146,14 +143,12 @@ public class TeamResource {
      *
      * @param user user that should join the team
      * @param token string to verify if the user is allowed to join the team
-     * @param competitionId id of the competition that the team belongs to
-     * @param teamId id of the team that the user should join
      */
     @POST
     @Consumes("application/xml,application/json")
     @Path("/join/{token}")
     public void joinTeam(User user, @PathParam("token") String token) {
-        teamService.joinTeam(user, token);
+        invitationService.acceptInvitation(user, token);
     }
 
     /**

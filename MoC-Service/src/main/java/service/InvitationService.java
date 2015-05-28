@@ -3,13 +3,13 @@ package service;
 import domain.Competition;
 import domain.Invitation;
 import domain.Team;
+import domain.User;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
-import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
@@ -43,8 +43,6 @@ public class InvitationService extends GenericService<Invitation> {
      *
      * @param email email address of the person that should be invited
      * @param teamId id of the team that the person should be invited to
-     * @param competitionId
-     *
      *
      */
     public void inviteMember(String email, long teamId) {
@@ -55,13 +53,9 @@ public class InvitationService extends GenericService<Invitation> {
 
         //Generate token
         String token = generateToken();
-
-        //Get Team
         Team team = teamService.findById(teamId);
-
         Competition comp = team.getCompetition();
-        
-//        }
+
         //Create invite
         Invitation invite = new Invitation(team, email, token);
 
@@ -123,7 +117,25 @@ public class InvitationService extends GenericService<Invitation> {
     public Invitation findByToken(String token) {
         Query q = em.createNamedQuery("Invitation.findByToken");
         q.setParameter("token", token);
-        return (Invitation)q.getSingleResult();
+        return (Invitation) q.getSingleResult();
+    }
+    
+    /**
+     * Lets a user join a certain team
+     *
+     * @param user user that should join the team
+     * @param token string to verify if the user is allowed to join the team
+     */
+    public void acceptInvitation(User user, String token) {
+        Invitation inv = findByToken(token);
+        Team team = inv.getTeam();
+        
+        boolean result = team.addParticipant(user);
+        inv.setState(Invitation.InvitationState.ACCEPTED);
+        if (result) {
+            teamService.edit(team);
+            this.edit(inv);
+        }
     }
 
  //</editor-fold>

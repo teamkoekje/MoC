@@ -18,9 +18,6 @@ public class TeamService extends GenericService<Team> {
     @Inject
     private UserService userService;
 
-    @Inject
-    private InvitationService invitationService;
-
     public TeamService() {
         super(Team.class);
     }
@@ -42,25 +39,6 @@ public class TeamService extends GenericService<Team> {
         Query q = em.createNamedQuery("Team.findByCompetition");
         q.setParameter("competition", competition);
         return q.getResultList();
-    }
-
-    /**
-     * Lets a user join a certain team
-     *
-     * @param user user that should join the team
-     * @param token string to verify if the user is allowed to join the team
-     * @param teamId id of the team that the user should join
-     */
-    public void joinTeam(User user, String token) {
-        Invitation inv = invitationService.findByToken(token);
-        Team team = inv.getTeam();
-        
-        boolean result = team.addParticipant(user);
-        inv.setState(Invitation.InvitationState.ACCEPTED);
-        if (result) {
-            this.edit(team);
-            this.invitationService.edit(inv);
-        }
     }
 
     /**
