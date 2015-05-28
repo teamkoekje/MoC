@@ -148,6 +148,12 @@ public class TeamResource {
     @Consumes("application/xml,application/json")
     @Path("/join/{token}")
     public void joinTeam(User user, @PathParam("token") String token) {
+       /*
+        THIS METHOD IS NOT USED NOW
+        you are either the owner of a team or you are invited,
+        this method is handled in UserResource.createUser()
+        */
+        
         invitationService.acceptInvitation(user, token);
     }
 
