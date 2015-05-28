@@ -63,7 +63,7 @@ public class CompetitionService extends GenericService<Competition> {
         @Override
         public void run() {
             for (Competition c : competitions) {
-                System.out.println("updating competition" + c.getName());
+                System.out.println("updating competition: " + c.getName());
                 for (CompetitionEvent e : c.update()) {
                     competitionEvent.fire(e);
                 }
