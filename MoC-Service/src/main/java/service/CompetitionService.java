@@ -6,6 +6,9 @@ import domain.Events.CompetitionEvent;
 import java.awt.BorderLayout;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
+import domain.Invitation;
+import domain.Team;
+import domain.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -76,15 +79,6 @@ public class CompetitionService extends GenericService<Competition> {
         //timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
     }
 
-    public boolean joinTeam(String email, String token, long competitionId, long teamId) {
-        Competition c = this.findById(competitionId);
-        boolean result = c.joinTeam(email, token, teamId);
-        if (result) {
-            this.edit(c);
-        }
-        return result;
-    }
-
     public List<Competition> getActiveCompetitions() {
         List<Competition> activeCompetitions = new ArrayList();
         for (Competition c : findAll()) {
@@ -101,7 +95,7 @@ public class CompetitionService extends GenericService<Competition> {
         List<Competition> futureCompetitions = new ArrayList();
         Date currentDate = new Date();
         currentDate.setTime(System.currentTimeMillis());
-        
+
         for (Competition c : findAll()) {
             if (c.getCompetitionDate().after(currentDate)) {
                 futureCompetitions.add(c);

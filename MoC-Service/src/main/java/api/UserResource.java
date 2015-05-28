@@ -113,11 +113,15 @@ public class UserResource {
     @Consumes("application/xml,application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response createUser(User user) {
+     @Path("/{token}")
+    public Response createUser(@PathParam("token") String token, User user) {
         userService.create(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {
             return Response.serverError().entity("Error creating user").build();
+        }
+        if (token != null){
+            teamService.joinTeam(user,token);
         }
         return Response.ok(user).build();
     }
