@@ -113,7 +113,7 @@ public class UserResource {
     @Consumes("application/xml,application/json")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-     @Path("/{token}")
+    @Path("/register/{token}")
     public Response createUser(@PathParam("token") String token, User user) {
         userService.create(user);
         User createdUser = userService.findById(user.getUsername());
