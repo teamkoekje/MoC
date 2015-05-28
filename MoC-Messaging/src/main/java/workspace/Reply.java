@@ -9,13 +9,19 @@ import java.io.Serializable;
  */
 public class Reply implements Serializable {
 
+    private final Action action;
     private final String message;
     
-    public Reply(String message){
+    public Reply(Action action, String message){
+        this.action = action;
         this.message = message;
     }
 
     public String getMessage() {
         return message;
+    }
+    
+    public Action getAction() {
+        return action;
     }
 }

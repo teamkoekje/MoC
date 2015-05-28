@@ -19,6 +19,7 @@ import workspace.DeleteRequest;
 import workspace.FileRequest;
 import workspace.FolderStructureRequest;
 import workspace.PushRequest;
+import workspace.Reply;
 import workspace.Request;
 import workspace.TestAllRequest;
 import workspace.TestRequest;
@@ -111,78 +112,6 @@ public class WorkspaceManagement {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
-    /**
-     * Processes the given request
-     *
-     * @param r The request to process
-     * @return The result of the processed request
-     */
-    public String processRequest(Request r) {
-        switch (r.getAction()) {
-            case COMPILE:
-                CompileRequest compileRequest = (CompileRequest) r;
-                return buildWorkspace(compileRequest.getCompetition(), compileRequest.getTeamName(), compileRequest.getChallengeName());
-            case TEST:
-                TestRequest testRequest = (TestRequest) r;
-                return test(testRequest.getCompetition(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName());
-            case TESTALL:
-                TestAllRequest testAllRequest = (TestAllRequest) r;
-                return testAll(testAllRequest.getCompetition(), testAllRequest.getTeamName(), testAllRequest.getChallengeName());
-            case UPDATE:
-                UpdateRequest updateRequest = (UpdateRequest) r;
-                return updateFile(updateRequest.getCompetition(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent());
-            case CREATE:
-                CreateRequest createRequest = (CreateRequest) r;
-                return createWorkspace(createRequest.getCompetition(), createRequest.getTeamName());
-            case DELETE:
-                DeleteRequest deleteRequest = (DeleteRequest) r;
-                return removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName());
-            case PUSH_CHALLENGE:
-                PushRequest pushRequest = (PushRequest) r;
-                return extractChallengeToTeam(pushRequest.getData(), pushRequest.getChallengeName(), pushRequest.getCompetition());
-            case FOLDER_STRUCTURE:
-                FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                String folderPath
-                        = defaultPath
-                        + "Competitions"
-                        + File.separator
-                        + folderStructureRequest.getCompetition()
-                        + File.separator
-                        + "Teams"
-                        + File.separator
-                        + folderStructureRequest.getTeamName()
-                        + File.separator
-                        + folderStructureRequest.getChallengeName();
-                String jarPathForFolder
-                        = folderPath
-                        + File.separator
-                        + folderStructureRequest.getChallengeName() + ".jar";
-                System.out.println(jarPathForFolder);
-                return FileManagement.getInstance(jarPathForFolder).getFolderJSON(folderPath);
-            case FILE:
-                FileRequest fileRequest = (FileRequest) r;
-                String jarPathForFile
-                        = defaultPath
-                        + File.separator
-                        + "Competitions"
-                        + File.separator
-                        + fileRequest.getCompetition()
-                        + File.separator
-                        + "Teams"
-                        + File.separator
-                        + fileRequest.getTeamName()
-                        + File.separator
-                        + fileRequest.getChallangeName()
-                        + File.separator
-                        + fileRequest.getChallangeName() + ".jar";
-                return FileManagement.getInstance(jarPathForFile).getFileJSON(fileRequest.getFilepath());
-            case SYSINFO:
-                return systemInformation();
-            // private final String defaultJar = defaultPath + "/annotionframework/annotatedProject-1.0.jar"
-            default:
-                return "error, unknown action: " + r.getAction().name();
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="create, remove & edit" >
     /**
@@ -192,7 +121,7 @@ public class WorkspaceManagement {
      * @param teamName Name of the team
      * @return A String indicating the success or failure the workspace creation
      */
-    protected String createWorkspace(String competitionName, String teamName) {
+    public String createWorkspace(String competitionName, String teamName) {
         try {
             File teamFolder = new File(defaultPath
                     + File.separator
@@ -226,7 +155,7 @@ public class WorkspaceManagement {
      * @return A String indicating whether the workspace has been removed or
      * not.
      */
-    protected String removeWorkspace(String competitionName, String teamName) {
+    public String removeWorkspace(String competitionName, String teamName) {
         File teamFolder = new File(defaultPath
                 + File.separator
                 + "Competitions"
@@ -246,7 +175,7 @@ public class WorkspaceManagement {
         }
     }
 
-    private static boolean deleteDirectory(File path) {
+    public static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
             for (File file : files) {
@@ -269,7 +198,7 @@ public class WorkspaceManagement {
      * @param fileContent The new content of the file
      * @return A String indicating the success of the update
      */
-    protected String updateFile(String competitionName, String teamName, String filePath, String fileContent) {
+    public String updateFile(String competitionName, String teamName, String filePath, String fileContent) {
         //variables
         File teamFolder = new File(defaultPath
                 + File.separator
@@ -334,7 +263,7 @@ public class WorkspaceManagement {
      * @param challengeName The challenge to extract
      * @return A string indicating the success of the extraction
      */
-    protected String extractChallengeToTeam(byte[] data, String challengeName, String competitionName) {
+    public String extractChallengeToTeam(byte[] data, String challengeName, String competitionName) {
         File challengePath = new File(defaultPath
                 + File.separator
                 + "Competitions"
@@ -442,6 +371,7 @@ public class WorkspaceManagement {
             String IP = InetAddress.getLocalHost().getHostAddress();
 
             sb.append("[SYSINFO]");
+            sb.append("IP: " + IP + ";");
             sb.append("free diskspace: " + format.format(freeSpace) + ";");
             sb.append("allocated diskspace: " + format.format(usableSpace) + ";");
             sb.append("total diskspace: " + format.format(totalSpace) + ";");
@@ -453,6 +383,8 @@ public class WorkspaceManagement {
 
             sb.append("processor amount: " + amountProcessors + ";");
             sb.append("cpu usage: " + cpuUsage + ";");
+            sb.append("workspaces: " + teams.size() + ";");
+            
 
             return sb.toString();
         } catch (UnknownHostException ex) {
@@ -469,7 +401,7 @@ public class WorkspaceManagement {
      * @param challengeName The name of the challenge to be build
      * @return A String with the build output.
      */
-    protected String buildWorkspace(String competitionName, String teamName, String challengeName) {
+    public String buildWorkspace(String competitionName, String teamName, String challengeName) {
         try {
             beforeMavenInvocation(competitionName, teamName, challengeName);
             request.setGoals(Arrays.asList("install"));
@@ -492,7 +424,7 @@ public class WorkspaceManagement {
      * @param challengeName The name of the challenge to be tested
      * @return A String indicating the test report
      */
-    protected String testAll(String competitionName, String teamName, String challengeName) {
+    public String testAll(String competitionName, String teamName, String challengeName) {
         try {
             beforeMavenInvocation(competitionName, teamName, challengeName);
             request.setGoals(Arrays.asList("test"));
@@ -519,7 +451,7 @@ public class WorkspaceManagement {
      * @param testName The name of the test to test
      * @return
      */
-    protected String test(String competitionName, String teamName, String challengeName, String testFile, String testName) {
+    public String test(String competitionName, String teamName, String challengeName, String testFile, String testName) {
         try {
             beforeMavenInvocation(competitionName, teamName, challengeName);
             request.setGoals(Arrays.asList("test"));
