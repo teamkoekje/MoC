@@ -52,7 +52,7 @@ controllers.controller('registerController', ['$scope', 'user',
             console.log("Create User");
             $scope.user.$save(function () {
                 $scope.user = new $user.all();
-                 location.href = "#/login";
+                location.href = "#/login";
                 //loadData();
             });
         };
@@ -204,5 +204,132 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         };
 
         loadData();
+    }
+]);
+
+controllers.controller('competitionController', ['$scope', function ($scope) {
+        //http://ace.c9.io/#nav=howto
+        var editor;
+        $(window).ready(function () {
+            initEditor("editor");
+        });
+
+        /**
+         * Create the ace editor
+         * @param {String} editorID The element ID of the element that becomes the ace editor
+         */
+        function initEditor(editorID) {
+            // trigger extension
+            editor = ace.edit(editorID);
+            // we're using java
+            editor.session.setMode("ace/mode/java");
+            // light theme
+            editor.setTheme("ace/theme/tomorrow");
+            // dark theme
+            // editor.setTheme("ace/theme/monokai");
+            // ugly vertical line has to be removed
+            editor.setShowPrintMargin(false);
+            // false to make it editable
+            editor.setReadOnly(false);
+            //to fix warning (was shown in console to set to infinity) also infinity is a real global JS variable
+            editor.$blockScrolling = Infinity;
+            // enable autocompletion and snippets
+            editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: false
+            });
+            // handle going fullscreen
+            $("#wrapperAroundEditor").on(
+                    'webkitfullscreenchange mozfullscreenchange fullscreenchange',
+                    function () {
+                        var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+                        if (isFullScreen) {
+                            editor.setTheme("ace/theme/monokai");
+                            $("#wrapperAroundEditor").css({
+                                paddingRight: '0px',
+                                paddingLeft: '0px'
+                            });
+                        } else {
+                            editor.setTheme("ace/theme/tomorrow");
+                            $("#wrapperAroundEditor").css({
+                                paddingRight: '15px',
+                                paddingLeft: '15px'
+                            });
+                        }
+                        editor.resize();
+                    });
+        }
+
+        $scope.getTextFromEditor = function getTextFromEditor() {
+            return editor.getSession.getValue();
+        };
+
+        $scope.getSelectionFromEditor = function getSelectionFromEditor() {
+            return editor.session.getTextRange(editor.getSelectionRange());
+        };
+
+        function fullScreenElement(elem) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else {
+                alert("Full screen is not supported, recommended webbrowser to use is Google Chrome");
+            }
+        }
+
+        $scope.fullScreenEditor = function fullScreenEditor() {
+            //Hide the side panels
+            $('#wrapperMessages').hide();
+            $('#wrapperAroundResults').hide();
+            //Make sure the editor will use full width
+            $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+            //Set the editor full screen
+            fullScreenElement($('#wrapperAroundEditor')[0]);
+        }
+
+        $scope.toggleMessages = function toggleMessages() {
+            if ($('#wrapperMessages').is(":visible")) {
+                $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                $('#wrapperMessages').hide();
+            } else {
+                $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                $('#wrapperMessages').show();
+            }
+            $('#wrapperAroundResults').hide();
+            $('#wrapperTests').hide();
+            editor.resize();
+        }
+
+        $scope.toggleTests = function toggleTests() {
+            if ($('#wrapperTests').is(":visible")) {
+                $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                $('#wrapperTests').hide();
+            } else {
+                $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                $('#wrapperTests').show();
+            }
+            $('#wrapperAroundResults').hide();
+            $('#wrapperMessages').hide();
+            editor.resize();
+        }
+
+        $scope.toggleResults = function toggleResults() {
+            if ($('#wrapperAroundResults').is(":visible")) {
+                $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                $('#wrapperAroundResults').hide();
+            } else {
+                $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                $('#wrapperAroundResults').show();
+            }
+            $('#wrapperMessages').hide();
+            $('#wrapperTests').hide();
+            editor.resize();
+        }
     }
 ]);
