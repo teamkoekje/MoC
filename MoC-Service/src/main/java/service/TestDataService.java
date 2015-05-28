@@ -95,6 +95,6 @@ public class TestDataService {
         competitionService.create(c3);
         competitionService.create(c4);
 
-        //   invitationService.inviteMember("daan.goumans@hotmail.com", t1.getId(), c1.getId());
+        invitationService.inviteMember("TeamKoekje@gmail.com", t1.getId());
     }
 }

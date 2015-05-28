@@ -1,7 +1,6 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', []);
-
 controllers.controller('loginController', ['$scope', function ($scope) {
 
         $scope.login = function () {
@@ -19,13 +18,11 @@ controllers.controller('loginController', ['$scope', function ($scope) {
                 console.log("Logged in succesfully: " + $scope.username);
                 //$cookies.user = $scope.username;
                 location.href = "#/competitions";
-
             }).error(function (data) {
                 console.log("Error while logging in");
                 console.log(data);
             });
         };
-
         $scope.logout = function () {
             $.ajax({
                 type: "POST",
@@ -45,7 +42,6 @@ controllers.controller('loginController', ['$scope', function ($scope) {
         };
     }
 ]);
-
 controllers.controller('registerController', ['$scope', '$routeParams', 'user',
     function ($scope, $routeParams, $user) {
         $scope.register = function () {
@@ -62,7 +58,6 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user',
         $scope.user.organisation = "Fontys";
     }
 ]);
-
 controllers.controller('demoController', ['$scope', 'user', 'competition', 'team',
     function ($scope, $user, $competition, $team) {
         $scope.createUser = function () {
@@ -72,7 +67,6 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
             });
             $scope.user = new $user();
         };
-
         $scope.createTeam = function () {
             console.log("Create Team");
             console.log($scope.team);
@@ -82,21 +76,18 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
             });
             $scope.team = new $team();
         };
-
         $scope.deleteUser = function (userId) {
             console.log("Delete User");
             $user.delete({userId: userId}, function () {
                 loadData();
             });
         };
-
         $scope.deleteTeam = function (teamId) {
             console.log("Delete Team");
             $team.delete({competitionId: $scope.selected_competition.id, teamId: teamId}, function () {
                 loadData();
             });
         };
-
         loadData = function () {
             console.log("loading data");
             $scope.competitions = $competition.query();
@@ -105,7 +96,6 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
                 $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
             }
         };
-
         $scope.refreshTeams = function () {
             if ($scope.selected_competition !== undefined) {
                 $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
@@ -120,8 +110,6 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         $scope.user.username = "Memphizx";
         $scope.user.name = "Robin van der Avoort";
         $scope.user.organisation = "Fontys";
-
-
         var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
         ws.onopen = function () {
             console.log("opening ws connection");
@@ -131,7 +119,6 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         };
     }
 ]);
-
 controllers.controller('competitionsController', ['$scope', 'competition',
     function ($scope, $competition) {
         $scope.selectCompetition = function (id) {
@@ -140,11 +127,9 @@ controllers.controller('competitionsController', ['$scope', 'competition',
             $scope.challenges = $competition.challenges.query({competitionId: id});
             $scope.teams = $competition.teams.query({competitionId: id});
         };
-
         $scope.isSelected = function (competitionId) {
             return $scope.competition.id === competitionId;
         };
-
         loadData = function () {
             $scope.activeCompetitions = $competition.active.query(function () {
                 if (!$scope.competition && $scope.activeCompetitions.length > 0) {
@@ -157,11 +142,9 @@ controllers.controller('competitionsController', ['$scope', 'competition',
                 }
             });
         };
-
         loadData();
     }
 ]);
-
 controllers.controller('teamsController', ['$scope', 'team', 'user',
     function ($scope, $team, $user) {
 
@@ -170,11 +153,9 @@ controllers.controller('teamsController', ['$scope', 'team', 'user',
             $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
         };
-
         $scope.isSelected = function (teamId) {
             return $scope.team.id === teamId;
         };
-
         loadData = function () {
             $scope.teams = $team.myTeams.query(function () {
                 $scope.selectTeam($scope.teams[0].id);
@@ -182,11 +163,9 @@ controllers.controller('teamsController', ['$scope', 'team', 'user',
             //TODO: Don't use hardcoded user
             $scope.invitations = $user.invitations.query({userId: 'Strike'});
         };
-
         loadData();
     }
 ]);
-
 controllers.controller('newTeamController', ['$scope', 'competition', 'team',
     function ($scope, $competition, $team) {
 
@@ -199,15 +178,39 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
             });
             $scope.team = new $team.all();
         };
-
         loadData = function () {
             $scope.competitions = $competition.all.query();
             $scope.team = new $team.all();
         };
-
         loadData();
     }
 ]);
+controllers.controller('inviteUserController', ['$scope', 'email', 'team',
+    function ($scope, $email, $team) {
+
+        $scope.inviteUser = function () {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/MoC-Service/api/team/" + $team + "/invite",
+                data: {
+                    email: $email
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+            }).success(function (data) {
+                console.log("invited succesfully");
+                //$cookies.user = undefined;
+                location.href = "#/login";
+            }).error(function (data) {
+                console.log("Error while inviting");
+                //$cookies.user = undefined;
+                console.log(data);
+            });
+        }
+    }
+]);
+
 
 controllers.controller('competitionController', ['$scope', function ($scope) {
         //http://ace.c9.io/#nav=howto
@@ -215,7 +218,6 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
         $(window).ready(function () {
             initEditor("editor");
         });
-
         /**
          * Create the ace editor
          * @param {String} editorID The element ID of the element that becomes the ace editor
@@ -266,11 +268,9 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
         $scope.getTextFromEditor = function getTextFromEditor() {
             return editor.getSession.getValue();
         };
-
         $scope.getSelectionFromEditor = function getSelectionFromEditor() {
             return editor.session.getTextRange(editor.getSelectionRange());
         };
-
         function fullScreenElement(elem) {
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
