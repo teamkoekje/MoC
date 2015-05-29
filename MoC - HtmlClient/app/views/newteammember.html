@@ -39,8 +39,9 @@ invite sturen
 
     <label for="competitionInput" style="">teams</label><br>
 
-    <select id="competitionInput" ng-model="team" 
-            ng-options="competition as competition.name for competition in competitions"></select>
+    <select id="competitionInput" ng-model="teams" 
+            ng-options="team as team.name for team in teams">
+    </select>
 </div>
 
 
@@ -53,12 +54,12 @@ invite sturen
             <input type="submit" class="btn btn-default" value="Invite user"/>
         </div>
     </form>
-
-
-
-
-
 </div>
+
+
+
+
+
 <div id="existingUserPanel">
     <div class="form-group">
 

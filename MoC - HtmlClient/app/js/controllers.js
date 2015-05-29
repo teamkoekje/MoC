@@ -189,8 +189,8 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$scope', 'email', 'team',
-    function ($scope, $email, $team) {
+controllers.controller('inviteUserController', ['$cookies', '$scope', 'user', 'email', 'team',
+    function ($cookies, $scope, $user, $email, $team) {
 
         $scope.inviteUser = function () {
             $.ajax({
@@ -211,7 +211,12 @@ controllers.controller('inviteUserController', ['$scope', 'email', 'team',
                 //$cookies.user = undefined;
                 console.log(data);
             });
-        }
+        };
+        loadData = function () {
+            $scope.teams = $user.teams({userId: $cookies.user});
+        };
+        loadData();
+
     }
 ]);
 
