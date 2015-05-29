@@ -144,7 +144,7 @@ public class WorkspaceService {
 
             @Override
             public void onReply(Request request, Reply reply) {
-                System.out.println("All servers responded to the broadcast: ");
+                System.out.println("All servers responded to the broadcast. Message to send to user: ");
                 System.out.println(reply.getMessage());
                 we.sendToUser(reply.getMessage(), username);
                 // TODO: Think of something in case a server drops out.

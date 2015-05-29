@@ -37,7 +37,7 @@ public class SysInfoAggregate {
     private void notifyListener() {
         if (replyListener != null) {
             String s = "{";
-            int i = 0;
+            int i = 1;
             for (Reply r : replies) {
                 if(i < replies.size()){
                     s += r.getMessage() + ",";

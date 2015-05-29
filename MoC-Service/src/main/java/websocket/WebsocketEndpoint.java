@@ -18,6 +18,7 @@ public class WebsocketEndpoint {
 
     @OnOpen
     public void openConnection(Session session) {
+        System.out.println("Client opened websocket");
         Principal p = session.getUserPrincipal();
         if (p != null) {
             peers.put(p.getName(), session);
@@ -39,8 +40,9 @@ public class WebsocketEndpoint {
     }
 
     public void sendToUser(String msg, String username) {
+        System.out.println("Sending message to: " + username);
         Session s = peers.get(username);
         s.getAsyncRemote().sendObject(msg);
-        System.out.println("Message send to user: " + username);
+        System.out.println("Message sent to user: " + username);
     }
 }

@@ -22,6 +22,17 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 console.log("Logged in succesfully: " + $scope.username);
                 $cookies.user = $scope.username;
                 location.href = "#/competitions";
+
+                var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
+                ws.onopen = function () {
+                    console.log("opening ws connection");
+                };
+                ws.onmessage = function (msg) {
+                    var result = $.parseJSON(msg.data);
+                    console.log(result);
+                    // TODO: Handle the json result
+                };
+
             }).error(function (data) {
                 console.log("Error while logging in");
                 console.log(data);
@@ -131,13 +142,6 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
         $scope.user.username = "Memphizx";
         $scope.user.name = "Robin van der Avoort";
         $scope.user.organisation = "Fontys";
-        var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
-        ws.onopen = function () {
-            console.log("opening ws connection");
-        };
-        ws.onmessage = function (msg) {
-            console.log(msg);
-        };
     }
 ]);
 controllers.controller('competitionsController', ['$scope', 'competition',
