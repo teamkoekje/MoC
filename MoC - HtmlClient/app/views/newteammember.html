@@ -17,6 +17,20 @@
     <input name="xxx" id="existingUserRadioButton" type="radio">
 </form>
 
+
+
+
+<div>
+    <label for="teamInput" style="">teams</label><br>
+
+    <select id="teamInput" ng-model="teamSelect" 
+            ng-options="team as team.name for team in teams">
+    </select>
+</div>
+
+
+
+
 <br>
 <hr>
 <br>
@@ -35,14 +49,7 @@ invite sturen
 -->
 
 
-<div class="form-group">
 
-    <label for="competitionInput" style="">teams</label><br>
-
-    <select id="competitionInput" ng-model="teams" 
-            ng-options="team as team.name for team in teams">
-    </select>
-</div>
 
 
 <div id="newUserPanel">

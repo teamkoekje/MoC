@@ -3,7 +3,7 @@
 var controllers = angular.module('mocControllers', ['ngCookies']);
 controllers.controller('loginController', ['$scope', '$cookies', function ($scope, $cookies) {
 
-        $scope.isLoggedIn = function() {
+        $scope.isLoggedIn = function () {
             return $cookies.user;
         }
 
@@ -149,8 +149,8 @@ controllers.controller('competitionsController', ['$scope', 'competition',
         loadData();
     }
 ]);
-controllers.controller('teamsController', ['$scope', 'team', 'user',
-    function ($scope, $team, $user) {
+controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
+    function ($scope, $cookies, $team, $user) {
 
         $scope.selectTeam = function (teamId) {
             console.log("Select team with id: " + teamId);
@@ -165,7 +165,7 @@ controllers.controller('teamsController', ['$scope', 'team', 'user',
                 $scope.selectTeam($scope.teams[0].id);
             });
             //TODO: Don't use hardcoded user
-            $scope.invitations = $user.invitations.query({userId: 'Strike'});
+            $scope.invitations = $user.invitations.query({userId: $cookies.user});
         };
         loadData();
     }
@@ -189,8 +189,8 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$cookies', '$scope', 'user', 'email', 'team',
-    function ($cookies, $scope, $user, $email, $team) {
+controllers.controller('inviteUserController', ['$cookies', '$scope', 'user', 'team',
+    function ($cookies, $scope, $user, $team) {
 
         $scope.inviteUser = function () {
             $.ajax({
@@ -213,7 +213,7 @@ controllers.controller('inviteUserController', ['$cookies', '$scope', 'user', 'e
             });
         };
         loadData = function () {
-            $scope.teams = $user.teams({userId: $cookies.user});
+            $scope.teams = new $team.myTeams.query();
         };
         loadData();
 
