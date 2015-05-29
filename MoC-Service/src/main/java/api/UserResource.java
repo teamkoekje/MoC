@@ -67,7 +67,7 @@ public class UserResource {
         User u = userService.findById(userId);
         return userService.findById(userId);
     }
-    
+
     /**
      * Get all teams that a certain user is a member of
      *
@@ -82,7 +82,7 @@ public class UserResource {
         User u = userService.findById(username);
         return u.getTeams();
     }
-    
+
     /**
      * Get all invitations for a certain user
      *
@@ -118,7 +118,7 @@ public class UserResource {
             return Response.ok("Username is available").build();
         }
     }
-    
+
     /**
      * Creates a new user
      *
@@ -131,6 +131,9 @@ public class UserResource {
     @PermitAll
     @Path("/register")
     public Response createUser(User user) {
+        if (userService.findById(user.getUsername()) != null) {
+            return Response.serverError().entity("User already exists").build();
+        }
         userService.create(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {
@@ -152,13 +155,17 @@ public class UserResource {
     @PermitAll
     @Path("/register/{token}")
     public Response createUserWithToken(@PathParam("token") String token, User user) {
+        if (userService.findById(user.getUsername()) != null) {
+            return Response.serverError().entity("User already exists").build();
+        }
+        
         userService.create(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {
             return Response.serverError().entity("Error creating user").build();
         }
-        if (token != null){
-            invitationService.acceptInvitation(user,token);
+        if (token != null) {
+            invitationService.acceptInvitation(user, token);
         }
         return Response.ok(user).build();
     }

@@ -3,9 +3,9 @@
 var controllers = angular.module('mocControllers', ['ngCookies']);
 controllers.controller('loginController', ['$scope', '$cookies', function ($scope, $cookies) {
 
-        $scope.isLoggedIn = function() {
+        $scope.isLoggedIn = function () {
             return $cookies.user;
-        }
+        };
 
         $scope.login = function () {
             $.ajax({
@@ -44,16 +44,33 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 console.log(data);
             });
         };
+
+        $scope.username = $cookies.user;
     }
+
 ]);
-controllers.controller('registerController', ['$scope', '$routeParams', 'user',
-    function ($scope, $routeParams, $user) {
+controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
+    function ($scope, $routeParams, $user, $team) {
         $scope.register = function () {
             console.log("Create User");
             $scope.user.$save(function () {
-                location.href = "#/login";
+                $scope.showSuccesAlert = true;
+                $scope.user = new $user.register();
+                setTimeout(function () {
+                    location.href = "#/login";
+                }, 3000);
+            }, function (data) {
+                console.log(data);
+                $scope.showFailedAlert = true;
+                $scope.error = data.data;
             });
         };
+
+        if ($routeParams.token) {
+            team = $team.byToken.get({token: $routeParams.token}, function () {
+                $scope.inviteInfo = "You are invited to " + team.name;
+            });
+        }
         $scope.user = new $user.register({token: $routeParams.token});
         $scope.user.email = "robin@robin.nl";
         $scope.user.password = "welkom123";
