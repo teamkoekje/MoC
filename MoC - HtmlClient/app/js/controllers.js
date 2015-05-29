@@ -1,7 +1,11 @@
 /* global angular */
 
-var controllers = angular.module('mocControllers', []);
-controllers.controller('loginController', ['$scope', function ($scope) {
+var controllers = angular.module('mocControllers', ['ngCookies']);
+controllers.controller('loginController', ['$scope', '$cookies', function ($scope, $cookies) {
+
+        $scope.isLoggedIn = function() {
+            return $cookies.user;
+        }
 
         $scope.login = function () {
             $.ajax({
@@ -16,7 +20,7 @@ controllers.controller('loginController', ['$scope', function ($scope) {
                 }
             }).success(function (data) {
                 console.log("Logged in succesfully: " + $scope.username);
-                //$cookies.user = $scope.username;
+                $cookies.user = $scope.username;
                 location.href = "#/competitions";
             }).error(function (data) {
                 console.log("Error while logging in");
@@ -32,11 +36,11 @@ controllers.controller('loginController', ['$scope', function ($scope) {
                 }
             }).success(function (data) {
                 console.log("Logged out succesfully");
-                //$cookies.user = undefined;
+                delete $cookies.user;
                 location.href = "#/login";
             }).error(function (data) {
                 console.log("Error while logging out");
-                //$cookies.user = undefined;
+                delete $cookies.user;
                 console.log(data);
             });
         };
