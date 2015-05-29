@@ -26,8 +26,8 @@
         <div class="container theme-showcase" role="main">
 
             <div class="page-header" ng-controller="loginController">
-                <a href="#login" class="btn btn-lg btn-link" style="float:right">Login</a>
-                <a ng-click="logout()" class="btn btn-lg btn-link" style="float:right">Logout</a>
+                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">Login</a>
+                <a ng-click="logout()" ng-if="isLoggedIn()" class="btn btn-lg btn-link" style="float:right">Logout</a>
                 <h1>Masters of Code</h1>
             </div>
 
@@ -37,6 +37,7 @@
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-route/angular-route.js"></script>
         <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
 
         <script src="components/version/version.js"></script>
         <script src="components/version/version-directive.js"></script>
