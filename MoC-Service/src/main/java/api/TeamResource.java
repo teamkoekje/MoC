@@ -161,6 +161,9 @@ public class TeamResource {
     @Consumes("application/xml,application/json")
     @Path("/{teamId}/invite")
     public Response inviteMember(String email, @PathParam("teamId") long teamId) {
+        System.out.println(email + " - " + teamId);
+        
+        
         if (email == null || email.isEmpty()) {
             return Response.serverError().entity("No email").build();
         } else if (teamService.findById(teamId) == null) {

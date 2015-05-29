@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation"><a href="#users">users</a></li>
+    <li role="presentation"><a href="#teams">Teams</a></li>
     <li role="presentation" class="active"><a href="#inviteUsers">Invite Users</a></li>
 </ul>
 
@@ -20,13 +20,6 @@
 
 
 
-<div>
-    <label for="teamInput" style="">teams</label><br>
-
-    <select id="teamInput" ng-model="teamSelect" 
-            ng-options="team as team.name for team in teams">
-    </select>
-</div>
 
 
 
@@ -41,7 +34,7 @@
 
 todo
 
-teamlijst/id ophalen
+teamid ophalen
 controller fixen zodat email en id erin mee komt
 
 invite sturen
@@ -55,6 +48,12 @@ invite sturen
 <div id="newUserPanel">
 
     <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
+
+      
+       
+
+
+
         <div class="form-group">
             <label for="emailInput" style="">email</label>
             <input required type="email" class="form-control" id="emailInput" placeholder="Email" ng-model="email" style="display: table-cell"/>

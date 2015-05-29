@@ -14,7 +14,7 @@
                 {{team.name}} 
             </a>
         </div>
-        
+
         <h4>Invitations</h4>
         <div ng-show="invitations.length === 0">You are currently not invited to any teams.</div>
         <div ng-show="invitations.length > 0" class="list-group" style="max-height:200px; overflow:auto;">
@@ -70,7 +70,9 @@
                     </tbody>
                 </table>
             </div>
-            <center> <a href="#newteammember"><span class="btn btn-default">Add new team member</span></a></center>
+            <div ng-controller="loginController" >
+                <center> <a href="?teamid={{team.id}}#newteammember" ng-if="isLoggedInOwner(team.owner.username)"><span class="btn btn-default">Add new team member</span></a></center>
+            </div>
         </div>
     </div>
 

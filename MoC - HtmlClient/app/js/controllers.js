@@ -56,6 +56,10 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
             });
         };
 
+        $scope.isLoggedInOwner = function (teamOwner) {
+            return $cookies.user === teamOwner;
+        };
+
         $scope.username = $cookies.user;
     }
 
@@ -210,29 +214,32 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$cookies', '$scope', 'user', 'team',
-    function ($cookies, $scope, $user, $team) {
+controllers.controller('inviteUserController', ['$scope', 'team',
+    function ($scope, $team) {
 
         $scope.inviteUser = function () {
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8080/MoC-Service/api/team/" + $team + "/invite",
-                data: {
-                    email: $email
-                },
+                contentType: 'application/json; charset=UTF-8',
+                url: "http://localhost:8080/MoC-Service/api/team/" + window.params().teamid + "/invite",
+                data: $("#emailInput").val(),
                 xhrFields: {
                     withCredentials: true
                 }
             }).success(function (data) {
+                console.log($("#emailInput").val());
                 console.log("invited succesfully");
                 //$cookies.user = undefined;
-                location.href = "#/login";
+                location.href = "#/newteammember";
             }).error(function (data) {
                 console.log("Error while inviting");
                 //$cookies.user = undefined;
                 console.log(data);
             });
         };
+
+
+
         loadData = function () {
             $scope.teams = new $team.myTeams.query();
         };
@@ -365,3 +372,18 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
         }
     }
 ]);
+
+/**
+ * Get the parameters from the URL and put them in a map
+ * @returns Map with URL parameters
+ */
+window.params = function () {
+    var result = {};
+    var searchString = location.search.substring(1, location.search.length);
+    var pairs = searchString.split("&");
+    for (var i in pairs) {
+        var pair = pairs[i].split("=");
+        result[pair[0]] = pair[1];
+    }
+    return result;
+};
