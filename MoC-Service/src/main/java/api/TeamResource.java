@@ -1,5 +1,6 @@
 package api;
 
+import domain.Invitation;
 import domain.Team;
 import domain.User;
 import java.util.List;
@@ -75,6 +76,18 @@ public class TeamResource {
     public List<User> getUsersFromTeam(@PathParam("teamId") long teamId) {
         Team t = teamService.findById(teamId);
         return t.getParticipants();
+    }
+
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/token/{token}")
+    @PermitAll
+    public Team getTeamByToken(@PathParam("token") String token) {
+        Invitation i = invitationService.findByToken(token);
+        if (i != null) {
+            return i.getTeam();
+        }
+        return null;
     }
 
     /**
@@ -168,12 +181,12 @@ public class TeamResource {
     @Consumes("application/xml,application/json")
     @Path("/join/{token}")
     public void joinTeam(User user, @PathParam("token") String token) {
-       /*
-        THIS METHOD IS NOT USED NOW
-        you are either the owner of a team or you are invited,
-        this method is handled in UserResource.createUser()
-        */
-        
+        /*
+         THIS METHOD IS NOT USED NOW
+         you are either the owner of a team or you are invited,
+         this method is handled in UserResource.createUser()
+         */
+
         invitationService.acceptInvitation(user, token);
     }
 
