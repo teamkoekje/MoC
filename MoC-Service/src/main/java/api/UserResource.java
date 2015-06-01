@@ -135,6 +135,7 @@ public class UserResource {
             return Response.serverError().entity("User already exists").build();
         }
         userService.create(user);
+        userService.sendAccountCreatedEmail(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {
             return Response.serverError().entity("Error creating user").build();
@@ -158,8 +159,8 @@ public class UserResource {
         if (userService.findById(user.getUsername()) != null) {
             return Response.serverError().entity("User already exists").build();
         }
-        
         userService.create(user);
+        userService.sendAccountCreatedEmail(user);
         User createdUser = userService.findById(user.getUsername());
         if (createdUser == null) {
             return Response.serverError().entity("Error creating user").build();
