@@ -49,19 +49,16 @@ public class Competition implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Round> rounds = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
     private final List<Team> teams = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     private Round currentRound;
 
-    private final NewsFeed newsFeed;
     //</editor-fold>    
-
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    public Competition() {
-        newsFeed = new NewsFeed();
+    protected Competition() {
     }
 
     public Competition(String name, Date competitionDate, Date startingTime, Date endTime, String location) {
@@ -70,8 +67,6 @@ public class Competition implements Serializable {
         this.startTime = startingTime;
         this.endTime = endTime;
         this.location = location;
-
-        newsFeed = new NewsFeed();
     }
     //</editor-fold>    
 
@@ -139,10 +134,10 @@ public class Competition implements Serializable {
     public List<Round> getRounds() {
         return rounds;
     }
-    
+
     public List<Challenge> getChallenges() {
         List<Challenge> challenges = new ArrayList<>();
-        for(Round r : rounds){
+        for (Round r : rounds) {
             challenges.add(r.getChallenge());
         }
         return challenges;
@@ -165,14 +160,14 @@ public class Competition implements Serializable {
                 switch (event.getType()) {
                     case ROUND_ENDED:
                         RoundEndedEvent ree = (RoundEndedEvent) event;
-                        System.out.println("Round ended: " + ree.getEndedRound().getChallenge().getName());                        
+                        System.out.println("Round ended: " + ree.getEndedRound().getChallenge().getName());
                         //if there is another round, set it as current
                         int nextRoundOrder = ree.getEndedRound().getRoundOrder() + 1;
                         if (rounds.size() > nextRoundOrder) {
                             currentRound = rounds.get(nextRoundOrder);
-                        //oterwise, tell the calling service the entire competition has ended
+                            //oterwise, tell the calling service the entire competition has ended
                         } else {
-                            currentRound = null;
+                            //currentRound = null;
                             ArrayList<CompetitionEvent> temp = new ArrayList<>();
                             temp.add(new CompetitionEndedEvent(this));
                             return temp;
@@ -271,6 +266,25 @@ public class Competition implements Serializable {
             }
         }
         return false;
+    }
+    
+    /**
+     * Attempts to start the next round in the competition (including starting the first round).
+     * @throws IllegalStateException Thrown if the current round's state is NOT_STARTED or there are no rounds to start.
+     */
+    public void startNextRound() throws IllegalStateException{
+        if (rounds.size() > 0) {
+            currentRound = rounds.get(0);
+            if (currentRound.getRoundState() == RoundState.NOT_STARTED) {
+                currentRound.start();
+            } else {
+                throw new IllegalStateException(
+                        "Can't start the current round as it's state is not NOT_STARTED, current state: "
+                        + currentRound.getRoundState());
+            }
+        } else {
+            throw new IllegalStateException("Can't start the first round as there are no rounds defined in the competition");
+        }
     }
     //</editor-fold>
 }

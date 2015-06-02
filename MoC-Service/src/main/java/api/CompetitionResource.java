@@ -199,40 +199,14 @@ public class CompetitionResource {
     /**
      * Starts a round
      *
-     * @param round the round that should be started
+     * @param competitionId
      */
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/round/start")
-    public void startRound(Round round) {
-        //round.start(); idk
+    @Path("/{competitionId}/start")
+    public void startRound(@PathParam("competitionId") long competitionId) {        
+        Competition c = competitionService.findById(competitionId);
+        c.startNextRound();
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Teams">
-    /**
-     *
-     * // /** // * Creates a new team // * // * @param request // * @param t //
-     * * @return //
-     */
-//    @POST
-//    @Path("/{competitionId}/team")
-//    @Produces(MediaType.TEXT_PLAIN)
-//    @RolesAllowed({"User", "Admin"})
-//    public Response createTeam(@Context HttpServletRequest request, Team t) {
-//        try {
-//            User user = userService.findById(request.getRemoteUser());
-//            Team team = new Team(user, t.getName());
-//            Competition competition = competitionService.findById(t.getCompetition().getId());
-//            team.setCompetition(competition);
-//            teamService.createTeam(team);
-//            Team createdTeam = teamService.findById(team.getId());
-//            return Response.ok(createdTeam.getName()).build();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return Response.serverError().entity(ex.getMessage()).build();
-//        }
-//    }
-    
     //</editor-fold>
 }
