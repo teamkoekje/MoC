@@ -252,9 +252,6 @@ controllers.controller('inviteUserController', ['$scope', 'team',
 controllers.controller('competitionController', ['$scope', function ($scope) {
         //http://ace.c9.io/#nav=howto
         var editor;
-        $(window).ready(function () {
-            initEditor("editor");
-        });
         /**
          * Create the ace editor
          * @param {String} editorID The element ID of the element that becomes the ace editor
@@ -370,6 +367,8 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperTests').hide();
             editor.resize();
         }
+        
+        initEditor("editor");
     }
 ]);
 

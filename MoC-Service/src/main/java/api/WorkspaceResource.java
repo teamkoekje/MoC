@@ -50,17 +50,17 @@ public class WorkspaceResource {
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionName}/{teamName}/{challangeName}/compile")
-    public void compile(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
-        String messageId = workspaceService.compile(competitionName, teamName, challangeName);
+    @Path("/{competitionName}/{teamName}/{challengeName}/compile")
+    public void compile(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challengeName") String challengeName) {
+        String messageId = workspaceService.compile(competitionName, teamName, challengeName);
         workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionName}/{teamName}/{challangeName}/test")
-    public void testAll(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challangeName") String challangeName) {
-        String messageId = workspaceService.testAll(competitionName, teamName, challangeName);
+    @Path("/{competitionName}/{teamName}/{challengeName}/test")
+    public void testAll(@PathParam("competitionName") String competitionName, @PathParam("teamName") String teamName, @PathParam("challengeName") String challengeName) {
+        String messageId = workspaceService.testAll(competitionName, teamName, challengeName);
         workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 

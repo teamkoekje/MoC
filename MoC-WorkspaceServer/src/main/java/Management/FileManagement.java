@@ -43,7 +43,7 @@ public class FileManagement {
     /**
      * Get an instance of FileManagement
      *
-     * @param filepath Path to the .jar of the challange
+     * @param filepath Path to the .jar of the challenge
      * @return A FileManagement instance
      */
     public static FileManagement getInstance(String filepath){

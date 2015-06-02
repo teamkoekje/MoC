@@ -41,12 +41,14 @@ public class TestDataService {
 
         User u1 = new User(1);
         u1.setUsername("Strike");
+        u1.setName("Arno Schellekens");
         u1.setEmail("Arno@Arno.nl");
         u1.setPassword("qwerty");
         u1.setOrganisation("Fontys");
 
         User u2 = new User(2);
         u2.setUsername("Obsidian");
+        u2.setName("Casper Linschooten");
         u2.setEmail("Casper@Pizzaplace.nl");
         u2.setPassword("qwerty");
         u2.setOrganisation("Fontys");
