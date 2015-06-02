@@ -379,22 +379,6 @@ public class WorkspaceManagement {
             long totalSpace = new File("/").getTotalSpace();
             String IP = InetAddress.getLocalHost().getHostAddress();
 
-            /*sb.append("[SYSINFO]");
-            sb.append("IP: " + IP + ";");
-            sb.append("free diskspace: " + format.format(freeSpace) + ";");
-            sb.append("allocated diskspace: " + format.format(usableSpace) + ";");
-            sb.append("total diskspace: " + format.format(totalSpace) + ";");
-
-            sb.append("free memory: " + format.format(freeMemory / 1024) + ";");
-            sb.append("allocated memory: " + format.format(allocatedMemory / 1024) + ";");
-            sb.append("max memory: " + format.format(maxMemory / 1024) + ";");
-            sb.append("total free memory: " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + ";");
-
-            sb.append("processor amount: " + amountProcessors + ";");
-            sb.append("cpu usage: " + cpuUsage + ";");
-            sb.append("workspaces: " + teams.size() + ";");*/
-            
-
             sb.append("\"" + getServerId() + "\":{");
             sb.append("\"IP\": \"" + IP + "\",");
             sb.append("\"freediskspace\": \"" + format.format(freeSpace) + "\",");

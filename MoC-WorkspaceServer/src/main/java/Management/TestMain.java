@@ -26,8 +26,9 @@ public class TestMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WorkspaceManagement wm = WorkspaceManagement.getInstance();
-        System.out.println(wm.systemInformation());
+        //System.out.println("{\"hint\":{\"message\":\"" + "HAHA" + "\"}}");
+        //WorkspaceManagement wm = WorkspaceManagement.getInstance();
+        //System.out.println(wm.systemInformation());
         /*CreateRequest cr = new CreateRequest("competition1", "team1");
         //wm.processRequest(cr);
 

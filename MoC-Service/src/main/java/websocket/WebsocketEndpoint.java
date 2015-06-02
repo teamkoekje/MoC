@@ -33,7 +33,7 @@ public class WebsocketEndpoint {
         }
     }
 
-    public static void broadCast(String msg) {
+    public void broadCast(String msg) {
         for (Session s : peers.values()) {
             s.getAsyncRemote().sendObject(msg);
         }
