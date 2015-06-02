@@ -29,8 +29,9 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 };
                 ws.onmessage = function (msg) {
                     var result = $.parseJSON(msg.data);
-                    console.log(result);
-                    // TODO: Handle the json result
+                    if(typeof result.hint !== 'undefined'){
+                        $scope.newsfeed.push(result.hint.message);
+                    }
                 };
 
             }).error(function (data) {
@@ -60,6 +61,7 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
             return $cookies.user === teamOwner;
         };
 
+        $scope.newsfeed = [];
         $scope.username = $cookies.user;
     }
 

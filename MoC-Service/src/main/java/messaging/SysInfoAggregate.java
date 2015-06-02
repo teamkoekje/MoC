@@ -36,14 +36,14 @@ public class SysInfoAggregate {
 
     private void notifyListener() {
         if (replyListener != null) {
-            String s = "{";
+            String s = "{\"sysinfo\":{";
             int i = 1;
             for (Reply r : replies) {
                 if(i < replies.size()){
                     s += r.getMessage() + ",";
                     i++;
                 }else{
-                    s += r.getMessage() + "}";
+                    s += r.getMessage() + "}}";
                 }
             }
             BroadcastReply reply = new BroadcastReply(s);
