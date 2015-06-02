@@ -39,8 +39,19 @@ services.factory('team', ['$resource',
         };
     }
 ]);
+//services.factory('workspace', ['$resource',
+//    function ($resource) {
+//        return $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'});
+//    }
+//]);
+
 services.factory('workspace', ['$resource',
     function ($resource) {
-        return $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'});
+        return{
+            all: $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'}),
+            myTeams: $resource(baseUrl + '/team/myTeams'),
+            byToken: $resource(baseUrl + '/team/token/:token', {token: '@token'}),
+            participants: $resource(baseUrl + '/team/:teamId/users', {teamId: '@teamId'})
+        };
     }
 ]);

@@ -29,8 +29,9 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 };
                 ws.onmessage = function (msg) {
                     var result = $.parseJSON(msg.data);
-                    console.log(result);
-                    // TODO: Handle the json result
+                    if(typeof result.hint !== 'undefined'){
+                        $scope.newsfeed.push(result.hint.message);
+                    }
                 };
 
             }).error(function (data) {
@@ -60,6 +61,7 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
             return $cookies.user === teamOwner;
         };
 
+        $scope.newsfeed = [];
         $scope.username = $cookies.user;
     }
 
@@ -252,9 +254,6 @@ controllers.controller('inviteUserController', ['$scope', 'team',
 controllers.controller('competitionController', ['$scope', function ($scope) {
         //http://ace.c9.io/#nav=howto
         var editor;
-        $(window).ready(function () {
-            initEditor("editor");
-        });
         /**
          * Create the ace editor
          * @param {String} editorID The element ID of the element that becomes the ace editor
@@ -370,6 +369,8 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperTests').hide();
             editor.resize();
         }
+        
+        initEditor("editor");
     }
 ]);
 

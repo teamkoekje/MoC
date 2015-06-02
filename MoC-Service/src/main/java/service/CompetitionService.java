@@ -17,6 +17,7 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
+import websocket.WebsocketEndpoint;
 
 @Singleton
 @Startup
@@ -28,6 +29,9 @@ public class CompetitionService extends GenericService<Competition> {
     @Inject
     @Any
     Event<CompetitionEvent> competitionEvent;
+    
+    @Inject
+    private WebsocketEndpoint we;
 
     public CompetitionService() {
         super(Competition.class);
@@ -47,7 +51,7 @@ public class CompetitionService extends GenericService<Competition> {
                 break;
             case HINT_RELEASED:
                 HintReleasedEvent hre = (HintReleasedEvent) event;
-                //TODO: Send the released hint to the newsfeed
+                we.broadCast("{\"hint\":{\"message\":\"" + hre.getReleasedHint().getContent() + "\"}}");
                 break;
             default:
                 throw new AssertionError(event.getType().name());
