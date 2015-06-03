@@ -1,10 +1,10 @@
 package messaging;
 
 import java.util.ArrayList;
-import workspace.Action;
-import workspace.Reply;
-import workspace.Request;
-import workspace.BroadcastReply;
+import workspace.Requests.Action;
+import workspace.Replies.Reply;
+import workspace.Requests.Request;
+import workspace.Replies.BroadcastReply;
 
 
 /**

@@ -8,9 +8,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import workspace.Reply;
-import workspace.Request;
-import workspace.TeamRequest;
+import workspace.Replies.Reply;
+import workspace.Requests.Request;
+import workspace.Requests.TeamRequest;
 import workspace.WorkspaceSenderRouter;
 import workspace.WorkspaceServer;
 

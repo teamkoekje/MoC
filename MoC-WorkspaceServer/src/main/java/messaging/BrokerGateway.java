@@ -1,7 +1,23 @@
 package Messaging;
 
-import Management.FileManagement;
-import Management.WorkspaceManagement;
+// <editor-fold defaultstate="collapsed" desc="imports" >
+import workspace.Requests.UpdateRequest;
+import workspace.Requests.FolderStructureRequest;
+import workspace.Requests.DeleteRequest;
+import workspace.Requests.CreateRequest;
+import workspace.Requests.CompileRequest;
+import workspace.Requests.Request;
+import workspace.Requests.FileRequest;
+import workspace.Requests.TestRequest;
+import workspace.Requests.PushRequest;
+import workspace.Requests.TestAllRequest;
+import workspace.Replies.Reply;
+import workspace.Replies.BroadcastReply;
+import workspace.Replies.NormalReply;
+import controllers.PathController;
+import controllers.SystemInformation;
+import management.FileManagement;
+import management.WorkspaceManagement;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,19 +34,7 @@ import messaging.DestinationType;
 import messaging.IRequestListener;
 import messaging.JMSSettings;
 import messaging.MessagingGateway;
-import workspace.BroadcastReply;
-import workspace.CompileRequest;
-import workspace.CreateRequest;
-import workspace.DeleteRequest;
-import workspace.FileRequest;
-import workspace.FolderStructureRequest;
-import workspace.NormalReply;
-import workspace.PushRequest;
-import workspace.Reply;
-import workspace.Request;
-import workspace.TestAllRequest;
-import workspace.TestRequest;
-import workspace.UpdateRequest;
+//</editor-fold>
 
 /**
  * Connects with the router, listens for requests, handles them and then replies
@@ -40,15 +44,21 @@ import workspace.UpdateRequest;
  */
 @Singleton
 @Startup
-//@Stateless
-public class BrokerGateway implements IRequestListener<Request> {   
+public class BrokerGateway implements IRequestListener<Request> {
 
+    // <editor-fold defaultstate="collapsed" desc="variables" >
     private MessagingGateway registerGateway;
     private String initMsgId;
+    private final PathController pathInstance = PathController.getInstance();
     private final WorkspaceManagement wm = WorkspaceManagement.getInstance();
 
     private AsynchronousReplier<Request, Reply> replier;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
+    /**
+     * Called on the start. Registers to the service.
+     */
     @PostConstruct
     private void init() {
         try {
@@ -66,6 +76,12 @@ public class BrokerGateway implements IRequestListener<Request> {
         }
     }
 
+    /**
+     * Registers to the service by sending a "HELLO SERVER" message.
+     *
+     * @throws JMSException Thrown when something goes wrong in the JMS
+     * communication.
+     */
     private void register() throws JMSException {
         System.out.println("registering");
         Message msg = registerGateway.createTextMessage("HELLO SERVER");
@@ -74,6 +90,12 @@ public class BrokerGateway implements IRequestListener<Request> {
         System.out.println("Init request send: " + initMsgId);
     }
 
+    /**
+     * Callback for when the service send a reply on the register request.
+     * Starts the listening to requests made from the service.
+     *
+     * @param msg The message the service replied.
+     */
     private void onRegisterReply(Message msg) {
         System.out.println("on register reply");
         try {
@@ -93,11 +115,19 @@ public class BrokerGateway implements IRequestListener<Request> {
             System.err.println(ex.getMessage());
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="methods" >
+    /**
+     * Callback method for when a request is received. Handles the request and
+     * sends the appropriate reply.
+     *
+     * @param request The request to handle
+     */
     @Override
     public synchronized void receivedRequest(Request request) {
         System.out.println("Request received on workspace server: " + request.getAction());
-        Reply reply = getReply(request);
+        Reply reply = handleRequest(request);
         //TODO:
         //if (threads available in pool)
         //  create new correct thread and run it
@@ -106,72 +136,62 @@ public class BrokerGateway implements IRequestListener<Request> {
         //  rollback message using MessagingGateway.confirmMessage(false)
         replier.sendReply(request, reply);
     }
-    
-    private Reply getReply(Request r){
-        Reply reply;
+
+    /**
+     * Handles the specified request by casting it to it's specific instance,
+     * decided by the Request.getAction() method. After handling the request, a
+     * respective Reply is returned.
+     *
+     * @param r The request to handle
+     * @return A reply respective to the original request.
+     */
+    private Reply handleRequest(Request r) {
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
-                return new NormalReply(wm.buildWorkspace(compileRequest.getCompetitionId(), compileRequest.getTeamName(), compileRequest.getChallengeName()));
+                return new NormalReply(wm.buildWorkspace(compileRequest.getCompetition(), compileRequest.getTeamName(), compileRequest.getChallengeName()));
             case TEST:
                 TestRequest testRequest = (TestRequest) r;
-                return new NormalReply(wm.test(testRequest.getCompetitionId(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
+                return new NormalReply(wm.test(testRequest.getCompetition(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
-                return new NormalReply(wm.testAll(testAllRequest.getCompetitionId(), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
+                return new NormalReply(wm.testAll(testAllRequest.getCompetition(), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
-                return new NormalReply(wm.updateFile(updateRequest.getCompetitionId(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                return new NormalReply(wm.updateFile(updateRequest.getCompetition(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
             case CREATE:
                 CreateRequest createRequest = (CreateRequest) r;
-                return new NormalReply(wm.createWorkspace(createRequest.getCompetitionId(), createRequest.getTeamName()));
+                return new NormalReply(wm.createWorkspace(createRequest.getCompetition(), createRequest.getTeamName()));
             case DELETE:
                 DeleteRequest deleteRequest = (DeleteRequest) r;
-                return new NormalReply(wm.removeWorkspace(deleteRequest.getCompetitionId(), deleteRequest.getTeamName()));
+                return new NormalReply(wm.removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName()));
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return new NormalReply(wm.extractChallengeToTeam(pushRequest.getData(), pushRequest.getChallengeName(), pushRequest.getCompetitionId()));
+                return new NormalReply(wm.extractChallengeToTeam(pushRequest.getCompetition(), pushRequest.getChallengeName(), pushRequest.getData()));
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                String folderPath
-                        = wm.getDefaultPath()
-                        + "Competitions"
+                String folderPath = pathInstance.teamChallengePath(
+                        folderStructureRequest.getCompetition(),
+                        folderStructureRequest.getTeamName(),
+                        folderStructureRequest.getChallengeName());
+                String jarPathForFolder = folderPath
                         + File.separator
-                        + folderStructureRequest.getCompetitionId()
-                        + File.separator
-                        + "Teams"
-                        + File.separator
-                        + folderStructureRequest.getTeamName()
-                        + File.separator
-                        + folderStructureRequest.getChallengeName();
-                String jarPathForFolder
-                        = folderPath
-                        + File.separator
-                        + folderStructureRequest.getChallengeName() + ".jar";
-                System.out.println(jarPathForFolder);
+                        + folderStructureRequest.getChallengeName()
+                        + ".jar";
                 return new NormalReply(FileManagement.getInstance(jarPathForFolder).getFolderJSON(folderPath));
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
-                String jarPathForFile
-                        = wm.getDefaultPath()
-                        + File.separator
-                        + "Competitions"
-                        + File.separator
-                        + fileRequest.getCompetitionId()
-                        + File.separator
-                        + "Teams"
-                        + File.separator
-                        + fileRequest.getTeamName()
-                        + File.separator
-                        + fileRequest.getChallengeName()
-                        + File.separator
-                        + fileRequest.getChallengeName() + ".jar";
+                String jarPathForFile = pathInstance.teamChallengePath(
+                        fileRequest.getCompetition(),
+                        fileRequest.getTeamName(),
+                        fileRequest.getChallengeName())
+                        + File.separator + fileRequest.getChallengeName() + ".jar";
                 return new NormalReply(FileManagement.getInstance(jarPathForFile).getFileJSON(fileRequest.getFilepath()));
             case SYSINFO:
-                return new BroadcastReply(wm.systemInformation());
-            // private final String defaultJar = defaultPath + "/annotionframework/annotatedProject-1.0.jar"
+                return new BroadcastReply(SystemInformation.getInfo());
             default:
                 return new NormalReply("error, unknown action: " + r.getAction().name());
         }
     }
+    // </editor-fold>
 }

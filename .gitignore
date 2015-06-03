@@ -24,3 +24,8 @@
 /MoCtestproject/target/
 /temp/MoC-WorkspaceServer/target/
 /MoC-Mockups/nbproject/private/
+/MoC - HtmlAdminConsole/nbproject/private/
+/MoC - HtmlAdminConsole/node_modules
+/MoC - HtmlAdminConsole/app/bower_components
+MoC - HtmlAdminConsole/nbproject/project.properties
+MoC - HtmlClient/nbproject/project.properties

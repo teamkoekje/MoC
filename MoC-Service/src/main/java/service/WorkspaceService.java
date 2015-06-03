@@ -18,19 +18,19 @@ import messaging.IReplyListener;
 import messaging.SysInfoAggregate;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
-import workspace.Action;
-import workspace.CompileRequest;
-import workspace.CreateRequest;
-import workspace.DeleteRequest;
-import workspace.FileRequest;
-import workspace.FolderStructureRequest;
-import workspace.PushRequest;
-import workspace.Reply;
-import workspace.Request;
-import workspace.SysInfoRequest;
-import workspace.TestAllRequest;
-import workspace.TestRequest;
-import workspace.UpdateRequest;
+import workspace.Requests.Action;
+import workspace.Requests.CompileRequest;
+import workspace.Requests.CreateRequest;
+import workspace.Requests.DeleteRequest;
+import workspace.Requests.FileRequest;
+import workspace.Requests.FolderStructureRequest;
+import workspace.Requests.PushRequest;
+import workspace.Replies.Reply;
+import workspace.Requests.Request;
+import workspace.Requests.SysInfoRequest;
+import workspace.Requests.TestAllRequest;
+import workspace.Requests.TestRequest;
+import workspace.Requests.UpdateRequest;
 
 /**
  * Service class used to manage users

@@ -1,3 +1,8 @@
 form input:not([type="submit"]){
     margin-bottom: 5px;
 }
+
+.newsfeedBox{
+    overflow-y: scroll; 
+    height: 350px;
+}
