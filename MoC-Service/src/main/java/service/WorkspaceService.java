@@ -1,9 +1,10 @@
 package service;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,10 +34,12 @@ import workspace.Requests.TestAllRequest;
 import workspace.Requests.TestRequest;
 import workspace.Requests.UpdateRequest;
 
+// </editor-fold>
+
 /**
  * Service class used to manage users
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Singleton
 @Startup
@@ -93,35 +96,37 @@ public class WorkspaceService {
         }
     }
 
-    public String create(String competitionName, String teamName) {
-        return gateway.addWorkspace(new CreateRequest(competitionName, teamName));
+    public String create(long competitionId, String teamName) {
+        return gateway.addWorkspace(new CreateRequest(competitionId, teamName));
     }
 
-    public String delete(String competitionName, String teamName) {
-       return gateway.deleteWorkspace(new DeleteRequest(competitionName, teamName));
+    public String delete(long competitionId, String teamName) {
+       return gateway.deleteWorkspace(new DeleteRequest(competitionId, teamName));
     }
 
-    public String update(String competitionName, String teamName, String filePath, String fileContent) {
-        return gateway.sendRequestToTeam(new UpdateRequest(competitionName, teamName, filePath, fileContent));
+    public String update(long competitionId, String teamName, String filePath, String fileContent) {
+        System.out.println("Updating file: " + filePath + " with content: " + fileContent);
+                
+        return gateway.sendRequestToTeam(new UpdateRequest(competitionId, teamName, filePath, fileContent));
     }
 
-    public String compile(String competition, String teamName, String challengeName) {
-        return gateway.sendRequestToTeam(new CompileRequest(competition, teamName, challengeName));
+    public String compile(long competitionId, String teamName, String challengeName) {
+        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName));
     }
 
-    public String testAll(String competition, String teamName, String challengeName) {
-        return gateway.sendRequestToTeam(new TestAllRequest(competition, teamName, challengeName));
+    public String testAll(long competitionId, String teamName, String challengeName) {
+        return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName));
     }
 
-    public String test(String competition, String teamName, String challengeName, String testFile, String testName) {
-        return gateway.sendRequestToTeam(new TestRequest(competition, teamName, challengeName, testFile, testName));
+    public String test(long competitionId, String teamName, String challengeName, String testFile, String testName) {
+        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testFile, testName));
     }
 
-    public void push(String competitionName, String challengeName) {
+    public void push(long competitionId, String challengeName) {
         try {
             byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
             System.out.println("pushing challenge");
-            gateway.broadcast(new PushRequest(competitionName, challengeName, data));
+            gateway.broadcast(new PushRequest(competitionId, challengeName, data));
 
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceService.class
@@ -129,24 +134,23 @@ public class WorkspaceService {
         }
     }
 
-    public void folderStructure(String competitionName, String challengeName, String teamName) {
-        gateway.sendRequestToTeam(new FolderStructureRequest(competitionName, challengeName, teamName));
+    public void folderStructure(long competitionId, String challengeName, String teamName) {
+        gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
 
-    public void file(String competitionName, String teamName, String challengeName, String filePath) {
-        gateway.sendRequestToTeam(new FileRequest(competitionName, teamName, challengeName, filePath));
+    public void file(long competitionId, String teamName, String challengeName, String filePath) {
+        gateway.sendRequestToTeam(new FileRequest(competitionId, teamName, challengeName, filePath));
     }
 
-    public void sysInfo(final String username) {
+    public void sysInfo(String username) {
         SysInfoRequest sir = new SysInfoRequest(Action.SYSINFO);
         numberOfBroadcastMessages = gateway.broadcast(sir);
         sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, username, new IReplyListener<Request, Reply>() {
-
             @Override
             public void onReply(Request request, Reply reply) {
                 System.out.println("All servers responded to the broadcast. Message to send to user: ");
                 System.out.println(reply.getMessage());
-                we.sendToUser(reply.getMessage(), username);
+                we.sendToUser(reply.getMessage(), sia.getUsername());
                 // TODO: Think of something in case a server drops out.
             }
         });

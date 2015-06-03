@@ -71,7 +71,7 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
                 };
                 ws.onmessage = function (msg) {
                     var result = $.parseJSON(msg.data);
-                    if(typeof result.hint !== 'undefined'){
+                    if (typeof result.hint !== 'undefined') {
                         newsfeedService.addHint(result.hint.text);
                     }else if(typeof result.message !== 'undefined'){
                         newsfeedService.addMessage(result.message.text);
@@ -217,6 +217,14 @@ controllers.controller('competitionsController', ['$scope', 'competition',
         $scope.isSelected = function (competitionId) {
             return $scope.competition.id === competitionId;
         };
+        $scope.isActive = function (competitionId) {
+            for (i = 0; i < $scope.activeCompetitions.length; i++) {
+                if ($scope.activeCompetitions[i].id === competitionId) {
+                    return true;
+                }
+            }
+            return false;
+        };
         loadData = function () {
             $scope.activeCompetitions = $competition.active.query(function () {
                 if (!$scope.competition && $scope.activeCompetitions.length > 0) {
@@ -242,6 +250,11 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
         };
         $scope.isSelected = function (teamId) {
             return $scope.team.id === teamId;
+        };
+         $scope.leaveTeam = function (user) {
+            console.log("remove user " + user.name + " from team with id: " + $scope.team.id);
+            $team.leaveTeam({teamId: $scope.team.id, user: user}, function () {
+            });
         };
         loadData = function () {
             $scope.teams = $team.myTeams.query(function () {
@@ -307,7 +320,8 @@ controllers.controller('inviteUserController', ['$scope', 'team',
 ]);
 
 
-controllers.controller('competitionController', ['$scope', 'newsfeedService', function ($scope, newsfeedService) {
+controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams', 'newsfeedService',
+    function ($scope, $workspace, $routeParams, newsfeedService) {
         $scope.messages = newsfeedService.getMessages();
         $scope.hints = newsfeedService.getHints();
         //http://ace.c9.io/#nav=howto
@@ -358,9 +372,10 @@ controllers.controller('competitionController', ['$scope', 'newsfeedService', fu
                         editor.resize();
                     });
         }
+        ;
 
         $scope.getTextFromEditor = function getTextFromEditor() {
-            return editor.getSession.getValue();
+            return editor.session.getValue();
         };
         $scope.getSelectionFromEditor = function getSelectionFromEditor() {
             return editor.session.getTextRange(editor.getSelectionRange());
@@ -378,6 +393,7 @@ controllers.controller('competitionController', ['$scope', 'newsfeedService', fu
                 alert("Full screen is not supported, recommended webbrowser to use is Google Chrome");
             }
         }
+        ;
 
         $scope.fullScreenEditor = function fullScreenEditor() {
             //Hide the side panels
@@ -387,7 +403,7 @@ controllers.controller('competitionController', ['$scope', 'newsfeedService', fu
             $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
             //Set the editor full screen
             fullScreenElement($('#wrapperAroundEditor')[0]);
-        }
+        };
 
         $scope.toggleMessages = function toggleMessages() {
             if ($('#wrapperMessages').is(":visible")) {
@@ -401,7 +417,7 @@ controllers.controller('competitionController', ['$scope', 'newsfeedService', fu
             $('#wrapperTests').hide();
             $('#wrapperHints').hide();
             editor.resize();
-        }
+        };
 
         $scope.toggleHints = function toggleHints() {
             if ($('#wrapperHints').is(":visible")) {
@@ -428,7 +444,7 @@ controllers.controller('competitionController', ['$scope', 'newsfeedService', fu
             $('#wrapperAroundResults').hide();
             $('#wrapperMessages').hide();
             editor.resize();
-        }
+        };
 
         $scope.toggleResults = function toggleResults() {
             if ($('#wrapperAroundResults').is(":visible")) {
@@ -441,23 +457,37 @@ controllers.controller('competitionController', ['$scope', 'newsfeedService', fu
             $('#wrapperMessages').hide();
             $('#wrapperTests').hide();
             editor.resize();
-        }
+        };
+
+        save = function (onSucces) {
+            var file = new $workspace.update({competitionId: $routeParams.id});
+            file.fileContent = $scope.getTextFromEditor();
+            //TODO: Get path of current file
+            file.filePath = "";
+            console.log("content: " + file.fileContent);
+            file.$save(onSucces, function (data) {
+                console.log(data.data);
+            });
+        };
+
+        $scope.compile = function () {
+            save(function () {
+                new $workspace.compile({competitionId: $routeParams.id}).$save();
+            });
+        };
         
+        $scope.testAll = function () {
+            save(function () {
+                new $workspace.test({competitionId: $routeParams.id}).$save();
+            });
+        };
+        
+        $scope.test = function (testFile, testName) {
+            save(function () {
+                new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
+            });
+        };
+
         initEditor("editor");
     }
 ]);
-
-/**
- * Get the parameters from the URL and put them in a map
- * @returns Map with URL parameters
- */
-window.params = function () {
-    var result = {};
-    var searchString = location.search.substring(1, location.search.length);
-    var pairs = searchString.split("&");
-    for (var i in pairs) {
-        var pair = pairs[i].split("=");
-        result[pair[0]] = pair[1];
-    }
-    return result;
-};

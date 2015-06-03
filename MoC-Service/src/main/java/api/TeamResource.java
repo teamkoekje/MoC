@@ -202,6 +202,7 @@ public class TeamResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{teamId}/leave")
+    @RolesAllowed({"User", "Admin"})
     public void leaveTeam(User user, @PathParam("teamId") long teamId) {
         teamService.leaveTeam(user, teamId);
     }

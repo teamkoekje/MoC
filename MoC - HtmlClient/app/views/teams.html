@@ -66,6 +66,12 @@
                         <tr ng-repeat="user in participants">
                             <td>{{user.username}}</td>
                             <td>{{user.name}}</td>
+                            
+                            <td ng-if="isLoggedInOwner(team.owner.username)">
+                                <form ng-submit="leaveTeam(user)">
+                                 <input type="submit" class="btn btn-default" value="X"/>
+                                </form>    
+                            </td>
                         </tr>
                     </tbody>
                 </table>

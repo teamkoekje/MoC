@@ -294,4 +294,13 @@ public class Competition implements Serializable {
         }
     }
     //</editor-fold>
+
+    public Team getTeamByUsername(String username) {
+        for(Team t : teams){
+            if(t.containsParticipant(username)){
+                return t;
+            }
+        }
+        return null;
+    }
 }

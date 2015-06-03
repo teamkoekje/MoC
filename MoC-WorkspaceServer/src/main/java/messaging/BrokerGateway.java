@@ -149,29 +149,29 @@ public class BrokerGateway implements IRequestListener<Request> {
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
-                return new NormalReply(wm.buildWorkspace(compileRequest.getCompetition(), compileRequest.getTeamName(), compileRequest.getChallengeName()));
+                return new NormalReply(wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()));
             case TEST:
                 TestRequest testRequest = (TestRequest) r;
-                return new NormalReply(wm.test(testRequest.getCompetition(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
+                return new NormalReply(wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
-                return new NormalReply(wm.testAll(testAllRequest.getCompetition(), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
+                return new NormalReply(wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
-                return new NormalReply(wm.updateFile(updateRequest.getCompetition(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                return new NormalReply(wm.updateFile(Long.toString(updateRequest.getCompetitionId()), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
             case CREATE:
                 CreateRequest createRequest = (CreateRequest) r;
-                return new NormalReply(wm.createWorkspace(createRequest.getCompetition(), createRequest.getTeamName()));
+                return new NormalReply(wm.createWorkspace(Long.toString(createRequest.getCompetitionId()), createRequest.getTeamName()));
             case DELETE:
                 DeleteRequest deleteRequest = (DeleteRequest) r;
-                return new NormalReply(wm.removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName()));
+                return new NormalReply(wm.removeWorkspace(Long.toString(deleteRequest.getCompetitionId()), deleteRequest.getTeamName()));
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return new NormalReply(wm.extractChallengeToTeam(pushRequest.getCompetition(), pushRequest.getChallengeName(), pushRequest.getData()));
+                return new NormalReply(wm.extractChallengeToTeam(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath = pathInstance.teamChallengePath(
-                        folderStructureRequest.getCompetition(),
+                        Long.toString(folderStructureRequest.getCompetitionId()),
                         folderStructureRequest.getTeamName(),
                         folderStructureRequest.getChallengeName());
                 String jarPathForFolder = folderPath
@@ -182,7 +182,7 @@ public class BrokerGateway implements IRequestListener<Request> {
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 String jarPathForFile = pathInstance.teamChallengePath(
-                        fileRequest.getCompetition(),
+                        Long.toString(fileRequest.getCompetitionId()),
                         fileRequest.getTeamName(),
                         fileRequest.getChallengeName())
                         + File.separator + fileRequest.getChallengeName() + ".jar";
