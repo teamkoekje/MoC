@@ -1,5 +1,6 @@
 package messaging;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.io.Serializable;
 import javax.jms.Message;
 import java.util.HashMap;
@@ -10,7 +11,12 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.naming.NamingException;
 
+// </editor-fold>
+
 /**
+ * Replier for the Request-Reply pattern between MoC-Service and
+ * MoC-WorkspaceServer.
+ *
  * @param <REQUEST>
  * @param <REPLY>
  *
@@ -18,6 +24,7 @@ import javax.naming.NamingException;
  */
 public class AsynchronousReplier<REQUEST, REPLY> {
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     /**
      * For sending and receiving messages
      */
@@ -32,13 +39,15 @@ public class AsynchronousReplier<REQUEST, REPLY> {
      * The listener that will be informed when each request arrives.
      */
     private IRequestListener<REQUEST> requestListener = null;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
     /**
      * This constructor: 1. intitiates the serializer, receiver and
      * activeRequests 2. registeres a message listener for the MessagingGateway
      * (method onMessage)
      *
-     * @param requestReceiverQueue is the name of teh JMS queue from which the
+     * @param requestReceiverQueue is the name of the JMS queue from which the
      * requests will be received.
      * @throws javax.naming.NamingException
      * @throws javax.jms.JMSException
@@ -51,7 +60,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
             @Override
             public void onMessage(Message message) {
                 if (message instanceof BytesMessage) {
-                    
+
                 } else {
                     onRequest((ObjectMessage) message);
                 }
@@ -59,7 +68,9 @@ public class AsynchronousReplier<REQUEST, REPLY> {
         });
         this.activeRequests = new HashMap<>();
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
     /**
      * sets the listener that will be notified when each request arrives
      *
@@ -68,7 +79,9 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     public void setRequestListener(IRequestListener<REQUEST> requestListener) {
         this.requestListener = requestListener;
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Opens the JMS connection of the Messaging Gateway in order to start
      * sending/receiving requests.
@@ -78,7 +91,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
     }
 
     /**
-     * This method is invoked every time a new request arrives
+     * Callback for every time a new request arrives
      *
      * @param message the incoming message containing the request
      */
@@ -112,14 +125,11 @@ public class AsynchronousReplier<REQUEST, REPLY> {
             Message replyMsg = gateway.createObjectMessage((Serializable) reply);
             String messageID = requestMsg.getJMSMessageID();
             replyMsg.setJMSCorrelationID(messageID);
-            beforeSendReply(requestMsg, replyMsg);
             return gateway.sendMessage(replyMsg, requestMsg.getJMSReplyTo());
         } catch (JMSException ex) {
             System.err.println(ex.getMessage());
             return false;
         }
     }
-
-    protected void beforeSendReply(Message request, Message reply) {
-    }
+    // </editor-fold>
 }

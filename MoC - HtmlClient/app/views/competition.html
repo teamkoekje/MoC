@@ -4,11 +4,11 @@
 
 <div class="container" style="width:100%;">
     <span style="position: absolute; top: 10px; right: 35px">
-        <span>
+        <span style="cursor: pointer" ng-click="toggleHints();">
             hints
         </span>
         |
-        <span style="cursor: pointer" ng-onclick="toggleMessages();">
+        <span style="cursor: pointer" ng-click="toggleMessages();">
             messages
         </span>
     </span>
@@ -39,6 +39,17 @@
                     </ul>
                 </div>
             </div>
+            <div class="col-xs-6 newsfeedBox" style="display:none" id="wrapperHints">
+                <p ng-repeat="hint in hints">
+                    {{hint}}
+                </p>
+            </div>
+            <div class="col-xs-6 newsfeedBox" style="display:none" id="wrapperMessages">
+                <p ng-repeat="message in messages">
+                    {{message}}
+                </p>
+            </div>
+            
             <div class="col-xs-6" style="display:none" id="wrapperTests">
                 <div class="first" style="width: 40px;margin-left:7%;">Tests</div>
                 <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">

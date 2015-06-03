@@ -7,6 +7,7 @@ import domain.Events.HintReleasedEvent;
 import domain.Events.MessageReleasedEvent;
 import domain.Events.NewsItemPublishedEvent;
 import domain.Events.RoundEndedEvent;
+import domain.Round;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,12 +45,14 @@ public class CompetitionService extends GenericService<Competition> {
         switch (event.getType()) {
             case ROUND_ENDED:
                 RoundEndedEvent ree = (RoundEndedEvent) event;
-                //TODO: Edit in database
+                em.merge(ree.getCompetition());
+                // TODO: TEST THE ABOVE LINE!!
                 break;
             case COMPETITION_ENDED:
                 CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
                 competitions.remove(cee.getCompetition());
-                //TODO: Edit in database
+                em.persist(cee.getCompetition());
+                // TODO: TEST THE ABOVE LINE!!
                 break;
             case HINT_RELEASED:
                 HintReleasedEvent hre = (HintReleasedEvent) event;

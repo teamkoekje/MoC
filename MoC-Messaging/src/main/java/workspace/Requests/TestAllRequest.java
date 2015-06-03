@@ -1,17 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
-/**
+/** 
+ * A Request used to tell a Workspace Server to compile a project of a specified
+ * team, in a specified competition.
  *
- * @author Luc
+ * @author TeamKoekje
  */
 public class TestAllRequest extends TeamRequest{
     
-    private String challengeName;
+    private final String challengeName;
 
     public TestAllRequest(long competitionId, String teamName, String challengeName) {
         super(Action.TESTALL, competitionId, teamName);

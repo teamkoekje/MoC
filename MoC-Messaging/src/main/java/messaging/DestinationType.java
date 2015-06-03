@@ -1,7 +1,8 @@
 package messaging;
 
 /**
- *
+ * Class that provides simple naming for different destination types.
+ * 
  * @author TeamKoekje
  */
 public class DestinationType {

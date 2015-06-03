@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
 /**
+ * A Request used to tell a Workspace Server to delete the workspace of a
+ * specified Team in a specified Competition.
  *
- * @author Luc
+ * @author TeamKoekje
  */
 public class DeleteRequest extends TeamRequest {
 

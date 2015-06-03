@@ -1,5 +1,6 @@
 package messaging;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.io.Serializable;
 import java.util.HashMap;
 import javax.jms.Message;
@@ -9,20 +10,23 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.naming.NamingException;
 
+// </editor-fold>
 /**
  * This class is used for sending requests and receiving replies in asynchronous
  * communication.This class inherits the MessagingGateway, i.e., it has access
  * to a MessageSender and MessageReceiver.
  *
- * @author TeamKoekje
  * @param <REQUEST> is the domain class for requests
  * @param <REPLY> is the domain class for replies
+ *
+ * @author TeamKoekje
  */
 public class AsynchronousRequestor<REQUEST, REPLY> {
 
+    // <editor-fold defaultstate="collapsed" desc="Private classes" >
     /**
-     * Class Pair is just used to make it possible to store pairs of REQUEST,
-     * ReplyListener in a hashtable!
+     * Used to make it possible to store pairs of REQUEST, ReplyListener in a
+     * hashtable!
      */
     private class Pair {
 
@@ -34,7 +38,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
             this.request = request;
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     /**
      * For sending and receiving messages
      */
@@ -44,7 +50,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
      * contains registered reply listeners for each sent request
      */
     private final Map<String, Pair> listeners;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
     /**
      * The only constructor. This constructor does the following: 1. creates the
      * serializer and listener. 2. registers itself as the listener on the
@@ -67,7 +75,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
             }
         });
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Opens JMS connection in order to be able to send messages and to start
      * receiving messages.
@@ -102,8 +112,9 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
     }
 
     /**
-     * Called when a reply is received. Uses the correlation ID of the message
-     * to retrieve the correct listener and calls the onReply of that listener.
+     * Callback for when a reply is received. Uses the correlation ID of the
+     * message to retrieve the correct listener and calls the onReply of that
+     * listener.
      *
      * @param message the reply message
      */
@@ -119,4 +130,5 @@ public class AsynchronousRequestor<REQUEST, REPLY> {
         }
 
     }
+    // </editor-fold>
 }

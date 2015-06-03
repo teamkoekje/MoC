@@ -1,17 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
 /**
+ * A Request used to tell a Workspace Server to create a Workspace for a
+ * specified Team in a specified Competition
  *
- * @author Luc
+ * @author TeamKoekje
  */
 public class CreateRequest extends TeamRequest {
 
-    public CreateRequest(long competitionId, String teamNAme) {
-        super(Action.CREATE, competitionId, teamNAme);
+    public CreateRequest(long competitionId, String teamName) {
+        super(Action.CREATE, competitionId, teamName);
     }
 }

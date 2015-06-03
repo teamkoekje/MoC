@@ -1,5 +1,6 @@
 package domain;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAttribute;
+// </editor-fold>
 
 /**
  * The Competition class represents a Masters of Code competition. A competition
@@ -58,6 +60,7 @@ public class Competition implements Serializable {
     private Round currentRound;
 
     //</editor-fold>    
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Competition() {
     }
@@ -150,6 +153,15 @@ public class Competition implements Serializable {
 
     public Round getCurrentRound() {
         return currentRound;
+    }    
+    
+    public Team getTeamByUsername(String username) {
+        for(Team t : teams){
+            if(t.containsParticipant(username)){
+                return t;
+            }
+        }
+        return null;
     }
     // </editor-fold>
 
@@ -161,14 +173,16 @@ public class Competition implements Serializable {
                 switch (event.getType()) {
                     case ROUND_ENDED:
                         RoundEndedEvent ree = (RoundEndedEvent) event;
+                        ree.setCompetition(this);
                         System.out.println("Round ended: " + ree.getEndedRound().getChallenge().getName());
                         //if there is another round, set it as current
                         int nextRoundOrder = ree.getEndedRound().getRoundOrder() + 1;
                         if (rounds.size() > nextRoundOrder) {
                             currentRound = rounds.get(nextRoundOrder);
+                            
                             //oterwise, tell the calling service the entire competition has ended
                         } else {
-                            //currentRound = null;
+                            currentRound = null;
                             ArrayList<CompetitionEvent> temp = new ArrayList<>();
                             temp.add(new CompetitionEndedEvent(this));
                             return temp;
@@ -292,13 +306,4 @@ public class Competition implements Serializable {
         }
     }
     //</editor-fold>
-
-    public Team getTeamByUsername(String username) {
-        for(Team t : teams){
-            if(t.containsParticipant(username)){
-                return t;
-            }
-        }
-        return null;
-    }
 }

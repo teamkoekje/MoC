@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
 /**
+ * Abstract class used to tell a Workspace Server to perform a Specified Action
+ * in a specified Competition on a specified Team.
  *
- * @author Luc
+ * @author TeamKoekje
  */
 public abstract class TeamRequest extends Request {
 
