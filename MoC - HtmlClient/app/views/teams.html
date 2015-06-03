@@ -66,19 +66,19 @@
                         <tr ng-repeat="user in participants">
                             <td>{{user.username}}</td>
                             <td>{{user.name}}</td>
-                            
-                            <td ng-if="isLoggedInOwner(team.owner.username)">
-                                <form ng-submit="leaveTeam(user)">
-                                 <input type="submit" class="btn btn-default" value="X"/>
-                                </form>    
+
+                            <td ng-if="isOwnerLoggedIn(team.owner.username)">
+                                <button type="button" class="btn btn-sm btn-danger" ng-click="leaveTeam(user)">X</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+
+                <a href="#newteammember?teamid={{team.id}}" ng-if="isOwnerLoggedIn(team.owner.username)">
+                    <span class="btn btn-primary">Add new team member</span>
+                </a>
             </div>
-            <div ng-controller="loginController" >
-                <center> <a href="?teamid={{team.id}}#newteammember" ng-if="isLoggedInOwner(team.owner.username)"><span class="btn btn-default">Add new team member</span></a></center>
-            </div>
+
         </div>
     </div>
 

@@ -2,33 +2,33 @@
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
 
-controllers.service('newsfeedService', function() {
+controllers.service('newsfeedService', function () {
     var messages = [];
     var hints = [];
 
     // Messages
-    var addMessage = function(message) {
+    var addMessage = function (message) {
         messages.push(message);
     };
 
-    var clearMessages = function(){
+    var clearMessages = function () {
         messages = [];
     }
 
-    var getMessages = function(){
+    var getMessages = function () {
         return messages;
     };
 
     // Hints
-    var addHint = function(hint) {
+    var addHint = function (hint) {
         hints.push(hint);
     };
 
-    var clearHints = function(){
+    var clearHints = function () {
         hints = [];
     }
 
-    var getHints = function(){
+    var getHints = function () {
         return hints;
     };
 
@@ -73,7 +73,7 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
                     var result = $.parseJSON(msg.data);
                     if (typeof result.hint !== 'undefined') {
                         newsfeedService.addHint(result.hint.text);
-                    }else if(typeof result.message !== 'undefined'){
+                    } else if (typeof result.message !== 'undefined') {
                         newsfeedService.addMessage(result.message.text);
                     }
                 };
@@ -101,11 +101,8 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
             });
         };
 
-        $scope.isLoggedInOwner = function (teamOwner) {
-            return $cookies.user === teamOwner;
-        };
-
-        $scope.newsfeed = [];
+        $scope.messages = [];
+        $scope.hints = [];
         $scope.username = $cookies.user;
         // TODO: Remove test data
         newsfeedService.addMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, tortor et commodo scelerisque, justo sapien elementum lacus, sed mollis lacus turpis quis mauris");
@@ -248,13 +245,20 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
             $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
         };
+        
         $scope.isSelected = function (teamId) {
             return $scope.team.id === teamId;
         };
-         $scope.leaveTeam = function (user) {
-            console.log("remove user " + user.name + " from team with id: " + $scope.team.id);
-            $team.leaveTeam({teamId: $scope.team.id, user: user}, function () {
+        
+        $scope.leaveTeam = function (user) {
+            new $team.leaveTeam({teamId: $scope.team.id, username: user.username}).$save(function() {
+                $scope.participants = $team.participants.query({teamId: $scope.team.id});
             });
+            
+        };
+        
+        $scope.isOwnerLoggedIn = function (teamOwner) {
+            return $cookies.user.toUpperCase() === teamOwner.toUpperCase();
         };
         loadData = function () {
             $scope.teams = $team.myTeams.query(function () {
@@ -475,13 +479,13 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
                 new $workspace.compile({competitionId: $routeParams.id}).$save();
             });
         };
-        
+
         $scope.testAll = function () {
             save(function () {
                 new $workspace.test({competitionId: $routeParams.id}).$save();
             });
         };
-        
+
         $scope.test = function (testFile, testName) {
             save(function () {
                 new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();

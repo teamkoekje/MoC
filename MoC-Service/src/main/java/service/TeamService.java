@@ -48,7 +48,9 @@ public class TeamService extends GenericService<Team> {
      * @param teamId id of the team that the user should leave
      */
     public void leaveTeam(User user, long teamId) {
-        throw new UnsupportedOperationException();
+        Team team = findById(teamId);
+        team.removeParticipant(user);
+        edit(team);
     }
 
 

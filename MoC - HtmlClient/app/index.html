@@ -26,7 +26,7 @@
         <div class="container theme-showcase" role="main">
 
             <div class="page-header" ng-controller="loginController">
-                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">Login</a>
+                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-primary" style="float:right">Login</a>
                 <div ng-if="isLoggedIn()" style="float:right">
                     Logged in as: <b>{{username}} </b>
                     <a ng-click="logout()" class="btn btn-lg btn-link">Logout</a>

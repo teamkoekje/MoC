@@ -36,7 +36,7 @@ services.factory('team', ['$resource',
             myTeams: $resource(baseUrl + '/team/myTeams'),
             byToken: $resource(baseUrl + '/team/token/:token', {token: '@token'}),
             participants: $resource(baseUrl + '/team/:teamId/users', {teamId: '@teamId'}),
-             leaveTeam: $resource(baseUrl + '/team/:teamId/leave', {teamId: '@teamId'})
+            leaveTeam: $resource(baseUrl + '/team/:teamId/leave/:username', {teamId: '@teamId', username: '@username'})
         };
     }
 ]);

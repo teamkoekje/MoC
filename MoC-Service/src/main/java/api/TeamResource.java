@@ -162,8 +162,7 @@ public class TeamResource {
     @Path("/{teamId}/invite")
     public Response inviteMember(String email, @PathParam("teamId") long teamId) {
         System.out.println(email + " - " + teamId);
-        
-        
+
         if (email == null || email.isEmpty()) {
             return Response.serverError().entity("No email").build();
         } else if (teamService.findById(teamId) == null) {
@@ -201,10 +200,13 @@ public class TeamResource {
      */
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{teamId}/leave")
+    @Path("/{teamId}/leave/{username}")
     @RolesAllowed({"User", "Admin"})
-    public void leaveTeam(User user, @PathParam("teamId") long teamId) {
-        teamService.leaveTeam(user, teamId);
+    public void leaveTeam(@PathParam("teamId") long teamId, @PathParam("username") String username) {
+        User user = userService.findById(username);
+        if (user != null) {
+            teamService.leaveTeam(user, teamId);
+        }
     }
     //</editor-fold>
 }
