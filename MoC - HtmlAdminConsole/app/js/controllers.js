@@ -112,9 +112,6 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
         $scope.user.organisation = "FHICT";
     }
 ]);
-controllers.controller('competitionController', ['$scope', function($scope, ngDialog){
-        
-}]);
 
 /**
  * Get the parameters from the URL and put them in a map
@@ -133,6 +130,11 @@ window.params = function () {
 
 controllers.controller('competitionOverviewController', ['$scope',
     function ($scope) {
+        $scope.selectedCompetition = {
+            name: "selectedCompetitionName",
+            startTime: new Date(),
+            status: "not implemented"
+        };
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
         $scope.teams = [

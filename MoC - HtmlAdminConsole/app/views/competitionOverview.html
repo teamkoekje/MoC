@@ -3,14 +3,12 @@
 </a>
 <div class="col-xs-5">
     <h3 style="width: 100%;text-align:center">
-        Competitions <span style="float: right; cursor:pointer; border-radius:50px;color:white;padding-bottom:0px;height:25px;width:25px;text-align:center;padding:0;margin:0;vertical-align:middle;box-shadow:0px 0px 8px 0px rgba(0,0,0,0.75);background-color:#337ab7">+</span>
+        Competitions <span style="float: right; font-size:0.95em; cursor:pointer; border-radius:50px;color:white;padding-bottom:0px;height:25px;width:25px;text-align:center;padding:0;margin:0;vertical-align:middle;box-shadow:0px 0px 8px 0px rgba(0,0,0,0.75);background-color:#337ab7">+</span>
     </h3>
     <br>
-    <ul style="list-style: none" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]">
-        <li>
-            <span style="float:left">
-                Competition {{i}}
-            </span>
+    <ul style="list-style: none">
+        <li ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
+            Competition {{i}}
             <span style="float: right">
                 <a href='#'>view</a> 
                 <a href='#'>edit</a>
@@ -25,14 +23,14 @@
     </h3>
     <p>
         Name: {{selectedCompetition.name}} <br>
-        Start: {{selectedCompetition.startTime}} <br>
+        Start: {{selectedCompetition.startTime | date:'medium'}} <br>
         Status: {{selectedCompetition.status}}
     </p>
     <h3>
         Challenges
     </h3>
     <select multiple style='width:100%'>
-        <option ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]">
+        <option ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
             Challenge {{i}}
         </option>
     </select>
@@ -40,14 +38,16 @@
         Teams
     </h3>
     <div class='row'>
-        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'name'; reverseSort = !reverseSort">
+        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'name';
+                    reverseSort = !reverseSort">
             <h4>Teamname</h4>
         </div>
-        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'score'; reverseSort = !reverseSort">
+        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'score';
+                    reverseSort = !reverseSort">
             <h4>Score</h4>
         </div>
     </div>
-    <div class='row' ng-repeat="team in teams | orderBy:teamSort:reverseSort">
+    <div class='row' ng-repeat="team in teams| orderBy:teamSort:reverseSort">
         <div class='col-xs-6'>{{team.name}}</div>
         <div class='col-xs-6'>{{team.score}}</div>
     </div>
