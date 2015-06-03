@@ -3,8 +3,7 @@ package workspace.Requests;
 import java.io.Serializable;
 
 /**
- * This class represents an object that tells a specific workspace to perform a
- * specific action
+ * Base class used to tell a Workspace Server to perform a specified Action.
  *
  * @author TeamKoekje
  */

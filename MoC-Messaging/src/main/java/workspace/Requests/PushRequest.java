@@ -1,19 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
 /**
+ * A Request used to send a zip to a Workspace Server in order to extract it to
+ * a specified Competition.
  *
- * @author Luc
+ * @author TeamKoekje
  */
 public class PushRequest extends Request {
 
     private final String challengeName;
     private final byte[] data;
-    
+
     public PushRequest(long competitionId, String challengeName, byte[] data) {
         super(Action.PUSH_CHALLENGE, competitionId);
         this.challengeName = challengeName;
@@ -26,5 +23,5 @@ public class PushRequest extends Request {
 
     public byte[] getData() {
         return data;
-    } 
+    }
 }

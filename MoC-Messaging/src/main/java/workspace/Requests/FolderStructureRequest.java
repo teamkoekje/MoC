@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
 /**
+ * A Request used to tell a Workspace Server to retrieve the folder structure of
+ * a specified Project for a specified Team in a specified Competition.
  *
- * @author Luc
+ * @author TeamKoekje
  */
-public class FolderStructureRequest extends TeamRequest{
-    
+public class FolderStructureRequest extends TeamRequest {
+
     private final String challengeName;
 
     public FolderStructureRequest(long competitionId, String challengeName, String teamName) {

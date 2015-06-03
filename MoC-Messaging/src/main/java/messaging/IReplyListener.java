@@ -1,6 +1,8 @@
 package messaging;
 
 /**
+ * Simple interface used to indicate a class has a handler for when replies are
+ * received.
  *
  * @author TeamKoekje
  * @param <REQUEST>

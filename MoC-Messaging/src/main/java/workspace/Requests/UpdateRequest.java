@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package workspace.Requests;
 
 /**
+ * A Request used to tell a Workspace Server to update the contents of a
+ * specified File in a specified Competition for a specified Team to the
+ * specified content.
  *
- * @author Luc
+ * @author TeamKoekje
  */
-public class UpdateRequest extends TeamRequest{
-    
+public class UpdateRequest extends TeamRequest {
+
     private final String filePath;
     private final String fileContent;
 

@@ -1,6 +1,7 @@
 package messaging;
 /**
- *
+ * Class providing Strings for naming purposes of JMS.
+ * 
  * @author TeamKoekje
  */
 public class JMSSettings {
