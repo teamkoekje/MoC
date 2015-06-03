@@ -1,6 +1,9 @@
-package workspace;
+package workspace.Requests;
 
 /**
+ * Indicates the action for the request. This is used on the workspace servers
+ * to cast the request to the correct sub-request.
+ *
  * @author TeamKoekje
  */
 public enum Action {

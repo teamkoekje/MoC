@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workspace;
+package workspace.Requests;
 
 /**
  *
  * @author Luc
  */
-public class TestAllRequest extends TeamRequest{
+public class FolderStructureRequest extends TeamRequest{
     
-    private String challengeName;
+    private final String challengeName;
 
-    public TestAllRequest(String competition, String teamName, String challengeName) {
-        super(Action.TESTALL, competition, teamName);
+    public FolderStructureRequest(String competition, String challengeName, String teamName) {
+        super(Action.FOLDER_STRUCTURE, competition, teamName);
         this.challengeName = challengeName;
     }
 

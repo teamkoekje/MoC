@@ -1,6 +1,7 @@
 package main;
 
-import Management.WorkspaceManagement;
+import controllers.PathController;
+import management.WorkspaceManagement;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,16 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import workspace.CreateRequest;
-import workspace.DeleteRequest;
-import workspace.PushRequest;
-import workspace.UpdateRequest;
 
 /**
  *
  * @author Casper
  */
-public class temp extends WorkspaceManagement{
+public class temp {
 
     public temp() {
     }
@@ -30,20 +27,13 @@ public class temp extends WorkspaceManagement{
         //init
         String teamName = "testTeam";
         String competitionName = "testCompetition";
-        WorkspaceManagement instance = getInstance();
+        WorkspaceManagement instance = WorkspaceManagement.getInstance();
+        PathController pathInstance = PathController.getInstance();
         System.out.println("creating workspace");
         //create
-        instance.createWorkspace(competitionName, teamName);
         //confirm
-        File f = new File(instance.getDefaultPath()
-                + File.separator
-                + "Competitions"
-                + File.separator
-                + competitionName
-                + File.separator
-                + "Teams"
-                + File.separator
-                + teamName);
+        pathInstance.teamPath(competitionName, teamName);
+        File f = new File(instance.createWorkspace(competitionName, teamName));
         assertTrue(f.exists());
         assertTrue(f.isDirectory());
         assertEquals(f.listFiles().length, 0);
@@ -65,37 +55,37 @@ public class temp extends WorkspaceManagement{
     public void testExtractChallenge() {
         //init
         /*System.out.println("extracting challenge");
-        String competitionName = "testCompetition";
-        WorkspaceManagement instance = getInstance();
-        CreateRequest cr = new CreateRequest(competitionName, "team 1");
-        CreateRequest cr2 = new CreateRequest(competitionName, "team 2");
-        instance.processRequest(cr);
-        instance.processRequest(cr2);
+         String competitionName = "testCompetition";
+         WorkspaceManagement instance = getInstance();
+         CreateRequest cr = new CreateRequest(competitionName, "team 1");
+         CreateRequest cr2 = new CreateRequest(competitionName, "team 2");
+         instance.processRequest(cr);
+         instance.processRequest(cr2);
 
-        //extract (push)
-        //byte[] data = null;
-        PushRequest pr = new PushRequest(competitionName, "test challenge");
-        instance.processRequest(pr);
-        //confirm
-        File f = new File(instance.getDefaultPath()
-                + File.separator
-                + "Competitions"
-                + File.separator
-                + competitionName
-                + File.separator
-                + "Teams"
-                + File.separator);
-        File teamAFile1 = new File(f.getAbsolutePath() + "/team a/test challenge/some text.txt");
-        File teamAFile2 = new File(f.getAbsolutePath() + "/team a/test challenge/a sub folder/pizza.java");
-        File teamBFile1 = new File(f.getAbsolutePath() + "/team b/test challenge/some text.txt");
-        File teamBFile2 = new File(f.getAbsolutePath() + "/team b/test challenge/a sub folder/pizza.java");
-        assertTrue(teamAFile1.exists());
-        assertTrue(teamAFile2.exists());
-        assertTrue(teamBFile1.exists());
-        assertTrue(teamBFile2.exists());
-        //cleanup
-        instance.removeWorkspace(competitionName, "team a");
-        instance.removeWorkspace(competitionName, "team b");*/
+         //extract (push)
+         //byte[] data = null;
+         PushRequest pr = new PushRequest(competitionName, "test challenge");
+         instance.processRequest(pr);
+         //confirm
+         File f = new File(instance.getDefaultPath()
+         + File.separator
+         + "Competitions"
+         + File.separator
+         + competitionName
+         + File.separator
+         + "Teams"
+         + File.separator);
+         File teamAFile1 = new File(f.getAbsolutePath() + "/team a/test challenge/some text.txt");
+         File teamAFile2 = new File(f.getAbsolutePath() + "/team a/test challenge/a sub folder/pizza.java");
+         File teamBFile1 = new File(f.getAbsolutePath() + "/team b/test challenge/some text.txt");
+         File teamBFile2 = new File(f.getAbsolutePath() + "/team b/test challenge/a sub folder/pizza.java");
+         assertTrue(teamAFile1.exists());
+         assertTrue(teamAFile2.exists());
+         assertTrue(teamBFile1.exists());
+         assertTrue(teamBFile2.exists());
+         //cleanup
+         instance.removeWorkspace(competitionName, "team a");
+         instance.removeWorkspace(competitionName, "team b");*/
     }
 
     @Test
@@ -103,22 +93,14 @@ public class temp extends WorkspaceManagement{
         System.out.println("updating file");
         try {
             //init
-            String competitionName = "testCompitition";
+            String competitionId = "testCompitition";
             String originalContent = "this is test text";
             String newContent = "new content";
-            WorkspaceManagement instance = getInstance();
-            instance.createWorkspace(competitionName, "team c");
-            File f = new File(instance.getDefaultPath()
-                    + File.separator
-                    + "Competitions"
-                    + File.separator
-                    + competitionName
-                    + File.separator
-                    + "Teams"
-                    + File.separator
-                    + "team c"
-                    + File.separator
-                    + "test file.txt");
+            WorkspaceManagement instance = WorkspaceManagement.getInstance();
+            PathController pathInstance = PathController.getInstance();
+            
+            instance.createWorkspace(competitionId, "team c");
+            File f = new File(pathInstance.teamPath(competitionId, "team c")+ File.separator + "test file.txt");
             assertTrue(f.createNewFile());
             FileWriter fw = new FileWriter(f);
             try (BufferedWriter bw = new BufferedWriter(fw)) {
@@ -128,13 +110,13 @@ public class temp extends WorkspaceManagement{
             String temp = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(temp, originalContent);
             //update
-            String result = instance.updateFile(competitionName, "team c", "test file.txt", newContent);
+            String result = instance.updateFile(competitionId, "team c", "test file.txt", newContent);
             assertEquals(result, "File succesfully Updated");
             //confirm new data
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(newContent, temp2);
             //cleanup
-            removeWorkspace(competitionName, "team c");
+            instance.removeWorkspace(competitionId, "team c");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

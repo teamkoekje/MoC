@@ -1,5 +1,5 @@
 
-package workspace;
+package workspace.Requests;
 
 public class SysInfoRequest extends Request {
 

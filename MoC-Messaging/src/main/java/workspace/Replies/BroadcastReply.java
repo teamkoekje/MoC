@@ -1,4 +1,6 @@
-package workspace;
+package workspace.Replies;
+
+import workspace.Requests.Action;
 
 public class BroadcastReply extends Reply {
     

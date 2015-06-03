@@ -1,6 +1,7 @@
-package workspace;
+package workspace.Replies;
 
 import java.io.Serializable;
+import workspace.Requests.Action;
 
 /**
  * This is the generic Reply class used to reply to requests on the JMS connections.

@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package workspace;
+package workspace.Requests;
 
 /**
  *
  * @author Luc
  */
-public class CompileRequest extends TeamRequest{
+public class TestAllRequest extends TeamRequest{
     
-    private final String challengeName;
+    private String challengeName;
 
-    public CompileRequest(String competition, String teamName, String challengeName) {
-        super(Action.COMPILE, competition, teamName);
+    public TestAllRequest(String competition, String teamName, String challengeName) {
+        super(Action.TESTALL, competition, teamName);
         this.challengeName = challengeName;
     }
 
