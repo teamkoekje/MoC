@@ -3,6 +3,7 @@ package domain;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
+import domain.Events.MessageReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -178,6 +179,10 @@ public class Competition implements Serializable {
                     case HINT_RELEASED:
                         HintReleasedEvent hre = (HintReleasedEvent) event;
                         System.out.println("Hint released: " + hre.getReleasedHint().getContent());
+                        break;
+                    case MESSAGE_RELEASED:
+                        MessageReleasedEvent mre = (MessageReleasedEvent) event;
+                        System.out.println("Message released: " + mre.getReleasedMessage().getContent());
                         break;
                     default:
                         throw new AssertionError(event.getType().name());
