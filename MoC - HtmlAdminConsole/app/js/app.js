@@ -5,6 +5,7 @@
 // Declare app level module which depends on views, and components
 var app = angular.module('mocApp', [
     'ngRoute',
+    'ngDialog',
     'mocControllers',
     'mocServices'
 ]);

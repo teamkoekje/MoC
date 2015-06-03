@@ -12,6 +12,7 @@
     "angular-mocks": "~1.2.x",
     "angular-resource": "~1.2.x",
     "angular-cookies": "~1.2.x",
-    "html5-boilerplate": "~4.3.0"
+    "html5-boilerplate": "~4.3.0",
+    "ngDialog": "latest"
   }
 }

@@ -38,7 +38,7 @@ controllers.controller('loginController', ['$scope', '$cookies', 'user', functio
             }).success(function (data) {
                 console.log("Logged in succesfully: " + $scope.username);
                 $cookies.user = $scope.username;
-                location.href = "#/demo";
+                location.href = "#/competitionOverview";
 
                 var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
                 ws.onopen = function () {
@@ -112,6 +112,9 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
         $scope.user.organisation = "FHICT";
     }
 ]);
+controllers.controller('competitionController', ['$scope', function($scope, ngDialog){
+        
+}]);
 
 /**
  * Get the parameters from the URL and put them in a map
