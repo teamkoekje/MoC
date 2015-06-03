@@ -29,17 +29,17 @@ public class temp extends WorkspaceManagement{
     public void testCreateAndRemoveWorkspace() {
         //init
         String teamName = "testTeam";
-        String competitionName = "testCompetition";
+        long competitionId = 1;
         WorkspaceManagement instance = getInstance();
         System.out.println("creating workspace");
         //create
-        instance.createWorkspace(competitionName, teamName);
+        instance.createWorkspace(competitionId, teamName);
         //confirm
         File f = new File(instance.getDefaultPath()
                 + File.separator
                 + "Competitions"
                 + File.separator
-                + competitionName
+                + competitionId
                 + File.separator
                 + "Teams"
                 + File.separator
@@ -49,7 +49,7 @@ public class temp extends WorkspaceManagement{
         assertEquals(f.listFiles().length, 0);
         //remove
         System.out.println("removing workspace");
-        instance.removeWorkspace(competitionName, teamName);
+        instance.removeWorkspace(competitionId, teamName);
         //confirm
         assertFalse(f.exists());
     }
@@ -65,23 +65,23 @@ public class temp extends WorkspaceManagement{
     public void testExtractChallenge() {
         //init
         /*System.out.println("extracting challenge");
-        String competitionName = "testCompetition";
+        String competitionId = "testCompetition";
         WorkspaceManagement instance = getInstance();
-        CreateRequest cr = new CreateRequest(competitionName, "team 1");
-        CreateRequest cr2 = new CreateRequest(competitionName, "team 2");
+        CreateRequest cr = new CreateRequest(competitionId, "team 1");
+        CreateRequest cr2 = new CreateRequest(competitionId, "team 2");
         instance.processRequest(cr);
         instance.processRequest(cr2);
 
         //extract (push)
         //byte[] data = null;
-        PushRequest pr = new PushRequest(competitionName, "test challenge");
+        PushRequest pr = new PushRequest(competitionId, "test challenge");
         instance.processRequest(pr);
         //confirm
         File f = new File(instance.getDefaultPath()
                 + File.separator
                 + "Competitions"
                 + File.separator
-                + competitionName
+                + competitionId
                 + File.separator
                 + "Teams"
                 + File.separator);
@@ -94,8 +94,8 @@ public class temp extends WorkspaceManagement{
         assertTrue(teamBFile1.exists());
         assertTrue(teamBFile2.exists());
         //cleanup
-        instance.removeWorkspace(competitionName, "team a");
-        instance.removeWorkspace(competitionName, "team b");*/
+        instance.removeWorkspace(competitionId, "team a");
+        instance.removeWorkspace(competitionId, "team b");*/
     }
 
     @Test
@@ -103,16 +103,16 @@ public class temp extends WorkspaceManagement{
         System.out.println("updating file");
         try {
             //init
-            String competitionName = "testCompitition";
+            long competitionId = 1;
             String originalContent = "this is test text";
             String newContent = "new content";
             WorkspaceManagement instance = getInstance();
-            instance.createWorkspace(competitionName, "team c");
+            instance.createWorkspace(competitionId, "team c");
             File f = new File(instance.getDefaultPath()
                     + File.separator
                     + "Competitions"
                     + File.separator
-                    + competitionName
+                    + competitionId
                     + File.separator
                     + "Teams"
                     + File.separator
@@ -128,13 +128,13 @@ public class temp extends WorkspaceManagement{
             String temp = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(temp, originalContent);
             //update
-            String result = instance.updateFile(competitionName, "team c", "test file.txt", newContent);
+            String result = instance.updateFile(competitionId, "team c", "test file.txt", newContent);
             assertEquals(result, "File succesfully Updated");
             //confirm new data
             String temp2 = new String(Files.readAllBytes(Paths.get(f.getPath())));
             assertEquals(newContent, temp2);
             //cleanup
-            removeWorkspace(competitionName, "team c");
+            removeWorkspace(competitionId, "team c");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

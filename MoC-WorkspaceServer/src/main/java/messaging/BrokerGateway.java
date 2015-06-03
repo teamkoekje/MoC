@@ -112,32 +112,32 @@ public class BrokerGateway implements IRequestListener<Request> {
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
-                return new NormalReply(wm.buildWorkspace(compileRequest.getCompetition(), compileRequest.getTeamName(), compileRequest.getChallengeName()));
+                return new NormalReply(wm.buildWorkspace(compileRequest.getCompetitionId(), compileRequest.getTeamName(), compileRequest.getChallengeName()));
             case TEST:
                 TestRequest testRequest = (TestRequest) r;
-                return new NormalReply(wm.test(testRequest.getCompetition(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
+                return new NormalReply(wm.test(testRequest.getCompetitionId(), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
-                return new NormalReply(wm.testAll(testAllRequest.getCompetition(), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
+                return new NormalReply(wm.testAll(testAllRequest.getCompetitionId(), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
-                return new NormalReply(wm.updateFile(updateRequest.getCompetition(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                return new NormalReply(wm.updateFile(updateRequest.getCompetitionId(), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
             case CREATE:
                 CreateRequest createRequest = (CreateRequest) r;
-                return new NormalReply(wm.createWorkspace(createRequest.getCompetition(), createRequest.getTeamName()));
+                return new NormalReply(wm.createWorkspace(createRequest.getCompetitionId(), createRequest.getTeamName()));
             case DELETE:
                 DeleteRequest deleteRequest = (DeleteRequest) r;
-                return new NormalReply(wm.removeWorkspace(deleteRequest.getCompetition(), deleteRequest.getTeamName()));
+                return new NormalReply(wm.removeWorkspace(deleteRequest.getCompetitionId(), deleteRequest.getTeamName()));
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return new NormalReply(wm.extractChallengeToTeam(pushRequest.getData(), pushRequest.getChallengeName(), pushRequest.getCompetition()));
+                return new NormalReply(wm.extractChallengeToTeam(pushRequest.getData(), pushRequest.getChallengeName(), pushRequest.getCompetitionId()));
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath
                         = wm.getDefaultPath()
                         + "Competitions"
                         + File.separator
-                        + folderStructureRequest.getCompetition()
+                        + folderStructureRequest.getCompetitionId()
                         + File.separator
                         + "Teams"
                         + File.separator
@@ -157,7 +157,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                         + File.separator
                         + "Competitions"
                         + File.separator
-                        + fileRequest.getCompetition()
+                        + fileRequest.getCompetitionId()
                         + File.separator
                         + "Teams"
                         + File.separator

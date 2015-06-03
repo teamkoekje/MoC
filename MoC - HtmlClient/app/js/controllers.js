@@ -29,7 +29,7 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 };
                 ws.onmessage = function (msg) {
                     var result = $.parseJSON(msg.data);
-                    if(typeof result.hint !== 'undefined'){
+                    if (typeof result.hint !== 'undefined') {
                         $scope.newsfeed.push(result.hint.message);
                     }
                 };
@@ -161,6 +161,14 @@ controllers.controller('competitionsController', ['$scope', 'competition',
         $scope.isSelected = function (competitionId) {
             return $scope.competition.id === competitionId;
         };
+        $scope.isActive = function (competitionId) {
+            for (i = 0; i < $scope.activeCompetitions.length; i++) {
+                if ($scope.activeCompetitions[i].id === competitionId) {
+                    return true;
+                }
+            }
+            return false;
+        };
         loadData = function () {
             $scope.activeCompetitions = $competition.active.query(function () {
                 if (!$scope.competition && $scope.activeCompetitions.length > 0) {
@@ -251,7 +259,8 @@ controllers.controller('inviteUserController', ['$scope', 'team',
 ]);
 
 
-controllers.controller('competitionController', ['$scope', function ($scope) {
+controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams',
+    function ($scope, $workspace, $routeParams) {
         //http://ace.c9.io/#nav=howto
         var editor;
         /**
@@ -300,9 +309,10 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
                         editor.resize();
                     });
         }
+        ;
 
         $scope.getTextFromEditor = function getTextFromEditor() {
-            return editor.getSession.getValue();
+            return editor.session.getValue();
         };
         $scope.getSelectionFromEditor = function getSelectionFromEditor() {
             return editor.session.getTextRange(editor.getSelectionRange());
@@ -320,6 +330,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
                 alert("Full screen is not supported, recommended webbrowser to use is Google Chrome");
             }
         }
+        ;
 
         $scope.fullScreenEditor = function fullScreenEditor() {
             //Hide the side panels
@@ -329,7 +340,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
             //Set the editor full screen
             fullScreenElement($('#wrapperAroundEditor')[0]);
-        }
+        };
 
         $scope.toggleMessages = function toggleMessages() {
             if ($('#wrapperMessages').is(":visible")) {
@@ -342,7 +353,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperAroundResults').hide();
             $('#wrapperTests').hide();
             editor.resize();
-        }
+        };
 
         $scope.toggleTests = function toggleTests() {
             if ($('#wrapperTests').is(":visible")) {
@@ -355,7 +366,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperAroundResults').hide();
             $('#wrapperMessages').hide();
             editor.resize();
-        }
+        };
 
         $scope.toggleResults = function toggleResults() {
             if ($('#wrapperAroundResults').is(":visible")) {
@@ -368,23 +379,37 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperMessages').hide();
             $('#wrapperTests').hide();
             editor.resize();
-        }
+        };
+
+        save = function (onSucces) {
+            var file = new $workspace.update({competitionId: $routeParams.id});
+            file.fileContent = $scope.getTextFromEditor();
+            //TODO: Get path of current file
+            file.filePath = "";
+            console.log("content: " + file.fileContent);
+            file.$save(onSucces, function (data) {
+                console.log(data.data);
+            });
+        };
+
+        $scope.compile = function () {
+            save(function () {
+                new $workspace.compile({competitionId: $routeParams.id}).$save();
+            });
+        };
         
+        $scope.testAll = function () {
+            save(function () {
+                new $workspace.test({competitionId: $routeParams.id}).$save();
+            });
+        };
+        
+        $scope.test = function (testFile, testName) {
+            save(function () {
+                new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
+            });
+        };
+
         initEditor("editor");
     }
 ]);
-
-/**
- * Get the parameters from the URL and put them in a map
- * @returns Map with URL parameters
- */
-window.params = function () {
-    var result = {};
-    var searchString = location.search.substring(1, location.search.length);
-    var pairs = searchString.split("&");
-    for (var i in pairs) {
-        var pair = pairs[i].split("=");
-        result[pair[0]] = pair[1];
-    }
-    return result;
-};

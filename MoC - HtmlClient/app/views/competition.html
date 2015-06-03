@@ -1,6 +1,8 @@
 <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
 <script src="bower_components/ace-builds/src-min-noconflict/ext-language_tools.js"></script>
-<div ng-controller="competitionController" class="container" style="width:100%;">
+
+
+<div class="container" style="width:100%;">
     <span style="position: absolute; top: 10px; right: 35px">
         <span>
             hints
@@ -52,7 +54,7 @@
                         </option>
                     </select>
                     <br>
-                    <button class="btn btn-default">
+                    <button class="btn btn-default" ng-click="test()">
                         Run test
                     </button>
                 </div>
@@ -64,10 +66,10 @@
                 <button class="btn btn-default" ng-click="toggleTests();">Run specific test</button>
             </div>
             <div class="col-xs-2">
-                <button class="btn btn-default">Run all tests</button>
+                <button class="btn btn-default" ng-click="testAll()">Run all tests</button>
             </div>
             <div class="col-xs-2">
-                <button class="btn btn-default">Compile</button>
+                <button class="btn btn-default" ng-click="compile()">Compile</button>
             </div>
             <div class='col-xs-2'>
                 <button class="btn btn-default" 
