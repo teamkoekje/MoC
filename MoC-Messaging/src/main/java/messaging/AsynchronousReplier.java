@@ -12,6 +12,7 @@ import javax.jms.ObjectMessage;
 import javax.naming.NamingException;
 
 // </editor-fold>
+
 /**
  * Replier for the Request-Reply pattern between MoC-Service and
  * MoC-WorkspaceServer.
