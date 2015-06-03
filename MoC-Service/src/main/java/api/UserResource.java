@@ -64,8 +64,26 @@ public class UserResource {
     @Path("/{userId}")
     @PermitAll
     public User getUserById(@PathParam("userId") String userId) {
-        User u = userService.findById(userId);
         return userService.findById(userId);
+    }
+    
+    /**
+     * Check if the request is made by an Admin
+     * @param request
+     * The request
+     * @return 
+     * A response
+     */
+    @GET
+    @Path("/isAdmin")
+    public Response isAdmin(@Context HttpServletRequest request){
+        if(request.getRemoteUser() == null){
+            return Response.serverError().entity("You're not logged in").build();
+        }
+        if(!request.isUserInRole("Admin")){
+            return Response.serverError().entity("You're not in the admin group").build();
+        }
+        return Response.ok().build();
     }
 
     /**

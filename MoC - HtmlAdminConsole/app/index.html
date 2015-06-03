@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mocApp" class="no-js">
+    <head>
+        <title>Masters of Code</title>
+
+        <!--META INFO -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!--STYLESHEETS -->
+        <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
+        <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+        <!--SCRIPTS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body role="document">
+
+        <div class="container theme-showcase" role="main">
+
+            <div class="page-header" ng-controller="loginController">
+                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">Login</a>
+                <div ng-if="isLoggedIn()" style="float:right">
+                    Logged in as: <b>{{username}} </b>
+                    <a ng-click="logout()" class="btn btn-lg btn-link">Logout</a>
+                </div>
+                <h1>Masters of Code admin</h1>
+            </div>
+
+            <div ng-view></div>
+        </div>
+
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+
+        <script src="components/version/version.js"></script>
+        <script src="components/version/version-directive.js"></script>
+        <script src="components/version/interpolate-filter.js"></script>
+
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js"></script>
+    </body>
+</html>
