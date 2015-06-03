@@ -14,8 +14,8 @@ public class PushRequest extends Request {
     private final String challengeName;
     private final byte[] data;
     
-    public PushRequest(String competition, String challengeName, byte[] data) {
-        super(Action.PUSH_CHALLENGE, competition);
+    public PushRequest(long competitionId, String challengeName, byte[] data) {
+        super(Action.PUSH_CHALLENGE, competitionId);
         this.challengeName = challengeName;
         this.data = data;
     }

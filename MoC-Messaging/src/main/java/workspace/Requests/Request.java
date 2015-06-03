@@ -11,11 +11,11 @@ import java.io.Serializable;
 public abstract class Request implements Serializable {
 
     private final Action action;
-    private String competition;
+    private long competitionId;
 
-    protected Request(Action action, String competition) {
+    protected Request(Action action, long competitionId) {
         this.action = action;
-        this.competition = competition;
+        this.competitionId = competitionId;
     }
     
     protected Request(Action action){
@@ -26,7 +26,7 @@ public abstract class Request implements Serializable {
         return action;
     }
 
-    public String getCompetition() {
-        return competition;
+    public long getCompetitionId() {
+        return competitionId;
     }
 }

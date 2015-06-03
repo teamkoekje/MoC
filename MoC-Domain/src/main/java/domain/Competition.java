@@ -3,6 +3,7 @@ package domain;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
+import domain.Events.MessageReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -179,6 +180,10 @@ public class Competition implements Serializable {
                         HintReleasedEvent hre = (HintReleasedEvent) event;
                         System.out.println("Hint released: " + hre.getReleasedHint().getContent());
                         break;
+                    case MESSAGE_RELEASED:
+                        MessageReleasedEvent mre = (MessageReleasedEvent) event;
+                        System.out.println("Message released: " + mre.getReleasedMessage().getContent());
+                        break;
                     default:
                         throw new AssertionError(event.getType().name());
                 }
@@ -287,4 +292,13 @@ public class Competition implements Serializable {
         }
     }
     //</editor-fold>
+
+    public Team getTeamByUsername(String username) {
+        for(Team t : teams){
+            if(t.containsParticipant(username)){
+                return t;
+            }
+        }
+        return null;
+    }
 }

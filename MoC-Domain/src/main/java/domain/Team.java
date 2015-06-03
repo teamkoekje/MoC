@@ -40,7 +40,7 @@ public class Team implements Serializable {
     private User owner;
 
     private String name;
-    
+
     @ManyToOne
     @XmlElement
     private Competition competition;
@@ -78,8 +78,8 @@ public class Team implements Serializable {
     public User getOwner() {
         return owner;
     }
-    
-    public void setOwner(User owner){
+
+    public void setOwner(User owner) {
         addParticipant(owner);
         this.owner = owner;
     }
@@ -124,4 +124,13 @@ public class Team implements Serializable {
         competition.submit(this);
     }
     //</editor-fold>
+
+    boolean containsParticipant(String username) {
+        for (User p : participants) {
+            if (p.getUsername().toUpperCase().equals(username.toUpperCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

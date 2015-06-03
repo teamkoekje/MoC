@@ -1,7 +1,49 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$cookies', function ($scope, $cookies) {
+
+controllers.service('newsfeedService', function() {
+    var messages = [];
+    var hints = [];
+
+    // Messages
+    var addMessage = function(message) {
+        messages.push(message);
+    };
+
+    var clearMessages = function(){
+        messages = [];
+    }
+
+    var getMessages = function(){
+        return messages;
+    };
+
+    // Hints
+    var addHint = function(hint) {
+        hints.push(hint);
+    };
+
+    var clearHints = function(){
+        hints = [];
+    }
+
+    var getHints = function(){
+        return hints;
+    };
+
+    return {
+        addMessage: addMessage,
+        clearMessages: clearMessages,
+        getMessages: getMessages,
+        addHint: addHint,
+        clearHints: clearHints,
+        getHints: getHints
+    };
+
+});
+
+controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedService', function ($scope, $cookies, newsfeedService) {
 
         $scope.isLoggedIn = function () {
             return $cookies.user;
@@ -29,8 +71,10 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 };
                 ws.onmessage = function (msg) {
                     var result = $.parseJSON(msg.data);
-                    if(typeof result.hint !== 'undefined'){
-                        $scope.newsfeed.push(result.hint.message);
+                    if (typeof result.hint !== 'undefined') {
+                        newsfeedService.addHint(result.hint.text);
+                    }else if(typeof result.message !== 'undefined'){
+                        newsfeedService.addMessage(result.message.text);
                     }
                 };
 
@@ -63,6 +107,18 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
 
         $scope.newsfeed = [];
         $scope.username = $cookies.user;
+        // TODO: Remove test data
+        newsfeedService.addMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, tortor et commodo scelerisque, justo sapien elementum lacus, sed mollis lacus turpis quis mauris");
+        newsfeedService.addMessage("Aenean lacus quam, placerat in mi vel, interdum pellentesque nisl. Cras tincidunt cursus eros, vel fermentum lectus fringilla vitae. Donec eget neque faucibus, bibendum orci vel, porta metus. Aliquam odio orci, auctor nec dictum quis, molestie a nisi. Maecenas vitae erat eu sapien fringilla pellentesque eu id velit. Mauris quis mauris tempus, tempor ex et, pharetra justo. Vivamus varius fringilla mauris");
+        newsfeedService.addMessage("Fusce ac neque elementum, pharetra ");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus nunc ultrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus nasdfaltrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus aaaUt turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus nungfdsgrttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus nunc ultrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus nasdfaltrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus aaaUt turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus nungfdsgrttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
     }
 
 ]);
@@ -161,6 +217,14 @@ controllers.controller('competitionsController', ['$scope', 'competition',
         $scope.isSelected = function (competitionId) {
             return $scope.competition.id === competitionId;
         };
+        $scope.isActive = function (competitionId) {
+            for (i = 0; i < $scope.activeCompetitions.length; i++) {
+                if ($scope.activeCompetitions[i].id === competitionId) {
+                    return true;
+                }
+            }
+            return false;
+        };
         loadData = function () {
             $scope.activeCompetitions = $competition.active.query(function () {
                 if (!$scope.competition && $scope.activeCompetitions.length > 0) {
@@ -251,7 +315,10 @@ controllers.controller('inviteUserController', ['$scope', 'team',
 ]);
 
 
-controllers.controller('competitionController', ['$scope', function ($scope) {
+controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams', 'newsfeedService',
+    function ($scope, $workspace, $routeParams, newsfeedService) {
+        $scope.messages = newsfeedService.getMessages();
+        $scope.hints = newsfeedService.getHints();
         //http://ace.c9.io/#nav=howto
         var editor;
         /**
@@ -285,7 +352,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
                     function () {
                         var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
                         if (isFullScreen) {
-                            editor.setTheme("ace/theme/monokai");
+                            //editor.setTheme("ace/theme/monokai");
                             $("#wrapperAroundEditor").css({
                                 paddingRight: '0px',
                                 paddingLeft: '0px'
@@ -300,9 +367,10 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
                         editor.resize();
                     });
         }
+        ;
 
         $scope.getTextFromEditor = function getTextFromEditor() {
-            return editor.getSession.getValue();
+            return editor.session.getValue();
         };
         $scope.getSelectionFromEditor = function getSelectionFromEditor() {
             return editor.session.getTextRange(editor.getSelectionRange());
@@ -320,6 +388,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
                 alert("Full screen is not supported, recommended webbrowser to use is Google Chrome");
             }
         }
+        ;
 
         $scope.fullScreenEditor = function fullScreenEditor() {
             //Hide the side panels
@@ -329,7 +398,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
             //Set the editor full screen
             fullScreenElement($('#wrapperAroundEditor')[0]);
-        }
+        };
 
         $scope.toggleMessages = function toggleMessages() {
             if ($('#wrapperMessages').is(":visible")) {
@@ -341,6 +410,21 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             }
             $('#wrapperAroundResults').hide();
             $('#wrapperTests').hide();
+            $('#wrapperHints').hide();
+            editor.resize();
+        };
+
+        $scope.toggleHints = function toggleHints() {
+            if ($('#wrapperHints').is(":visible")) {
+                $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                $('#wrapperHints').hide();
+            } else {
+                $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                $('#wrapperHints').show();
+            }
+            $('#wrapperAroundResults').hide();
+            $('#wrapperTests').hide();
+            $('#wrapperMessages').hide();
             editor.resize();
         }
 
@@ -355,7 +439,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperAroundResults').hide();
             $('#wrapperMessages').hide();
             editor.resize();
-        }
+        };
 
         $scope.toggleResults = function toggleResults() {
             if ($('#wrapperAroundResults').is(":visible")) {
@@ -368,23 +452,37 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             $('#wrapperMessages').hide();
             $('#wrapperTests').hide();
             editor.resize();
-        }
+        };
+
+        save = function (onSucces) {
+            var file = new $workspace.update({competitionId: $routeParams.id});
+            file.fileContent = $scope.getTextFromEditor();
+            //TODO: Get path of current file
+            file.filePath = "";
+            console.log("content: " + file.fileContent);
+            file.$save(onSucces, function (data) {
+                console.log(data.data);
+            });
+        };
+
+        $scope.compile = function () {
+            save(function () {
+                new $workspace.compile({competitionId: $routeParams.id}).$save();
+            });
+        };
         
+        $scope.testAll = function () {
+            save(function () {
+                new $workspace.test({competitionId: $routeParams.id}).$save();
+            });
+        };
+        
+        $scope.test = function (testFile, testName) {
+            save(function () {
+                new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
+            });
+        };
+
         initEditor("editor");
     }
 ]);
-
-/**
- * Get the parameters from the URL and put them in a map
- * @returns Map with URL parameters
- */
-window.params = function () {
-    var result = {};
-    var searchString = location.search.substring(1, location.search.length);
-    var pairs = searchString.split("&");
-    for (var i in pairs) {
-        var pair = pairs[i].split("=");
-        result[pair[0]] = pair[1];
-    }
-    return result;
-};

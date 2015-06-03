@@ -14,8 +14,8 @@ public class FileRequest extends TeamRequest{
     private String filepath;
     private String challengeName;
 
-    public FileRequest(String competition, String teamname, String challengeName, String filepath) {
-        super(Action.FILE, competition, teamname);
+    public FileRequest(long competitionId, String teamname, String challengeName, String filepath) {
+        super(Action.FILE, competitionId, teamname);
         this.challengeName = challengeName;
         this.filepath = filepath;
     }

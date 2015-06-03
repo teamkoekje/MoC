@@ -14,8 +14,8 @@ public class UpdateRequest extends TeamRequest{
     private final String filePath;
     private final String fileContent;
 
-    public UpdateRequest(String competition, String teamName, String filePath, String fileContent) {
-        super(Action.UPDATE, competition, teamName);
+    public UpdateRequest(long competitionId, String teamName, String filePath, String fileContent) {
+        super(Action.UPDATE, competitionId, teamName);
         this.filePath = filePath;
         this.fileContent = fileContent;
     }

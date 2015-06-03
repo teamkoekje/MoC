@@ -15,8 +15,8 @@ public class TestRequest extends TeamRequest{
     private String testFile;
     private String testName;
 
-    public TestRequest(String competition, String teamname, String challengeName, String testFile, String testName) {
-        super(Action.TEST, competition, teamname);
+    public TestRequest(long competitionId, String teamname, String challengeName, String testFile, String testName) {
+        super(Action.TEST, competitionId, teamname);
         this.challengeName = challengeName;
         this.testFile = testFile;
         this.testName = testName;

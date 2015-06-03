@@ -4,6 +4,8 @@ import domain.Competition;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
+import domain.Events.MessageReleasedEvent;
+import domain.Events.NewsItemPublishedEvent;
 import domain.Events.RoundEndedEvent;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +53,11 @@ public class CompetitionService extends GenericService<Competition> {
                 break;
             case HINT_RELEASED:
                 HintReleasedEvent hre = (HintReleasedEvent) event;
-                we.broadCast("{\"hint\":{\"message\":\"" + hre.getReleasedHint().getContent() + "\"}}");
+                we.broadCast("{\"hint\":{\"text\":\"" + hre.getReleasedHint().getContent() + "\"}}");
+                break;
+            case MESSAGE_RELEASED:
+                MessageReleasedEvent mre = (MessageReleasedEvent) event;
+                we.broadCast("{\"message\":{\"text\":\"" + mre.getReleasedMessage().getContent() + "\"}}");
                 break;
             default:
                 throw new AssertionError(event.getType().name());
