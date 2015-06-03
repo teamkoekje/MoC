@@ -1,10 +1,12 @@
 package domain;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+// </editor-fold>
 
 /**
  * The Hint class represents a hint that can be shown during a challenge. It

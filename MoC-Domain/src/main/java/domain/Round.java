@@ -1,9 +1,12 @@
 package domain;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -13,9 +16,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+// </editor-fold>
 
 /**
  * The Round class represents a round within a Masters of Code competition. A
@@ -143,13 +146,11 @@ public class Round implements Serializable {
      */
     public long getRemainingTime() {
         //get the Duration between the current and end time, then retrieve it's seconds.
-//        return Duration.between(Instant.now(), endTime.toInstant()).getSeconds();
-        return 0;
+        return Duration.between(Instant.now(), endTime.toInstant()).getSeconds();
     }
 
     protected long elapsedTime() {
-        //return Duration.between(startTime.toInstant(), Instant.now()).getSeconds();
-        return 0;
+        return Duration.between(startTime.toInstant(), Instant.now()).getSeconds();
     }
 
     /**

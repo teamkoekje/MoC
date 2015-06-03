@@ -1,13 +1,15 @@
 package domain;
 
+// <editor-fold defaultstate="collapsed" desc="Variables" >
 import domain.Invitation.InvitationState;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+// </editor-fold>
 
 /**
  * A class used for managing invitations. Each team has their own InviteManager.
- * 
+ *
  * @author TeamKoekje
  */
 public class InviteManager {

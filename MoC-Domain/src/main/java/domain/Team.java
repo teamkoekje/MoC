@@ -1,5 +1,6 @@
 package domain;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+// </editor-fold>
 
 /**
  * The team class represents a team that participates in a competition. A team
@@ -123,8 +125,15 @@ public class Team implements Serializable {
     public void submit() {
         competition.submit(this);
     }
-    //</editor-fold>
 
+    /**
+     * Checks whether the specified username is found in the list of Users in
+     * this Team.
+     *
+     * @param username The name to check for
+     * @return True if the username was found in the users of this Team,
+     * otherwise false.
+     */
     boolean containsParticipant(String username) {
         for (User p : participants) {
             if (p.getUsername().toUpperCase().equals(username.toUpperCase())) {
@@ -133,4 +142,5 @@ public class Team implements Serializable {
         }
         return false;
     }
+    //</editor-fold>
 }

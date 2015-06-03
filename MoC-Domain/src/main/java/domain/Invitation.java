@@ -1,5 +1,6 @@
 package domain;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+// </editor-fold>
 
 /**
  * Used to keep track of invitations sent out by teams to people they wish to
@@ -43,6 +45,7 @@ public class Invitation implements Serializable {
         DECLINED
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
     @GeneratedValue
     private Long id;
@@ -52,9 +55,11 @@ public class Invitation implements Serializable {
     private final String email;
     private final String token;
     private InvitationState invitationState;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
     protected Invitation() {
-        team = /*new Team(new Participant());*/ null;
+        team = null;
         email = "no email";
         token = "no token";
     }
@@ -65,7 +70,9 @@ public class Invitation implements Serializable {
         this.token = token;
         this.invitationState = InvitationState.UNDECIDED;
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
     public InvitationState getState() {
         return invitationState;
     }
@@ -86,6 +93,16 @@ public class Invitation implements Serializable {
         return token;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Methods" >    
     @Override
     public boolean equals(Object other) {
         if (other == null) {
@@ -99,13 +116,6 @@ public class Invitation implements Serializable {
         }
         Invitation otherInvitation = (Invitation) other;
         return otherInvitation.email.equals(this.email);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    }    
+    // </editor-fold>
 }
