@@ -60,7 +60,6 @@ public class Competition implements Serializable {
     private Round currentRound;
 
     //</editor-fold>    
-    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Competition() {
     }
@@ -153,11 +152,11 @@ public class Competition implements Serializable {
 
     public Round getCurrentRound() {
         return currentRound;
-    }    
-    
+    }
+
     public Team getTeamByUsername(String username) {
-        for(Team t : teams){
-            if(t.containsParticipant(username)){
+        for (Team t : teams) {
+            if (t.containsParticipant(username)) {
                 return t;
             }
         }
@@ -179,7 +178,7 @@ public class Competition implements Serializable {
                         int nextRoundOrder = ree.getEndedRound().getRoundOrder() + 1;
                         if (rounds.size() > nextRoundOrder) {
                             currentRound = rounds.get(nextRoundOrder);
-                            
+
                             //oterwise, tell the calling service the entire competition has ended
                         } else {
                             currentRound = null;
@@ -286,20 +285,31 @@ public class Competition implements Serializable {
         }
         return false;
     }
-    
+
     /**
-     * Attempts to start the next round in the competition (including starting the first round).
-     * @throws IllegalStateException Thrown if the current round's state is NOT_STARTED or there are no rounds to start.
+     * Attempts to start the next round in the competition (including starting
+     * the first round).
+     *
+     * @throws IllegalStateException Thrown if the current round's state is
+     * NOT_STARTED or there are no rounds to start.
      */
-    public void startNextRound() throws IllegalStateException{
+    public void startNextRound() throws IllegalStateException {
         if (rounds.size() > 0) {
-            currentRound = rounds.get(0);
-            if (currentRound.getRoundState() == RoundState.NOT_STARTED) {
-                currentRound.start();
-            } else {
-                throw new IllegalStateException(
-                        "Can't start the current round as it's state is not NOT_STARTED, current state: "
-                        + currentRound.getRoundState());
+            if(currentRound == null){
+                if(rounds.get(rounds.size()-1).getRoundState() == RoundState.NOT_STARTED){
+                    currentRound = rounds.get(0);
+                    currentRound.start();
+                }else{
+                    throw new IllegalStateException("Can't start the first round as the Competition is already over.");
+                }
+            }else{
+                if (currentRound.getRoundState() == RoundState.NOT_STARTED) {
+                    currentRound.start();
+                } else {
+                    throw new IllegalStateException(
+                            "Can't start the current round as it's state is not NOT_STARTED, current state: "
+                            + currentRound.getRoundState());
+                }
             }
         } else {
             throw new IllegalStateException("Can't start the first round as there are no rounds defined in the competition");
