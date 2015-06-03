@@ -14,11 +14,15 @@ app.config(['$routeProvider',
         $routeProvider
                 .when('/login', {
                     templateUrl: 'views/login.html',
-                    controller: 'loginController'
+                    controller: '' //no need to add loginController because it's defined in index.html
                 })
                 .when('/register', {
                     templateUrl: 'views/register.html',
                     controller: 'registerController'
+                })
+                .when('/competitionOverview', {
+                    templateUrl: 'views/competitionOverview.html',
+                    controller: 'competitionOverviewController'
                 })
                 .otherwise({redirectTo: '/login'});
     }

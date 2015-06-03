@@ -1,18 +1,28 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$cookies', function ($scope, $cookies) {
+controllers.controller('loginController', ['$scope', '$cookies', 'user', function ($scope, $cookies, $user) {
 
         $scope.isLoggedIn = function () {
             return $cookies.user;
         };
 
+        $scope.admin = undefined;
         $scope.isAdmin = function () {
             if ($scope.isLoggedIn()) {
-                alert('implement this');
+                console.log("$user.isAdmin()");
+                $user.isAdmin.get(function () {
+                    console.log('success');
+                    $scope.admin = true;
+                }, function (error) {
+                    console.log('error');
+                    console.log(error.data);
+                    $scope.admin = false;
+                    alert(error.data);
+                });
             }
-            return false;
         };
+        $scope.isAdmin();
 
         $scope.login = function () {
             $.ajax({
@@ -28,7 +38,7 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
             }).success(function (data) {
                 console.log("Logged in succesfully: " + $scope.username);
                 $cookies.user = $scope.username;
-                location.href = "#/competitions";
+                location.href = "#/demo";
 
                 var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
                 ws.onopen = function () {
@@ -40,7 +50,6 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                         $scope.newsfeed.push(result.hint.message);
                     }
                 };
-
             }).error(function (data) {
                 console.log("Error while logging in");
                 console.log(data);
@@ -118,3 +127,32 @@ window.params = function () {
     }
     return result;
 };
+
+controllers.controller('competitionOverviewController', ['$scope',
+    function ($scope) {
+        $scope.teamSort = 'score';
+        $scope.reverseSort = true;
+        $scope.teams = [
+            {
+                name: 'team koekje',
+                score: 1337
+            },
+            {
+                name: 'team pannenkoek',
+                score: 137
+            },
+            {
+                name: 'fuck deze proftaak',
+                score: 13337
+            },
+            {
+                name: 'fuck deze proftaak 2',
+                score: 13337
+            },
+            {
+                name: 'waarom is angular kut?',
+                score: 13337
+            }
+        ];
+    }
+]);

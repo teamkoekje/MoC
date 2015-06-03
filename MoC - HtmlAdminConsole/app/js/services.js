@@ -14,7 +14,8 @@ services.factory('user', ['$resource',
             all: $resource(baseUrl + '/user/:userId', {userId: '@userId'}, {remove: {method: 'DELETE'}}),
             register: $resource(baseUrl + '/user/register/:token', {token: '@token'}),
             teams: $resource(baseUrl + '/user/:userId/teams', {userId: '@userId'}),
-            invitations: $resource(baseUrl + '/user/:userId/invitations', {userId: '@userId'})
+            invitations: $resource(baseUrl + '/user/:userId/invitations', {userId: '@userId'}),
+            isAdmin: $resource(baseUrl + '/user/isAdmin')
         };
     }
 ]);

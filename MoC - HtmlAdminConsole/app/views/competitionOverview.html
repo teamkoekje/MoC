@@ -1,0 +1,54 @@
+<a href='#' style='position: absolute; top: 10px; left: 10px;'>
+    <img style='height: 30px; width: 30px' src='images/server.png'/>
+</a>
+<div class="col-xs-5">
+    <h3 style="width: 100%;text-align:center">
+        Competitions
+    </h3>
+    <br>
+    <ul style="list-style: none" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]">
+        <li>
+            <span style="float:left">
+                Competition {{i}}
+            </span>
+            <span style="float: right">
+                <a href='#'>view</a> 
+                <a href='#'>edit</a>
+                <a href='#'>delete</a>
+            </span>
+        </li>
+    </ul>
+</div>
+<div class="col-xs-7">
+    <h3>
+        Details <span style='float: right; cursor: pointer'>→</span>
+    </h3>
+    <p>
+        Name: {{selectedCompetition.name}} <br>
+        Start: {{selectedCompetition.startTime}} <br>
+        Status: {{selectedCompetition.status}}
+    </p>
+    <h3>
+        Challenges
+    </h3>
+    <select multiple style='width:100%'>
+        <option ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]">
+            Challenge {{i}}
+        </option>
+    </select>
+    <h3>
+        Teams
+    </h3>
+    <div class='row'>
+        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'name'; reverseSort = !reverseSort">
+            <h4>Teamname</h4>
+        </div>
+        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'score'; reverseSort = !reverseSort">
+            <h4>Score</h4>
+        </div>
+    </div>
+    <div class='row' ng-repeat="team in teams | orderBy:teamSort:reverseSort">
+        <div class='col-xs-6'>{{team.name}}</div>
+        <div class='col-xs-6'>{{team.score}}</div>
+    </div>
+</div>
