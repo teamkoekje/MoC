@@ -251,6 +251,11 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
         $scope.isSelected = function (teamId) {
             return $scope.team.id === teamId;
         };
+         $scope.leaveTeam = function (user) {
+            console.log("remove user " + user.name + " from team with id: " + $scope.team.id);
+            $team.leaveTeam({teamId: $scope.team.id, user: user}, function () {
+            });
+        };
         loadData = function () {
             $scope.teams = $team.myTeams.query(function () {
                 $scope.selectTeam($scope.teams[0].id);
