@@ -1,7 +1,49 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$cookies', function ($scope, $cookies) {
+
+controllers.service('newsfeedService', function() {
+    var messages = [];
+    var hints = [];
+
+    // Messages
+    var addMessage = function(message) {
+        messages.push(message);
+    };
+
+    var clearMessages = function(){
+        messages = [];
+    }
+
+    var getMessages = function(){
+        return messages;
+    };
+
+    // Hints
+    var addHint = function(hint) {
+        hints.push(hint);
+    };
+
+    var clearHints = function(){
+        hints = [];
+    }
+
+    var getHints = function(){
+        return hints;
+    };
+
+    return {
+        addMessage: addMessage,
+        clearMessages: clearMessages,
+        getMessages: getMessages,
+        addHint: addHint,
+        clearHints: clearHints,
+        getHints: getHints
+    };
+
+});
+
+controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedService', function ($scope, $cookies, newsfeedService) {
 
         $scope.isLoggedIn = function () {
             return $cookies.user;
@@ -30,7 +72,9 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
                 ws.onmessage = function (msg) {
                     var result = $.parseJSON(msg.data);
                     if(typeof result.hint !== 'undefined'){
-                        $scope.newsfeed.push(result.hint.message);
+                        newsfeedService.addHint(result.hint.text);
+                    }else if(typeof result.message !== 'undefined'){
+                        newsfeedService.addMessage(result.message.text);
                     }
                 };
 
@@ -63,6 +107,18 @@ controllers.controller('loginController', ['$scope', '$cookies', function ($scop
 
         $scope.newsfeed = [];
         $scope.username = $cookies.user;
+        // TODO: Remove test data
+        newsfeedService.addMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, tortor et commodo scelerisque, justo sapien elementum lacus, sed mollis lacus turpis quis mauris");
+        newsfeedService.addMessage("Aenean lacus quam, placerat in mi vel, interdum pellentesque nisl. Cras tincidunt cursus eros, vel fermentum lectus fringilla vitae. Donec eget neque faucibus, bibendum orci vel, porta metus. Aliquam odio orci, auctor nec dictum quis, molestie a nisi. Maecenas vitae erat eu sapien fringilla pellentesque eu id velit. Mauris quis mauris tempus, tempor ex et, pharetra justo. Vivamus varius fringilla mauris");
+        newsfeedService.addMessage("Fusce ac neque elementum, pharetra ");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus nunc ultrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus nasdfaltrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus aaaUt turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addMessage("ro nec libero vehicula, in cursus nungfdsgrttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus nunc ultrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus nasdfaltrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus aaaUt turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
+        newsfeedService.addHint("ro nec libero vehicula, in cursus nungfdsgrttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
     }
 
 ]);
@@ -251,7 +307,9 @@ controllers.controller('inviteUserController', ['$scope', 'team',
 ]);
 
 
-controllers.controller('competitionController', ['$scope', function ($scope) {
+controllers.controller('competitionController', ['$scope', 'newsfeedService', function ($scope, newsfeedService) {
+        $scope.messages = newsfeedService.getMessages();
+        $scope.hints = newsfeedService.getHints();
         //http://ace.c9.io/#nav=howto
         var editor;
         /**
@@ -285,7 +343,7 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
                     function () {
                         var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
                         if (isFullScreen) {
-                            editor.setTheme("ace/theme/monokai");
+                            //editor.setTheme("ace/theme/monokai");
                             $("#wrapperAroundEditor").css({
                                 paddingRight: '0px',
                                 paddingLeft: '0px'
@@ -341,6 +399,21 @@ controllers.controller('competitionController', ['$scope', function ($scope) {
             }
             $('#wrapperAroundResults').hide();
             $('#wrapperTests').hide();
+            $('#wrapperHints').hide();
+            editor.resize();
+        }
+
+        $scope.toggleHints = function toggleHints() {
+            if ($('#wrapperHints').is(":visible")) {
+                $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
+                $('#wrapperHints').hide();
+            } else {
+                $('#wrapperAroundEditor').addClass('col-xs-6').removeClass('col-xs-12');
+                $('#wrapperHints').show();
+            }
+            $('#wrapperAroundResults').hide();
+            $('#wrapperTests').hide();
+            $('#wrapperMessages').hide();
             editor.resize();
         }
 

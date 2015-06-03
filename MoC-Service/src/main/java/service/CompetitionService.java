@@ -51,8 +51,9 @@ public class CompetitionService extends GenericService<Competition> {
                 break;
             case HINT_RELEASED:
                 HintReleasedEvent hre = (HintReleasedEvent) event;
-                we.broadCast("{\"hint\":{\"message\":\"" + hre.getReleasedHint().getContent() + "\"}}");
+                we.broadCast("{\"hint\":{\"text\":\"" + hre.getReleasedHint().getContent() + "\"}}");
                 break;
+            // TODO: Add MESSAGE_RELEASED
             default:
                 throw new AssertionError(event.getType().name());
         }
