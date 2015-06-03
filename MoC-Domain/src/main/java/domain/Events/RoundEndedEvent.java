@@ -1,5 +1,6 @@
 package domain.Events;
 
+import domain.Competition;
 import domain.Round;
 
 /**
@@ -8,6 +9,7 @@ import domain.Round;
  */
 public class RoundEndedEvent extends CompetitionEvent {
 
+    private Competition competition;
     private final Round round;
 
     public RoundEndedEvent(Round round) {
@@ -17,6 +19,14 @@ public class RoundEndedEvent extends CompetitionEvent {
 
     public Round getEndedRound() {
         return round;
+    }
+    
+    public Competition getCompetition(){
+        return competition;
+    }
+    
+    public void setCompetition(Competition competition){
+        this.competition = competition;
     }
 
 }

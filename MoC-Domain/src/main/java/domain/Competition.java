@@ -161,14 +161,16 @@ public class Competition implements Serializable {
                 switch (event.getType()) {
                     case ROUND_ENDED:
                         RoundEndedEvent ree = (RoundEndedEvent) event;
+                        ree.setCompetition(this);
                         System.out.println("Round ended: " + ree.getEndedRound().getChallenge().getName());
                         //if there is another round, set it as current
                         int nextRoundOrder = ree.getEndedRound().getRoundOrder() + 1;
                         if (rounds.size() > nextRoundOrder) {
                             currentRound = rounds.get(nextRoundOrder);
+                            
                             //oterwise, tell the calling service the entire competition has ended
                         } else {
-                            //currentRound = null;
+                            currentRound = null;
                             ArrayList<CompetitionEvent> temp = new ArrayList<>();
                             temp.add(new CompetitionEndedEvent(this));
                             return temp;
