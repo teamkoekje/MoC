@@ -1,5 +1,6 @@
 package management;
 
+// <editor-fold defaultstate="collapsed" desc="imports" >
 import annotations.*;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import org.scannotation.AnnotationDB;
+// </editor-fold>
 
 /**
  *
@@ -25,11 +27,14 @@ import org.scannotation.AnnotationDB;
  */
 public class FileManagement {
 
+    // <editor-fold defaultstate="collapsed" desc="variables" >
     private List<String> visibleClasses;
     private AnnotationDB db;
     private Map<String, Set<String>> annotationIndex;
     private ArrayList<String> editables;
+    //</editor-fold>
     
+    // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
     private static final Map<String, FileManagement> fileManagers = new HashMap<>();
     /**
      * Get an instance of FileManagement
@@ -70,7 +75,9 @@ public class FileManagement {
             Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
     public String getFolderJSON(String folderPath) {
         File folder = new File(folderPath);
         if (!folder.isDirectory()) {
@@ -78,7 +85,9 @@ public class FileManagement {
         }
         return listStructureJSON(folder).build().toString();
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     private Boolean isFileEditable(String filePath) {
         File f = new File(filePath);
         String filename = f.getName().substring(0, f.getName().length() - 5);
@@ -140,4 +149,5 @@ public class FileManagement {
         }
         return false;
     }
+    //</editor-fold>
 }

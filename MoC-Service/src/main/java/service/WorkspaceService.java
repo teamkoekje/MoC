@@ -1,9 +1,10 @@
 package service;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,10 +34,12 @@ import workspace.Requests.TestAllRequest;
 import workspace.Requests.TestRequest;
 import workspace.Requests.UpdateRequest;
 
+// </editor-fold>
+
 /**
  * Service class used to manage users
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Singleton
 @Startup
@@ -137,16 +140,15 @@ public class WorkspaceService {
         gateway.sendRequestToTeam(new FileRequest(competitionName, teamName, challengeName, filePath));
     }
 
-    public void sysInfo(final String username) {
+    public void sysInfo(String username) {
         SysInfoRequest sir = new SysInfoRequest(Action.SYSINFO);
         numberOfBroadcastMessages = gateway.broadcast(sir);
         sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, username, new IReplyListener<Request, Reply>() {
-
             @Override
             public void onReply(Request request, Reply reply) {
                 System.out.println("All servers responded to the broadcast. Message to send to user: ");
                 System.out.println(reply.getMessage());
-                we.sendToUser(reply.getMessage(), username);
+                we.sendToUser(reply.getMessage(), sia.getUsername());
                 // TODO: Think of something in case a server drops out.
             }
         });

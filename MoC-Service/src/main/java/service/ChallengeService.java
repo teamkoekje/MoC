@@ -1,8 +1,10 @@
 package service;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.Challenge;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
+//</editor-fold>
 
 /**
  * Service class used to manage users

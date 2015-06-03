@@ -1,15 +1,18 @@
 package websocket;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.security.Principal;
 import java.util.HashMap;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+// </editor-fold>
 
 /**
+ * Websocket used to send messages from the Service to Clients.
  *
- * @author Robin
+ * @author TeamKoekje
  */
 @ServerEndpoint(value = "/ws/api")
 public class WebsocketEndpoint {

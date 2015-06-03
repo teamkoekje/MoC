@@ -1,5 +1,7 @@
 package messaging;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,8 +16,10 @@ import workspace.Requests.TeamRequest;
 import workspace.WorkspaceSenderRouter;
 import workspace.WorkspaceServer;
 
+// </editor-fold>
+
 /**
- * //TODO: class description, what does this class do
+ * Application Gateway between MoC-Service and MessagingGateways. Contains the WorkspaceSenderRouter and MessagingGateways for init messages and replies of requests
  *
  * @author TeamKoekje
  */
@@ -134,10 +138,6 @@ public abstract class WorkspaceGateway {
             System.out.println("Workspace not found");
             return null;
         }
-    }
-
-    void start() {
-        router.openConnection();
     }
 
     public abstract void onWorkspaceMessageReceived(Message message);
