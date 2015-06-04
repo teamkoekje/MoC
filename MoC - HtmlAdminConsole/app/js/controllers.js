@@ -187,17 +187,68 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
                 score: 137
             },
             {
-                name: 'fuck deze proftaak',
+                name: 'team pizza',
                 score: 13337
             },
             {
-                name: 'fuck deze proftaak 2',
+                name: 'team zoute popcorn',
                 score: 13337
             },
             {
-                name: 'waarom is angular kut?',
+                name: 'team taart',
                 score: 13337
             }
         ];
+    }
+]);
+
+controllers.controller('competitionViewController', ['$scope',
+    function ($scope) {
+        $scope.teamSort = 'score';
+        $scope.reverseSort = true;
+        $scope.currentCompetition = {
+            name: "selectedCompetitionName",
+            startTime: new Date(),
+            status: "not implemented",
+            challenges: [{
+                    name: 'chalName',
+                    state: 'completed',
+                    timeLeft: '00:00'
+                }, {
+                    name: 'chalName',
+                    state: 'working',
+                    timeLeft: '00:01'
+                }, {
+                    name: 'chalName',
+                    state: 'waiting',
+                    timeLeft: '01:00'
+                }, {
+                    name: 'chalName',
+                    state: 'waiting',
+                    timeLeft: '10:00'
+                }],
+            currentChallenge: 1,
+            teams: [
+                {
+                    name: 'team koekje',
+                    score: 1337
+                },
+                {
+                    name: 'team pannenkoek',
+                    score: 137
+                },
+                {
+                    name: 'team pizza',
+                    score: 13337
+                },
+                {
+                    name: 'team zoute popcorn',
+                    score: 13337
+                },
+                {
+                    name: 'team taart',
+                    score: 13337
+                }]
+        };
     }
 ]);
