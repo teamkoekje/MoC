@@ -1,0 +1,83 @@
+<a href="#/competitionOverview" style='position: absolute; top: 10px; left: 10px;'>
+    <span style="font-size: 25px" class="glyphicon glyphicon-circle-arrow-left"></span>
+</a>
+<a href="" style='position: absolute; top: 10px; left: 45px;'>
+    <span style="font-size: 25px" class="glyphicon glyphicon-cog"></span>
+</a>
+
+<div class="row" style="text-align: center">
+    <h3>Current Challenge : {{currentCompetition.challenges[currentCompetition.currentChallenge].name}} - {{currentCompetition.challenges[currentCompetition.currentChallenge].state}} - {{currentCompetition.challenges[currentCompetition.currentChallenge].timeLeft}}</h3>
+</div>
+<div class="row" style="text-align: center;width: 80%;margin: 0 auto;padding-bottom: 15px; border-bottom: 2px solid #337ab7">
+    <div class="col-xs-3">
+        <button class="btn btn-primary" style="width: 125px">Start / Resume</button>
+    </div>
+    <div class="col-xs-3">
+        <button class="btn btn-primary" style="width: 125px">Pause</button>
+    </div>
+    <div class="col-xs-3">
+        <button class="btn btn-primary" style="width: 125px">Freeze</button>
+    </div>
+    <div class="col-xs-3">
+        <button class="btn btn-primary" style="width: 125px">Stop</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-4">
+        <h3>
+            General
+        </h3>
+        <ul class="notARealList">
+            <li>Name: <span style="float:right">{{currentCompetition.name}}</span> </li>
+            <li>Start: <span style="float:right">{{currentCompetition.startTime| date:'medium'}}</span> </li>
+            <li>Status: <span style="float:right">{{currentCompetition.status}}</span> </li>
+        </ul>
+
+        <h3>
+            Challenges
+        </h3>
+        <ul class="notARealList">
+            <li class="row" ng-repeat="chal in currentCompetition.challenges">
+                <div class="col-xs-3" ng-switch on="chal.state">
+                    <div ng-switch-when="completed" class="glyphicon glyphicon-asterisk" style="color: green"></div>
+                    <div ng-switch-when="working" class="glyphicon glyphicon-asterisk" style="color: yellow"></div>
+                    <div ng-switch-when="waiting" class="glyphicon glyphicon-asterisk" style="color: red"></div>
+                </div>
+                <div class="col-xs-9">
+                    <span style="float:right">{{chal.name}}</span>
+                </div>
+            </li>
+        </ul>
+        <h3>
+            Teams
+        </h3>
+        <div class="row">
+            <div class="col-xs-6">
+                <h4>
+                    Teamname
+                    <span class="glyphicon glyphicon-sort" style="font-size:14px; cursor:pointer" ng-click="teamSort = 'name';
+                                reverseSort = !reverseSort"></span>
+                </h4>
+            </div>
+            <div class="col-xs-6">
+                <h4 style="float: right">
+                    Score 
+                    <span class="glyphicon glyphicon-sort" style="font-size:14px; cursor:pointer" ng-click="teamSort = 'score';
+                                reverseSort = !reverseSort"></span>
+                </h4>
+            </div>
+        </div>
+        <ul class='notARealList' >
+            <li ng-repeat="team in currentCompetition.teams| orderBy:teamSort:reverseSort">
+                {{team.name}}
+                <span style="float: right">
+                    {{team.score}}
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xs-8">
+
+    </div>
+</div>
