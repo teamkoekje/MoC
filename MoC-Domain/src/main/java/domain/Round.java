@@ -209,6 +209,7 @@ public class Round implements Serializable {
      * Start the round.
      */
     public void start() {
+        System.out.println("Starting round: " + this.id + " - " + this.roundState);
         if (roundState == RoundState.NOT_STARTED) {
             //set the start time, end time and the hints to be released
             startTime = Calendar.getInstance();

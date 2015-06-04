@@ -207,6 +207,7 @@ public class CompetitionResource {
     public void startRound(@PathParam("competitionId") long competitionId) {        
         Competition c = competitionService.findById(competitionId);
         c.startNextRound();
+        competitionService.edit(c);
     }
     //</editor-fold>
 }

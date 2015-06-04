@@ -202,8 +202,8 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
     }
 ]);
 
-controllers.controller('competitionViewController', ['$scope', 'competition',
-    function ($scope, $competition) {
+controllers.controller('competitionViewController', ['$scope', 'competition', '$routeParams',
+    function ($scope, $competition, $routeParams) {
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
         $scope.currentCompetition = {
@@ -251,8 +251,9 @@ controllers.controller('competitionViewController', ['$scope', 'competition',
                 }]
         };
         
-        $scope.startCompetition = function(compID){
-            $competition.start.save({competitionId: compID});
+        $scope.startCompetition = function(){
+            console.log("start competition");
+            $competition.start.save({competitionId: $routeParams.id});
         };
     }
 ]);

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
             query = "SELECT inv FROM Invitation inv WHERE inv.token = :token"),
 
     @NamedQuery(name = "Invitation.findByTeam",
-            query = "SELECT inv FROM Invitation inv WHERE inv.team_id = :teamid"),
+            query = "SELECT inv FROM Invitation inv WHERE inv.team = :teamid"),
 
     @NamedQuery(name = "Invitation.findByEmail",
             query = "SELECT inv FROM Invitation inv WHERE inv.email = :email")})
