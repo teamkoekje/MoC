@@ -2,6 +2,7 @@ package service;
 
 import domain.Competition;
 import domain.Invitation;
+import domain.Invitation.InvitationState;
 import domain.Team;
 import domain.User;
 import java.io.BufferedReader;
@@ -120,13 +121,13 @@ public class InvitationService extends GenericService<Invitation> {
         q.setParameter("token", token);
         return (Invitation) q.getSingleResult();
     }
-    
+
     public List<Invitation> findByEmail(String email) {
         Query q = em.createNamedQuery("Invitation.findByEmail");
         q.setParameter("email", email);
         return (List<Invitation>) q.getResultList();
     }
-    
+
     /**
      * Lets a user join a certain team
      *
@@ -136,7 +137,7 @@ public class InvitationService extends GenericService<Invitation> {
     public void acceptInvitation(User user, String token) {
         Invitation inv = findByToken(token);
         Team team = inv.getTeam();
-        
+
         boolean result = team.addParticipant(user);
         inv.setState(Invitation.InvitationState.ACCEPTED);
         if (result) {
@@ -151,5 +152,17 @@ public class InvitationService extends GenericService<Invitation> {
         edit(inv);
     }
     
+    public List<Invitation> findInvitationsByTeam(Team team) {
+        List<Invitation> invites = null;
+        Query q = em.createNamedQuery("Invitation.findByTeam");
+        q.setParameter("teamid", team.getId());
+        for (Invitation inv : (List<Invitation>) q.getResultList()) {
+            if (inv.getState() != InvitationState.ACCEPTED) {
+                invites.add(inv);
+            }
+        }
+        return invites;
+    }
+
  //</editor-fold>
 }

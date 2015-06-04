@@ -23,6 +23,10 @@ import javax.xml.bind.annotation.XmlElement;
 @NamedQueries({
     @NamedQuery(name = "Invitation.findByToken",
             query = "SELECT inv FROM Invitation inv WHERE inv.token = :token"),
+
+    @NamedQuery(name = "Invitation.findByTeam",
+            query = "SELECT inv FROM Invitation inv WHERE inv.team_id = :teamid"),
+
     @NamedQuery(name = "Invitation.findByEmail",
             query = "SELECT inv FROM Invitation inv WHERE inv.email = :email")})
 public class Invitation implements Serializable {
