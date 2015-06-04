@@ -149,6 +149,7 @@ public class TeamResource {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Invites">
     /**
      * Invites a member to a certain team

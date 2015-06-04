@@ -245,18 +245,18 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
             $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
         };
-        
+
         $scope.isSelected = function (teamId) {
             return $scope.team.id === teamId;
         };
-        
+
         $scope.leaveTeam = function (user) {
-            new $team.leaveTeam({teamId: $scope.team.id, username: user.username}).$save(function() {
+            new $team.leaveTeam({teamId: $scope.team.id, username: user.username}).$save(function () {
                 $scope.participants = $team.participants.query({teamId: $scope.team.id});
             });
-            
+
         };
-        
+
         $scope.isOwnerLoggedIn = function (teamOwner) {
             return $cookies.user.toUpperCase() === teamOwner.toUpperCase();
         };
@@ -289,37 +289,19 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$scope', 'team',
-    function ($scope, $team) {
+controllers.controller('inviteUserController', ['$scope', 'team', '$routeParams',
+    function ($scope, $team, $routeParams) {
 
         $scope.inviteUser = function () {
-            $.ajax({
-                type: "POST",
-                contentType: 'application/json; charset=UTF-8',
-                url: "http://localhost:8080/MoC-Service/api/team/" + window.params().teamid + "/invite",
-                data: $("#emailInput").val(),
-                xhrFields: {
-                    withCredentials: true
-                }
-            }).success(function (data) {
-                console.log($("#emailInput").val());
-                console.log("invited succesfully");
-                //$cookies.user = undefined;
-                location.href = "#/newteammember";
-            }).error(function (data) {
-                console.log("Error while inviting");
-                //$cookies.user = undefined;
-                console.log(data);
+            var email = $("#emailInput").val();
+
+            $team.invite.save({teamId: $routeParams.teamid}, email, function () {
+                $scope.showSuccesAlert = true;
+            }, function (data) {
+                $scope.showFailedAlert = true;
+                $scope.error = data.data;
             });
         };
-
-
-
-        loadData = function () {
-            $scope.teams = new $team.myTeams.query();
-        };
-        loadData();
-
     }
 ]);
 

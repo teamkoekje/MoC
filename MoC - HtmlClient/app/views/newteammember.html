@@ -3,11 +3,15 @@
     <li role="presentation" class="active"><a href="#inviteUsers">Invite Users</a></li>
 </ul>
 
-
 <br>
+<div class="alert alert-success" role="alert" ng-if="showSuccesAlert">
+    <strong>Succes!</strong> An email has been sent, the user has been invited to the team.
+</div>
+<div class="alert alert-danger" role="alert" ng-if="showFailedAlert">
+    <strong>Oops!</strong> Something went wrong when trying to invite the user. {{error}}
+</div>
 
 <h4>Add team member</h4>
-
 
 <form name="radioButtons">
     <label for="newUserCheckbox">New user</label>
@@ -16,19 +20,9 @@
     <label for="existingUserCheckbox">Existing user</label>
     <input name="xxx" id="existingUserRadioButton" type="radio">
 </form>
-
-
-
-
-
-
-
-
 <br>
 <hr>
 <br>
-
-
 
 <!--
 
@@ -41,21 +35,11 @@ invite sturen
 
 -->
 
-
-
-
-
 <div id="newUserPanel">
 
     <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
-
-      
-       
-
-
-
         <div class="form-group">
-            <label for="emailInput" style="">email</label>
+            <label for="emailInput" style="">Email</label>
             <input required type="email" class="form-control" id="emailInput" placeholder="Email" ng-model="email" style="display: table-cell"/>
             <input type="submit" class="btn btn-default" value="Invite user"/>
         </div>
@@ -78,17 +62,17 @@ invite sturen
 
 
 <script>
-            $(window).ready(function () {
+    $(window).ready(function () {
+        $('#existingUserPanel').hide();
+        $('input[type="radio"]').on('click', function () {
+            if ($(this).attr('id') == 'newUserRadioButton') {
                 $('#existingUserPanel').hide();
-                $('input[type="radio"]').on('click', function () {
-                    if ($(this).attr('id') == 'newUserRadioButton') {
-                        $('#existingUserPanel').hide();
-                        $('#newUserPanel').show();
-                    }
-                    else {
-                        $('#newUserPanel').hide();
-                        $('#existingUserPanel').show();
-                    }
-                });
-            });
+                $('#newUserPanel').show();
+            }
+            else {
+                $('#newUserPanel').hide();
+                $('#existingUserPanel').show();
+            }
+        });
+    });
 </script>
