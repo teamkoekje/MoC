@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
 /**
@@ -48,9 +50,11 @@ public class Invitation implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     @Id
     @GeneratedValue
+    @XmlAttribute
     private Long id;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @XmlElement
     private final Team team;
     private final String email;
     private final String token;
@@ -96,12 +100,8 @@ public class Invitation implements Serializable {
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Methods" >    
     @Override
     public boolean equals(Object other) {
@@ -116,6 +116,6 @@ public class Invitation implements Serializable {
         }
         Invitation otherInvitation = (Invitation) other;
         return otherInvitation.email.equals(this.email);
-    }    
+    }
     // </editor-fold>
 }

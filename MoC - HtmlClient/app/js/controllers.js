@@ -241,9 +241,16 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
     function ($scope, $cookies, $team, $user) {
 
         $scope.selectTeam = function (teamId) {
-            console.log("Select team with id: " + teamId);
             $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
+            $scope.isInvitation = false;
+        };
+
+        $scope.selectInvitation = function (invitation) {
+            $scope.invitation = invitation;
+            $scope.team = invitation.team;
+            $scope.participants = $team.participants.query({teamId: invitation.team.id});
+            $scope.isInvitation = true;
         };
 
         $scope.isSelected = function (teamId) {
@@ -257,6 +264,28 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
 
         };
 
+        $scope.acceptInvitation = function (invitation) {
+            console.log("accept: " + invitation.id);
+            $team.acceptInvitation.save({invitationId: invitation.id}, function () {
+                console.log("invite accepted");
+                loadData();
+            }, function (data) {
+                console.log("error accepting invite");
+
+            });
+        };
+        
+        $scope.declineInvitation = function (invitation) {
+            console.log("decline: " + invitation.id);
+            $team.declineInvitation.save({invitationId: invitation.id}, function () {
+                console.log("invite declined");
+                loadData();
+            }, function (data) {
+                console.log("error declining invite");
+
+            });
+        };
+
         $scope.isOwnerLoggedIn = function (teamOwner) {
             return $cookies.user.toUpperCase() === teamOwner.toUpperCase();
         };
@@ -264,8 +293,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
             $scope.teams = $team.myTeams.query(function () {
                 $scope.selectTeam($scope.teams[0].id);
             });
-            //TODO: Don't use hardcoded user
-            $scope.invitations = $user.invitations.query({userId: $cookies.user});
+            $scope.invitations = $team.myTeamInvitations.query();
         };
         loadData();
     }

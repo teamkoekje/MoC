@@ -97,6 +97,7 @@ public class TestDataService {
         competitionService.create(c3);
         competitionService.create(c4);
 
-        invitationService.inviteMember("TeamKoekje@gmail.com", t1.getId());
+        invitationService.inviteMember("casper@pizzaplace.nl", t3.getId());
+        //invitationService.inviteMember("TeamKoekje@gmail.com", t1.getId());
     }
 }

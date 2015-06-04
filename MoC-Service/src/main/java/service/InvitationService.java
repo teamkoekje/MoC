@@ -144,6 +144,12 @@ public class InvitationService extends GenericService<Invitation> {
             this.edit(inv);
         }
     }
-
+    
+    public void declineInvitation(long invitationId) {
+        Invitation inv = findById(invitationId);
+        inv.setState(Invitation.InvitationState.DECLINED);
+        edit(inv);
+    }
+    
  //</editor-fold>
 }
