@@ -22,7 +22,7 @@ controllers.controller('loginController', ['$scope', '$cookies', 'user', functio
                 });
             }
         };
-        $scope.isAdmin();
+        //$scope.isAdmin();
 
         $scope.login = function () {
             $.ajax({
@@ -128,8 +128,48 @@ window.params = function () {
     return result;
 };
 
-controllers.controller('competitionOverviewController', ['$scope',
-    function ($scope) {
+controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
+    function ($scope, ngDialog) {
+        $scope.addCompetition = function () {
+            ngDialog.open({
+                template: "popups/addCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        //TODO submit this
+        //name not empty/null/existing already
+        //Date has to be in the future
+        $scope.newCompetiton = {
+            name: '',
+            date: new Date()
+        };
+        $scope.showServerInfo = function () {
+            ngDialog.open({
+                template: "popups/serverInfo.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        $scope.servers = [{
+                IP: '127.0.0.1',
+                CPU: '40%',
+                RAM: '8GB/12GB',
+                HDD: '200GB/1TB',
+                Workspaces: 69
+            }, {
+                IP: '127.0.0.2',
+                CPU: '40%',
+                RAM: '8GB/12GB',
+                HDD: '200GB/1TB',
+                Workspaces: 69
+            }, {
+                IP: '127.0.0.3',
+                CPU: '40%',
+                RAM: '8GB/12GB',
+                HDD: '200GB/1TB',
+                Workspaces: 69
+            }];
         $scope.selectedCompetition = {
             name: "selectedCompetitionName",
             startTime: new Date(),

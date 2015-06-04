@@ -1,54 +1,64 @@
-<a href='#' style='position: absolute; top: 10px; left: 10px;'>
-    <img style='height: 30px; width: 30px' src='images/server.png'/>
+<a href='' style='position: absolute; top: 10px; left: 10px;'>
+    <span style="font-size: 25px" class="glyphicon glyphicon-align-justify" ng-click="showServerInfo()"></span>
 </a>
 <div class="col-xs-5">
     <h3 style="width: 100%;text-align:center">
-        Competitions <span style="float: right; font-size:0.95em; cursor:pointer; border-radius:50px;color:white;padding-bottom:0px;height:25px;width:25px;text-align:center;padding:0;margin:0;vertical-align:middle;box-shadow:0px 0px 8px 0px rgba(0,0,0,0.75);background-color:#337ab7">+</span>
+        Competitions <span data-ng-click="addCompetition()" class="blueRoundBtn">+</span>
     </h3>
     <br>
-    <ul style="list-style: none">
+    <ul style="list-style: none" class="notARealList">
         <li ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
             Competition {{i}}
             <span style="float: right">
-                <a href='#'>view</a> 
-                <a href='#'>edit</a>
-                <a href='#'>delete</a>
+                <a href='#'><span class="glyphicon glyphicon-search"></span></a> 
+                <a href='#'><span class="glyphicon glyphicon-cog"></span></a>
+                <a href='#'><span class="glyphicon glyphicon-trash"></span></a>
             </span>
         </li>
     </ul>
 </div>
-<div class="col-xs-7">
+<div class="col-xs-7" style="border-left: 2px solid #337ab7">
     <h3>
-        Details <span style='float: right; cursor: pointer'>→</span>
+        Details <span style='float: right; font-size:0.8em' class="blueRoundBtn">→</span>
     </h3>
-    <p>
-        Name: {{selectedCompetition.name}} <br>
-        Start: {{selectedCompetition.startTime | date:'medium'}} <br>
-        Status: {{selectedCompetition.status}}
-    </p>
+    <ul style="list-style: none" class="notARealList">
+        <li>Name: <span style="float:right">{{selectedCompetition.name}}</span> </li>
+        <li>Start: <span style="float:right">{{selectedCompetition.startTime| date:'medium'}}</span> </li>
+        <li>Status: <span style="float:right">{{selectedCompetition.status}}</span> </li>
+    </ul>
     <h3>
         Challenges
     </h3>
-    <select multiple style='width:100%'>
-        <option ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
+    <ul class="notARealList">
+        <li ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
             Challenge {{i}}
-        </option>
-    </select>
+        </li>
+    </ul>
     <h3>
         Teams
     </h3>
     <div class='row'>
-        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'name';
-                    reverseSort = !reverseSort">
-            <h4>Teamname</h4>
+        <div class='col-xs-6'>
+            <h4>
+                Teamname
+                <span class="glyphicon glyphicon-sort" style="font-size:14px; cursor:pointer" ng-click="teamSort = 'name';
+                                    reverseSort = !reverseSort"></span>
+            </h4>
         </div>
-        <div style='cursor: pointer' class='col-xs-6' ng-click="teamSort = 'score';
-                    reverseSort = !reverseSort">
-            <h4>Score</h4>
+        <div class='col-xs-6'>
+            <h4 style="float: right">
+                Score 
+                <span class="glyphicon glyphicon-sort" style="font-size:14px; cursor:pointer" ng-click="teamSort = 'score';
+                                    reverseSort = !reverseSort"></span>
+            </h4>
         </div>
     </div>
-    <div class='row' ng-repeat="team in teams| orderBy:teamSort:reverseSort">
-        <div class='col-xs-6'>{{team.name}}</div>
-        <div class='col-xs-6'>{{team.score}}</div>
-    </div>
+    <ul class='notARealList' >
+        <li ng-repeat="team in teams| orderBy:teamSort:reverseSort">
+            {{team.name}}
+            <span style="float: right">
+                {{team.score}}
+            </span>
+        </li>
+    </ul>
 </div>

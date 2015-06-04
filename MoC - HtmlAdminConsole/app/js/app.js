@@ -7,7 +7,8 @@ var app = angular.module('mocApp', [
     'ngRoute',
     'ngDialog',
     'mocControllers',
-    'mocServices'
+    'mocServices',
+    'ui.bootstrap.datetimepicker'
 ]);
 
 app.config(['$routeProvider',
