@@ -13,7 +13,7 @@ controllers.service('newsfeedService', function () {
 
     var clearMessages = function () {
         messages = [];
-    }
+    };
 
     var getMessages = function () {
         return messages;
@@ -26,7 +26,7 @@ controllers.service('newsfeedService', function () {
 
     var clearHints = function () {
         hints = [];
-    }
+    };
 
     var getHints = function () {
         return hints;
@@ -191,7 +191,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
             if ($scope.selected_competition !== undefined) {
                 $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
             }
-        }
+        };
 
         loadData();
         $scope.team = new $team();
@@ -417,7 +417,7 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
             $('#wrapperTests').hide();
             $('#wrapperMessages').hide();
             editor.resize();
-        }
+        };
 
         $scope.toggleTests = function toggleTests() {
             if ($('#wrapperTests').is(":visible")) {
