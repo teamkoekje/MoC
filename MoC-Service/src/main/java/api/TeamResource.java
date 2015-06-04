@@ -149,7 +149,6 @@ public class TeamResource {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Invites">
     /**
      * Invites a member to a certain team
@@ -209,5 +208,21 @@ public class TeamResource {
             teamService.leaveTeam(user, teamId);
         }
     }
+
+    /**
+     * Lets you find all the invited users of a certain team
+     *
+     * @param teamId id of the team from which we want the invited users
+     * @return list of Invitations
+     */
+    @GET
+    @Consumes("application/xml,application/json")
+    @Path("/{teamId}/findInvited")
+    @RolesAllowed({"User", "Admin"})
+    public List<Invitation> findInvitationsByTeam(@PathParam("teamId") long teamId) {
+        Team team = teamService.findById(teamId);
+        return invitationService.findInvitationsByTeam(team);
+    }
+
     //</editor-fold>
 }

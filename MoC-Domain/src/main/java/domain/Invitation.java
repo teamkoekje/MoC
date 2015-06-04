@@ -21,6 +21,10 @@ import javax.persistence.NamedQuery;
 @NamedQueries({
     @NamedQuery(name = "Invitation.findByToken",
             query = "SELECT inv FROM Invitation inv WHERE inv.token = :token"),
+
+    @NamedQuery(name = "Invitation.findByTeam",
+            query = "SELECT inv FROM Invitation inv WHERE inv.team_id = :teamid"),
+
     @NamedQuery(name = "Invitation.findByEmail",
             query = "SELECT inv FROM Invitation inv WHERE inv.email = :email")})
 public class Invitation implements Serializable {
@@ -101,7 +105,7 @@ public class Invitation implements Serializable {
         this.id = id;
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Methods" >    
     @Override
     public boolean equals(Object other) {
@@ -116,6 +120,6 @@ public class Invitation implements Serializable {
         }
         Invitation otherInvitation = (Invitation) other;
         return otherInvitation.email.equals(this.email);
-    }    
+    }
     // </editor-fold>
 }
