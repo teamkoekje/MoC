@@ -6,6 +6,7 @@ import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.MessageReleasedEvent;
 import domain.Events.RoundEndedEvent;
+import domain.Events.UpdateEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ public class CompetitionService extends GenericService<Competition> {
     @Inject
     @Any
     Event<CompetitionEvent> competitionEvent;
-    
+
     @Inject
     private WebsocketEndpoint we;
 
@@ -41,6 +42,14 @@ public class CompetitionService extends GenericService<Competition> {
     public void HandleEvent(@Observes CompetitionEvent event) {
         System.out.println("Hallo event: " + event.getType());
         switch (event.getType()) {
+            case UPDATE:
+                for (Competition c : findAll()) {
+                    //System.out.println("updating competition: " + c.getName());
+                    for (CompetitionEvent e : c.update()) {
+                        competitionEvent.fire(e);
+                    }
+                }
+                break;
             case ROUND_ENDED:
                 RoundEndedEvent ree = (RoundEndedEvent) event;
                 em.merge(ree.getCompetition());
@@ -69,12 +78,7 @@ public class CompetitionService extends GenericService<Competition> {
 
         @Override
         public void run() {
-            for (Competition c : competitions) {
-                System.out.println("updating competition: " + c.getName());
-                for (CompetitionEvent e : c.update()) {
-                    competitionEvent.fire(e);
-                }
-            }
+            competitionEvent.fire(new UpdateEvent());
         }
     }
 
@@ -83,7 +87,12 @@ public class CompetitionService extends GenericService<Competition> {
         System.out.println("Init of competitionService");
         competitions = findAll();
         timer = new Timer();
-        //timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
+        timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
+    }
+
+    public void loadComps() {
+
+        competitions = findAll();
     }
 
     public List<Competition> getActiveCompetitions() {

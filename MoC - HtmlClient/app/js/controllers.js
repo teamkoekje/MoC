@@ -653,5 +653,6 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
         };
 
         initEditor("editor");
+        $workspace.folderStructure.save({competitionId: $routeParams.id});
     }
 ]);
