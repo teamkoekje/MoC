@@ -82,31 +82,51 @@
             Challenge details
         </h3>
         <ul class="notARealList">
-            <li>Name</li>
-            <li>Duration</li>
-            <li> Status</li>
-            <li>Difficulty</li>
+            <li>Name <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].name}}</span></li>
+            <li>Duration <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].duration}}</span></li>
+            <li>Status <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].state}}</span></li>
+            <li>Difficulty <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].difficulty}}</span></li>
         </ul>
         <h3>
             Author
         </h3>
         <ul class="notARealList">
-            <li>Name</li>
-            <li>Organisation</li>
+            <li>Name <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.name}}</span></li>
+            <li>Organisation <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.organisation}}</span></li>
         </ul>
         <h3>
             Descriptions
         </h3>
-        <button class="btn btn-default">Participants</button>
-        <button class="btn btn-default">Spectators</button>
-        <p>
-            BLABLABLABLA
-        </p>
+        <button class="btn btn-default" ng-click="description = 'participant'">Participants</button>
+        <button class="btn btn-default" ng-click="description = 'spectator'">Spectators</button>
+        <div ng-switch on="description">
+            <div ng-switch-when="participant">
+                {{currentCompetition.challenges[currentCompetition.currentChallenge].descriptions.participant}}
+            </div>
+            <div ng-switch-default>
+                {{currentCompetition.challenges[currentCompetition.currentChallenge].descriptions.spectator}}
+            </div>
+        </div>
         <h3>
             Hints
         </h3>
         <ul class="notARealList">
-            <li ng-repeat="i in [1, 2, 3, 4, 5]">hint {{i}}</li>
+            <li class="row" ng-repeat="hint in currentCompetition.challenges[currentCompetition.currentChallenge].hints">
+                <div class="col-xs-1" ng-switch on="hint.isReleased">
+                    <span ng-switch-when="true">
+                        <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                    </span>
+                    <span ng-switch-when="false" style="cursor: pointer; color:yellow">
+                        <span class="glyphicon glyphicon-send"></span>
+                    </span>
+                </div>
+                <div class="col-xs-1">
+                    {{hint.releaseTime}}
+                </div>
+                <div class="col-xs-10">
+                    {{hint.context}}
+                </div>
+            </li>
         </ul>
     </div>
 </div>
