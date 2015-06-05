@@ -225,11 +225,19 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         spectator: 'Spectator description',
                         participant: 'Participant description'
                     },
-                    hints: [
-                        'hint1',
-                        'hint2',
-                        'hint3'
-                    ]
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }, {
                     name: 'chalName',
                     state: 'working',
@@ -244,11 +252,19 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         spectator: 'Spectator description',
                         participant: 'Participant description'
                     },
-                    hints: [
-                        'hint1',
-                        'hint2',
-                        'hint3'
-                    ]
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }, {
                     name: 'chalName',
                     state: 'waiting',
@@ -263,11 +279,19 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         spectator: 'Spectator description',
                         participant: 'Participant description'
                     },
-                    hints: [
-                        'hint1',
-                        'hint2',
-                        'hint3'
-                    ]
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }, {
                     name: 'chalName',
                     state: 'waiting',
@@ -282,11 +306,19 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         spectator: 'Spectator description',
                         participant: 'Participant description'
                     },
-                    hints: [
-                        'hint1',
-                        'hint2',
-                        'hint3'
-                    ]
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }],
             currentChallenge: 1,
             teams: [

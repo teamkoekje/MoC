@@ -111,8 +111,21 @@
             Hints
         </h3>
         <ul class="notARealList">
-            <li ng-repeat="hint in currentCompetition.challenges[currentCompetition.currentChallenge].hints">
-                {{hint}}
+            <li class="row" ng-repeat="hint in currentCompetition.challenges[currentCompetition.currentChallenge].hints">
+                <div class="col-xs-1" ng-switch on="hint.isReleased">
+                    <span ng-switch-when="true">
+                        <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                    </span>
+                    <span ng-switch-when="false" style="cursor: pointer; color:yellow">
+                        <span class="glyphicon glyphicon-send"></span>
+                    </span>
+                </div>
+                <div class="col-xs-1">
+                    {{hint.releaseTime}}
+                </div>
+                <div class="col-xs-10">
+                    {{hint.context}}
+                </div>
             </li>
         </ul>
     </div>
