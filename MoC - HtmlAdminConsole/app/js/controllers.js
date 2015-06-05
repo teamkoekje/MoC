@@ -393,6 +393,14 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
-        }
+        };
+        
+        $scope.addMembers = function(){
+            ngDialog.open({
+                template: "popups/addMember.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
     }
 ]);
