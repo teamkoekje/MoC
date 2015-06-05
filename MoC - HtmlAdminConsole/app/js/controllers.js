@@ -202,58 +202,205 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
     }
 ]);
 
-controllers.controller('competitionViewController', ['$scope', 'competition', '$routeParams',
-    function ($scope, $competition, $routeParams) {
+controllers.controller('competitionViewController', ['$scope', 'competition', '$routeParams', 'ngDialog',
+    function ($scope, $competition, $routeParams, ngDialog) {
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
+        $scope.description = 'participant';
+        $scope.selectedTeam = 0;
         $scope.currentCompetition = {
             name: "selectedCompetitionName",
-            startTime: new Date(),
+            date: new Date(),
             status: "not implemented",
             challenges: [{
-                    name: 'chalName',
+                    name: 'chalName 1',
                     state: 'completed',
-                    timeLeft: '00:00'
+                    timeLeft: '00:00',
+                    difficulty: 'easy',
+                    duration: '1:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }, {
-                    name: 'chalName',
+                    name: 'chalName 2',
                     state: 'working',
-                    timeLeft: '00:01'
+                    timeLeft: '00:01',
+                    difficulty: 'hard',
+                    duration: '1:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }, {
-                    name: 'chalName',
+                    name: 'chalName 3',
                     state: 'waiting',
-                    timeLeft: '01:00'
+                    timeLeft: '01:00',
+                    difficulty: 'hard',
+                    duration: '1:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }, {
-                    name: 'chalName',
+                    name: 'chalName 4',
                     state: 'waiting',
-                    timeLeft: '10:00'
+                    timeLeft: '10:00',
+                    difficulty: 'hard',
+                    duration: '10:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [{
+                        isReleased: true,
+                        releaseTime: '0:50',
+                        context: 'hint 1'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:30',
+                        context: 'hint 2'
+                    },{
+                        isReleased: false,
+                        releaseTime: '0:10',
+                        context: 'hint 3'
+                    }]
                 }],
             currentChallenge: 1,
             teams: [
                 {
                     name: 'team koekje',
-                    score: 1337
+                    score: 1337,
+                    members: [
+                        'member1',
+                        'member2'
+                    ]
                 },
                 {
                     name: 'team pannenkoek',
-                    score: 137
+                    score: 137,
+                    members: [
+                        'member1',
+                        'member3'
+                    ]
                 },
                 {
                     name: 'team pizza',
-                    score: 13337
+                    score: 13337,
+                    members: [
+                        'member2',
+                        'member3'
+                    ]
                 },
                 {
                     name: 'team zoute popcorn',
-                    score: 13337
+                    score: 13337,
+                    members: [
+                        'member1',
+                        'member2',
+                        'member3'
+                    ]
                 },
                 {
                     name: 'team taart',
-                    score: 13337
+                    score: 13337,
+                    members: [
+                        'member2'
+                    ]
                 }]
         };
+        
+        $scope.availableParticipants = [
+                'luc',
+                'astrid',
+                'casper',
+                'daan',
+                'arno',
+                'robin'
+        ]
         
         $scope.startCompetition = function(){
             console.log("start competition");
             $competition.start.save({competitionId: $routeParams.id});
+        };
+        
+        $scope.editCompetition = function(){
+            ngDialog.open({
+                template: "popups/editCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        
+        $scope.addTeam = function(){
+            ngDialog.open({
+                template: "popups/addTeam.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        
+        $scope.addMembers = function(){
+            ngDialog.open({
+                template: "popups/addMember.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
         };
     }
 ]);

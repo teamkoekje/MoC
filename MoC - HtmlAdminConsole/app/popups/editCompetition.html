@@ -1,0 +1,83 @@
+<style>
+    .ngdialog.ngdialog-theme-default .ngdialog-content{
+        width: 1000px !important;
+    }
+</style>
+<div class="dialog-contents" style='padding:25px; padding-bottom: 50px'>
+    <div class="row">
+        <div class="col-xs-3">
+            <h3>
+                General
+            </h3>
+            <div>
+                <label for='newCompetitionName'>Name: </label>
+                <input type='text' id='newCompetitionName' data-ng-model='currentCompetition.name' style='float: right; width: 150px'/>
+            </div>
+            <br>
+            <div>
+                <label for='newCompetitionDate'>Date: </label>
+                <div class="dropdown" style='float: right'>
+                    <a class="dropdown-toggle my-toggle-select" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
+                        <div class="input-append"><span>{{currentCompetition.date| date:'yyyy-MM-dd HH:mm'}}</span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="currentCompetition.date"
+                                        data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select' }"></datetimepicker>
+                    </ul>
+                </div>   
+                <br>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <h3>
+                Teams
+                <span style='float: right'>
+                    <span class='blueRoundBtn' ng-click='addTeam()'>+</span>
+                </span>
+            </h3>
+            <div class="row">
+                <div class="col-xs-6" style="overflow-x: scroll;white-space: nowrap;">
+                    <ul class="notARealList">
+                        <li ng-repeat="team in currentCompetition.teams" ng-click="$parent.selectedTeam = $index;">
+                            {{team.name}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-6">
+                    <h4 style="margin-top: 0px">
+                        Members
+                        <span style='float: right'>
+                            <span class='blueRoundBtn' style='padding-top: 3px' ng-click='addMembers()'>+</span>
+                        </span>
+                    </h4>
+                    <ul class="notARealList">
+                        <li ng-repeat="member in currentCompetition.teams[selectedTeam].members| orderBy:name">
+                            {{member}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <h3>
+                Challenges 
+                <span style='float: right'>
+                    <span class='blueRoundBtn'>+</span>
+                </span>
+            </h3>
+            <ul class='notARealList'>
+                <li ng-repeat="challenge in currentCompetition.challenges">
+                    {{challenge.name}}
+                    <span style='float:right'>
+                        <span style='cursor: pointer' class='glyphicon glyphicon-chevron-up' ng-if="!$first"></span>
+                        <span style='cursor: pointer' class='glyphicon glyphicon-chevron-down' ng-if='!$last'></span>
+                        <span style='cursor: pointer' class='glyphicon glyphicon-cog'></span>
+                        <span style='cursor: pointer' class='glyphicon glyphicon-trash'></span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="closeThisDialog()"/>
+</div>
