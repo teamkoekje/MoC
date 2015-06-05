@@ -1,7 +1,7 @@
 <a href="#/competitionOverview" style='position: absolute; top: 10px; left: 10px;'>
     <span style="font-size: 25px" class="glyphicon glyphicon-circle-arrow-left"></span>
 </a>
-<a href="" style='position: absolute; top: 10px; left: 45px;'>
+<a href="" ng-click="editCompetition()" style='position: absolute; top: 10px; left: 45px;'>
     <span style="font-size: 25px" class="glyphicon glyphicon-cog"></span>
 </a>
 
@@ -30,7 +30,7 @@
         </h3>
         <ul class="notARealList">
             <li>Name: <span style="float:right">{{currentCompetition.name}}</span> </li>
-            <li>Start: <span style="float:right">{{currentCompetition.startTime| date:'medium'}}</span> </li>
+            <li>Start: <span style="float:right">{{currentCompetition.date | date:'medium'}}</span> </li>
             <li>Status: <span style="float:right">{{currentCompetition.status}}</span> </li>
         </ul>
 

@@ -202,17 +202,18 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
     }
 ]);
 
-controllers.controller('competitionViewController', ['$scope', 'competition', '$routeParams',
-    function ($scope, $competition, $routeParams) {
+controllers.controller('competitionViewController', ['$scope', 'competition', '$routeParams', 'ngDialog',
+    function ($scope, $competition, $routeParams, ngDialog) {
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
         $scope.description = 'participant';
+        $scope.selectedTeam = 0;
         $scope.currentCompetition = {
             name: "selectedCompetitionName",
-            startTime: new Date(),
+            date: new Date(),
             status: "not implemented",
             challenges: [{
-                    name: 'chalName',
+                    name: 'chalName 1',
                     state: 'completed',
                     timeLeft: '00:00',
                     difficulty: 'easy',
@@ -239,7 +240,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         context: 'hint 3'
                     }]
                 }, {
-                    name: 'chalName',
+                    name: 'chalName 2',
                     state: 'working',
                     timeLeft: '00:01',
                     difficulty: 'hard',
@@ -266,7 +267,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         context: 'hint 3'
                     }]
                 }, {
-                    name: 'chalName',
+                    name: 'chalName 3',
                     state: 'waiting',
                     timeLeft: '01:00',
                     difficulty: 'hard',
@@ -293,7 +294,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         context: 'hint 3'
                     }]
                 }, {
-                    name: 'chalName',
+                    name: 'chalName 4',
                     state: 'waiting',
                     timeLeft: '10:00',
                     difficulty: 'hard',
@@ -324,23 +325,43 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
             teams: [
                 {
                     name: 'team koekje',
-                    score: 1337
+                    score: 1337,
+                    members: [
+                        'member1',
+                        'member2'
+                    ]
                 },
                 {
                     name: 'team pannenkoek',
-                    score: 137
+                    score: 137,
+                    members: [
+                        'member1',
+                        'member3'
+                    ]
                 },
                 {
                     name: 'team pizza',
-                    score: 13337
+                    score: 13337,
+                    members: [
+                        'member2',
+                        'member3'
+                    ]
                 },
                 {
                     name: 'team zoute popcorn',
-                    score: 13337
+                    score: 13337,
+                    members: [
+                        'member1',
+                        'member2',
+                        'member3'
+                    ]
                 },
                 {
                     name: 'team taart',
-                    score: 13337
+                    score: 13337,
+                    members: [
+                        'member2'
+                    ]
                 }]
         };
         
@@ -349,6 +370,12 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
             $competition.start.save({competitionId: $routeParams.id});
         };
         
-        
+        $scope.editCompetition = function(){
+            ngDialog.open({
+                template: "popups/editCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        }
     }
 ]);

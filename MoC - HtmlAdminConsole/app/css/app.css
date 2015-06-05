@@ -30,7 +30,3 @@ form input:not([type="submit"]){
 .notARealList > *:not(:last-child){
     border-bottom: 1px #ddd solid;
 }
-
-.ngdialog.ngdialog-theme-default .ngdialog-content{
-    width: 550px !important;
-}
