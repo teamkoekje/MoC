@@ -89,7 +89,7 @@ public class TestDataService {
         Challenge ch1 = new Challenge("Challenge 1");
         Challenge ch2 = new Challenge("Challenge 2");
 
-        c1.addChallenge(ch1, 600);
+        c1.addChallenge(ch1, 10);
         c1.addChallenge(ch2, 1200);
 
         competitionService.create(c1);
@@ -98,6 +98,8 @@ public class TestDataService {
         competitionService.create(c4);
 
         invitationService.inviteMember("casper@pizzaplace.nl", t3.getId());
+        
+        competitionService.loadComps();
         //invitationService.inviteMember("TeamKoekje@gmail.com", t1.getId());
     }
 }

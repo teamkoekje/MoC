@@ -142,6 +142,26 @@ public class WorkspaceResource {
     public void sysInfo() {
         workspaceService.sysInfo(request.getUserPrincipal().getName());
     }
+    
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{competitionId}/folderStructure")
+    public Response folderStructure(@PathParam("competitionId") long competitionId) {
+        Competition competition = competitionService.findById(competitionId);
+        if (competition != null && competition.getCurrentRound() != null) {
+            Team team = competition.getTeamByUsername(request.getRemoteUser());
+            Challenge challenge = competition.getCurrentRound().getChallenge();
+            if (team != null) {
+                String messageId = workspaceService.folderStructure(competitionId, challenge.getName(), team.getName());
+                workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
+                return Response.ok("Folder structure is being generated").build();
+            } else {
+                return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
+            }
+        } else {
+            return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
+        }
+    }
 
     //</editor-fold>
 }
