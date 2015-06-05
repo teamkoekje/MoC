@@ -448,7 +448,6 @@ controllers.controller('inviteUserController', ['$scope', 'team', '$routeParams'
         $scope.searchUser = function () {
             var searchInput = $("#searchInput").val();
             console.log($user.search.query({searchInput: searchInput}));
-           
         };
     }
 ]);
