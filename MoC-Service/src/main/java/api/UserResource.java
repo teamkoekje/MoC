@@ -68,6 +68,20 @@ public class UserResource {
     }
     
     /**
+     * Gets all users matching the query
+     *
+     * @param searchInput for the user
+     * @return a list of users
+     */
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/search/{searchInput}")
+    @PermitAll
+    public List<User> searchUsers(@PathParam("searchInput") String searchInput) {
+        return userService.searchUsers(searchInput);
+    }
+    
+    /**
      * Check if the request is made by an Admin
      * @param request
      * The request

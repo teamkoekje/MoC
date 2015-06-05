@@ -313,6 +313,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
             $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
             $scope.isInvitation = false;
+            $scope.invitedParticipants = $team.invitedParticipants.query({teamId: teamId});
         };
 
         /**
@@ -437,6 +438,17 @@ controllers.controller('inviteUserController', ['$scope', 'team', '$routeParams'
                 $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
+        };
+        
+        /*
+         * 
+         * TODO return list and update view(table)
+         * @returns list users
+         */
+        $scope.searchUser = function () {
+            var searchInput = $("#searchInput").val();
+            console.log($user.search.query({searchInput: searchInput}));
+           
         };
     }
 ]);

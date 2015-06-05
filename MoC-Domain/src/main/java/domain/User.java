@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
@@ -17,6 +19,13 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "MOC_USER")
+
+@NamedQueries({
+    @NamedQuery(name = "User.searchUsers",
+            query = "SELECT user FROM User user WHERE user.name LIKE :searchInput OR user.username LIKE :searchInput OR user.email LIKE :searchInput")
+})
+
+
 public class User implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
