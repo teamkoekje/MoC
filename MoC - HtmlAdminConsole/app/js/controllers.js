@@ -206,6 +206,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
     function ($scope, $competition, $routeParams) {
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
+        $scope.description = 'participant';
         $scope.currentCompetition = {
             name: "selectedCompetitionName",
             startTime: new Date(),
@@ -213,19 +214,79 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
             challenges: [{
                     name: 'chalName',
                     state: 'completed',
-                    timeLeft: '00:00'
+                    timeLeft: '00:00',
+                    difficulty: 'easy',
+                    duration: '1:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [
+                        'hint1',
+                        'hint2',
+                        'hint3'
+                    ]
                 }, {
                     name: 'chalName',
                     state: 'working',
-                    timeLeft: '00:01'
+                    timeLeft: '00:01',
+                    difficulty: 'hard',
+                    duration: '1:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [
+                        'hint1',
+                        'hint2',
+                        'hint3'
+                    ]
                 }, {
                     name: 'chalName',
                     state: 'waiting',
-                    timeLeft: '01:00'
+                    timeLeft: '01:00',
+                    difficulty: 'hard',
+                    duration: '1:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [
+                        'hint1',
+                        'hint2',
+                        'hint3'
+                    ]
                 }, {
                     name: 'chalName',
                     state: 'waiting',
-                    timeLeft: '10:00'
+                    timeLeft: '10:00',
+                    difficulty: 'hard',
+                    duration: '10:00',
+                    author: {
+                        name: 'Luc Kolen',
+                        organisation: 'Fontys'
+                    },
+                    descriptions: {
+                        spectator: 'Spectator description',
+                        participant: 'Participant description'
+                    },
+                    hints: [
+                        'hint1',
+                        'hint2',
+                        'hint3'
+                    ]
                 }],
             currentChallenge: 1,
             teams: [
@@ -255,5 +316,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
             console.log("start competition");
             $competition.start.save({competitionId: $routeParams.id});
         };
+        
+        
     }
 ]);
