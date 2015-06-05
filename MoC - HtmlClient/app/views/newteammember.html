@@ -13,12 +13,12 @@
 
 <h4>Add team member</h4>
 
-<form name="radioButtons">
+<form name="radioButtons" ng-init="usercontent='new'">
     <label for="newUserCheckbox">New user</label>
-    <input name="xxx" type="radio" id="newUserRadioButton" checked>
+    <input name="usercontent" ng-model="usercontent" type="radio" id="newUserRadioButton" checked value="new">
     <br/><br/>
     <label for="existingUserCheckbox">Existing user</label>
-    <input name="xxx" id="existingUserRadioButton" type="radio">
+    <input name="usercontent" ng-model="usercontent" id="existingUserRadioButton" type="radio" value="existing">
 </form>
 <br>
 <hr>
@@ -35,7 +35,7 @@ invite sturen
 
 -->
 
-<div id="newUserPanel">
+<div id="newUserPanel" ng-show="usercontent == 'new'">
 
     <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
         <div class="form-group">
@@ -50,7 +50,7 @@ invite sturen
 
 
 
-<div id="existingUserPanel">
+<div id="existingUserPanel" ng-show="usercontent == 'existing'">
     <div class="form-group">
 
         <label for="existingInput" style="">Existing user:</label><br>
@@ -58,22 +58,3 @@ invite sturen
         <select id="existingInput" ng-model="user" ng-options="user as user.name for user in users"></select>
     </div>
 </div>
-
-
-
-<script>
-    // TODO: Replace this using Angular (instead of jQuery)
-    $(window).ready(function () {
-        $('#existingUserPanel').hide();
-        $('input[type="radio"]').on('click', function () {
-            if ($(this).attr('id') == 'newUserRadioButton') {
-                $('#existingUserPanel').hide();
-                $('#newUserPanel').show();
-            }
-            else {
-                $('#newUserPanel').hide();
-                $('#existingUserPanel').show();
-            }
-        });
-    });
-</script>
