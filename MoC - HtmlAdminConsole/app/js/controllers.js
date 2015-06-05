@@ -365,6 +365,15 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                 }]
         };
         
+        $scope.availableParticipants = [
+                'luc',
+                'astrid',
+                'casper',
+                'daan',
+                'arno',
+                'robin'
+        ]
+        
         $scope.startCompetition = function(){
             console.log("start competition");
             $competition.start.save({competitionId: $routeParams.id});
@@ -373,6 +382,14 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
         $scope.editCompetition = function(){
             ngDialog.open({
                 template: "popups/editCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        
+        $scope.addTeam = function(){
+            ngDialog.open({
+                template: "popups/addTeam.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });

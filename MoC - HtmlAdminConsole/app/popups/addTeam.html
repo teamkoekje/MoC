@@ -1,0 +1,22 @@
+<style>
+    .ngdialog.ngdialog-theme-default .ngdialog-content{
+        width:350px !important;
+    }
+</style>
+<div class="dialog-contents" style='padding:25px;padding-bottom: 50px'>
+    <div>
+        <h3>
+            New team
+        </h3>
+        <label for='newTeamName'>Name</label>
+        <input style='float: right' type='text' id='newTeamName'/>
+        <br><br>
+        <label for='newTeamOwner'>Owner</label>
+        <select style='float: right' id='newTeamOwner'>
+            <option ng-repeat="user in availableParticipants">
+                {{user}}
+            </option>
+        </select>
+    </div>
+    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="closeThisDialog()"/>
+</div>
