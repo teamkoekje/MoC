@@ -227,18 +227,18 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         participant: 'Participant description'
                     },
                     hints: [{
-                        isReleased: true,
-                        releaseTime: '0:50',
-                        context: 'hint 1'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:30',
-                        context: 'hint 2'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:10',
-                        context: 'hint 3'
-                    }]
+                            isReleased: true,
+                            releaseTime: '0:50',
+                            context: 'hint 1'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:30',
+                            context: 'hint 2'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:10',
+                            context: 'hint 3'
+                        }]
                 }, {
                     name: 'chalName 2',
                     state: 'working',
@@ -254,18 +254,18 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         participant: 'Participant description'
                     },
                     hints: [{
-                        isReleased: true,
-                        releaseTime: '0:50',
-                        context: 'hint 1'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:30',
-                        context: 'hint 2'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:10',
-                        context: 'hint 3'
-                    }]
+                            isReleased: true,
+                            releaseTime: '0:50',
+                            context: 'hint 1'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:30',
+                            context: 'hint 2'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:10',
+                            context: 'hint 3'
+                        }]
                 }, {
                     name: 'chalName 3',
                     state: 'waiting',
@@ -281,18 +281,18 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         participant: 'Participant description'
                     },
                     hints: [{
-                        isReleased: true,
-                        releaseTime: '0:50',
-                        context: 'hint 1'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:30',
-                        context: 'hint 2'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:10',
-                        context: 'hint 3'
-                    }]
+                            isReleased: true,
+                            releaseTime: '0:50',
+                            context: 'hint 1'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:30',
+                            context: 'hint 2'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:10',
+                            context: 'hint 3'
+                        }]
                 }, {
                     name: 'chalName 4',
                     state: 'waiting',
@@ -308,18 +308,18 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                         participant: 'Participant description'
                     },
                     hints: [{
-                        isReleased: true,
-                        releaseTime: '0:50',
-                        context: 'hint 1'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:30',
-                        context: 'hint 2'
-                    },{
-                        isReleased: false,
-                        releaseTime: '0:10',
-                        context: 'hint 3'
-                    }]
+                            isReleased: true,
+                            releaseTime: '0:50',
+                            context: 'hint 1'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:30',
+                            context: 'hint 2'
+                        }, {
+                            isReleased: false,
+                            releaseTime: '0:10',
+                            context: 'hint 3'
+                        }]
                 }],
             currentChallenge: 1,
             teams: [
@@ -364,43 +364,49 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                     ]
                 }]
         };
-        
+
         $scope.availableParticipants = [
-                'luc',
-                'astrid',
-                'casper',
-                'daan',
-                'arno',
-                'robin'
-        ]
-        
-        $scope.startCompetition = function(){
+            'luc',
+            'astrid',
+            'casper',
+            'daan',
+            'arno',
+            'robin'
+        ];
+
+        $scope.startCompetition = function () {
             console.log("start competition");
             $competition.start.save({competitionId: $routeParams.id});
         };
-        
-        $scope.editCompetition = function(){
+
+        $scope.editCompetition = function () {
             ngDialog.open({
                 template: "popups/editCompetition.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
         };
-        
-        $scope.addTeam = function(){
+
+        $scope.addTeam = function () {
             ngDialog.open({
                 template: "popups/addTeam.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
         };
-        
-        $scope.addMembers = function(){
+
+        $scope.addMembers = function () {
             ngDialog.open({
                 template: "popups/addMember.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
         };
+    }
+]);
+
+controllers.controller('addChallengeController', ['$scope',
+    function ($scope) {
+
     }
 ]);
