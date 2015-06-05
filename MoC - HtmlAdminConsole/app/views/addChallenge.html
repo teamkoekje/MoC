@@ -5,3 +5,33 @@
     <span style="font-size: 25px" class="glyphicon glyphicon-plus"></span>
 </a>
 
+<div class='row'>
+    <div class='col-xs-4'>
+        <h3>
+            Select challenge
+        </h3>
+        <h4>
+            Upload
+        </h4>
+        <form id='newChallengeUploadForm'>
+            <input type='file' style='display: none' onchange="newChallengeUploadDisplay.value = newChallengeUpload.value" id='newChallengeUpload'/>
+            <input class='col-xs-8' type="text" id='newChallengeUploadDisplay' readonly=""/>
+            <span class='col-xs-4' style='text-align: right;' >
+                <span style='cursor: pointer;margin-right: 5px' class='glyphicon glyphicon-folder-open' onclick='newChallengeUpload.click()'></span>
+                <span style='cursor: pointer' class='glyphicon glyphicon-upload' onclick='document.getElementById("newChallengeUploadForm").submit();'></span>
+            </span>
+        </form>
+        <br><br>
+        <h4>
+            Available
+        </h4>
+        <ul class='notARealList'>
+            <li ng-repeat="i in [1, 2, 3, 4, 5, 6]">
+                template {{i}}
+            </li>
+        </ul>
+    </div>
+    <div class='col-xs-8'>
+
+    </div>
+</div>
