@@ -1,4 +1,4 @@
-package messaging;
+package messaging.MessagingConstants;
 
 /**
  * Class that provides simple naming for different destination types.

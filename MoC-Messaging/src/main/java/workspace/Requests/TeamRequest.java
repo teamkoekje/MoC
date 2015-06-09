@@ -10,7 +10,7 @@ public abstract class TeamRequest extends Request {
 
     private final String teamName;
 
-    public TeamRequest(Action action, long competitionId, String teamName) {
+    public TeamRequest(RequestAction action, long competitionId, String teamName) {
         super(action, competitionId);
         this.teamName = teamName;
     }

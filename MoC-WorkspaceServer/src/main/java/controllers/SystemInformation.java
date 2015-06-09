@@ -57,7 +57,7 @@ public class SystemInformation {
             sb.append("\"totalfreememory\": \"" + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + "\",");
             sb.append("\"processoramount\": \"" + amountProcessors + "\",");
             sb.append("\"cpuusage\": \"" + cpuUsage + "\",");
-            sb.append("\"workspaces\": \"" + wmInstance.getTeamSize() + "\"");
+            sb.append("\"workspaces\": \"" + wmInstance.getTeamsCount() + "\"");
             sb.append("}");
 
             return sb.toString();

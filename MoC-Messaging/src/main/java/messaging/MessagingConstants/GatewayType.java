@@ -1,4 +1,4 @@
-package messaging;
+package messaging.MessagingConstants;
 
 /**
  * Enum to identify the difference between Gateways; either a sender or receiver.

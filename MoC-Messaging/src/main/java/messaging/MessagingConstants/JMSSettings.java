@@ -1,4 +1,4 @@
-package messaging;
+package messaging.MessagingConstants;
 /**
  * Class providing Strings for naming purposes of JMS.
  * 

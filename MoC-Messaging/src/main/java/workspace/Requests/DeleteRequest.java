@@ -9,6 +9,6 @@ package workspace.Requests;
 public class DeleteRequest extends TeamRequest {
 
     public DeleteRequest(long competitionId, String teamName) {
-        super(Action.DELETE, competitionId, teamName);
+        super(RequestAction.DELETE, competitionId, teamName);
     }
 }

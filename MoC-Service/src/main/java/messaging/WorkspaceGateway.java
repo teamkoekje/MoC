@@ -1,7 +1,9 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
-
+import messaging.MessagingConstants.DestinationType;
+import messaging.MessagingConstants.GatewayType;
+import messaging.MessagingConstants.JMSSettings;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,24 +19,27 @@ import workspace.WorkspaceSenderRouter;
 import workspace.WorkspaceServer;
 
 // </editor-fold>
-
 /**
- * Application Gateway between MoC-Service and MessagingGateways. Contains the WorkspaceSenderRouter and MessagingGateways for init messages and replies of requests
+ * Application Gateway between MoC-Service and MessagingGateways. Contains the
+ * WorkspaceSenderRouter and MessagingGateways for init messages and replies of
+ * requests
  *
  * @author TeamKoekje
  */
 public abstract class WorkspaceGateway {
 
+    // <editor-fold defaultstate="collapsed" desc="Variables" >
     private WorkspaceSenderRouter router;
     private MessagingGateway initGtw;
     private MessagingGateway receiverGtw;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
     public WorkspaceGateway() {
         try {
             router = new WorkspaceSenderRouter();
             initGtw = new MessagingGateway(JMSSettings.WORKSPACE_INIT_REPLY, DestinationType.TOPIC, JMSSettings.BROKER_INIT_REQUEST, DestinationType.QUEUE);
             initGtw.setReceivedMessageListener(new MessageListener() {
-
                 @Override
                 public void onMessage(Message msg) {
                     processInitMessage(msg);
@@ -43,13 +48,12 @@ public abstract class WorkspaceGateway {
 
             receiverGtw = new MessagingGateway(JMSSettings.BROKER_REPLY, DestinationType.QUEUE, GatewayType.RECEIVER);
             receiverGtw.setReceivedMessageListener(new MessageListener() {
-
                 @Override
                 public void onMessage(Message message) {
                     if (message instanceof ObjectMessage) {
                         try {
                             ObjectMessage objMsg = (ObjectMessage) message;
-                            Reply reply = (Reply)objMsg.getObject();
+                            Reply reply = (Reply) objMsg.getObject();
                             System.out.println("Message received: " + reply.getMessage());
                         } catch (JMSException ex) {
                             Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,7 +70,9 @@ public abstract class WorkspaceGateway {
             System.err.println(ex.getMessage());
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     public void closeConnection() {
         initGtw.closeConnection();
         receiverGtw.closeConnection();
@@ -109,10 +115,10 @@ public abstract class WorkspaceGateway {
             return null;
         }
     }
-    
-    public synchronized int broadcast(Request request){
+
+    public synchronized int broadcast(Request request) {
         List<WorkspaceServer> servers = router.getAllServers();
-        for(WorkspaceServer server : servers){
+        for (WorkspaceServer server : servers) {
             sendRequest(request, server.getSender());
         }
         return servers.size();
@@ -128,9 +134,9 @@ public abstract class WorkspaceGateway {
             return null;
         }
     }
-    
+
     public String deleteWorkspace(TeamRequest request) {
-         WorkspaceServer ws = router.getServerByWorkspaceName(request.getTeamName());
+        WorkspaceServer ws = router.getServerByWorkspaceName(request.getTeamName());
         if (ws != null) {
             ws.deleteWorkspace(request.getTeamName());
             return sendRequest(request, ws.getSender());
@@ -141,4 +147,5 @@ public abstract class WorkspaceGateway {
     }
 
     public abstract void onWorkspaceMessageReceived(Message message);
+    // </editor-fold>
 }

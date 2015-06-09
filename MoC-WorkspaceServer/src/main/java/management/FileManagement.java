@@ -78,7 +78,7 @@ public class FileManagement {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
-    public String getFolderJSON(String folderPath) {
+    public String getFolderStructureJSON(String folderPath) {
         File folder = new File(folderPath);
         if (!folder.isDirectory()) {
             return null;
@@ -94,7 +94,7 @@ public class FileManagement {
         return editables.contains(filename);
     }
 
-    public String getFileJSON(String filePath) {
+    public String getFileContentJSON(String filePath) {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         try {
             Path file = Paths.get(filePath);

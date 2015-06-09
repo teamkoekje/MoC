@@ -8,7 +8,7 @@ package workspace.Requests;
  */
 public class SysInfoRequest extends Request {
 
-    public SysInfoRequest(Action action) {
+    public SysInfoRequest(RequestAction action) {
         super(action);
     }
 }

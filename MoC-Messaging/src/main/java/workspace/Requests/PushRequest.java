@@ -12,7 +12,7 @@ public class PushRequest extends Request {
     private final byte[] data;
 
     public PushRequest(long competitionId, String challengeName, byte[] data) {
-        super(Action.PUSH_CHALLENGE, competitionId);
+        super(RequestAction.PUSH_CHALLENGE, competitionId);
         this.challengeName = challengeName;
         this.data = data;
     }

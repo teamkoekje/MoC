@@ -30,9 +30,9 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
 import messaging.AsynchronousReplier;
-import messaging.DestinationType;
+import messaging.MessagingConstants.DestinationType;
 import messaging.IRequestListener;
-import messaging.JMSSettings;
+import messaging.MessagingConstants.JMSSettings;
 import messaging.MessagingGateway;
 //</editor-fold>
 
@@ -52,7 +52,7 @@ public class BrokerGateway implements IRequestListener<Request> {
     private final PathController pathInstance = PathController.getInstance();
     private final WorkspaceManagement wm = WorkspaceManagement.getInstance();
 
-    private AsynchronousReplier<Request, Reply> replier;
+    private AsynchronousReplier<Request, Reply> requestReplier;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
@@ -102,9 +102,9 @@ public class BrokerGateway implements IRequestListener<Request> {
             System.out.println("Init reply received: " + msg.getJMSCorrelationID());
             if (msg.getJMSCorrelationID().equals(initMsgId)) {
                 String id = ((TextMessage) msg).getText();
-                replier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
-                replier.setRequestListener(this);
-                replier.start();
+                requestReplier = new AsynchronousReplier<>(JMSSettings.WORKSPACE_REQUEST + "_" + id);
+                requestReplier.setRequestListener(this);
+                requestReplier.start();
                 wm.setServerId(id);
                 System.out.println("Server id: " + id);
                 registerGateway.closeConnection();
@@ -134,7 +134,7 @@ public class BrokerGateway implements IRequestListener<Request> {
         //  confirm message with MessagingGateway.confirmMessage(true)
         //else
         //  rollback message using MessagingGateway.confirmMessage(false)
-        replier.sendReply(request, reply);
+        requestReplier.sendReply(request, reply);
     }
 
     /**
@@ -167,7 +167,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                 return new NormalReply(wm.removeWorkspace(Long.toString(deleteRequest.getCompetitionId()), deleteRequest.getTeamName()));
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return new NormalReply(wm.extractChallengeToTeam(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
+                return new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
                 String folderPath = pathInstance.teamChallengePath(
@@ -178,7 +178,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                         + File.separator
                         + folderStructureRequest.getChallengeName()
                         + ".jar";
-                return new NormalReply(FileManagement.getInstance(jarPathForFolder).getFolderJSON(folderPath));
+                return new NormalReply(FileManagement.getInstance(jarPathForFolder).getFolderStructureJSON(folderPath));
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 String jarPathForFile = pathInstance.teamChallengePath(
@@ -186,7 +186,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                         fileRequest.getTeamName(),
                         fileRequest.getChallengeName())
                         + File.separator + fileRequest.getChallengeName() + ".jar";
-                return new NormalReply(FileManagement.getInstance(jarPathForFile).getFileJSON(fileRequest.getFilepath()));
+                return new NormalReply(FileManagement.getInstance(jarPathForFile).getFileContentJSON(fileRequest.getFilepath()));
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             default:

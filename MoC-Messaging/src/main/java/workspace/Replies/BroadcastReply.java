@@ -1,10 +1,10 @@
 package workspace.Replies;
 
-import workspace.Requests.Action;
+import workspace.Requests.RequestAction;
 
 public class BroadcastReply extends Reply {
     
     public BroadcastReply(String message){
-        super(Action.BROADCAST, message);
+        super(ReplyAction.BROADCAST, message);
     }
 }

@@ -20,7 +20,7 @@ import messaging.IReplyListener;
 import messaging.SysInfoAggregate;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
-import workspace.Requests.Action;
+import workspace.Requests.RequestAction;
 import workspace.Requests.CompileRequest;
 import workspace.Requests.CreateRequest;
 import workspace.Requests.DeleteRequest;
@@ -28,6 +28,7 @@ import workspace.Requests.FileRequest;
 import workspace.Requests.FolderStructureRequest;
 import workspace.Requests.PushRequest;
 import workspace.Replies.Reply;
+import workspace.Replies.ReplyAction;
 import workspace.Requests.Request;
 import workspace.Requests.SysInfoRequest;
 import workspace.Requests.TestAllRequest;
@@ -68,7 +69,7 @@ public class WorkspaceService {
                         String username = requests.get(message.getJMSCorrelationID());
                         ObjectMessage objMsg = (ObjectMessage) message;
                         Reply reply = (Reply) objMsg.getObject();
-                        if (reply.getAction() == Action.BROADCAST) {
+                        if (reply.getAction() == ReplyAction.BROADCAST) {
                             sia.addReply(reply);
                         } else {
                             System.out.println("Message received from workspace: " + reply.getMessage());
@@ -143,7 +144,7 @@ public class WorkspaceService {
     }
 
     public void sysInfo(String username) {
-        SysInfoRequest sir = new SysInfoRequest(Action.SYSINFO);
+        SysInfoRequest sir = new SysInfoRequest(RequestAction.SYSINFO);
         numberOfBroadcastMessages = gateway.broadcast(sir);
         sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, username, new IReplyListener<Request, Reply>() {
             @Override

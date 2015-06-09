@@ -26,7 +26,7 @@ public class WorkspaceManagement {
     /**
      * Key: Competition name Value: ArrayList<String> with team names
      */
-    private final HashMap<String, ArrayList<String>> teams = new HashMap<>();
+    private final HashMap<String, ArrayList<String>> competitions = new HashMap<>();
     private static final File MAVEN_HOME = new File("C:/apache-maven-3.3.1");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
@@ -53,14 +53,14 @@ public class WorkspaceManagement {
             for (File f : competitionFolder.listFiles()) {
                 if (f.isDirectory()) {
                     String competitionName = f.getName();
-                    if (!teams.containsKey(competitionName)) {
-                        teams.put(competitionName, new ArrayList());
+                    if (!competitions.containsKey(competitionName)) {
+                        competitions.put(competitionName, new ArrayList());
                     }
-                    ArrayList<String> tempList = teams.get(competitionName);
+                    ArrayList<String> tempList = competitions.get(competitionName);
                     for (File f2 : f.listFiles()) {
                         tempList.add(f2.getName());
                     }
-                    teams.put(competitionName, tempList);
+                    competitions.put(competitionName, tempList);
                 }
             }
         }
@@ -97,9 +97,15 @@ public class WorkspaceManagement {
     public void setServerId(String serverId) {
         this.serverId = serverId;
     }
-    
-    public int getTeamSize() {
-        return this.teams.size();
+
+    public int getTeamsCount() {
+        int temp = 0;
+        Iterator it = competitions.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, ArrayList<String>> pair = (Map.Entry) it.next();
+            temp += pair.getValue().size();
+        }
+        return temp;
     }
     // </editor-fold>
 
@@ -116,12 +122,12 @@ public class WorkspaceManagement {
         try {
             File teamFolder = new File(pathInstance.teamPath(competitionId, teamName));
             teamFolder.mkdirs();
-            ArrayList<String> tempList = teams.get(competitionId);
+            ArrayList<String> tempList = competitions.get(competitionId);
             if (tempList == null) {
                 tempList = new ArrayList<>();
             }
             tempList.add(teamName);
-            teams.put(competitionId, tempList);
+            competitions.put(competitionId, tempList);
             return "Created workspace for team: " + teamName;
         } catch (Exception ex) {
             System.err.println(ex.getLocalizedMessage());
@@ -141,16 +147,16 @@ public class WorkspaceManagement {
     public String removeWorkspace(String competitionId, String teamName) {
         File teamFolder = new File(pathInstance.teamPath(competitionId, teamName));
         if (deleteDirectory(teamFolder)) {
-            ArrayList<String> tempList = teams.get(competitionId);
+            ArrayList<String> tempList = competitions.get(competitionId);
             tempList.remove(teamName);
-            teams.put(competitionId, tempList);
+            competitions.put(competitionId, tempList);
             return "Workspace succesfully deleted";
         } else {
             return "Error while deleting workspace";
         }
     }
 
-    public static boolean deleteDirectory(File path) {
+    private static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
             for (File file : files) {
@@ -232,16 +238,16 @@ public class WorkspaceManagement {
      * @param data The data to extract
      * @return A string indicating the success of the extraction
      */
-    public String extractChallengeToTeam(String competitionId, String challengeName, byte[] data) {
+    public String extractChallenge(String competitionId, String challengeName, byte[] data) {
         File challengePath = new File(pathInstance.challengesPath(competitionId));
         challengePath.mkdirs();
         File challengeZip = new File(challengePath.getAbsoluteFile() + File.separator + challengeName + ".zip");
         //write to server        
         writeZipToCompetition(data, challengeZip.getAbsolutePath());
         //for all teams
-        for (String teamName : teams.get(competitionId)) {
+        for (String teamName : competitions.get(competitionId)) {
             try {
-                extractChallenge(challengeZip, teamName, competitionId);
+                extractChallengeToTeam(challengeZip, teamName, competitionId);
             } catch (Exception ex) {
                 Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 return "Error extracting: " + ex.getLocalizedMessage();
@@ -278,7 +284,7 @@ public class WorkspaceManagement {
      * @param competitionId The id of the competition
      * @throws IOException
      */
-    private void extractChallenge(File challengeZip, String teamName, String competitionId) throws IOException {
+    private void extractChallengeToTeam(File challengeZip, String teamName, String competitionId) throws IOException {
         ZipFile zip = new ZipFile(challengeZip);
         Enumeration zipFileEntries = zip.entries();
         String outputPath = pathInstance.teamPath(competitionId, teamName) + File.separator + FilenameUtils.removeExtension(challengeZip.getName());
@@ -321,7 +327,7 @@ public class WorkspaceManagement {
                 dest.flush();
             }
         }
-    }    
+    }
 
     // <editor-fold defaultstate="collapsed" desc="build, test (maven invoker)" >
     /**

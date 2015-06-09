@@ -4,8 +4,8 @@ package workspace;
 import java.util.ArrayList;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
-import messaging.DestinationType;
-import messaging.GatewayType;
+import messaging.MessagingConstants.DestinationType;
+import messaging.MessagingConstants.GatewayType;
 import messaging.MessagingGateway;
 // </editor-fold>
 

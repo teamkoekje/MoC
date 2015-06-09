@@ -1,10 +1,10 @@
 package workspace.Replies;
 
-import workspace.Requests.Action;
+import workspace.Requests.RequestAction;
 
 public class NormalReply extends Reply {
     
     public NormalReply(String message){
-        super(Action.NORMAL, message);
+        super(ReplyAction.NORMAL, message);
     }
 }

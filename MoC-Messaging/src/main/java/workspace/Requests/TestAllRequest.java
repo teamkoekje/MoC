@@ -11,7 +11,7 @@ public class TestAllRequest extends TeamRequest{
     private final String challengeName;
 
     public TestAllRequest(long competitionId, String teamName, String challengeName) {
-        super(Action.TESTALL, competitionId, teamName);
+        super(RequestAction.TESTALL, competitionId, teamName);
         this.challengeName = challengeName;
     }
 
