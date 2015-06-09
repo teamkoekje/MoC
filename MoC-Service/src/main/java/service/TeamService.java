@@ -50,8 +50,7 @@ public class TeamService extends GenericService<Team> {
     public void leaveTeam(User user, long teamId) {
         Team team = findById(teamId);
         team.removeParticipant(user);
+        user.removeTeam(team);
         edit(team);
     }
-
-
 }
