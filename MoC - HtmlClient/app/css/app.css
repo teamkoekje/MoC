@@ -6,3 +6,8 @@ form input:not([type="submit"]){
     overflow-y: scroll; 
     height: 350px;
 }
+
+#foundUserTable td, #foundUserTable th{
+    border: 1px solid black;
+    padding-right: 15px;
+}
