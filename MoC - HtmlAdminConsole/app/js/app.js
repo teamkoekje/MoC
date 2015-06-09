@@ -7,7 +7,8 @@ var app = angular.module('mocApp', [
     'ngRoute',
     'ngDialog',
     'mocControllers',
-    'mocServices'
+    'mocServices',
+    'ui.bootstrap.datetimepicker'
 ]);
 
 app.config(['$routeProvider',
@@ -24,6 +25,14 @@ app.config(['$routeProvider',
                 .when('/competitionOverview', {
                     templateUrl: 'views/competitionOverview.html',
                     controller: 'competitionOverviewController'
+                })
+                .when('/competitionView', {
+                    templateUrl: "views/competitionView.html",
+                    controller: 'competitionViewController'
+                })
+                .when('/addChallenge', {
+                    templateUrl: "views/addChallenge.html",
+                    controller: 'addChallengeController'
                 })
                 .otherwise({redirectTo: '/login'});
     }

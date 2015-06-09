@@ -121,12 +121,12 @@ public class FileManagement {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         String temp = folderToShow.getName();
         if ((folderToShow.isFile() && isVisible(temp) || folderToShow.isDirectory())) {
-            jsonObjectBuilder.add(temp, listFileJSON(folderToShow));
+            jsonObjectBuilder.add(temp, listFolderJSON(folderToShow));
         }
         return jsonObjectBuilder;
     }
 
-    private JsonArrayBuilder listFileJSON(File file) {
+    private JsonArrayBuilder listFolderJSON(File file) {
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
         for (File f : file.listFiles()) {
             if (f.isDirectory()) {

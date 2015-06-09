@@ -16,6 +16,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
         <link rel='stylesheet' href='bower_components/ngDialog/css/ngDialog.min.css'>
+        <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog-theme-default.min.css">
+        <link rel='stylesheet' href='bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'>
 
         <!--SCRIPTS -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -25,7 +27,6 @@
     <body role="document">
 
         <div class="container theme-showcase" role="main">
-
             <div class="page-header" ng-controller="loginController">
                 <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">Login</a>
                 <div ng-if="isLoggedIn()" style="float:right">
@@ -43,6 +44,8 @@
         <script src="bower_components/angular-resource/angular-resource.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src='bower_components/ngDialog/js/ngDialog.js'></script>
+        <script src='bower_components/moment/min/moment.min.js'></script>
+        <script src='bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'></script>
 
         <script src="components/version/version.js"></script>
         <script src="components/version/version-directive.js"></script>

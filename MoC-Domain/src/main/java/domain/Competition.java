@@ -167,6 +167,7 @@ public class Competition implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     public List<CompetitionEvent> update() {
         if (currentRound != null) {
+            System.out.println("Updating round: ");
             List<CompetitionEvent> events = currentRound.update();
             for (CompetitionEvent event : events) {
                 switch (event.getType()) {
@@ -295,14 +296,14 @@ public class Competition implements Serializable {
      */
     public void startNextRound() throws IllegalStateException {
         if (rounds.size() > 0) {
-            if(currentRound == null){
-                if(rounds.get(rounds.size()-1).getRoundState() == RoundState.NOT_STARTED){
+            if (currentRound == null) {
+                if (rounds.get(rounds.size() - 1).getRoundState() == RoundState.NOT_STARTED) {
                     currentRound = rounds.get(0);
                     currentRound.start();
-                }else{
+                } else {
                     throw new IllegalStateException("Can't start the first round as the Competition is already over.");
                 }
-            }else{
+            } else {
                 if (currentRound.getRoundState() == RoundState.NOT_STARTED) {
                     currentRound.start();
                 } else {

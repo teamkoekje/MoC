@@ -1,8 +1,10 @@
 package api;
 
 import domain.Invitation;
+import domain.Invitation.InvitationState;
 import domain.Team;
 import domain.User;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
@@ -41,6 +43,9 @@ public class TeamResource {
 
     @Inject
     private InvitationService invitationService;
+
+    @Context
+    private HttpServletRequest request;
 
     //<editor-fold defaultstate="collapsed" desc="Team">
     /**
@@ -105,6 +110,26 @@ public class TeamResource {
         if (username != null) {
             User u = userService.findById(username);
             return u.getTeams();
+        } else {
+            return null;
+        }
+    }
+
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/myTeamInvitations")
+    @RolesAllowed({"User"})
+    public List<Invitation> getMyTeamInvitations() {
+        String username = request.getRemoteUser();
+        if (username != null) {
+            List<Invitation> invitations = new ArrayList<>();
+            User u = userService.findById(username);
+            for (Invitation i : invitationService.findByEmail(u.getEmail())) {
+                if (i.getState() == InvitationState.UNDECIDED) {
+                    invitations.add(i);
+                }
+            }
+            return invitations;
         } else {
             return null;
         }
@@ -192,6 +217,22 @@ public class TeamResource {
         invitationService.acceptInvitation(user, token);
     }
 
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/accept/{invitationId}")
+    public void acceptInvitation(@PathParam("invitationId") long invitationId) {
+        User user = userService.findById(request.getRemoteUser());
+        Invitation invitation = invitationService.findById(invitationId);
+        invitationService.acceptInvitation(user, invitation.getToken());
+    }
+
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/decline/{invitationId}")
+    public void declineInvitation(@PathParam("invitationId") long invitationId) {
+        invitationService.declineInvitation(invitationId);
+    }
+
     /**
      * Lets a user leave a certain team
      *
@@ -208,5 +249,21 @@ public class TeamResource {
             teamService.leaveTeam(user, teamId);
         }
     }
+
+    /**
+     * Lets you find all the invited users of a certain team
+     *
+     * @param teamId id of the team from which we want the invited users
+     * @return list of Invitations
+     */
+    @GET
+    @Consumes("application/xml,application/json")
+    @Path("/{teamId}/findInvited")
+    @RolesAllowed({"User", "Admin"})
+    public List<Invitation> findInvitationsByTeam(@PathParam("teamId") long teamId) {
+        Team team = teamService.findById(teamId);
+        return invitationService.findInvitationsByTeam(team);
+    }
+
     //</editor-fold>
 }

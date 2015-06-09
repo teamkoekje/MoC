@@ -135,8 +135,8 @@ public class WorkspaceService {
         }
     }
 
-    public void folderStructure(long competitionId, String challengeName, String teamName) {
-        gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
+    public String folderStructure(long competitionId, String challengeName, String teamName) {
+        return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
 
     public void file(long competitionId, String teamName, String challengeName, String filePath) {

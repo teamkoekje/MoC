@@ -1,0 +1,27 @@
+<style>
+    .ngdialog.ngdialog-theme-default .ngdialog-content{
+        width:550px !important;
+    }
+</style>
+<div class="dialog-contents" style='padding:25px;'>
+    <table class="table table-striped" style="width: 100%">
+        <thead>
+            <tr>
+                <th>IP</th>
+                <th>CPU</th>
+                <th>RAM</th>
+                <th>HDD</th>
+                <th>#Workspaces</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="server in servers">
+                <td>{{server.IP}}</td>
+                <td>{{server.CPU}}</td>
+                <td>{{server.RAM}}</td>
+                <td>{{server.HDD}}</td>
+                <td>{{server.Workspaces}}</td>    
+            </tr>
+        </tbody>
+    </table>
+</div>

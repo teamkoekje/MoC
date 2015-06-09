@@ -3,92 +3,59 @@
     <li role="presentation" class="active"><a href="#inviteUsers">Invite Users</a></li>
 </ul>
 
-
 <br>
+<div class="alert alert-success" role="alert" ng-if="showSuccesAlert">
+    <strong>Succes!</strong> An email has been sent, the user has been invited to the team.
+</div>
+<div class="alert alert-danger" role="alert" ng-if="showFailedAlert">
+    <strong>Oops!</strong> Something went wrong when trying to invite the user. {{error}}
+</div>
 
 <h4>Add team member</h4>
 
-
-<form name="radioButtons">
+<form name="radioButtons" ng-init="usercontent = 'new'">
     <label for="newUserCheckbox">New user</label>
-    <input name="xxx" type="radio" id="newUserRadioButton" checked>
+    <input name="usercontent" ng-model="usercontent" type="radio" id="newUserRadioButton" checked value="new">
     <br/><br/>
     <label for="existingUserCheckbox">Existing user</label>
-    <input name="xxx" id="existingUserRadioButton" type="radio">
+    <input name="usercontent" ng-model="usercontent" id="existingUserRadioButton" type="radio" value="existing">
 </form>
-
-
-
-
-
-
-
-
 <br>
 <hr>
 <br>
 
-
-
-<!--
-
-todo
-
-teamid ophalen
-controller fixen zodat email en id erin mee komt
-
-invite sturen
-
--->
-
-
-
-
-
-<div id="newUserPanel">
+<div id="newUserPanel" ng-show="usercontent == 'new'">
 
     <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
-
-      
-       
-
-
-
         <div class="form-group">
-            <label for="emailInput" style="">email</label>
+            <label for="emailInput" style="">Email</label>
             <input required type="email" class="form-control" id="emailInput" placeholder="Email" ng-model="email" style="display: table-cell"/>
             <input type="submit" class="btn btn-default" value="Invite user"/>
         </div>
     </form>
 </div>
 
-
-
-
-
-<div id="existingUserPanel">
-    <div class="form-group">
-
-        <label for="existingInput" style="">Existing user:</label><br>
-
-        <select id="existingInput" ng-model="user" ng-options="user as user.name for user in users"></select>
-    </div>
+<div id="existingUserPanel" ng-show="usercontent == 'existing'">
+    <form style="display:inline-block;text-align: left" ng-submit="searchUser()">
+        <div class="form-group">
+            <label for="searchInput" style="">search</label>
+            <input required type="text" class="form-control" id="searchInput" placeholder="Search" ng-model="text" style="display: table-cell"/>
+            <input type="submit" class="btn btn-default" value="Search user"/>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>name</th>  <th>username</th><th>email</th> <th>invite</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="i in [1, 2, 3, 4, 5]">
+                    <td>name {{i}}</td>
+                    <td>username {{i}}</td>
+                    <td>email {{i}}</td>
+                    <td>invite {{i}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>
-
-
-
-<script>
-            $(window).ready(function () {
-                $('#existingUserPanel').hide();
-                $('input[type="radio"]').on('click', function () {
-                    if ($(this).attr('id') == 'newUserRadioButton') {
-                        $('#existingUserPanel').hide();
-                        $('#newUserPanel').show();
-                    }
-                    else {
-                        $('#newUserPanel').hide();
-                        $('#existingUserPanel').show();
-                    }
-                });
-            });
-</script>

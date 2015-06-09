@@ -37,22 +37,22 @@ public class Round implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Challenge challenge;
-    
+
     private long duration;
-    
+
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar startTime;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar endTime;
 
     private List<Hint> hintsCopy;
-    
+
     private Set<Team> submittedTeams;
     private int roundOrder;
     private RoundState roundState;
-   
-    // </editor-fold>
 
+    // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Round() {
         init();
@@ -209,6 +209,7 @@ public class Round implements Serializable {
      * Start the round.
      */
     public void start() {
+        System.out.println("Starting round: " + this.id + " - " + this.roundState);
         if (roundState == RoundState.NOT_STARTED) {
             //set the start time, end time and the hints to be released
             startTime = Calendar.getInstance();
@@ -273,6 +274,8 @@ public class Round implements Serializable {
         List<CompetitionEvent> events = new ArrayList<>();
         if (roundState == RoundState.ONGOING) {
             //stop the round if it ended
+            System.out.println("Remaing Time: " + getRemainingTime());
+
             if (getRemainingTime() <= 0) {
                 stop();
                 events.add(new RoundEndedEvent(this));
