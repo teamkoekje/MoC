@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
@@ -17,6 +18,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.Query;
 
 /**
  * Service class used to manage users
@@ -97,5 +99,11 @@ public class UserService extends GenericService<User> {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public List<User> searchUsers(String searchInput) {
+        Query q = em.createNamedQuery("User.searchUsers");
+        q.setParameter("searchInput", "%" + searchInput + "%");
+        return (List<User>) q.getResultList();
     }
 }

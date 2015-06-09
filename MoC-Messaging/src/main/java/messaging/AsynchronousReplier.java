@@ -1,6 +1,8 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import messaging.MessagingConstants.DestinationType;
+import messaging.MessagingConstants.GatewayType;
 import java.io.Serializable;
 import javax.jms.Message;
 import java.util.HashMap;

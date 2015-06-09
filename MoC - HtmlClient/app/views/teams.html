@@ -85,7 +85,21 @@
                 <h3 class="panel-title">Invited</h3>
             </div>
             <div class="panel-body">
-                Show the invited members?
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="invite in invitedParticipants">
+                            <td>{{invite.email}}</td>
+                            <td>{{invite.state}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
         </div>
         <div ng-if="isInvitation">

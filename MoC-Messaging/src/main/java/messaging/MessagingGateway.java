@@ -1,6 +1,8 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import messaging.MessagingConstants.GatewayType;
+import messaging.MessagingConstants.JMSSettings;
 import java.io.Serializable;
 import java.util.Properties;
 import javax.jms.Connection;

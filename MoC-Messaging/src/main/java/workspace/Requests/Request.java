@@ -9,19 +9,19 @@ import java.io.Serializable;
  */
 public abstract class Request implements Serializable {
 
-    private final Action action;
+    private final RequestAction action;
     private long competitionId;
 
-    protected Request(Action action, long competitionId) {
+    protected Request(RequestAction action, long competitionId) {
         this.action = action;
         this.competitionId = competitionId;
     }
     
-    protected Request(Action action){
+    protected Request(RequestAction action){
         this.action = action;
     }
     
-    public Action getAction() {
+    public RequestAction getAction() {
         return action;
     }
 

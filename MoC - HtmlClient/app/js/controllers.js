@@ -79,7 +79,7 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
                 console.log(data);
             });
         };
-        
+
         /**
          * Logs out the current user and, if successful, sends the user to the login page
          */
@@ -100,11 +100,11 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
                 console.log(data);
             });
         };
-        
+
         /**
          * Creates a websocket
          */
-        openWebsocket = function(){
+        openWebsocket = function () {
             var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
             ws.onopen = function () {
                 console.log("opening ws connection");
@@ -182,7 +182,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
             });
             $scope.user = new $user();
         };
-        
+
         /**
          * Creates new team
          */
@@ -195,7 +195,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
             });
             $scope.team = new $team();
         };
-        
+
         /**
          * Deletes a user using userId
          * @param {int} userId
@@ -206,7 +206,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
                 loadData();
             });
         };
-        
+
         /**
          * Deletes a team using teamId
          * @param {int} teamId
@@ -217,7 +217,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
                 loadData();
             });
         };
-        
+
         /**
          * Loads all data (competitions, users, teams)
          */
@@ -229,7 +229,7 @@ controllers.controller('demoController', ['$scope', 'user', 'competition', 'team
                 $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
             }
         };
-        
+
         /**
          * Refreshes the teams list
          */
@@ -261,7 +261,7 @@ controllers.controller('competitionsController', ['$scope', 'competition',
             $scope.challenges = $competition.challenges.query({competitionId: id});
             $scope.teams = $competition.teams.query({competitionId: id});
         };
-        
+
         /**
          * Checks if the selected competition is the same as the loaded competition
          * @param {int} competitionId
@@ -270,7 +270,7 @@ controllers.controller('competitionsController', ['$scope', 'competition',
         $scope.isSelected = function (competitionId) {
             return $scope.competition.id === competitionId;
         };
-        
+
         /**
          * Checks if the given competition is active
          * @param {int} competitionId
@@ -284,7 +284,7 @@ controllers.controller('competitionsController', ['$scope', 'competition',
             }
             return false;
         };
-        
+
         /**
          * Loads all active and future competitions
          */
@@ -313,6 +313,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
             $scope.team = $team.all.get({teamId: teamId});
             $scope.participants = $team.participants.query({teamId: teamId});
             $scope.isInvitation = false;
+            $scope.invitedParticipants = $team.invitedParticipants.query({teamId: teamId});
         };
 
         /**
@@ -360,7 +361,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
 
             });
         };
-        
+
         /**
          * Declines the given invitation
          * @param {Invitation} invitation
@@ -384,7 +385,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
         $scope.isOwnerLoggedIn = function (teamOwner) {
             return $cookies.user.toUpperCase() === teamOwner.toUpperCase();
         };
-        
+
         /**
          * Loads team and invitation data
          */
@@ -411,7 +412,7 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
             });
             $scope.team = new $team.all();
         };
-        
+
         /**
          * Loads competition and team data
          */
@@ -422,8 +423,8 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$scope', 'team', '$routeParams',
-    function ($scope, $team, $routeParams) {
+controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams',
+    function ($scope, $team, $user, $routeParams) {
         /**
          * Creates an invite for the given email address
          */
@@ -438,6 +439,31 @@ controllers.controller('inviteUserController', ['$scope', 'team', '$routeParams'
                 $scope.error = data.data;
             });
         };
+
+        $scope.searchUser = function () {
+            var searchInput = $("#searchInput").val();
+            $scope.foundUsers = $user.search.query({searchInput: searchInput});
+            console.log($scope.foundUsers);
+        };
+        
+        
+         $scope.inviteExistingUser = function () {
+            var email = $("#foundUserInput").val();
+            $team.invite.save({teamId: $routeParams.teamid}, email, function () {
+                $scope.showSuccesAlert = true;
+            }, function (data) {
+                $scope.showFailedAlert = true;
+                $scope.error = data.data;
+            });
+        };
+        
+        
+        
+
+        loadData = function () {
+            $scope.foundUsers = $user.search.query({searchInput: ""});
+        };
+        loadData();
     }
 ]);
 
@@ -452,7 +478,7 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
          * Create the ace editor
          * @param {String} editorID The element ID of the element that becomes the ace editor
          */
-        initEditor = function(editorID) {
+        initEditor = function (editorID) {
             // trigger extension
             editor = ace.edit(editorID);
             // we're using java
@@ -502,7 +528,7 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
         $scope.getTextFromEditor = function getTextFromEditor() {
             return editor.session.getValue();
         };
-        
+
         /**
          * Gets selected text from the editor
          * @returns {String}
@@ -510,12 +536,12 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
         $scope.getSelectionFromEditor = function getSelectionFromEditor() {
             return editor.session.getTextRange(editor.getSelectionRange());
         };
-        
+
         /**
          * Sets the given HTML element to fullscreen
          * @param {HTML Element} elem
          */
-        fullScreenElement = function(elem) {
+        fullScreenElement = function (elem) {
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
             } else if (elem.msRequestFullscreen) {

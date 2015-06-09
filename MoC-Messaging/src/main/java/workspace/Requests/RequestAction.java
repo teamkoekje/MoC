@@ -6,7 +6,7 @@ package workspace.Requests;
  *
  * @author TeamKoekje
  */
-public enum Action {
+public enum RequestAction {
 
-    COMPILE, TEST, TESTALL, UPDATE, CREATE, DELETE, PUSH_CHALLENGE, FOLDER_STRUCTURE, FILE, SYSINFO, BROADCAST, NORMAL
+    COMPILE, TEST, TESTALL, UPDATE, CREATE, DELETE, PUSH_CHALLENGE, FOLDER_STRUCTURE, FILE, SYSINFO
 }

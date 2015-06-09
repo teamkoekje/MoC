@@ -9,6 +9,6 @@ package workspace.Requests;
 public class CreateRequest extends TeamRequest {
 
     public CreateRequest(long competitionId, String teamName) {
-        super(Action.CREATE, competitionId, teamName);
+        super(RequestAction.CREATE, competitionId, teamName);
     }
 }

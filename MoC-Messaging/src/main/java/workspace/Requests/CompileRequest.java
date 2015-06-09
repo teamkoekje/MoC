@@ -11,7 +11,7 @@ public class CompileRequest extends TeamRequest {
     private final String challengeName;
 
     public CompileRequest(long competitionId, String teamName, String challengeName) {
-        super(Action.COMPILE, competitionId, teamName);
+        super(RequestAction.COMPILE, competitionId, teamName);
         this.challengeName = challengeName;
     }
 

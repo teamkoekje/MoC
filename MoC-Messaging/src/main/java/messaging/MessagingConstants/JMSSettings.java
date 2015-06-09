@@ -1,4 +1,4 @@
-package messaging;
+package messaging.MessagingConstants;
 /**
  * Class providing Strings for naming purposes of JMS.
  * 
@@ -6,7 +6,7 @@ package messaging;
  */
 public class JMSSettings {
 
-    public static final String URL_ACTIVE_MQ = "tcp://192.168.24.34:61616";
+    public static final String URL_ACTIVE_MQ = "tcp://192.168.24.34:61616?jms.prefetchPolicy.queuePrefetch=10";
 
     public static final String WORKSPACE_REQUEST = "WORKSPACE_REQUEST";
     public static final String BROKER_REPLY = "BROKER_REPLY";

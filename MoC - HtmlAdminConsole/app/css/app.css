@@ -2,24 +2,8 @@ form input:not([type="submit"]){
     margin-bottom: 5px;
 }
 
-.blueRoundBtn{
-    float: right; 
-    font-size:0.95em; 
-    cursor:pointer; 
-    border-radius:50px;
-    color:white;
-    height:25px;
-    width:25px;
-    text-align:center;
-    padding:0;
-    margin:0;
-    vertical-align:middle;
-    box-shadow:0px 0px 8px 0px rgba(0,0,0,0.75);
-    background-color:#337ab7
-}
-
 .page-header {
-  border-bottom: 2px solid #337ab7 !important;
+    border-bottom: 2px solid #337ab7 !important;
 }
 
 .notARealList{
@@ -29,4 +13,13 @@ form input:not([type="submit"]){
 
 .notARealList > *:not(:last-child){
     border-bottom: 1px #ddd solid;
+}
+
+.glyphiconButton{
+    color: #337AB7;
+    cursor: pointer;
+}
+
+.glyphiconButton:hover{
+    color: #23527C;
 }

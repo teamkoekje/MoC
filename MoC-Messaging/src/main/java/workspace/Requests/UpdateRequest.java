@@ -13,7 +13,7 @@ public class UpdateRequest extends TeamRequest {
     private final String fileContent;
 
     public UpdateRequest(long competitionId, String teamName, String filePath, String fileContent) {
-        super(Action.UPDATE, competitionId, teamName);
+        super(RequestAction.UPDATE, competitionId, teamName);
         this.filePath = filePath;
         this.fileContent = fileContent;
     }

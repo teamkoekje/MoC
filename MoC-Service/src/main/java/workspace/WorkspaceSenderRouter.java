@@ -4,7 +4,7 @@ package workspace;
 import java.util.*;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
-import messaging.JMSSettings;
+import messaging.MessagingConstants.JMSSettings;
 // </editor-fold>
 
 /**
