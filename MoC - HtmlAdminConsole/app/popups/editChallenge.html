@@ -1,0 +1,59 @@
+<style>
+    .ngdialog.ngdialog-theme-default .ngdialog-content{
+        width: 1000px !important;
+    }
+</style>
+<div class="dialog-contents" style='padding:25px; padding-bottom: 50px'>
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>
+                General
+            </h3>
+            <div>
+                <label for='editCompetitionName'>Name: </label>
+                <input type='text' id='editCompetitionName' data-ng-model='currentChallenge.name' style='float: right; width: 145px'/>
+            </div>
+            <br>
+            <div>
+                <label for='editCompetitionDuration'>Duration: </label>
+                <input type='text' id='editCompetitionDuration' data-ng-model='currentChallenge.duration' style='float: right; width: 145px'/>
+            </div>
+            <br>
+            <div>
+                <label for='editCompetitionDifficulty'>Difficulty: </label>
+                <select id='editCompetitionDifficulty' style='float: right; width: 145px'
+                        ng-model="currentChallenge.difficulty" 
+                        ng-options="i as i for i in ['easy','medium','hard']">
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <h3>
+                Descriptions
+            </h3>
+            <button class="btn btn-default" ng-click="description = 'participant'">Participants</button>
+            <button class="btn btn-default" ng-click="description = 'spectator'">Spectators</button>
+            <div ng-switch on="description">
+                <textarea ng-switch-when="participant" ng-model="currentChallenge.descriptions.participant"></textarea>
+                <textarea ng-switch-default ng-model="currentChallenge.descriptions.spectator"></textarea>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <h3>
+                Hints <span style='float: right' class='glyphicon glyphicon-plus glyphiconButton'></span>
+            </h3>
+            <ul class='notARealList'>
+                <li ng-repeat="hint in currentChallenge.hints">
+                    {{hint.name}}
+                    <span style='float:right'>
+                        <span class='glyphicon glyphicon-chevron-up glyphiconButton' ng-if="!$first"></span>
+                        <span class='glyphicon glyphicon-chevron-down glyphiconButton' ng-if='!$last'></span>
+                        <span class='glyphicon glyphicon-cog glyphiconButton'></span>
+                        <span class='glyphicon glyphicon-trash glyphiconButton'></span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="closeThisDialog()"/>
+</div>

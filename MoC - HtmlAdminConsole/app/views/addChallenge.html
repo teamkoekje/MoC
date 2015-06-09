@@ -14,7 +14,13 @@
             Upload
         </h4>
         <form id='newChallengeUploadForm'>
-            <input type='file' style='display: none' onchange="newChallengeUploadDisplay.value = newChallengeUpload.value" id='newChallengeUpload'/>
+            <script>
+                function updateFilePath(input, output) {
+                    //Chrome likes to do C:/fakepath/<filename> instead of the real path so we only use the filename
+                    output.value = input.files[0].name;
+                }
+            </script>
+            <input type='file' style='display: none;' onchange="updateFilePath(this, document.getElementById('newChallengeUploadDisplay'))" id='newChallengeUpload'/>
             <input class='col-xs-8' type="text" id='newChallengeUploadDisplay' readonly=""/>
             <span class='col-xs-4' style='text-align: right;' >
                 <span style='margin-right: 5px' class='glyphicon glyphicon-folder-open glyphiconButton' onclick='newChallengeUpload.click()'></span>
@@ -32,6 +38,54 @@
         </ul>
     </div>
     <div class='col-xs-8'>
-
+        <div class="row">
+            <div class="col-xs-6">
+                <h3>
+                    General
+                </h3>
+                <ul class="notARealList">
+                    <li>
+                        Name: <span style="float: right">{{challenge.name}}</span>
+                    </li>
+                    <li>
+                        Duration: <span style="float: right">{{challenge.duration}}</span>
+                    </li>
+                </ul>
+                <h3>
+                    Descriptions
+                </h3>
+                <button class="btn btn-default" ng-click="description = 'participant'">Participants</button>
+                <button class="btn btn-default" ng-click="description = 'spectator'">Spectators</button>
+            </div>
+            <div class="col-xs-6">
+                <h3>
+                    Author
+                </h3>
+                <ul class="notARealList">
+                    <li>
+                        Name: <span style="float: right">{{challenge.author.name}}</span>
+                    </li>
+                    <li>
+                        Organisation: <span style="float: right">{{challenge.author.organisation}}</span>
+                    </li>
+                    <li>
+                        Website: 
+                        <span style="float: right">
+                            <a target="_blank" ng-href="{{challenge.author.website}}">{{challenge.author.website}}</a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-12">
+                <div ng-switch on="description">
+                    <div ng-switch-when="participant">
+                        {{challenge.description.participant}}
+                    </div>
+                    <div ng-switch-default>
+                        {{challenge.description.spectator}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -23,3 +23,7 @@ form input:not([type="submit"]){
 .glyphiconButton:hover{
     color: #23527C;
 }
+
+input, select{
+    -webkit-appearance: textfield;
+}
