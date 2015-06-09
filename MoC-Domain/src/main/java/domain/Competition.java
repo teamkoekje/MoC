@@ -167,7 +167,6 @@ public class Competition implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     public List<CompetitionEvent> update() {
         if (currentRound != null) {
-            System.out.println("Updating round: ");
             List<CompetitionEvent> events = currentRound.update();
             for (CompetitionEvent event : events) {
                 switch (event.getType()) {

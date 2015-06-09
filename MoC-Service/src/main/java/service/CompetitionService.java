@@ -40,11 +40,10 @@ public class CompetitionService extends GenericService<Competition> {
     }
 
     public void HandleEvent(@Observes CompetitionEvent event) {
-        System.out.println("Hallo event: " + event.getType());
+        //System.out.println("Hallo event: " + event.getType());
         switch (event.getType()) {
             case UPDATE:
                 for (Competition c : findAll()) {
-                    //System.out.println("updating competition: " + c.getName());
                     for (CompetitionEvent e : c.update()) {
                         competitionEvent.fire(e);
                     }
@@ -113,7 +112,7 @@ public class CompetitionService extends GenericService<Competition> {
         currentDate.setTime(System.currentTimeMillis());
 
         for (Competition c : findAll()) {
-            if (c.getCompetitionDate().after(currentDate)) {
+            if (c.getCompetitionDate().after(currentDate) && c.getCurrentRound() == null) {
                 futureCompetitions.add(c);
             } else {
                 //date is before today. so its not an future competition

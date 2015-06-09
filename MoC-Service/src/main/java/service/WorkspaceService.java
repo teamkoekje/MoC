@@ -124,7 +124,7 @@ public class WorkspaceService {
 
     public void push(long competitionId, String challengeName) {
         try {
-            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\test.zip"));
+            byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\" + challengeName + ".zip"));
             System.out.println("pushing challenge");
             gateway.broadcast(new PushRequest(competitionId, challengeName, data));
 
@@ -135,6 +135,7 @@ public class WorkspaceService {
     }
 
     public String folderStructure(long competitionId, String challengeName, String teamName) {
+        System.out.println("Get folder structure for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
 

@@ -44,7 +44,7 @@
                         {{competition.competitionDate| date : 'mediumDate'}}<br>
                         {{competition.startTime| date : 'shortTime' }}
                     </div>
-                    <div class="col-xs-3" ng-show="!isActive(competition.id)">
+                    <div class="col-xs-3" ng-show="isActive(competition.id)">
                         <a ng-href="#competition?id={{competition.id}}">
                             <span class="btn btn-primary" style="margin-top:12px;">Start coding!</span>
                         </a>
