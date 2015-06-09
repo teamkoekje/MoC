@@ -40,6 +40,9 @@ public class UserResource {
     @Inject
     private InvitationService invitationService;
 
+    @Context
+    private HttpServletRequest request;
+
     //<editor-fold defaultstate="collapsed" desc="User">
     /**
      * Gets all users
@@ -66,7 +69,7 @@ public class UserResource {
     public User getUserById(@PathParam("userId") String userId) {
         return userService.findById(userId);
     }
-    
+
     /**
      * Gets all users matching the query
      *
@@ -80,21 +83,20 @@ public class UserResource {
     public List<User> searchUsers(@PathParam("searchInput") String searchInput) {
         return userService.searchUsers(searchInput);
     }
-    
+
     /**
      * Check if the request is made by an Admin
-     * @param request
-     * The request
-     * @return 
-     * A response
+     *
+     * @param request The request
+     * @return A response
      */
     @GET
     @Path("/isAdmin")
-    public Response isAdmin(@Context HttpServletRequest request){
-        if(request.getRemoteUser() == null){
+    public Response isAdmin() {
+        if (request.getRemoteUser() == null) {
             return Response.serverError().entity("You're not logged in").build();
         }
-        if(!request.isUserInRole("Admin")){
+        if (!request.isUserInRole("Admin")) {
             return Response.serverError().entity("You're not in the admin group").build();
         }
         return Response.ok().build();
@@ -236,8 +238,7 @@ public class UserResource {
     @PermitAll
     public Response login(
             @FormParam("username") String username,
-            @FormParam("password") String password,
-            @Context HttpServletRequest request) {
+            @FormParam("password") String password) {
         try {
             request.getSession();
             request.login(username, password);
@@ -255,18 +256,28 @@ public class UserResource {
     @Path("/isLoggedIn/{username}")
     @PermitAll
     public boolean isLoggedIn(
-            @PathParam("username") String username,
-            @Context HttpServletRequest request) {
+            @PathParam("username") String username) {
         System.out.println("Checking if user is logged in: " + username);
         return username.equals(request.getRemoteUser());
+    }
+
+    @GET
+    @Path("/authenticated")
+    @PermitAll
+    public User getAuthenticatedUser() {
+        String username = request.getRemoteUser();
+        if (username != null) {
+            return userService.findById(username);
+        }
+        return null;
+
     }
 
     @POST
     @Path("/logout")
     @Produces(MediaType.TEXT_PLAIN)
     @RolesAllowed({"User", "Admin"})
-    public Response logout(
-            @Context HttpServletRequest request) {
+    public Response logout() {
         try {
             System.out.println("User: " + request.isUserInRole("User"));
             System.out.println("Admin: " + request.isUserInRole("Admin"));

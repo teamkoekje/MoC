@@ -42,6 +42,9 @@ public class Team implements Serializable {
     private User owner;
 
     private String name;
+    
+    @XmlAttribute
+    private int score = 0;
 
     @ManyToOne
     @XmlElement
@@ -89,6 +92,15 @@ public class Team implements Serializable {
     public Competition getCompetition() {
         return competition;
     }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void increaseScore(int score) {
+        this.score += score;
+    }
+    
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >

@@ -43,7 +43,7 @@ controllers.service('newsfeedService', function () {
 
 });
 
-controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedService', function ($scope, $cookies, newsfeedService) {
+controllers.controller('loginController', ['$scope', 'user', 'newsfeedService', function ($scope, $user, newsfeedService) {
 
         /**
          * If a user is logged in, returns username, else returns undefined
@@ -51,7 +51,8 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
          * @returns {String} username
          */
         $scope.isLoggedIn = function () {
-            return $cookies.user;
+            console.log($scope.user);
+            return $scope.user.username !== undefined;
         };
 
         /**
@@ -71,9 +72,9 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
                 }
             }).success(function (data) {
                 console.log("Logged in succesfully: " + $scope.username);
-                $cookies.user = $scope.username;
                 openWebsocket();
                 location.href = "#/competitions";
+                location.reload();
             }).error(function (data) {
                 console.log("Error while logging in");
                 console.log(data);
@@ -92,11 +93,10 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
                 }
             }).success(function (data) {
                 console.log("Logged out succesfully");
-                delete $cookies.user;
                 location.href = "#/login";
+                location.reload();
             }).error(function (data) {
                 console.log("Error while logging out");
-                delete $cookies.user;
                 console.log(data);
             });
         };
@@ -121,7 +121,10 @@ controllers.controller('loginController', ['$scope', '$cookies', 'newsfeedServic
 
         $scope.messages = [];
         $scope.hints = [];
-        $scope.username = $cookies.user;
+        $scope.user = $user.authenticated.get(function () {
+            console.log($scope.user);
+            $scope.isLoggedIn = $scope.user.username !== undefined;
+        });
         // TODO: Remove test data
         newsfeedService.addMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, tortor et commodo scelerisque, justo sapien elementum lacus, sed mollis lacus turpis quis mauris");
         newsfeedService.addMessage("Aenean lacus quam, placerat in mi vel, interdum pellentesque nisl. Cras tincidunt cursus eros, vel fermentum lectus fringilla vitae. Donec eget neque faucibus, bibendum orci vel, porta metus. Aliquam odio orci, auctor nec dictum quis, molestie a nisi. Maecenas vitae erat eu sapien fringilla pellentesque eu id velit. Mauris quis mauris tempus, tempor ex et, pharetra justo. Vivamus varius fringilla mauris");
@@ -445,9 +448,9 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
             $scope.foundUsers = $user.search.query({searchInput: searchInput});
             console.log($scope.foundUsers);
         };
-        
-        
-         $scope.inviteExistingUser = function () {
+
+
+        $scope.inviteExistingUser = function () {
             var email = $("#foundUserInput").val();
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
                 $scope.showSuccesAlert = true;
@@ -456,9 +459,9 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
                 $scope.error = data.data;
             });
         };
-        
-        
-        
+
+
+
 
         loadData = function () {
             $scope.foundUsers = $user.search.query({searchInput: ""});
