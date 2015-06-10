@@ -7,7 +7,7 @@ var translationsEN = {
   BACK: 'Back',
   NEW: 'New',
   PASSWORD: 'Password',
-  REGISTER: 'Regsiter',
+  REGISTER: 'Register',
   LOGIN: 'Log in',
   LOGOUT: 'Logout',
   LOGGED_IN_AS: 'Logged in as',
@@ -42,7 +42,7 @@ var translationsEN = {
   
   EMAIL_SEND: 'An email has been sent, the user has been invited to the team.',
   EMAIL_ERROR: 'Something went wrong when trying to invite the user.',
-  EMAIL_SUCCES_REGISTER: 'An email has been sent, click on the link your mail to activate your account.',
+  EMAIL_SUCCES_REGISTER: 'An email has been sent, click on the link in your mail to activate your account.',
   EMAIL_ERROR_REGISTER: 'Something went wrong when trying to register your account.',
   
   DIFFICULTY: 'Difficulty',
@@ -76,7 +76,7 @@ var translationsNL= {
   BACK: 'Terug',
   NEW: 'Nieuw',
   PASSWORD: 'Wachtwoord',
-  REGISTER: 'Registeer',
+  REGISTER: 'Registreer',
   LOGIN: 'Aanmelden',
   LOGOUT: 'Afmelden',
   LOGGED_IN_AS: 'Aangemeld als',
@@ -127,11 +127,80 @@ var translationsNL= {
   COMPETITION_INFO: 'Competitie overzicht',
   
   CHALLENGES: 'Opdrachten',
-  NO_CHALLENGE: 'Er geen geen opdrachten toegevoegd aan de competitie.',
+  NO_CHALLENGE: 'Er zijn geen opdrachten toegevoegd aan de competitie.',
   
   INVITE_USERS: 'Nodig gebruiker uit',
   SEARCH_USERS: 'Zoek gebruiker',
   
   BUTTON_LANG_NL: 'Nederlands',
   BUTTON_LANG_EN: 'Engels'
+};
+
+var translationsFI = {
+  USERNAME: 'Username',
+  NEW_USER: 'New user',
+  EXISTING_USER: 'Existing user',
+  INVALID_USER: 'Invalid username',
+  
+  BACK: 'Back',
+  NEW: 'New',
+  PASSWORD: 'Password',
+  REGISTER: 'Register',
+  LOGIN: 'Log in',
+  LOGOUT: 'Logout',
+  LOGGED_IN_AS: 'Logged in as',
+  COMPETITION: 'Competition',
+  COMPETITIONS: 'Competitions',
+  
+  INVITE: 'Invite',
+  INVITATIONS: 'Invitations',
+  NO_INVITE: 'You are currently not invited to any teams.',
+  
+  ORGANISATION: 'Organisation',
+  
+  MYTEAMS: 'My teams',
+  TEAMS: 'Teams',
+  NO_TEAMS: 'No teams have been added to this competition yet.',
+  NEW_TEAM: 'Create new team',
+  TEAM_NAME: 'Team name',
+  CREATE_TEAM: 'Create team', 
+  ADD_TEAM_MEMBER: 'Add team member',
+  ADD_NEW_TEAM_MEMBER: 'Add new team member',
+  TEAM_INFO: 'Team information',
+  TEAM_OWNER: 'Team owner',
+  TEAM_MEMBER: 'Team members',
+  
+  OWNER: 'Owner',
+  POINTS: 'Points',
+  NAME: 'Name',
+  DATE: 'Date',
+  SUCCES: 'Succes',
+  OOPS: 'Oops',
+  STATUS: 'Status',
+  
+  EMAIL_SEND: 'An email has been sent, the user has been invited to the team.',
+  EMAIL_ERROR: 'Something went wrong when trying to invite the user.',
+  EMAIL_SUCCES_REGISTER: 'An email has been sent, click on the link in your mail to activate your account.',
+  EMAIL_ERROR_REGISTER: 'Something went wrong when trying to register your account.',
+  
+  DIFFICULTY: 'Difficulty',
+  STARTS_AT: 'Starts at',
+  START_CODING: 'Start coding!',
+  VARIABLE_REPLACEMENT: 'Hi {{name}}',
+  
+  ACTIVE_COMPETITIONS: 'Active Competitions',
+  NO_ACTIVE_COMPETITIONS: 'There are currently no active competitions',
+  
+  FUTURE_COMPETITIONS: 'Future Competitions',
+  NO_FUTURE_COMPETITIONS: 'There are currently no future competitions.',
+  COMPETITION_INFO: 'Competition info',
+  
+  CHALLENGES: 'Challenges',
+  NO_CHALLENGE: 'No challenges have been added to this competition yet.',
+  
+  INVITE_USERS: 'Invite users',
+  SEARCH_USERS: 'Search user',
+  
+  BUTTON_LANG_NL: 'Dutch',
+  BUTTON_LANG_EN: 'English'
 };

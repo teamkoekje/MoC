@@ -57,6 +57,7 @@ app.config(['$translateProvider', function ($translateProvider) {
   // add translation tables
   $translateProvider.translations('en', translationsEN);
   $translateProvider.translations('nl', translationsNL);
+  $translateProvider.translations('fi', translationsFI);
   $translateProvider.preferredLanguage('en');
   $translateProvider.fallbackLanguage('en');
   $translateProvider.useSanitizeValueStrategy('escaped');
