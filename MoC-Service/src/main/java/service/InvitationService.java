@@ -133,7 +133,7 @@ public class InvitationService extends GenericService<Invitation> {
      * Lets a user join a certain team
      *
      * @param user user that should join the team
-     * @param token string to verify if the user is allowed to join the team
+     * @param token string to verify  if the user is allowed to join the team
      */
     public void acceptInvitation(User user, String token) {
         Invitation inv = findByToken(token);
@@ -154,15 +154,9 @@ public class InvitationService extends GenericService<Invitation> {
     }
     
     public List<Invitation> findInvitationsByTeam(Team team) {
-        List<Invitation> invites = new ArrayList<>();
         Query q = em.createNamedQuery("Invitation.findByTeam");
         q.setParameter("teamid", team);
-        for (Invitation inv : (List<Invitation>) q.getResultList()) {
-            if (inv.getState() != InvitationState.ACCEPTED) {
-                invites.add(inv);
-            }
-        }
-        return invites;
+        return (List<Invitation>) q.getResultList();
     }
 
  //</editor-fold>
