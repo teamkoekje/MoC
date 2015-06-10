@@ -27,7 +27,8 @@ services.factory('competition', ['$resource',
             active: $resource(baseUrl + '/competition/active'),
             future: $resource(baseUrl + '/competition/future'),
             teams: $resource(baseUrl + '/competition/:competitionId/teams', {competitionId: '@competitionId'}),
-            start: $resource(baseUrl + '/competition/:competitionId/start', {competitionId: '@competitionId'})
+            start: $resource(baseUrl + '/competition/:competitionId/start', {competitionId: '@competitionId'}),
+            add: $resource(baseUrl + '/competition')
         };
     }
 ]);
@@ -41,11 +42,6 @@ services.factory('team', ['$resource',
         };
     }
 ]);
-//services.factory('workspace', ['$resource',
-//    function ($resource) {
-//        return $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'});
-//    }
-//]);
 
 services.factory('workspace', ['$resource',
     function ($resource) {

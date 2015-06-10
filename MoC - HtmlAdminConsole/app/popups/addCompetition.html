@@ -1,22 +1,22 @@
 <div class="dialog-contents" style='padding:25px; padding-bottom: 50px'>
     <div>
         <label for='newCompetitionName'>Competition name: </label>
-        <input type='text' id='newCompetitionName' data-ng-model='newCompetiton.name' style='float: right'/>
+        <input type='text' id='newCompetitionName' data-ng-model='newCompetition.name' style='float: right'/>
     </div>
     <br>
     <div>
         <label for='newCompetitionDate'>Competition date: </label>
         <div class="dropdown" style='float: right'>
             <a class="dropdown-toggle my-toggle-select" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
-                <div class="input-append"><span>{{newCompetiton.date| date:'yyyy-MM-dd HH:mm'}}</span>
+                <div class="input-append"><span>{{newCompetition.date| date:'yyyy-MM-dd HH:mm'}}</span>
                 </div>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker data-ng-model="newCompetiton.date"
+                <datetimepicker data-ng-model="newCompetition.date"
                                 data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select' }"></datetimepicker>
             </ul>
         </div>   
         <br>
     </div>
-    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="closeThisDialog()"/>
+    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="save();closeThisDialog()"/>
 </div>

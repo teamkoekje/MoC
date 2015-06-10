@@ -4,7 +4,7 @@ var controllers = angular.module('mocControllers', ['ngCookies']);
 controllers.controller('loginController', ['$scope', '$translate', '$cookies', 'user', function ($scope, $translate, $cookies, $user) {
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
-          };
+        };
 
         $scope.isLoggedIn = function () {
             return $cookies.user;
@@ -89,9 +89,6 @@ controllers.controller('loginController', ['$scope', '$translate', '$cookies', '
 controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
     function ($scope, $routeParams, $user, $team) {
         $scope.showDetailsFor = 'user'; // can be 'user' or 'team' depending on what to show
-
-
-
         $scope.users = [
             'luc',
             'astrid',
@@ -146,29 +143,32 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
     }
 ]);
 
-/**
- * Get the parameters from the URL and put them in a map
- * @returns Map with URL parameters
- */
-window.params = function () {
-    var result = {};
-    var searchString = location.search.substring(1, location.search.length);
-    var pairs = searchString.split("&");
-    for (var i in pairs) {
-        var pair = pairs[i].split("=");
-        result[pair[0]] = pair[1];
-    }
-    return result;
-};
+controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', 'competition',
+    function ($scope, ngDialog, $competition) {
+        $scope.competitions = new $competition.all.query();
+        $scope.setSelectedCompetition = function (competition) {
+            $scope.selectedCompetition = competition;
+        };
+        //Default info when no competition is selected
+        $scope.selectedCompetition = {
+            name: "No competition selected",
+            startTime: null,
+            status: null
+        };
 
-controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
-    function ($scope, ngDialog) {
         $scope.addCompetition = function () {
+            $scope.newCompetition = new $competition.add();
+            $scope.newCompetition.name = '';
+            $scope.newCompetition.date = new Date();
             ngDialog.open({
                 template: "popups/addCompetition.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
+            $scope.save = function(){
+                console.log($scope.newCompetition)
+                $scope.newCompetition.$save();
+            };
         };
         $scope.editCompetition = function (i) {
             ngDialog.open({
@@ -176,13 +176,6 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
-        };
-        //TODO submit this
-        //name not empty/null/existing already
-        //Date has to be in the future
-        $scope.newCompetiton = {
-            name: '',
-            date: new Date()
         };
         $scope.showServerInfo = function () {
             ngDialog.open({
@@ -210,11 +203,6 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
                 HDD: '200GB/1TB',
                 Workspaces: 69
             }];
-        $scope.selectedCompetition = {
-            name: "selectedCompetitionName",
-            startTime: new Date(),
-            status: "not implemented"
-        };
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
         $scope.teams = [
@@ -239,6 +227,7 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
                 score: 13337
             }
         ];
+
     }
 ]);
 
