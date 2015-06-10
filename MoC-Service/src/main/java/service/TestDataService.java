@@ -86,8 +86,8 @@ public class TestDataService {
         c1.addTeam(t2);
         c2.addTeam(t3);
 
-        Challenge ch1 = new Challenge("Challenge 1");
-        Challenge ch2 = new Challenge("Challenge 2");
+        Challenge ch1 = new Challenge("Challenge1");
+        Challenge ch2 = new Challenge("Challenge2");
 
         c1.addChallenge(ch1, 10000);
         c1.addChallenge(ch2, 1200);

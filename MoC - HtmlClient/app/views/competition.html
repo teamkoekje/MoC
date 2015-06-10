@@ -12,16 +12,19 @@
             messages
         </span>
     </span>
-        <h3>
-            {{minutes}} minutes left | {{points}} points
-        </h3>
+    <h3>
+        {{minutes}} minutes left | {{points}} points
+    </h3>
     <div>
-        <div class="row" style="margin-left:0px">
-            <button class="btn btn-default">Description</button>
-            <button class="btn btn-default">JavaDoc</button>
-            <button class="btn btn-default">Read only java file</button>
-            <button class="btn btn-default">Java file</button>
-        </div>
+        <ul class="nav nav-tabs" role="tablist" ng-repeat="file in files">
+            <li role="presentation" class="active" ng-click="selectFile(file.filename)">file.filename</li>
+        </ul>
+        <!--        <div class="row" style="margin-left:0px">
+                    <button class="btn btn-default">Description</button>
+                    <button class="btn btn-default">JavaDoc</button>
+                    <button class="btn btn-default">Read only java file</button>
+                    <button class="btn btn-default">Java file</button>
+                </div>-->
         <div class="row" style='height: 350px'>
             <div class="col-xs-12" id="wrapperAroundEditor" style='height: 100%;'>
                 <div id="editor" style='height:100%'>Class test{}</div>
@@ -49,7 +52,7 @@
                     {{message}}
                 </p>
             </div>
-            
+
             <div class="col-xs-6" style="display:none" id="wrapperTests">
                 <div class="first" style="width: 40px;margin-left:7%;">Tests</div>
                 <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">

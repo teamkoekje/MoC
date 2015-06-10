@@ -1,0 +1,21 @@
+<style>
+    .ngdialog.ngdialog-theme-default .ngdialog-content{
+        width: 400px !important;
+    }
+</style>
+<div class="dialog-contents" style='padding:25px; padding-bottom: 50px'>
+    <div class='row'>
+        <div class='col-xs-12'>
+            <h4>
+                New hint
+            </h4>
+            <textarea style='width: 100%'></textarea>
+            <br><br>
+            Time: 
+            <span style='float: right'>
+                <input type="number" min="0" max='24'/><input type='number' min='0' max="59"/>
+            </span>
+        </div>
+    </div>
+    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="closeThisDialog()"/>
+</div>

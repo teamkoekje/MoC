@@ -1,7 +1,10 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$cookies', 'user', function ($scope, $cookies, $user) {
+controllers.controller('loginController', ['$scope', '$translate', '$cookies', 'user', function ($scope, $translate, $cookies, $user) {
+        $scope.changeLanguage = function (langKey) {
+            $translate.use(langKey);
+          };
 
         $scope.isLoggedIn = function () {
             return $cookies.user;
@@ -84,6 +87,41 @@ controllers.controller('loginController', ['$scope', '$cookies', 'user', functio
 ]);
 controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
     function ($scope, $routeParams, $user, $team) {
+        $scope.showDetailsFor = 'user'; // can be 'user' or 'team' depending on what to show
+
+        $scope.users = [
+            'luc',
+            'astrid',
+            'casper',
+            'daan',
+            'arno',
+            'robin'
+        ];
+
+        $scope.teams = [
+            'team 1',
+            'team 2',
+            'team 3',
+            'team 4',
+            'team 5'
+        ];
+
+        $scope.currentUser = {
+            name: 'Flupke',
+            email: 'flupke69@hotmail.be',
+            organisation: 'krijg de tyfus BV',
+            teams: [
+                'ebola FTW',
+                'haat aan proftaak'
+            ]
+        };
+
+        $scope.currentTeam = [
+            'user 1',
+            'user 2',
+            'user 3'
+        ];
+
         $scope.register = function () {
             console.log("Create User");
             $scope.user.$save(function () {
@@ -133,6 +171,13 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog',
         $scope.addCompetition = function () {
             ngDialog.open({
                 template: "popups/addCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        $scope.editCompetition = function (i) {
+            ngDialog.open({
+                template: "popups/editCompetition.html?id=" + i,
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
@@ -213,6 +258,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
             date: new Date(),
             status: "not implemented",
             challenges: [{
+                    id: 1,
                     name: 'chalName 1',
                     state: 'completed',
                     timeLeft: '00:00',
@@ -240,6 +286,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                             context: 'hint 3'
                         }]
                 }, {
+                    id: 2,
                     name: 'chalName 2',
                     state: 'working',
                     timeLeft: '00:01',
@@ -267,6 +314,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                             context: 'hint 3'
                         }]
                 }, {
+                    id: 3,
                     name: 'chalName 3',
                     state: 'waiting',
                     timeLeft: '01:00',
@@ -294,6 +342,7 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
                             context: 'hint 3'
                         }]
                 }, {
+                    id: 4,
                     name: 'chalName 4',
                     state: 'waiting',
                     timeLeft: '10:00',
@@ -387,6 +436,33 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
             });
         };
 
+        $scope.editChallenge = function (id) {
+            ngDialog.open({
+                template: "popups/editChallenge.html?id=" + id,
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+        $scope.currentChallenge = {
+            name: 'challenge xyz',
+            duration: '10:00',
+            difficulty: 'hard',
+            descriptions: {
+                participant: 'Participant description',
+                spectator: 'Spectator description'
+            },
+            hints: [{
+                    name: 'hint 1',
+                    time: '1:00'
+                }, {
+                    name: 'hint 2',
+                    time: '1:30'
+                }, {
+                    name: 'hint 3',
+                    time: '2:00'
+                }]
+        };
+
         $scope.addTeam = function () {
             ngDialog.open({
                 template: "popups/addTeam.html",
@@ -407,6 +483,18 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
 
 controllers.controller('addChallengeController', ['$scope',
     function ($scope) {
-
+        $scope.challenge = {
+            name: 'challenge name',
+            duration: '10:00',
+            author: {
+                name: 'henkie',
+                organisation: 'ebola 4 life',
+                website: 'http://google.com'
+            },
+            description: {
+                spectator: "Spectator description is boring as fuck but for some reason people want to read a description here so I've to type some stuff now.",
+                participant: "Guess what? the participant description might be even more boring because those who read it will actually have to do the shit assignment"
+            }
+        }
     }
 ]);
