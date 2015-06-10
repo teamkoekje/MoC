@@ -57,9 +57,3 @@ services.factory('workspace', ['$resource',
         };
     }
 ]);
-//services.factory('workspace', ['$resource',
-//    function ($resource) {
-//        return $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'});
-//    }
-//]);
-

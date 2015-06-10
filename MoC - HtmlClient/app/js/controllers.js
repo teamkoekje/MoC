@@ -5,6 +5,7 @@ var controllers = angular.module('mocControllers', ['ngCookies']);
 controllers.service('newsfeedService', function () {
     var messages = [];
     var hints = [];
+    var files = [];
 
     // Messages
     var addMessage = function (message) {
@@ -30,6 +31,15 @@ controllers.service('newsfeedService', function () {
 
     var getHints = function () {
         return hints;
+    };
+    
+    //Files
+    var setFiles = function(files){
+        this.files = files;
+    };
+    
+    var getFiles = function(){
+        return files;
     };
 
     return {
@@ -110,11 +120,14 @@ controllers.controller('loginController', ['$scope', 'user', 'newsfeedService', 
                 console.log("opening ws connection");
             };
             ws.onmessage = function (msg) {
+                console.log(msg);
                 var result = $.parseJSON(msg.data);
                 if (typeof result.hint !== 'undefined') {
                     newsfeedService.addHint(result.hint.text);
                 } else if (typeof result.message !== 'undefined') {
                     newsfeedService.addMessage(result.message.text);
+                } else if (typeof result.filestructure !== 'undefined') {
+                   newsfeedService.setFiles(result.filestructure);
                 }
             };
         };
@@ -173,85 +186,7 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
         $scope.user.organisation = "Fontys";
     }
 ]);
-controllers.controller('demoController', ['$scope', 'user', 'competition', 'team',
-    function ($scope, $user, $competition, $team) {
-        /**
-         * Creates new user
-         */
-        $scope.createUser = function () {
-            console.log("Create User");
-            $scope.user.$save(function () {
-                loadData();
-            });
-            $scope.user = new $user();
-        };
 
-        /**
-         * Creates new team
-         */
-        $scope.createTeam = function () {
-            console.log("Create Team");
-            console.log($scope.team);
-            console.log($scope.competition.id);
-            $scope.team.$save({competitionId: $scope.competition.id}, function () {
-                loadData();
-            });
-            $scope.team = new $team();
-        };
-
-        /**
-         * Deletes a user using userId
-         * @param {int} userId
-         */
-        $scope.deleteUser = function (userId) {
-            console.log("Delete User");
-            $user.delete({userId: userId}, function () {
-                loadData();
-            });
-        };
-
-        /**
-         * Deletes a team using teamId
-         * @param {int} teamId
-         */
-        $scope.deleteTeam = function (teamId) {
-            console.log("Delete Team");
-            $team.delete({competitionId: $scope.selected_competition.id, teamId: teamId}, function () {
-                loadData();
-            });
-        };
-
-        /**
-         * Loads all data (competitions, users, teams)
-         */
-        loadData = function () {
-            console.log("loading data");
-            $scope.competitions = $competition.query();
-            $scope.users = $user.query();
-            if ($scope.selected_competition !== undefined) {
-                $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
-            }
-        };
-
-        /**
-         * Refreshes the teams list
-         */
-        $scope.refreshTeams = function () {
-            if ($scope.selected_competition !== undefined) {
-                $scope.teams = $team.query({competitionId: $scope.selected_competition.id});
-            }
-        };
-
-        loadData();
-        $scope.team = new $team();
-        $scope.user = new $user();
-        $scope.user.email = "robin@robin.nl";
-        $scope.user.password = "welkom123";
-        $scope.user.username = "Memphizx";
-        $scope.user.name = "Robin van der Avoort";
-        $scope.user.organisation = "Fontys";
-    }
-]);
 controllers.controller('competitionsController', ['$scope', 'competition',
     function ($scope, $competition) {
         /**
@@ -473,8 +408,7 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
 
 controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams', 'newsfeedService',
     function ($scope, $workspace, $routeParams, newsfeedService) {
-        $scope.messages = newsfeedService.getMessages();
-        $scope.hints = newsfeedService.getHints();
+
         //http://ace.c9.io/#nav=howto
         var editor;
         /**
@@ -683,5 +617,8 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
 
         initEditor("editor");
         $workspace.folderStructure.save({competitionId: $routeParams.id});
+
+        $scope.messages = newsfeedService.getMessages();
+        $scope.hints = newsfeedService.getHints();
     }
 ]);
