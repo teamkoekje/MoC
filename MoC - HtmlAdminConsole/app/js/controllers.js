@@ -28,6 +28,7 @@ controllers.controller('loginController', ['$scope', '$translate', '$cookies', '
         //$scope.isAdmin();
 
         $scope.login = function () {
+            console.log('login');
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/login",
@@ -88,6 +89,8 @@ controllers.controller('loginController', ['$scope', '$translate', '$cookies', '
 controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
     function ($scope, $routeParams, $user, $team) {
         $scope.showDetailsFor = 'user'; // can be 'user' or 'team' depending on what to show
+
+
 
         $scope.users = [
             'luc',
