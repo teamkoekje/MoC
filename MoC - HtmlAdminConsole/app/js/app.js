@@ -17,7 +17,7 @@ app.config(['$routeProvider',
         $routeProvider
                 .when('/login', {
                     templateUrl: 'views/login.html',
-                    controller: '', //no need to add loginController because it's defined in index.html
+                    controller: 'loginController', //no need to add loginController because it's defined in index.html
                     caseInsensitiveMatch: true
                 })
                 .when('/register', {
