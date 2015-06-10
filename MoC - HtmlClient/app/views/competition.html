@@ -5,15 +5,15 @@
 <div class="container" style="width:100%;">
     <span style="position: absolute; top: 10px; right: 35px">
         <span style="cursor: pointer" ng-click="toggleHints();">
-            hints
+            {{ "HINTS" | translate }}
         </span>
         |
         <span style="cursor: pointer" ng-click="toggleMessages();">
-            messages
+            {{ "MESSAGE" | translate }}
         </span>
     </span>
     <h3>
-        {{minutes}} minutes left | {{points}} points
+        {{minutes}} {{ "MINUTS_LEFT" | translate }} | {{points}} {{ "POINTS" | translate }}
     </h3>
     <div>
         <ul class="nav nav-tabs" role="tablist" ng-repeat="file in files">
@@ -69,7 +69,7 @@
                     </select>
                     <br>
                     <button class="btn btn-default" ng-click="test()">
-                        Run test
+                        {{ "RUN_TEST" | translate }}
                     </button>
                 </div>
             </div>
@@ -77,23 +77,23 @@
         <br>
         <div class="row">
             <div class="col-xs-2">
-                <button class="btn btn-default" ng-click="toggleTests();">Run specific test</button>
+                <button class="btn btn-default" ng-click="toggleTests();">{{"RUN_SPECIFIC_TEST" | translate}}</button>
             </div>
             <div class="col-xs-2">
-                <button class="btn btn-default" ng-click="testAll()">Run all tests</button>
+                <button class="btn btn-default" ng-click="testAll()">{{ "RUN_ALL_TEST" | translate}}</button>
             </div>
             <div class="col-xs-2">
-                <button class="btn btn-default" ng-click="compile()">Compile</button>
+                <button class="btn btn-default" ng-click="compile()">{{ "COMPILE" | translate}}</button>
             </div>
             <div class='col-xs-2'>
                 <button class="btn btn-default" 
                         ng-click="toggleResults()"
                         >
-                    Show/hide result
+                    {{ "SHOW_HIDE_RESULT" | translate }}
                 </button>
             </div>
             <div class="col-xs-2">
-                <button class="btn btn-default" ng-click="fullScreenEditor()">Fullscreen</button>
+                <button class="btn btn-default" ng-click="fullScreenEditor()">{{ "FULLSCREEN" | translate }}</button>
             </div>
         </div>
     </div>
