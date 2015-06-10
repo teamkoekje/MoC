@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation"><a href="#competitions">Competitions</a></li>
-    <li role="presentation" class="active"><a href="#teams">My Teams</a></li>
+    <li role="presentation"><a href="#competitions">{{ 'COMPETITIONS' | translate }}</a></li>
+    <li role="presentation" class="active"><a href="#teams">{{ 'MYTEAMS' | translate }}</a></li>
 </ul>
 
 
@@ -8,15 +8,15 @@
 
 <div class="row">
     <div class="col-xs-6">
-        <h4>My Teams</h4>
+        <h4>{{ 'MYTEAMS' | translate }}</h4>
         <div class="list-group" id="teams" style="max-height:200px; overflow:auto;">
             <a ng-click="selectTeam(team.id, false)" class="list-group-item" ng-class="{active : isSelected(team.id)}" ng-repeat="team in teams" style="cursor:pointer;">
                 {{team.name}} 
             </a>
         </div>
 
-        <h4>Invitations</h4>
-        <div ng-show="invitations.length === 0">You are currently not invited to any teams.</div>
+        <h4>{{ "INVITATIONS" | translate }}</h4>
+        <div ng-show="invitations.length === 0">{{ "NO_INVITE" | translate }}</div>
         <div ng-show="invitations.length > 0" class="list-group" style="max-height:200px; overflow:auto;">
             <a ng-click="selectInvitation(invitation)" class="list-group-item" ng-class="{active : isSelected(invitation.team.id)}" ng-repeat="invitation in invitations" style="cursor:pointer;" \>
                 {{invitation.team.name}}
@@ -24,21 +24,21 @@
 
         </div>
         <br>
-        <a href="#newteam"><span class="btn btn-default">Create new team</span></a>
+        <a href="#newteam"><span class="btn btn-default">{{ "NEW_TEAM" | translate }}</span></a>
     </div>
 
     <div class="col-xs-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Team info</h3>
+                <h3 class="panel-title">{{ "TEAM_INFO" | translate }}</h3>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-4">
                         <strong>
-                            Name:<br>
-                            Competition:<br>
-                            Team owner
+                            {{ "NAME" | translate }}<br>
+                            {{ "COMPETITION" | translate}}<br>
+                            {{ "TEAM_OWNER" | translate}}
                         </strong>
                     </div>
                     <div class="col-xs-8">
@@ -52,14 +52,14 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Team members</h3>
+                <h3 class="panel-title">{{ "TEAM_MEMBER" | translate}}</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Name</th>
+                            <th>{{ "USERNAME" | translate }}</th>
+                            <th>{{ "NAME" | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +75,7 @@
                 </table>
 
                 <a href="#newteammember?teamid={{team.id}}" ng-if="isOwnerLoggedIn(team.owner.username)">
-                    <span class="btn btn-primary">Add new team member</span>
+                    <span class="btn btn-primary">{{ "ADD_NEW_TEAM_MEMBER" | translate }}</span>
                 </a>
             </div>
 
@@ -89,7 +89,7 @@
                     <thead>
                         <tr>
                             <th>Email</th>
-                            <th>Status</th>
+                            <th>{{ "STATUS" | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,7 +107,4 @@
             <button class="btn btn-danger" ng-click="declineInvitation(invitation)">Decline</button>
         </div>
     </div>
-
-
-
 </div>

@@ -1,23 +1,23 @@
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation"><a href="#teams">Teams</a></li>
-    <li role="presentation" class="active"><a href="#inviteUsers">Invite Users</a></li>
+    <li role="presentation"><a href="#teams">{{ 'TEAMS' | translate }}</a></li>
+    <li role="presentation" class="active"><a href="#inviteUsers">{{ 'INVITE_USERS' | translate }}</a></li>
 </ul>
 
 <br>
 <div class="alert alert-success" role="alert" ng-if="showSuccesAlert">
-    <strong>Succes!</strong> An email has been sent, the user has been invited to the team.
+    <strong>{{ 'SUCCES' | translate }}!</strong> {{ 'EMAIL_SEND' | translate }}
 </div>
 <div class="alert alert-danger" role="alert" ng-if="showFailedAlert">
-    <strong>Oops!</strong> Something went wrong when trying to invite the user. {{error}}
+    <strong>{{ 'OOPS' | translate }}!</strong> {{ 'EMAIL_ERROR' | translate }} {{error}}
 </div>
 
-<h4>Add team member</h4>
+<h4>{{ "ADD_TEAM_MEMBER" | translate }}</h4>
 
 <form name="radioButtons" ng-init="usercontent = 'new'">
-    <label for="newUserCheckbox">New user</label>
+    <label for="newUserCheckbox">{{ 'NEW_USER' | translate }}</label>
     <input name="usercontent" ng-model="usercontent" type="radio" id="newUserRadioButton" checked value="new">
     <br/><br/>
-    <label for="existingUserCheckbox">Existing user</label>
+    <label for="existingUserCheckbox">{{ 'EXISTING_USER' | translate }}</label>
     <input name="usercontent" ng-model="usercontent" id="existingUserRadioButton" type="radio" value="existing">
 </form>
 <br>
@@ -30,7 +30,7 @@
         <div class="form-group">
             <label for="emailInput" style="">Email</label>
             <input required type="email" class="form-control" id="emailInput" placeholder="Email" ng-model="email" style="display: table-cell"/>
-            <input type="submit" class="btn btn-default" value="Invite user"/>
+            <input type="submit" class="btn btn-default" value="{{ 'INVITE_USERS' | translate }}"/>
         </div>
     </form>
 </div>
@@ -40,12 +40,15 @@
         <div class="form-group">
             <label for="searchInput" style="">search</label>
             <input required type="text" class="form-control" id="searchInput" placeholder="Search" ng-model="text" style="display: table-cell"/>
-            <input type="submit" class="btn btn-default" value="Search user"/>
+            <input type="submit" class="btn btn-default" value="{{ 'SEARCH_USERS' | translate }}"/>
         </div>
     </form>    
     <table id="foundUserTable">
             <tr>
-                <th>name</th>  <th>username</th> <th>email</th> <th>invite</th>
+                <th>{{ 'NAME' | translate }}</th>  
+                <th>{{ 'USERNAME' | translate }}</th> 
+                <th>email</th> 
+                <th>{{ 'INVITE' | translate }}</th>
             </tr>
             <tr ng-repeat="user in foundUsers">
                 <td>{{user.name}}</td>
@@ -54,7 +57,7 @@
                 <td>
                     <form ng-submit="inviteExistingUser()">
                          <input required type="hidden" class="form-control" id="foundUserInput" placeholder="Email" value="{{user.email}}" ng-model="email" style="display: table-cell"/>
-                        <input type="submit" class="btn btn-default" value="Invite user"/>
+                        <input type="submit" class="btn btn-default" value="{{ 'INVITE_USERS' | translate }}"/>
                     </form>
                 </td>
             </tr>
