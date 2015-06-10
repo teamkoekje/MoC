@@ -156,6 +156,82 @@ var translationsNL= {
   BUTTON_LANG_EN: 'Engels'
 };
 
+var translationsPL = {
+  USERNAME: 'Nazwa użytkownika',
+  NEW_USER: 'Nowy użytkownik',
+  EXISTING_USER: 'Istniejący użytkownik',
+  INVALID_USER: 'Nieprawidłowa nazwa użytkownika',
+  HINTS: 'Wskazówki',
+  MESSAGES: 'Wiadomości',
+  MINUTS_LEFT: 'Pozostało: # minut',
+  
+  BACK: 'Cofnij',
+  NEW: 'Nowy',
+  PASSWORD: 'Hasło',
+  REGISTER: 'Zarejestruj',
+  LOGIN: 'Zaloguj',
+  LOGOUT: 'Wyloguj',
+  LOGGED_IN_AS: 'Zalogowano jako:',
+  COMPETITION: 'Konkurencja',
+  COMPETITIONS: 'Konkurencje',
+  
+  INVITE: 'Zaproś',
+  INVITATIONS: 'Zaproszenia',
+  NO_INVITE: 'W tej chwili nie jesteś zaproszony do żadnego zespołu.',
+  
+  ORGANISATION: 'Organizacja',
+  
+  MYTEAMS: 'Moje zespoły',
+  TEAMS: 'Zespoły',
+  NO_TEAMS: 'Brak zespołów zapisanych do tej konkurencji.',
+  NEW_TEAM: 'Utwórz nowy zespół',
+  TEAM_NAME: 'Nazwa zespołu',
+  CREATE_TEAM: 'Utwórz zespół', 
+  ADD_TEAM_MEMBER: 'Dodaj członka zespołu',
+  ADD_NEW_TEAM_MEMBER: 'Dodaj nowego członka zespołu',
+  TEAM_INFO: 'Informacje o zespole',
+  TEAM_OWNER: 'Założyciel zespołu',
+  TEAM_MEMBER: 'Członkowie zespołu',
+  
+  OWNER: 'Założyciel',
+  POINTS: 'Punkty',
+  NAME: 'Nazwa',
+  DATE: 'Data',
+  SUCCES: 'Sukces',
+  OOPS: 'Ups',
+  STATUS: 'Status',
+  
+  EMAIL_SEND: 'E-mail został wysłany: użytkownik został zaproszony do zespołu.',
+  EMAIL_ERROR: 'Wystąpił błąd podczas próby zaproszenia użytkownika.',
+  EMAIL_SUCCES_REGISTER: 'E-mail z potwierdzeniem został wysłany. Prosimy kliknąć w link aby aktywować konto.',
+  EMAIL_ERROR_REGISTER: 'Wystąpił błąd podczas próby zarejestrowania konta.',
+  
+  DIFFICULTY: 'Trudność',
+  STARTS_AT: 'Rozpoczęcie o:',
+  START_CODING: 'Start!',
+  VARIABLE_REPLACEMENT: 'Witaj, {{name}}',
+  
+  ACTIVE_COMPETITIONS: 'Aktywne konkurencje:',
+  NO_ACTIVE_COMPETITIONS: 'W tej chwili nie ma aktywnych konkurencji.',
+  
+  FUTURE_COMPETITIONS: 'Nadchodzące konkurencje:',
+  NO_FUTURE_COMPETITIONS: 'W tej chwili nie ma nadchodzących konkurencji.',
+  COMPETITION_INFO: 'Informacje o konkurencji',
+  
+  CHALLENGES: 'Zadania',
+  NO_CHALLENGE: 'Do tej konkurencji nie dodano jeszcze zadań.',
+  
+  INVITE_USERS: 'Zaproś użytkowników',
+  SEARCH_USERS: 'Szukaj użytkowników',
+  
+  RUN_TEST: 'uruchom testy',
+  RUN_SPECIFIC_TEST: 'Uruchom specyficzne testy',
+  RUN_ALL_TEST: 'Uruchom wszystkie testy',
+  COMPILE: 'Kompiluj',
+  SHOW_HIDE_RESULT: 'Pokaż/ukryj wynik',
+  FULLSCREEN: 'Pełen ekran',
+};
+
 var translationsFI = {
   USERNAME: 'Username',
   NEW_USER: 'New user',
