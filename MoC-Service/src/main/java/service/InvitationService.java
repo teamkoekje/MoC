@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -153,9 +154,9 @@ public class InvitationService extends GenericService<Invitation> {
     }
     
     public List<Invitation> findInvitationsByTeam(Team team) {
-        List<Invitation> invites = null;
+        List<Invitation> invites = new ArrayList<>();
         Query q = em.createNamedQuery("Invitation.findByTeam");
-        q.setParameter("teamid", team.getId());
+        q.setParameter("teamid", team);
         for (Invitation inv : (List<Invitation>) q.getResultList()) {
             if (inv.getState() != InvitationState.ACCEPTED) {
                 invites.add(inv);
