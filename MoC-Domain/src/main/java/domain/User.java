@@ -110,7 +110,7 @@ public class User implements Serializable {
      *
      * @return A String containing the password of this User.
      */
-    @XmlTransient
+    //@XmlTransient
     public String getPassword() {
         return password;
     }

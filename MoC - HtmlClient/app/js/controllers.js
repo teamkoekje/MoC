@@ -53,8 +53,13 @@ controllers.service('newsfeedService', function () {
 
 });
 
-controllers.controller('loginController', ['$scope', 'user', 'newsfeedService', function ($scope, $user, newsfeedService) {
+controllers.controller('loginController', ['$scope', '$translate','user', 'newsfeedService', function ($scope, $translate, $user, newsfeedService) {
 
+
+         $scope.changeLanguage = function (langKey) {
+            $translate.use(langKey);
+          };
+  
         /**
          * If a user is logged in, returns username, else returns undefined
          * 

@@ -1,7 +1,10 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$cookies', 'user', function ($scope, $cookies, $user) {
+controllers.controller('loginController', ['$scope', '$translate', '$cookies', 'user', function ($scope, $translate, $cookies, $user) {
+        $scope.changeLanguage = function (langKey) {
+            $translate.use(langKey);
+          };
 
         $scope.isLoggedIn = function () {
             return $cookies.user;

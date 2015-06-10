@@ -8,7 +8,8 @@ var app = angular.module('mocApp', [
     'ngDialog',
     'mocControllers',
     'mocServices',
-    'ui.bootstrap.datetimepicker'
+    'ui.bootstrap.datetimepicker',
+    'pascalprecht.translate'
 ]);
 
 app.config(['$routeProvider',
@@ -42,3 +43,12 @@ app.config(['$routeProvider',
                 .otherwise({redirectTo: '/login'});
     }
 ]);
+
+app.config(['$translateProvider', function ($translateProvider) {
+  // add translation tables
+  $translateProvider.translations('en', translationsEN);
+  $translateProvider.translations('nl', translationsNL);
+  $translateProvider.preferredLanguage('en');
+  $translateProvider.fallbackLanguage('en');
+  $translateProvider.useSanitizeValueStrategy('escaped');
+}]);

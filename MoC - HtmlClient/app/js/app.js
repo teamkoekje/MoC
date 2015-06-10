@@ -6,10 +6,11 @@
 var app = angular.module('mocApp', [
     'ngRoute',
     'mocControllers',
-    'mocServices'
+    'mocServices',
+    'pascalprecht.translate'
 ]);
 
-app.config(['$routeProvider',
+app.config(['$routeProvider', 
     function ($routeProvider) {
         $routeProvider
                 .when('/login', {
@@ -51,3 +52,12 @@ app.config(['$routeProvider',
                 .otherwise({redirectTo: '/login'});
     }
 ]);
+
+app.config(['$translateProvider', function ($translateProvider) {
+  // add translation tables
+  $translateProvider.translations('en', translationsEN);
+  $translateProvider.translations('nl', translationsNL);
+  $translateProvider.preferredLanguage('en');
+  $translateProvider.fallbackLanguage('en');
+  $translateProvider.useSanitizeValueStrategy('escaped');
+}]);

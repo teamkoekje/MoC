@@ -5,16 +5,16 @@
     </p>-->
     <form style="display:inline-block;text-align: left" ng-submit="login()">
         <div class="form-group">
-            <label for="usernameInput" style="">Username:</label>
-            <input required type="text" class="form-control" id="usernameInput" placeholder="username" ng-model="username" style="display: table-cell"/>
+            <label for="usernameInput" style="">{{ 'USERNAME' | translate }}:</label>
+            <input required type="text" class="form-control" id="usernameInput" placeholder="{{ 'USERNAME' | translate }}" ng-model="username" style="display: table-cell"/>
         </div>
         <div class="form-group">
-            <label for="passwordInput" style="">Password:</label>
-            <input required type="password" class="form-control" id="passwordInput" placeholder="password" ng-model="password" style="display: table-cell"/>
+            <label for="passwordInput" style="">{{ 'PASSWORD' | translate }}:</label>
+            <input required type="password" class="form-control" id="passwordInput" placeholder="{{ 'PASSWORD' | translate }}" ng-model="password" style="display: table-cell"/>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-default" value="Log in"/>
-            <a href="#register"><span class="btn btn-default">Register</span></a>
+            <input type="submit" class="btn btn-default" value="{{ 'LOGIN' | translate }}"/>
+            <a href="#register"><span class="btn btn-default">{{ 'REGISTER' | translate }}</span></a>
         </div>
     </form>
 </div>
