@@ -83,7 +83,8 @@ public class FileManagement {
         if (!folder.isDirectory()) {
             return null;
         }
-        return listStructureJSON(folder).build().toString();
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        return listFolderJSON(folder, jsonArrayBuilder).build().toString();
     }
     // </editor-fold>
 
@@ -99,7 +100,6 @@ public class FileManagement {
         try {
             Path file = Paths.get(filePath);
             String filecontent = new String(Files.readAllBytes(file));
-
             jsonObjectBuilder.add("filecontent", filecontent);
             jsonObjectBuilder.add("editable", isFileEditable(filePath));
         } catch (IOException ex) {
@@ -117,21 +117,11 @@ public class FileManagement {
         }
     }
 
-    private JsonObjectBuilder listStructureJSON(File folderToShow) {
-        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-        String temp = folderToShow.getName();
-        if ((folderToShow.isFile() && isVisible(temp) || folderToShow.isDirectory())) {
-            jsonObjectBuilder.add(temp, listFolderJSON(folderToShow));
-        }
-        return jsonObjectBuilder;
-    }
-
-    private JsonArrayBuilder listFolderJSON(File file) {
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+    private JsonArrayBuilder listFolderJSON(File file, JsonArrayBuilder jsonArrayBuilder) {
         for (File f : file.listFiles()) {
             if (f.isDirectory()) {
-                jsonArrayBuilder.add(listStructureJSON(f));
-            } else if (isVisible(f.getName())) {
+                listFolderJSON(f, jsonArrayBuilder);
+            } else if (isVisible(f.getName()) || f.getName().endsWith(".html")) {
                 JsonObjectBuilder job = Json.createObjectBuilder();
                 job.add("filename", f.getName());
                 job.add("editable", isFileEditable(f.getName()));
