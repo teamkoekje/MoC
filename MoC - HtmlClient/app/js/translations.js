@@ -3,6 +3,9 @@ var translationsEN = {
   NEW_USER: 'New user',
   EXISTING_USER: 'Existing user',
   INVALID_USER: 'Invalid username',
+  HINTS: 'Hints',
+  MESSAGES: 'Messages',
+  MINUTS_LEFT: 'minutes left',
   
   BACK: 'Back',
   NEW: 'New',
@@ -63,6 +66,13 @@ var translationsEN = {
   INVITE_USERS: 'Invite users',
   SEARCH_USERS: 'Search user',
   
+  RUN_TEST: 'Run test',
+  RUN_SPECIFIC_TEST: 'Run specific test',
+  RUN_ALL_TEST: 'Run all tests',
+  COMPILE: 'Compile',
+  SHOW_HIDE_RESULT: 'Show/hide result',
+  FULLSCREEN: 'Fullscreen',
+  
   BUTTON_LANG_NL: 'Dutch',
   BUTTON_LANG_EN: 'English'
 };
@@ -72,6 +82,9 @@ var translationsNL= {
   NEW_USER: 'Nieuwe gebruiker',
   EXISTING_USER: 'Bestaande gebruiker',
   INVALID_USER: 'Gebruikersnaam ongeldig',
+  HINTS: 'Hints',
+  MESSAGES: 'Berichten',
+  MINUTS_LEFT: 'tijd over',
   
   BACK: 'Terug',
   NEW: 'Nieuw',
@@ -132,6 +145,13 @@ var translationsNL= {
   INVITE_USERS: 'Nodig gebruiker uit',
   SEARCH_USERS: 'Zoek gebruiker',
   
+  RUN_TEST: 'Voer test uit',
+  RUN_SPECIFIC_TEST: 'Voer specifieke test uit',
+  RUN_ALL_TEST: 'Voer alle testen uit',
+  COMPILE: 'Compileren',
+  SHOW_HIDE_RESULT: 'Resultaat weergeven/verbergen',
+  FULLSCREEN: 'Volledig scherm',
+  
   BUTTON_LANG_NL: 'Nederlands',
   BUTTON_LANG_EN: 'Engels'
 };
@@ -141,6 +161,9 @@ var translationsFI = {
   NEW_USER: 'New user',
   EXISTING_USER: 'Existing user',
   INVALID_USER: 'Invalid username',
+  HINTS: 'Hints',
+  MESSAGES: 'Messages',
+  MINUTS_LEFT: 'minutes left',
   
   BACK: 'Back',
   NEW: 'New',
@@ -200,6 +223,13 @@ var translationsFI = {
   
   INVITE_USERS: 'Invite users',
   SEARCH_USERS: 'Search user',
+  
+  RUN_TEST: 'Run test',
+  RUN_SPECIFIC_TEST: 'Run specific test',
+  RUN_ALL_TEST: 'Run all tests',
+  COMPILE: 'Compile',
+  SHOW_HIDE_RESULT: 'Show/hide result',
+  FULLSCREEN: 'Fullscreen',
   
   BUTTON_LANG_NL: 'Dutch',
   BUTTON_LANG_EN: 'English'
