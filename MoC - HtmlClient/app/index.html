@@ -24,8 +24,9 @@
     <body role="document">
 
         <div class="container theme-showcase" role="main">
-
             <div class="page-header" ng-controller="loginController">
+                <button ng-click="changeLanguage('nl')" translate="BUTTON_LANG_NL"></button>
+                <button ng-click="changeLanguage('en')" translate="BUTTON_LANG_EN"></button>
                 <a href="#login" ng-if="!isLoggedIn" class="btn btn-primary" style="float:right">Login</a>
                 <div ng-if="isLoggedIn" style="float:right">
                     {{ "LOGGED_IN_AS" | translate}}: <b>{{user.username}} </b>
