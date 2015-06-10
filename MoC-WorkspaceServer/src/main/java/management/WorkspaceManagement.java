@@ -4,6 +4,7 @@ package management;
 import controllers.PathController;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -244,10 +245,15 @@ public class WorkspaceManagement {
         File challengeZip = new File(challengePath.getAbsoluteFile() + File.separator + challengeName + ".zip");
         //write to server        
         writeZipToCompetition(data, challengeZip.getAbsolutePath());
+        try {
+            extractZip(challengeZip);
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //for all teams
         for (String teamName : competitions.get(competitionId)) {
             try {
-                extractChallengeToTeam(challengeZip, teamName, competitionId);
+                copyChallengeToTeam(challengeName, teamName, competitionId);
             } catch (Exception ex) {
                 Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
                 return "Error extracting: " + ex.getLocalizedMessage();
@@ -276,18 +282,15 @@ public class WorkspaceManagement {
     }
 
     /**
-     * Extracts the specified zip to the specified team in the specific
-     * competition.
-     *
-     * @param challengeZip The challenge to extract
-     * @param teamName The name of the team to extract to
-     * @param competitionId The id of the competition
-     * @throws IOException
+     * Extracts a challenge zip file and moves the jar file out of the folder
+     * 
+     * @param challengeZip The zip file of the challenge
+     * @throws IOException 
      */
-    private void extractChallengeToTeam(File challengeZip, String teamName, String competitionId) throws IOException {
+    private void extractZip(File challengeZip) throws IOException {
         ZipFile zip = new ZipFile(challengeZip);
         Enumeration zipFileEntries = zip.entries();
-        String outputPath = pathInstance.teamPath(competitionId, teamName) + File.separator + FilenameUtils.removeExtension(challengeZip.getName());
+        String outputPath = challengeZip.getParent() + File.separator + FilenameUtils.removeExtension(challengeZip.getName());
 
         //loop through the zip
         while (zipFileEntries.hasMoreElements()) {
@@ -300,7 +303,68 @@ public class WorkspaceManagement {
             //if the entry is a file, write the contents to it
             if (!entry.isDirectory()) {
                 writeZipEntry(zip, entry, destFile);
+                if (destFile.getName().endsWith("jar") && !destFile.getName().startsWith("MoCFramework")) {
+                    destFile.renameTo(new File(challengeZip.getParent() + File.separator + FilenameUtils.removeExtension(challengeZip.getName()) + ".jar"));
+                }
             }
+        }
+    }
+
+    /**
+     * Copies the specified challenge to the workspace of the specified team
+     * 
+     * @param challengeName Name of the challenge
+     * @param teamName Name of the team
+     * @param competitionId Id of the competition
+     */
+    private void copyChallengeToTeam(String challengeName, String teamName, String competitionId) {
+        File srcFolder = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName);
+        File destFolder = new File(pathInstance.teamPath(competitionId, teamName) + File.separator + challengeName);
+
+        if (srcFolder.exists()) {
+            try {
+                copyFolder(srcFolder, destFolder);
+            } catch (IOException ex) {
+                Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Recursive copy of a folder/file
+     * 
+     * @param src The source directory or file to copy
+     * @param dest The destination directory or file
+     * @throws IOException 
+     */
+    private void copyFolder(File src, File dest) throws IOException {
+        if (src.isDirectory()) {
+            // If directory not exists, create it
+            if (!dest.exists()) {
+                dest.mkdir();
+            }
+            // List all the directory contents
+            String files[] = src.list();
+            for (String file : files) {
+                // Construct the src and dest file structure
+                File srcFile = new File(src, file);
+                File destFile = new File(dest, file);
+                // Recursive copy
+                copyFolder(srcFile, destFile);
+            }
+        } else {
+            // If file, then copy it
+            // Use bytes stream to support all file types
+            InputStream in = new FileInputStream(src);
+            OutputStream out = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            // Copy the file content in bytes 
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            in.close();
+            out.close();
         }
     }
 

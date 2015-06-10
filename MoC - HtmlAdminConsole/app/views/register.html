@@ -63,40 +63,42 @@
         <h3>
             New user
         </h3>
-        <div class='row'>
-            <div class='col-xs-12'>
-                <label for='usernameInput'>Username</label>
-                <input type='text' id='usernameInput' placeholder='username' style='float: right'/>
+        <form ng-submit="register()">
+            <div class='row'>
+                <div class='col-xs-12'>
+                    <label for='usernameInput'>Username</label>
+                    <input type='text' required ng-model='user.username' id='usernameInput' placeholder='username' style='float: right'/>
+                </div>
             </div>
-        </div>
-        <div class='row'>
-            <div class="col-xs-12">
-                <label for='passwordInput'>Password</label>
-                <input type='password' id='passwordInput' placeholder="password" style='float: right'/>
+            <div class='row'>
+                <div class="col-xs-12">
+                    <label for='passwordInput'>Password</label>
+                    <input type='password' required ng-model='user.password' id='passwordInput' placeholder="password" style='float: right'/>
+                </div>
             </div>
-        </div>
-        <div class='row'>
-            <div class="col-xs-12">
-                <label for='nameInput'>Name</label>
-                <input type='text' id='nameInput' placeholder='name' style='float: right'/>
+            <div class='row'>
+                <div class="col-xs-12">
+                    <label for='nameInput'>Name</label>
+                    <input type='text' required ng-model='user.name' id='nameInput' placeholder='name' style='float: right'/>
+                </div>
             </div>
-        </div>
-        <div class='row'>
-            <div class="col-xs-12">
-                <label for='organisationInput'>Organisation</label>
-                <input type='text' id='organisationInput' placeholder='organisation' style='float: right'/>
+            <div class='row'>
+                <div class="col-xs-12">
+                    <label for='organisationInput'>Organisation</label>
+                    <input type='text' required ng-model='user.organisation' id='organisationInput' placeholder='organisation' style='float: right'/>
+                </div>
             </div>
-        </div>
-        <div class='row'>
-            <div class="col-xs-12">
-                <label for='emailInput'>Email</label>
-                <input type='email' id='emailInput' placeholder="email" style='float: right'/>
+            <div class='row'>
+                <div class="col-xs-12">
+                    <label for='emailInput'>Email</label>
+                    <input type='email' ng-model='user.email' id='emailInput' placeholder="email" style='float: right'/>
+                </div>
             </div>
-        </div>
-        <div class='row'>
-            <div class="col-xs-12">
-                <button style='float: right' class='btn btn-primary'>Create user</button>
+            <div class='row'>
+                <div class="col-xs-12">
+                    <input type='submit' style='float: right' class='btn btn-primary' value='create user'/>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>

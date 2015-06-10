@@ -1,7 +1,10 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$cookies', 'user', function ($scope, $cookies, $user) {
+controllers.controller('loginController', ['$scope', '$translate', '$cookies', 'user', function ($scope, $translate, $cookies, $user) {
+        $scope.changeLanguage = function (langKey) {
+            $translate.use(langKey);
+          };
 
         $scope.isLoggedIn = function () {
             return $cookies.user;
@@ -124,9 +127,6 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
             $scope.user.$save(function () {
                 $scope.showSuccesAlert = true;
                 $scope.user = new $user.register();
-                setTimeout(function () {
-                    location.href = "#/login";
-                }, 3000);
             }, function (data) {
                 console.log(data);
                 $scope.showFailedAlert = true;
@@ -139,12 +139,7 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
                 $scope.inviteInfo = "You are invited to " + team.name;
             });
         }
-        $scope.user = new $user.register({token: $routeParams.token});
-        $scope.user.email = "luc@luc.nl";
-        $scope.user.password = "luc";
-        $scope.user.username = "luc";
-        $scope.user.name = "Luc Kolen";
-        $scope.user.organisation = "FHICT";
+        $scope.user = new $user.register();
     }
 ]);
 

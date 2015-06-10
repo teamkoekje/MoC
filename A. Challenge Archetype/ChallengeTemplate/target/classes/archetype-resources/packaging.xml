@@ -17,6 +17,7 @@
         <exclude>**/*.log</exclude>
         <exclude>**/${symbol_dollar}{project.build.directory}/**</exclude>
 		<exclude>**/nb-configuration.xml</exclude>
+		<exclude>**/install archetype.bat</exclude>
       </excludes>
     </fileSet>
 	<fileSet>

@@ -174,11 +174,11 @@ public class BrokerGateway implements IRequestListener<Request> {
                         Long.toString(folderStructureRequest.getCompetitionId()),
                         folderStructureRequest.getTeamName(),
                         folderStructureRequest.getChallengeName());
-                String jarPathForFolder = folderPath
+                String jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
                         + File.separator
                         + folderStructureRequest.getChallengeName()
                         + ".jar";
-                return new NormalReply(FileManagement.getInstance(jarPathForFolder).getFolderStructureJSON(folderPath));
+                return new NormalReply("{\"filestructure\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 String jarPathForFile = pathInstance.teamChallengePath(

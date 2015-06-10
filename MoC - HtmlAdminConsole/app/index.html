@@ -29,12 +29,15 @@
 
         <div class="container theme-showcase" role="main">
             <div class="page-header" ng-controller="loginController">
-                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">Login</a>
+                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">{{"LOGIN" | translate}}</a>
                 <div ng-if="isLoggedIn()" style="float:right">
-                    Logged in as: <b>{{username}} </b>
-                    <a ng-click="logout()" class="btn btn-lg btn-link">Logout</a>
+                    {{ "LOGGED_IN_AS" | translate}}: <b>{{username}} </b>
+                    <a ng-click="logout()" class="btn btn-lg btn-link">{{"LOGOUT" | translate}}</a>
                 </div>
                 <h1>Masters of Code admin</h1>
+                <br>
+                <button ng-click="changeLanguage('nl')" translate="BUTTON_LANG_NL"></button>
+                <button ng-click="changeLanguage('en')" translate="BUTTON_LANG_EN"></button>
             </div>
 
             <div ng-view></div>
@@ -47,6 +50,7 @@
         <script src='bower_components/ngDialog/js/ngDialog.js'></script>
         <script src='bower_components/moment/min/moment.min.js'></script>
         <script src='bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'></script>
+        <script src="bower_components/angular-translate/angular-translate.js"></script>
 
         <script src="components/version/version.js"></script>
         <script src="components/version/version-directive.js"></script>
@@ -55,5 +59,6 @@
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
         <script src="js/services.js"></script>
+        <script src="js/translations.js"></script> 
     </body>
 </html>
