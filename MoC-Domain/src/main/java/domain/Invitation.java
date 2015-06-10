@@ -60,7 +60,8 @@ public class Invitation implements Serializable {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement
     private final Team team;
-    private final String email;
+    @XmlElement
+    private String email;
     private final String token;
     private InvitationState invitationState;
     // </editor-fold>
