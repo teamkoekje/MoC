@@ -40,7 +40,6 @@ public class CompetitionService extends GenericService<Competition> {
     }
 
     public void HandleEvent(@Observes CompetitionEvent event) {
-        //System.out.println("Hallo event: " + event.getType());
         switch (event.getType()) {
             case UPDATE:
                 for (Competition c : findAll()) {
@@ -51,14 +50,12 @@ public class CompetitionService extends GenericService<Competition> {
                 break;
             case ROUND_ENDED:
                 RoundEndedEvent ree = (RoundEndedEvent) event;
-                em.merge(ree.getCompetition());
-                // TODO: TEST THE ABOVE LINE!!
+                this.edit(ree.getCompetition());
                 break;
             case COMPETITION_ENDED:
                 CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
                 competitions.remove(cee.getCompetition());
-                em.persist(cee.getCompetition());
-                // TODO: TEST THE ABOVE LINE!!
+                this.edit(cee.getCompetition());
                 break;
             case HINT_RELEASED:
                 HintReleasedEvent hre = (HintReleasedEvent) event;

@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
+import javax.websocket.RemoteEndpoint.Async;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 // </editor-fold>
@@ -48,7 +49,9 @@ public class WebsocketEndpoint {
         System.out.println("Sending message to: " + username);
         Session s = peers.get(username);
         System.out.println(s.toString());
-        s.getAsyncRemote().sendObject(msg);
+        Async a = s.getAsyncRemote();
+        System.out.println("temp");
+        a.sendObject(msg);
         System.out.println("Message sent to user: " + username);
     }
 }
