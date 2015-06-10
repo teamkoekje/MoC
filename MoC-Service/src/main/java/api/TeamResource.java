@@ -192,6 +192,10 @@ public class TeamResource {
             return Response.serverError().entity("No email").build();
         } else if (teamService.findById(teamId) == null) {
             return Response.serverError().entity("Team not found").build();
+        } else if (invitationService.emailAlreadyInTeam(email, teamId)) {
+            return Response.serverError().entity("Email already in a team").build();
+        }else if (invitationService.emailAlreadyInvited(email, teamId)){
+            return Response.serverError().entity("Email already invited").build();
         } else {
             invitationService.inviteMember(email, teamId);
             return Response.ok("Invite send").build();
@@ -244,6 +248,11 @@ public class TeamResource {
     @Path("/{teamId}/leave/{username}")
     @RolesAllowed({"User", "Admin"})
     public void leaveTeam(@PathParam("teamId") long teamId, @PathParam("username") String username) {
+        /*
+        todo email owner that a user has left
+        */
+        
+        
         User user = userService.findById(username);
         if (user != null) {
             teamService.leaveTeam(user, teamId);

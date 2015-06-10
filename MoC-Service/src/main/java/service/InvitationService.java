@@ -146,17 +146,40 @@ public class InvitationService extends GenericService<Invitation> {
             this.edit(inv);
         }
     }
-    
+
     public void declineInvitation(long invitationId) {
         Invitation inv = findById(invitationId);
         inv.setState(Invitation.InvitationState.DECLINED);
         edit(inv);
     }
-    
+
     public List<Invitation> findInvitationsByTeam(Team team) {
         Query q = em.createNamedQuery("Invitation.findByTeam");
         q.setParameter("teamid", team);
         return (List<Invitation>) q.getResultList();
+    }
+
+    public boolean emailAlreadyInTeam(String email, long teamId) {
+        Team team = teamService.findById(teamId);
+        for (Team t : teamService.findByCompetition(team.getCompetition())) {
+            for (User u : t.getParticipants()) {
+                if (u.getEmail().equals(email)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean emailAlreadyInvited(String email, long teamId) {
+        Query q = em.createNamedQuery("Invitation.countUndecidedInvitations");
+        q.setParameter("email", email);
+        q.setParameter( "teamId", teamService.findById(teamId));
+        int x = q.getFirstResult();
+        System.out.println(x);
+        return x > 0;
+   
+        
     }
 
  //</editor-fold>
