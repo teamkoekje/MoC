@@ -19,7 +19,7 @@
         <!--SCRIPTS -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-        <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+
     </head>
     <body role="document">
 
@@ -28,8 +28,8 @@
             <div class="page-header" ng-controller="loginController">
                 <a href="#login" ng-if="!isLoggedIn" class="btn btn-primary" style="float:right">Login</a>
                 <div ng-if="isLoggedIn" style="float:right">
-                    Logged in as: <b>{{user.username}} </b>
-                    <a ng-click="logout()" class="btn btn-lg btn-link">Logout</a>
+                    {{ "LOGGED_IN_AS" | translate}}: <b>{{user.username}} </b>
+                    <a ng-click="logout()" class="btn btn-lg btn-link">{{ "LOGOUT" | translate}}</a>
                 </div>
                 <h1>Masters of Code</h1>
             </div>
@@ -41,6 +41,8 @@
         <script src="bower_components/angular-route/angular-route.js"></script>
         <script src="bower_components/angular-resource/angular-resource.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="bower_components/angular-translate/angular-translate.js"></script>
 
         <script src="components/version/version.js"></script>
         <script src="components/version/version-directive.js"></script>
@@ -49,5 +51,6 @@
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
         <script src="js/services.js"></script>
+        <script src="js/translations.js"></script> 
     </body>
 </html>

@@ -13,6 +13,7 @@
     "angular-resource": "~1.2.x",
     "angular-cookies": "~1.2.x",
     "html5-boilerplate": "~4.3.0",
+    "angular-translate": "latest",
     "angular-ui-ace": "bower"
   }
 }
