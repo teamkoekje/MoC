@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
             query = "SELECT inv FROM Invitation inv WHERE inv.token = :token"),
 
     @NamedQuery(name = "Invitation.findByTeam",
-            query = "SELECT inv FROM Invitation inv WHERE inv.team = :teamid"),
+            query = "SELECT inv FROM Invitation inv WHERE inv.team = :teamid AND inv.invitationState NOT LIKE 'ACCEPTED'"),
 
     @NamedQuery(name = "Invitation.findByEmail",
             query = "SELECT inv FROM Invitation inv WHERE inv.email = :email")})
@@ -55,7 +55,7 @@ public class Invitation implements Serializable {
     @Id
     @GeneratedValue
     @XmlAttribute
-    private Long id;
+    private long id;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement
