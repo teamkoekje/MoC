@@ -232,6 +232,7 @@ var translationsPL = {
   FULLSCREEN: 'Pełen ekran',
 };
 
+//Mika Tuorimiemi
 var translationsFI = {
   USERNAME: 'Käyttäjänimi',
   NEW_USER: 'Uusi käyttäjä',
