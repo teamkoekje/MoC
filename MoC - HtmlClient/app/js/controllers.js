@@ -32,13 +32,13 @@ controllers.service('newsfeedService', function () {
     var getHints = function () {
         return hints;
     };
-    
+
     //Files
-    var setFiles = function(files){
+    var setFiles = function (files) {
         this.files = files;
     };
-    
-    var getFiles = function(){
+
+    var getFiles = function () {
         return files;
     };
 
@@ -53,13 +53,13 @@ controllers.service('newsfeedService', function () {
 
 });
 
-controllers.controller('loginController', ['$scope', '$translate','user', 'newsfeedService', function ($scope, $translate, $user, newsfeedService) {
+controllers.controller('loginController', ['$scope', '$translate', 'user', 'newsfeedService', function ($scope, $translate, $user, newsfeedService) {
 
 
-         $scope.changeLanguage = function (langKey) {
+        $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
-          };
-  
+        };
+
         /**
          * If a user is logged in, returns username, else returns undefined
          * 
@@ -132,7 +132,7 @@ controllers.controller('loginController', ['$scope', '$translate','user', 'newsf
                 } else if (typeof result.message !== 'undefined') {
                     newsfeedService.addMessage(result.message.text);
                 } else if (typeof result.filestructure !== 'undefined') {
-                   newsfeedService.setFiles(result.filestructure);
+                    newsfeedService.setFiles(result.filestructure);
                 }
             };
         };
@@ -374,11 +374,13 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
         $scope.inviteUser = function () {
             // TODO: replace following line using Angular (instead of jQuery)
             var email = $("#emailInput").val();
-
+            $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
                 $scope.showSuccesAlert = true;
+                $scope.loading = false;
             }, function (data) {
                 $scope.showFailedAlert = true;
+                $scope.loading = false;
                 $scope.error = data.data;
             });
         };
@@ -401,10 +403,15 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
         };
 
 
+        loading = function () {
+            console.log($scope.loading);
+            return $scope.loading;
 
+        };
 
         loadData = function () {
             $scope.foundUsers = $user.search.query({searchInput: ""});
+            $scope.loading = false;
         };
         loadData();
     }

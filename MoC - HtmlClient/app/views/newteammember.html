@@ -4,10 +4,10 @@
 </ul>
 
 <br>
-<div class="alert alert-success" role="alert" ng-if="showSuccesAlert">
+<div  class="alert alert-success" role="alert" ng-if="showSuccesAlert">
     <strong>{{ 'SUCCES' | translate }}!</strong> {{ 'EMAIL_SEND' | translate }}
 </div>
-<div class="alert alert-danger" role="alert" ng-if="showFailedAlert">
+<div  class="alert alert-danger" role="alert" ng-if="showFailedAlert">
     <strong>{{ 'OOPS' | translate }}!</strong> {{ 'EMAIL_ERROR' | translate }} {{error}}
 </div>
 
@@ -27,20 +27,20 @@
 <div id="newUserPanel" ng-show="usercontent == 'new'">
 
     <form style="display:inline-block;text-align: left" ng-submit="inviteUser()">
-        <div class="form-group">
+        <div  class="form-group">
             <label for="emailInput" style="">Email</label>
             <input required type="email" class="form-control" id="emailInput" placeholder="Email" ng-model="email" style="display: table-cell"/>
-            <input type="submit" class="btn btn-default" value="{{ 'INVITE_USERS' | translate }}"/>
+            <input type="submit" class="btn btn-default" value="{{ 'INVITE_USERS' | translate }}"/> <div id="loadinggif" ng-show="loading"><img src="http://cdn.satmarin.com/images/loading.gif"/></div>
         </div>
     </form>
 </div>
 
-<div id="existingUserPanel" ng-show="usercontent == 'existing'">
+<div id="existingUserPanel" ng-show="usercontent == 'existing'" >
     <form style="display:inline-block;text-align: left" ng-submit="searchUser()">
         <div class="form-group">
             <label for="searchInput" style="">search</label>
             <input required type="text" class="form-control" id="searchInput" placeholder="Search" ng-model="text" style="display: table-cell"/>
-            <input type="submit" class="btn btn-default" value="{{ 'SEARCH_USERS' | translate }}"/>
+            <input type="submit" class="btn btn-default" value="{{ 'SEARCH_USERS' | translate }}"/><div id="loadinggif" ng-show="loading"><img src="http://cdn.satmarin.com/images/loading.gif"/></div>
         </div>
     </form>    
     <table id="foundUserTable">
