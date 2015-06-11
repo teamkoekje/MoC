@@ -151,6 +151,17 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
         $scope.setSelectedCompetition = function (competition) {
             console.log(competition);
             $scope.selectedCompetition = competition;
+            $scope.selectedCompetition.challenges = $competition.challenges.query({competitionId: competition.id});
+            $scope.selectedCompetition.teams = $competition.teams.query({competitionId: competition.id});
+        };
+
+        $scope.removeCompetition = function (competition) {
+            if (confirm("Are you sure you want to remove " + competition.name + "?")) {
+                $competition.all.remove({competitionId: competition.id}, function(){
+                    $scope.competitions = new $competition.all.query();
+                });
+                    
+            }
         };
         //Default info when no competition is selected
         $scope.selectedCompetition = {
@@ -170,9 +181,9 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
-            $scope.save = function(){
+            $scope.save = function () {
                 console.log($scope.newCompetition);
-                $scope.newCompetition.$save(function(){
+                $scope.newCompetition.$save(function () {
                     $scope.competitions = new $competition.all.query();
                 });
             };
