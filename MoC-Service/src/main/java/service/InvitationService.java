@@ -156,6 +156,7 @@ public class InvitationService extends GenericService<Invitation> {
     public List<Invitation> findInvitationsByTeam(Team team) {
         Query q = em.createNamedQuery("Invitation.findByTeam");
         q.setParameter("team", team);
+        q.setParameter("state", InvitationState.ACCEPTED);
         return (List<Invitation>) q.getResultList();
     }
 
@@ -172,16 +173,11 @@ public class InvitationService extends GenericService<Invitation> {
     }
 
     public boolean emailAlreadyInvited(String email, long teamId) {
-        System.out.println(teamService.findById(teamId).getName());
-        System.out.println("email: " + email);
-
         Query q = em.createNamedQuery("Invitation.countUndecidedInvitations");
         q.setParameter("email", email);
         q.setParameter("team", teamService.findById(teamId));
-        int returnsize = q.getResultList().size();
-        System.out.println("return: " + returnsize);
-        return returnsize > 0;
-
+        q.setParameter("state", InvitationState.UNDECIDED);
+        return ((Long)q.getSingleResult()) > 0;
     }
 
  //</editor-fold>

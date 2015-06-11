@@ -53,7 +53,8 @@ controllers.service('newsfeedService', function () {
 
 });
 
-controllers.controller('loginController', ['$scope', '$translate', 'user', 'newsfeedService', function ($scope, $translate, $user, newsfeedService) {
+
+controllers.controller('mainController', ['$scope', '$translate','user', 'newsfeedService', function ($scope, $translate, $user, newsfeedService) {
 
 
         $scope.changeLanguage = function (langKey) {
@@ -74,20 +75,19 @@ controllers.controller('loginController', ['$scope', '$translate', 'user', 'news
          * Logs in with username and password
          * If login is successful, a websocket is created and the user is redirected to the competitions page
          */
-        $scope.login = function () {
+        $scope.login = function (username, password) {
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/login",
                 data: {
-                    username: $scope.username,
-                    password: $scope.password
+                    username: username,
+                    password: password
                 },
                 xhrFields: {
                     withCredentials: true
                 }
             }).success(function (data) {
-                console.log("Logged in succesfully: " + $scope.username);
-                openWebsocket();
+                console.log("Logged in succesfully: " + username);
                 location.href = "#/competitions";
                 location.reload();
             }).error(function (data) {
@@ -135,7 +135,13 @@ controllers.controller('loginController', ['$scope', '$translate', 'user', 'news
                     newsfeedService.setFiles(result.filestructure);
                 }
             };
+            ws.onclose = function(){
+                console.log("closing websocket");
+                return false;
+            };
         };
+        
+        openWebsocket();
 
         $scope.messages = [];
         $scope.hints = [];
@@ -326,7 +332,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
          * @returns {Boolean}
          */
         $scope.isOwnerLoggedIn = function (teamOwner) {
-            return $cookies.user.toUpperCase() === teamOwner.toUpperCase();
+            return $scope.user.username === teamOwner;
         };
 
         /**

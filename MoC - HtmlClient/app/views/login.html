@@ -3,7 +3,7 @@
 <!--    <p>
         You are invited to {{teamname}}
     </p>-->
-    <form style="display:inline-block;text-align: left" ng-submit="login()">
+    <form style="display:inline-block;text-align: left" ng-submit="login(username, password)">
         <div class="form-group">
             <label for="usernameInput" style="">{{ 'USERNAME' | translate }}:</label>
             <input required type="text" class="form-control" id="usernameInput" placeholder="{{ 'USERNAME' | translate }}" ng-model="username" style="display: table-cell"/>
