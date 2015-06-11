@@ -25,10 +25,10 @@ import javax.xml.bind.annotation.XmlElement;
             query = "SELECT inv FROM Invitation inv WHERE inv.token = :token"),
 
     @NamedQuery(name = "Invitation.findByTeam",
-            query = "SELECT inv FROM Invitation inv WHERE inv.team = :teamid AND inv.invitationState NOT LIKE 'ACCEPTED'"),
+            query = "SELECT inv FROM Invitation inv WHERE inv.team = :team AND inv.invitationState NOT LIKE 'ACCEPTED'"),
 
     @NamedQuery(name = "Invitation.countUndecidedInvitations",
-            query = "SELECT COUNT(inv.id) FROM Invitation inv WHERE inv.email = :email AND inv.team = :teamId AND inv.invitationState LIKE 'UNDECIDED'"),
+            query = "SELECT inv FROM Invitation inv WHERE inv.email = :email AND inv.team = :team AND inv.invitationState LIKE 'UNDECIDED'"),
 
     @NamedQuery(name = "Invitation.findByEmail",
             query = "SELECT inv FROM Invitation inv WHERE inv.email = :email")})
