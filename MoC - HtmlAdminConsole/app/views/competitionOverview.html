@@ -23,7 +23,9 @@
     </h3>
     <ul class="notARealList">
         <li>Name: <span style="float:right">{{selectedCompetition.name}}</span> </li>
-        <li>Start: <span style="float:right">{{selectedCompetition.startTime| date:'medium'}}</span> </li>
+        <li>Start: <span style="float:right">{{selectedCompetition.competitionDate | date:'medium'}}</span> </li>
+        <li>End: <span style="float:right">{{selectedCompetition.endTime | date:'medium'}}</span> </li>
+        <li>Location: <span style="float:right">{{selectedCompetition.location | date:'medium'}}</span> </li>
         <li>Status: <span style="float:right">{{selectedCompetition.status}}</span> </li>
     </ul>
     <h3>

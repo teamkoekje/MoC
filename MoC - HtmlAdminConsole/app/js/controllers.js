@@ -149,6 +149,7 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
     function ($scope, ngDialog, $competition) {
         $scope.competitions = new $competition.all.query();
         $scope.setSelectedCompetition = function (competition) {
+            console.log(competition);
             $scope.selectedCompetition = competition;
         };
         //Default info when no competition is selected
@@ -161,15 +162,19 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
         $scope.addCompetition = function () {
             $scope.newCompetition = new $competition.add();
             $scope.newCompetition.name = '';
-            $scope.newCompetition.date = new Date();
+            $scope.newCompetition.competitionDate = new Date();
+            $scope.newCompetition.endTime = new Date();
+            $scope.newCompetition.location = '';
             ngDialog.open({
                 template: "popups/addCompetition.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
             $scope.save = function(){
-                console.log($scope.newCompetition)
-                $scope.newCompetition.$save();
+                console.log($scope.newCompetition);
+                $scope.newCompetition.$save(function(){
+                    $scope.competitions = new $competition.all.query();
+                });
             };
         };
         $scope.editCompetition = function (i) {
