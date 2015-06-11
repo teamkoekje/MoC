@@ -54,12 +54,13 @@ controllers.service('newsfeedService', function () {
 });
 
 
-controllers.controller('mainController', ['$scope', '$translate','user', 'newsfeedService', function ($scope, $translate, $user, newsfeedService) {
-
+controllers.controller('mainController', ['$scope', '$translate','user', 'newsfeedService', '$cookies', function ($scope, $translate, $user, newsfeedService, $cookies) {
 
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
+            $cookies.language = langKey;
         };
+        $scope.changeLanguage($cookies.language);
 
         /**
          * If a user is logged in, returns username, else returns undefined
