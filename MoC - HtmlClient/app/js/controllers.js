@@ -332,7 +332,7 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
          * @returns {Boolean}
          */
         $scope.isOwnerLoggedIn = function (teamOwner) {
-            return $cookies.user.toUpperCase() === teamOwner.toUpperCase();
+            return $scope.user.username === teamOwner;
         };
 
         /**
