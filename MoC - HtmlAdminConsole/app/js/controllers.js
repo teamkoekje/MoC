@@ -149,7 +149,6 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
     function ($scope, ngDialog, $competition) {
         $scope.competitions = new $competition.all.query();
         $scope.setSelectedCompetition = function (competition) {
-            console.log(competition);
             $scope.selectedCompetition = competition;
             $scope.selectedCompetition.challenges = $competition.challenges.query({competitionId: competition.id});
             $scope.selectedCompetition.teams = $competition.teams.query({competitionId: competition.id});
@@ -157,10 +156,10 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
 
         $scope.removeCompetition = function (competition) {
             if (confirm("Are you sure you want to remove " + competition.name + "?")) {
-                $competition.all.remove({competitionId: competition.id}, function(){
+                $competition.all.remove({competitionId: competition.id}, function () {
                     $scope.competitions = new $competition.all.query();
                 });
-                    
+
             }
         };
         //Default info when no competition is selected
@@ -190,10 +189,15 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
         };
         $scope.editCompetition = function (i) {
             ngDialog.open({
-                template: "popups/editCompetition.html?id=" + i,
+                template: "popups/editCompetition.html",
                 className: 'ngdialog-theme-default',
                 scope: $scope
             });
+            $scope.currentCompetition = $competition.all.get({competitionId: i}, function () {
+                $scope.currentCompetition.challenges = $competition.challenges.query({competitionId: i});
+                $scope.currentCompetition.teams = $competition.teams.query({competitionId: i});
+            });
+            console.log($scope.currentCompetition);
         };
         $scope.showServerInfo = function () {
             ngDialog.open({
