@@ -57,9 +57,8 @@ controllers.service('newsfeedService', function () {
 
 });
 
-
 controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsfeedService', '$cookies', function ($scope, $translate, $user, newsfeedService, $cookies) {
-
+        $scope.loading = false;
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
             $cookies.language = langKey;
@@ -81,6 +80,7 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
          * If login is successful, a websocket is created and the user is redirected to the competitions page
          */
         $scope.login = function (username, password) {
+            $scope.loading = true;
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/login",
@@ -92,10 +92,12 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
                     withCredentials: true
                 }
             }).success(function (data) {
+                $scope.loading = false;
                 console.log("Logged in succesfully: " + username);
                 location.href = "#/competitions";
                 location.reload();
             }).error(function (data) {
+                $scope.loading = false;
                 console.log("Error while logging in");
                 console.log(data);
             });
@@ -105,6 +107,7 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
          * Logs out the current user and, if successful, sends the user to the login page
          */
         $scope.logout = function () {
+            $scope.loading = true;
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/logout",
@@ -112,10 +115,12 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
                     withCredentials: true
                 }
             }).success(function (data) {
+                $scope.loading = false;
                 console.log("Logged out succesfully");
                 location.href = "#/login";
                 location.reload();
             }).error(function (data) {
+                $scope.loading = false;
                 console.log("Error while logging out");
                 console.log(data);
             });
@@ -141,7 +146,7 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
                     newsfeedService.sendMessage(result);
                 }
             };
-
+			
             ws.onclose = function () {
                 console.log("closing websocket");
                 return false;
@@ -171,22 +176,27 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
     }
 
 ]);
-controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
-    function ($scope, $routeParams, $user, $team) {
+controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team','loadingService',
+    function ($scope, $routeParams, $user, $team, loadingService) {
         /**
          * Registers a user
          */
         $scope.register = function () {
             console.log("Create User");
+            $scope.loading = true;
             $scope.user.$save(function () {
+                $scope.loading = false;
                 $scope.showSuccesAlert = true;
+                $scope.showFailedAlert = false;
                 $scope.user = new $user.register();
                 setTimeout(function () {
                     location.href = "#/login";
                 }, 3000);
             }, function (data) {
                 console.log(data);
+                $scope.loading = false;
                 $scope.showFailedAlert = true;
+                $scope.showSuccesAlert = false;
                 $scope.error = data.data;
             });
         };
@@ -354,8 +364,8 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
         loadData();
     }
 ]);
-controllers.controller('newTeamController', ['$scope', 'competition', 'team',
-    function ($scope, $competition, $team) {
+controllers.controller('newTeamController', ['$scope', 'competition', 'team', 'loadingService',
+    function ($scope, $competition, $team, loadingService) {
         /**
          * Creates new team and redirects to team page if successful
          */
@@ -363,10 +373,12 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
             console.log("Create Team");
             console.log($scope.team);
             console.log($scope.team.competition.id);
+            $scope.loading = true;
             $scope.team.$save(function () {
                 location.href = "#/teams";
             });
             $scope.team = new $team.all();
+            $scope.loading = false;
         };
 
         /**
@@ -379,58 +391,56 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams',
-    function ($scope, $team, $user, $routeParams) {
+controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams', 'loadingService',
+    function ($scope, $team, $user, $routeParams, loadingService) {
         /**
          * Creates an invite for the given email address
          */
         $scope.inviteUser = function () {
             // TODO: replace following line using Angular (instead of jQuery)
             var email = $("#emailInput").val();
-            $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
+                loadingService.setLoading(true);
                 $scope.showSuccesAlert = true;
+                $scope.showFailedAlert = false;
                 $scope.loading = false;
             }, function (data) {
-                $scope.showFailedAlert = true;
                 $scope.loading = false;
+                $scope.showSuccesAlert = false;
+            }, function (data) {
+                $scope.loading = false;
+                $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
         };
 
         $scope.searchUser = function () {
             var searchInput = $("#searchInput").val();
+            $scope.loading = true;
             $scope.foundUsers = $user.search.query({searchInput: searchInput});
+            $scope.loading = false;
             console.log($scope.foundUsers);
         };
 
 
         $scope.inviteExistingUser = function () {
             var email = $("#foundUserInput").val();
+            $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
+                loadingService.setLoading(true);
                 $scope.showSuccesAlert = true;
             }, function (data) {
+                $scope.loading = false;
                 $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
         };
-
-
-        loading = function () {
-            console.log($scope.loading);
-            return $scope.loading;
-
-        };
-
         loadData = function () {
             $scope.foundUsers = $user.search.query({searchInput: ""});
-            $scope.loading = false;
         };
         loadData();
     }
 ]);
-
-
 controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams', 'newsfeedService',
     function ($scope, $workspace, $routeParams, newsfeedService) {
 
