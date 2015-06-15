@@ -14,6 +14,10 @@ controllers.service('newsfeedService', function () {
         onMessage = callback;
     };
 
+    var sendMessage = function (msg) {
+        onMessage(msg);
+    };
+
     // Messages
     var addMessage = function (message) {
         messages.push(message);
@@ -40,16 +44,6 @@ controllers.service('newsfeedService', function () {
         return hints;
     };
 
-    //Files
-    var setFiles = function (files) {
-        this.files = files;
-        onMessage(files);
-    };
-
-    var getFiles = function () {
-        return files;
-    };
-
     return {
         addMessage: addMessage,
         clearMessages: clearMessages,
@@ -57,9 +51,8 @@ controllers.service('newsfeedService', function () {
         addHint: addHint,
         clearHints: clearHints,
         getHints: getHints,
-        setFiles: setFiles,
-        getFiles: getFiles,
-        subscribe: subscribe
+        subscribe: subscribe,
+        sendMessage: sendMessage
     };
 
 });
@@ -144,8 +137,8 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
                     newsfeedService.addHint(result.hint.text);
                 } else if (typeof result.message !== 'undefined') {
                     newsfeedService.addMessage(result.message.text);
-                } else if (typeof result.filestructure !== 'undefined') {
-                    newsfeedService.setFiles(result.filestructure);
+                } else {
+                    newsfeedService.sendMessage(result);
                 }
             };
 
@@ -498,6 +491,10 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
             return editor.session.getValue();
         };
 
+        $scope.setTextFromEditor = function setTextFromEditor(text) {
+            editor.session.setValue(text);
+        };
+
         /**
          * Gets selected text from the editor
          * @returns {String}
@@ -646,42 +643,39 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
                 new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
             });
         };
-        
-        
-        /**
-         * Load data of comptetition using id
-         * @param {int} id
-         */
+
         $scope.selectFile = function (file) {
             console.log("Select file with path: " + file.filepath);
             $scope.file = file;
-            testfile = $workspace.file.save({competitionId: $routeParams.id, filePath: file.filepath}, function(){
-                console.log("received file: " + testfile);
-            });
-//            $scope.competition = $competition.all.get({competitionId: id});
-//            $scope.challenges = $competition.challenges.query({competitionId: id});
-//            $scope.teams = $competition.teams.query({competitionId: id});
+            editor.setReadOnly(!file.editable);
+            $workspace.file.save({competitionId: $routeParams.id}, file.filepath);
         };
 
-        /**
-         * Checks if the selected competition is the same as the loaded competition
-         * @param {int} competitionId
-         * @returns {Boolean}
-         */
         $scope.isSelected = function (file) {
             return $scope.file.filename === file.filename;
         };
 
-
+        //Init editor
         initEditor("editor");
+
         //Subscribe to newsfeed
-        newsfeedService.subscribe(function (files) {
-            $scope.files = files;
-            $scope.file = files[0];
+        newsfeedService.subscribe(function (msg) {
+            console.log(msg);
+            switch (msg.type) {
+                case "filestructure":
+                    $scope.files = msg.data;
+                    $scope.selectFile($scope.files[0]);
+                    break;
+                case "file":
+                    $scope.file = msg.data;
+                    $scope.setTextFromEditor(msg.data.filecontent);
+                    //$scope.selectFile(files[0]);
+                    break;
+            }
             $scope.$apply();
-            console.log($scope.files);
         });
 
+        //Request folderstructure
         $workspace.folderStructure.save({competitionId: $routeParams.id});
 
         $scope.messages = newsfeedService.getMessages();

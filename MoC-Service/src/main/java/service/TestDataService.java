@@ -90,7 +90,7 @@ public class TestDataService {
         Challenge ch2 = new Challenge("Challenge2");       
         Challenge ch3 = new Challenge("Challenge3");
 
-        c1.addChallenge(ch1, 30);
+        c1.addChallenge(ch1, 10000);
         c1.addChallenge(ch2, 30);
         c1.addChallenge(ch3, 30);
 

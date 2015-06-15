@@ -164,8 +164,8 @@ public class WorkspaceResource {
     }
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/file/{filePath}")
-    public Response file(@PathParam("competitionId") long competitionId, @PathParam("filePath") String filePath) {
+    @Path("/{competitionId}/file")
+    public Response file(@PathParam("competitionId") long competitionId, String filePath) {
         Competition competition = competitionService.findById(competitionId);
         if (competition != null && competition.getCurrentRound() != null) {
             Team team = competition.getTeamByUsername(request.getRemoteUser());
