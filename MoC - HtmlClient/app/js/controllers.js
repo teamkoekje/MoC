@@ -7,6 +7,13 @@ controllers.service('newsfeedService', function () {
     var hints = [];
     var files = [];
 
+    var onMessage;
+
+    //Subscribe
+    var subscribe = function (callback) {
+        onMessage = callback;
+    };
+
     // Messages
     var addMessage = function (message) {
         messages.push(message);
@@ -36,6 +43,7 @@ controllers.service('newsfeedService', function () {
     //Files
     var setFiles = function (files) {
         this.files = files;
+        onMessage(files);
     };
 
     var getFiles = function () {
@@ -48,13 +56,16 @@ controllers.service('newsfeedService', function () {
         getMessages: getMessages,
         addHint: addHint,
         clearHints: clearHints,
-        getHints: getHints
+        getHints: getHints,
+        setFiles: setFiles,
+        getFiles: getFiles,
+        subscribe: subscribe
     };
 
 });
 
 
-controllers.controller('mainController', ['$scope', '$translate','user', 'newsfeedService', '$cookies', function ($scope, $translate, $user, newsfeedService, $cookies) {
+controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsfeedService', '$cookies', function ($scope, $translate, $user, newsfeedService, $cookies) {
 
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
@@ -122,6 +133,7 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
          */
         openWebsocket = function () {
             var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
+
             ws.onopen = function () {
                 console.log("opening ws connection");
             };
@@ -136,12 +148,13 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
                     newsfeedService.setFiles(result.filestructure);
                 }
             };
-            ws.onclose = function(){
+
+            ws.onclose = function () {
                 console.log("closing websocket");
                 return false;
             };
         };
-        
+
         openWebsocket();
 
         $scope.messages = [];
@@ -633,8 +646,42 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
                 new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
             });
         };
+        
+        
+        /**
+         * Load data of comptetition using id
+         * @param {int} id
+         */
+        $scope.selectFile = function (file) {
+            console.log("Select file with path: " + file.filepath);
+            $scope.file = file;
+            testfile = $workspace.file.save({competitionId: $routeParams.id, filePath: file.filepath}, function(){
+                console.log("received file: " + testfile);
+            });
+//            $scope.competition = $competition.all.get({competitionId: id});
+//            $scope.challenges = $competition.challenges.query({competitionId: id});
+//            $scope.teams = $competition.teams.query({competitionId: id});
+        };
+
+        /**
+         * Checks if the selected competition is the same as the loaded competition
+         * @param {int} competitionId
+         * @returns {Boolean}
+         */
+        $scope.isSelected = function (file) {
+            return $scope.file.filename === file.filename;
+        };
+
 
         initEditor("editor");
+        //Subscribe to newsfeed
+        newsfeedService.subscribe(function (files) {
+            $scope.files = files;
+            $scope.file = files[0];
+            $scope.$apply();
+            console.log($scope.files);
+        });
+
         $workspace.folderStructure.save({competitionId: $routeParams.id});
 
         $scope.messages = newsfeedService.getMessages();
