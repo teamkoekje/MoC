@@ -64,9 +64,8 @@ controllers.service('newsfeedService', function () {
 
 });
 
-
 controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsfeedService', '$cookies', function ($scope, $translate, $user, newsfeedService, $cookies) {
-
+        $scope.loading = false;
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
             $cookies.language = langKey;
@@ -88,6 +87,7 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
          * If login is successful, a websocket is created and the user is redirected to the competitions page
          */
         $scope.login = function (username, password) {
+            $scope.loading = true;
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/login",
@@ -99,10 +99,12 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
                     withCredentials: true
                 }
             }).success(function (data) {
+                $scope.loading = false;
                 console.log("Logged in succesfully: " + username);
                 location.href = "#/competitions";
                 location.reload();
             }).error(function (data) {
+                $scope.loading = false;
                 console.log("Error while logging in");
                 console.log(data);
             });
@@ -112,6 +114,7 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
          * Logs out the current user and, if successful, sends the user to the login page
          */
         $scope.logout = function () {
+            $scope.loading = true;
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/logout",
@@ -119,10 +122,12 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
                     withCredentials: true
                 }
             }).success(function (data) {
+                $scope.loading = false;
                 console.log("Logged out succesfully");
                 location.href = "#/login";
                 location.reload();
             }).error(function (data) {
+                $scope.loading = false;
                 console.log("Error while logging out");
                 console.log(data);
             });
@@ -185,15 +190,20 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
          */
         $scope.register = function () {
             console.log("Create User");
+            $scope.loading = true;
             $scope.user.$save(function () {
+                $scope.loading = false;
                 $scope.showSuccesAlert = true;
+                $scope.showFailedAlert = false;
                 $scope.user = new $user.register();
                 setTimeout(function () {
                     location.href = "#/login";
                 }, 3000);
             }, function (data) {
                 console.log(data);
+                $scope.loading = false;
                 $scope.showFailedAlert = true;
+                $scope.showSuccesAlert = false;
                 $scope.error = data.data;
             });
         };
@@ -370,10 +380,12 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
             console.log("Create Team");
             console.log($scope.team);
             console.log($scope.team.competition.id);
+            $scope.loading = true;
             $scope.team.$save(function () {
                 location.href = "#/teams";
             });
             $scope.team = new $team.all();
+            $scope.loading = false;
         };
 
         /**
@@ -397,46 +409,43 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
             $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
                 $scope.showSuccesAlert = true;
+                $scope.showFailedAlert = false;
                 $scope.loading = false;
             }, function (data) {
-                $scope.showFailedAlert = true;
                 $scope.loading = false;
+                $scope.showSuccesAlert = false;
+                $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
         };
 
         $scope.searchUser = function () {
             var searchInput = $("#searchInput").val();
+            $scope.loading = true;
             $scope.foundUsers = $user.search.query({searchInput: searchInput});
+            $scope.loading = false;
             console.log($scope.foundUsers);
         };
 
 
         $scope.inviteExistingUser = function () {
             var email = $("#foundUserInput").val();
+            $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
                 $scope.showSuccesAlert = true;
             }, function (data) {
+                $scope.loading = false;
                 $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
         };
 
-
-        loading = function () {
-            console.log($scope.loading);
-            return $scope.loading;
-
-        };
-
         loadData = function () {
             $scope.foundUsers = $user.search.query({searchInput: ""});
-            $scope.loading = false;
         };
         loadData();
     }
 ]);
-
 
 controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams', 'newsfeedService',
     function ($scope, $workspace, $routeParams, newsfeedService) {
@@ -646,8 +655,8 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
                 new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
             });
         };
-        
-        
+
+
         /**
          * Load data of comptetition using id
          * @param {int} id
@@ -655,7 +664,7 @@ controllers.controller('competitionController', ['$scope', 'workspace', '$routeP
         $scope.selectFile = function (file) {
             console.log("Select file with path: " + file.filepath);
             $scope.file = file;
-            testfile = $workspace.file.save({competitionId: $routeParams.id, filePath: file.filepath}, function(){
+            testfile = $workspace.file.save({competitionId: $routeParams.id, filePath: file.filepath}, function () {
                 console.log("received file: " + testfile);
             });
 //            $scope.competition = $competition.all.get({competitionId: id});
