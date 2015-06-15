@@ -183,8 +183,8 @@ controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsf
     }
 
 ]);
-controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team','loadingService',
-    function ($scope, $routeParams, $user, $team, loadingService) {
+controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
+    function ($scope, $routeParams, $user, $team) {
         /**
          * Registers a user
          */
@@ -371,8 +371,8 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
         loadData();
     }
 ]);
-controllers.controller('newTeamController', ['$scope', 'competition', 'team', 'loadingService',
-    function ($scope, $competition, $team, loadingService) {
+controllers.controller('newTeamController', ['$scope', 'competition', 'team',
+    function ($scope, $competition, $team) {
         /**
          * Creates new team and redirects to team page if successful
          */
@@ -398,8 +398,8 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team', 'l
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams', 'loadingService',
-    function ($scope, $team, $user, $routeParams, loadingService) {
+controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams',
+    function ($scope, $team, $user, $routeParams) {
         /**
          * Creates an invite for the given email address
          */
@@ -407,7 +407,6 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
             // TODO: replace following line using Angular (instead of jQuery)
             var email = $("#emailInput").val();
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
-                loadingService.setLoading(true);
                 $scope.showSuccesAlert = true;
                 $scope.showFailedAlert = false;
                 $scope.loading = false;
@@ -434,7 +433,6 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
             var email = $("#foundUserInput").val();
             $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
-                loadingService.setLoading(true);
                 $scope.showSuccesAlert = true;
             }, function (data) {
                 $scope.loading = false;
