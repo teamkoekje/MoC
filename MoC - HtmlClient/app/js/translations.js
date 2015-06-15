@@ -312,3 +312,81 @@ var translationsFI = {
   BUTTON_LANG_EN: 'Englanniksi',
   BUTTON_LANG_FI: 'Suomeksi'
 };
+
+
+// Translation by Artem Smirnov aka EvilChaosKnight/DSF66
+var translationsRU = { 
+  USERNAME: 'Имя пользователя',
+  NEW_USER: 'Новый пользователь',
+  EXISTING_USER: 'Существующий пользователь',
+  INVALID_USER: 'Неправильное имя пользователя',
+  HINTS: 'Подсказки',
+  MESSAGES: 'Сообщения',
+  MINUTS_LEFT: '- оставшееся время',
+ 
+  BACK: 'Назад',
+  NEW: 'Создать',
+  PASSWORD: 'Пароль',
+  REGISTER: 'Зарегистрироваться',
+  LOGIN: 'Войти',
+  LOGOUT: 'Выйти',
+  LOGGED_IN_AS: 'Вы вошли как',
+  COMPETITION: 'Соревнование',
+  COMPETITIONS: 'Соревнования',
+ 
+  INVITE: 'Пригласить',
+  INVITATIONS: 'Приглашения',
+  NO_INVITE: 'В данный момент вы не приглашены ни в одну из команд.',
+ 
+  ORGANISATION: 'Название организации',
+ 
+  MYTEAMS: 'Мои команды',
+  TEAMS: 'Команды',
+  NO_TEAMS: 'В данное соревнование ещё не была добавлена ни одна команда.',
+  NEW_TEAM: 'Создать свою команду',
+  TEAM_NAME: 'Имя команды',
+  CREATE_TEAM: 'Создать команду',
+  ADD_TEAM_MEMBER: 'Добавить члена команды',
+  ADD_NEW_TEAM_MEMBER: 'Зарегистрировать нового члена команды',
+  TEAM_INFO: 'Информация о команде',
+  TEAM_OWNER: 'Владелец команды',
+  TEAM_MEMBER: 'Члены команды',
+ 
+  OWNER: 'Владелец',
+  POINTS: 'Очки',
+  NAME: 'Имя',
+  DATE: 'Дата',
+  SUCCES: 'Успех',
+  OOPS: 'Неудача',
+  STATUS: 'Статус',
+ 
+  EMAIL_SEND: 'Письмо было отправлено, пользователь приглашён в команду.',
+  EMAIL_ERROR: 'Что-то пошло не так при попытке пригласить пользователя.',
+  EMAIL_SUCCES_REGISTER: 'Письмо было отправлено, перейдите по ссылке в письме для активации своей учётной записи.',
+  EMAIL_ERROR_REGISTER: 'При попытке регистрации учётной записи произошла ошибка.',
+ 
+  DIFFICULTY: 'Сложность',
+  STARTS_AT: 'Начинается с',
+  START_CODING: 'Начинайте работу!',
+  VARIABLE_REPLACEMENT: 'Здравствуй, {{name}},',
+ 
+  ACTIVE_COMPETITIONS: 'Текущие соревнования',
+  NO_ACTIVE_COMPETITIONS: 'В данный момент не проводится каких-либо соревнований',
+ 
+  FUTURE_COMPETITIONS: 'Будущие соревнования',
+  NO_FUTURE_COMPETITIONS: 'В данный момент соревнований не запланировано.',
+  COMPETITION_INFO: 'Информация о соревнованиях',
+ 
+  CHALLENGES: 'Испытания',
+  NO_CHALLENGE: 'К данному соревнованию пока не было добавлено никаких испытаний.',
+ 
+  INVITE_USERS: 'Пригласить пользователей',
+  SEARCH_USERS: 'Найти пользователя',
+ 
+  RUN_TEST: 'Запустить проверку',
+  RUN_SPECIFIC_TEST: 'Запустить определённую проверку',
+  RUN_ALL_TEST: 'Запустить все возможные проверки',
+  COMPILE: 'Скомпилировать',
+  SHOW_HIDE_RESULT: 'Показать/скрыть результаты',
+  FULLSCREEN: 'Полный экран'
+};
