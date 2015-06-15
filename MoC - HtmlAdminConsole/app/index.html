@@ -29,17 +29,19 @@
 
         <div class="container theme-showcase" role="main">
             <div class="page-header" ng-controller="loginController">
-                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">{{"LOGIN" | translate}}</a>
+                <a href="#login" ng-if="!isLoggedIn()" class="btn btn-lg btn-link" style="float:right">{{"LOGIN"| translate}}</a>
                 <div ng-if="isLoggedIn()" style="float:right">
                     {{ "LOGGED_IN_AS" | translate}}: <b>{{username}} </b>
-                    <a ng-click="logout()" class="btn btn-lg btn-link">{{"LOGOUT" | translate}}</a>
+                    <a ng-click="logout()" class="btn btn-lg btn-link">{{"LOGOUT"| translate}}</a>
                 </div>
                 <h1>Masters of Code admin</h1>
                 <br>
-                <button ng-click="changeLanguage('nl')" translate="BUTTON_LANG_NL"></button>
-                <button ng-click="changeLanguage('en')" translate="BUTTON_LANG_EN"></button>
-                <button ng-click="changeLanguage('fi')" translate="BUTTON_LANG_FI"></button>
-                <button ng-click="changeLanguage('pl')" translate="BUTTON_LANG_PL"></button>
+                <img ng-click="changeLanguage('nl')" src="images/nl.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('en')" src="images/en.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('fi')" src="images/fi.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('pl')" src="images/pl.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('de')" src="images/de.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('ru')" src="images/ru.png" style="cursor: pointer"/>
             </div>
 
             <div ng-view></div>

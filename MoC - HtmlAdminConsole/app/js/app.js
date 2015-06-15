@@ -50,6 +50,7 @@ app.config(['$translateProvider', function ($translateProvider) {
   $translateProvider.translations('nl', translationsNL);
   $translateProvider.translations('fi', translationsFI);
   $translateProvider.translations('pl', translationsPL);
+  $translateProvider.translations('ru', translationsRU);
   $translateProvider.preferredLanguage('en');
   $translateProvider.fallbackLanguage('en');
   $translateProvider.useSanitizeValueStrategy('escaped');
