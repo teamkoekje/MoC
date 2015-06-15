@@ -102,6 +102,7 @@ public class FileManagement {
             Path file = Paths.get(filePath);
             String filecontent = new String(Files.readAllBytes(file));
             jsonObjectBuilder.add("filecontent", filecontent);
+            jsonObjectBuilder.add("filename", file.getFileName().toString());
             jsonObjectBuilder.add("editable", isFileEditable(filePath));
         } catch (IOException ex) {
             Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);

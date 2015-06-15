@@ -180,14 +180,14 @@ public class BrokerGateway implements IRequestListener<Request> {
                         + File.separator
                         + folderStructureRequest.getChallengeName()
                         + ".jar";
-                return new NormalReply("{\"filestructure\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
+                return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId()))
                         + File.separator
                         + fileRequest.getChallengeName()
                         + ".jar";
-                return new NormalReply(FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()));
+                return new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             default:
