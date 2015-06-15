@@ -17,6 +17,10 @@ public class NewsItem {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+    
+    public String getTimestamp(){
+        return this.timestamp;
+    }
 
     public String getContent() {
         return content;

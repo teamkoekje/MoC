@@ -1,6 +1,6 @@
 package domain.Events;
 
-import domain.Hint;
+import domain.enums.EventType;
 import domain.NewsItem;
 
 /**

@@ -1,11 +1,13 @@
 package domain;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import domain.enums.RoundState;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.MessageReleasedEvent;
 import domain.Events.RoundEndedEvent;
+import domain.enums.CompetitionState;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +16,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -29,6 +33,9 @@ import javax.xml.bind.annotation.XmlAttribute;
  * @author TeamKoekje
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "Competition.findActive",
+            query = "SELECT comp FROM Competition comp WHERE comp.competitionState = :state")})
 public class Competition implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
@@ -59,7 +66,10 @@ public class Competition implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Round currentRound;
 
-    //</editor-fold>    
+    private CompetitionState competitionState;
+
+    //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Competition() {
     }
@@ -70,6 +80,7 @@ public class Competition implements Serializable {
         this.startTime = startingTime;
         this.endTime = endTime;
         this.location = location;
+        this.competitionState = CompetitionState.NOT_STARTED;
     }
     //</editor-fold>    
 
@@ -162,6 +173,25 @@ public class Competition implements Serializable {
         }
         return null;
     }
+
+    /**
+     * Gets the CompetitionState of this Competition.
+     *
+     * @return A CompetitionState object indicating the state of this
+     * Competition.
+     */
+    public CompetitionState getCompetitionState() {
+        return this.competitionState;
+    }
+
+    /**
+     * Sets the competitionState to the specified state
+     *
+     * @param competitionState The new state of the competition.
+     */
+    protected void setCompetitionState(CompetitionState competitionState) {
+        this.competitionState = competitionState;
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
@@ -182,6 +212,7 @@ public class Competition implements Serializable {
                             //oterwise, tell the calling service the entire competition has ended
                         } else {
                             currentRound = null;
+                            competitionState = CompetitionState.ENDED;
                             ArrayList<CompetitionEvent> temp = new ArrayList<>();
                             temp.add(new CompetitionEndedEvent(this));
                             return temp;
@@ -213,7 +244,9 @@ public class Competition implements Serializable {
      * @param time time in seconds allowed for completing the challenge
      */
     public void addChallenge(Challenge challenge, int time) {
-        rounds.add(new Round(challenge, time));
+        Round r = new Round(challenge, time);
+        r.setRoundOrder(rounds.size());
+        rounds.add(r);
     }
 
     /**
@@ -256,7 +289,6 @@ public class Competition implements Serializable {
      */
     public void removeTeam(Team team) {
         teams.remove(team);
-
     }
 
     /**
@@ -294,15 +326,17 @@ public class Competition implements Serializable {
      * NOT_STARTED or there are no rounds to start.
      */
     public void startNextRound() throws IllegalStateException {
-        if (rounds.size() > 0) {
-            if (currentRound == null) {
-                if (rounds.get(rounds.size() - 1).getRoundState() == RoundState.NOT_STARTED) {
+        switch (competitionState) {
+            case NOT_STARTED:
+                if (rounds.size() > 0) {
                     currentRound = rounds.get(0);
                     currentRound.start();
+                    competitionState = CompetitionState.ONGOING;
                 } else {
-                    throw new IllegalStateException("Can't start the first round as the Competition is already over.");
+                    throw new IllegalStateException("Can't start the first round as there are no rounds defined in the competition");
                 }
-            } else {
+                break;
+            case ONGOING:
                 if (currentRound.getRoundState() == RoundState.NOT_STARTED) {
                     currentRound.start();
                 } else {
@@ -310,9 +344,11 @@ public class Competition implements Serializable {
                             "Can't start the current round as it's state is not NOT_STARTED, current state: "
                             + currentRound.getRoundState());
                 }
-            }
-        } else {
-            throw new IllegalStateException("Can't start the first round as there are no rounds defined in the competition");
+                break;
+            case ENDED:
+                throw new IllegalStateException("Can't start the first round as the Competition is already over.");
+            default:
+                throw new AssertionError(competitionState.name());
         }
     }
     //</editor-fold>

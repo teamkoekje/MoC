@@ -1,4 +1,4 @@
-package domain.Events;
+package domain.enums;
 
 public enum EventType {
 
