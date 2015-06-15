@@ -1,4 +1,4 @@
-package domain;
+package domain.enums;
 
 /**
  * Enum indicating the state of a round.

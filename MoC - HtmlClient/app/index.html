@@ -22,7 +22,9 @@
 
     </head>
     <body role="document">
-
+        <div class="loadOverlay" ng-show="loading">
+            <div class="loadGif"></div>
+        </div>
         <div class="container theme-showcase" role="main" ng-controller="mainController">
             <div class="page-header">
                 <img ng-click="changeLanguage('nl')" src="images/nl.png"/>

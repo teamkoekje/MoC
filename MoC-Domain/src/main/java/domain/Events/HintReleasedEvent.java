@@ -1,5 +1,6 @@
 package domain.Events;
 
+import domain.enums.EventType;
 import domain.Hint;
 
 /**

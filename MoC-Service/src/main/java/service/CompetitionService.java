@@ -1,5 +1,6 @@
 package service;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.Competition;
 import domain.Events.CompetitionEndedEvent;
 import domain.Events.CompetitionEvent;
@@ -7,6 +8,8 @@ import domain.Events.HintReleasedEvent;
 import domain.Events.MessageReleasedEvent;
 import domain.Events.RoundEndedEvent;
 import domain.Events.UpdateEvent;
+import domain.enums.CompetitionState;
+import domain.enums.EventType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,14 +22,19 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import websocket.WebsocketEndpoint;
+// </editor-fold>
 
 @Singleton
 @Startup
 public class CompetitionService extends GenericService<Competition> {
 
-    private List<Competition> competitions = new ArrayList<>();
+    // <editor-fold defaultstate="collapsed" desc="variables" >
     private Timer timer;
+
+    private List<Competition> activeCompetitions = new ArrayList<>();
+    private List<Competition> futureCompetitions = new ArrayList<>();
 
     @Inject
     @Any
@@ -34,19 +42,73 @@ public class CompetitionService extends GenericService<Competition> {
 
     @Inject
     private WebsocketEndpoint we;
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
     public CompetitionService() {
         super(Competition.class);
     }
 
+    @PostConstruct
+    private void init() {
+        System.out.println("Init of competitionService");
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
+    }
+
+    private class CompetitionUpdateTask extends TimerTask {
+
+        @Override
+        public void run() {
+            competitionEvent.fire(new UpdateEvent());
+        }
+    }
+
+    public void loadComps() {
+        System.out.println("Loading competitions...");
+        List<Competition> competitions = findAll();
+        System.out.println("Total competitions: " + competitions.size());
+        Query q = em.createNamedQuery("Competition.findActive");
+        q.setParameter("state", CompetitionState.ONGOING);
+        activeCompetitions = (List<Competition>) q.getResultList();
+        System.out.println("Active competitions: " + activeCompetitions.size());
+
+        futureCompetitions = new ArrayList();
+        for (Competition c : competitions) {
+            if (c.getCompetitionState() == CompetitionState.NOT_STARTED) {
+                futureCompetitions.add(c);
+            }
+        }
+        System.out.println("Not-started competitions: " + futureCompetitions.size());
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >    
+    public List<Competition> getActiveCompetitions() {
+        return activeCompetitions;
+    }
+
+    public List<Competition> getFutureCompetitions() {
+        return futureCompetitions;
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Methods" >
     public void HandleEvent(@Observes CompetitionEvent event) {
         switch (event.getType()) {
             case UPDATE:
-                for (Competition c : findAll()) {
+                List<Competition> competitionsToRemove = new ArrayList<>();
+                for (Competition c : activeCompetitions) {
                     for (CompetitionEvent e : c.update()) {
-                        competitionEvent.fire(e);
+                        if (e.getType() == EventType.COMPETITION_ENDED) {
+                            CompetitionEndedEvent cee = (CompetitionEndedEvent)e;
+                            competitionsToRemove.add(cee.getCompetition());
+                        } else {
+                            competitionEvent.fire(e);
+                        }
                     }
                 }
+                activeCompetitions.removeAll(competitionsToRemove);
                 break;
             case ROUND_ENDED:
                 RoundEndedEvent ree = (RoundEndedEvent) event;
@@ -54,7 +116,8 @@ public class CompetitionService extends GenericService<Competition> {
                 break;
             case COMPETITION_ENDED:
                 CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
-                competitions.remove(cee.getCompetition());
+                //test or when competition ends this works, if it is retrieved from the databse it may have another memmory adddress, so remove wont remove it.
+                boolean result = activeCompetitions.remove(cee.getCompetition());
                 this.edit(cee.getCompetition());
                 break;
             case HINT_RELEASED:
@@ -70,53 +133,32 @@ public class CompetitionService extends GenericService<Competition> {
         }
     }
 
-    private class CompetitionUpdateTask extends TimerTask {
-
-        @Override
-        public void run() {
-            competitionEvent.fire(new UpdateEvent());
-        }
-    }
-
-    @PostConstruct
-    private void init() {
-        System.out.println("Init of competitionService");
-        competitions = findAll();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
-    }
-
-    public void loadComps() {
-
-        competitions = findAll();
-    }
-
-    public List<Competition> getActiveCompetitions() {
-        List<Competition> activeCompetitions = new ArrayList();
-        for (Competition c : findAll()) {
-            if (c.getCurrentRound() != null) {
+    public void replaceActiveCompetition(Competition c) {
+        for (Competition ac : activeCompetitions) {
+            if (c.getId() == ac.getId()) {
+                activeCompetitions.remove(ac);
                 activeCompetitions.add(c);
-            } else {
-                //empty round. so its not an active competition
+                return;
             }
         }
-        return activeCompetitions;
     }
 
-    public List<Competition> geFutureCompetitions() {
-        List<Competition> futureCompetitions = new ArrayList();
-        Date currentDate = new Date();
-        currentDate.setTime(System.currentTimeMillis());
+    public void addActiveCompetition(Competition c) {
+        activeCompetitions.add(c);
+        futureCompetitions.remove(c);
+    }
 
-        for (Competition c : findAll()) {
-            if (c.getCompetitionDate().after(currentDate) && c.getCurrentRound() == null) {
-                futureCompetitions.add(c);
-            } else {
-                //date is before today. so its not an future competition
+    public void addFutureCompetition(Competition c) {
+        futureCompetitions.add(c);
+    }
+
+    public void removeFutureCompetition(Competition c) {
+        for (Competition fc : futureCompetitions) {
+            if (fc.getId() == c.getId()) {
+                futureCompetitions.remove(fc);
+                return;
             }
         }
-
-        return futureCompetitions;
     }
-
+    // </editor-fold>
 }

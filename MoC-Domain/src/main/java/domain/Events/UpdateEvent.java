@@ -1,5 +1,7 @@
 package domain.Events;
 
+import domain.enums.EventType;
+
 public class UpdateEvent extends CompetitionEvent {
 
     public UpdateEvent() {

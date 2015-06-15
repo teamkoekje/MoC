@@ -1,5 +1,6 @@
 package domain;
 
+import domain.enums.RoundState;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
