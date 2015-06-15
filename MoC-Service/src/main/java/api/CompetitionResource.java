@@ -1,10 +1,11 @@
 package api;
 
+// <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.Challenge;
 import domain.Competition;
 import domain.Round;
 import domain.Team;
-import domain.User;
+import domain.enums.CompetitionState;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -14,12 +15,12 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 import service.CompetitionService;
 import service.InvitationService;
 import service.RoundService;
 import service.TeamService;
 import service.UserService;
+// </editor-fold>
 
 /**
  * API used to manage competitions, round and teams
@@ -29,6 +30,7 @@ import service.UserService;
 @Path("competition")
 public class CompetitionResource {
 
+    // <editor-fold defaultstate="collapsed" desc="variables" >
     @Inject
     private CompetitionService competitionService;
 
@@ -43,6 +45,7 @@ public class CompetitionResource {
 
     @Inject
     private UserService userService;
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
@@ -67,7 +70,7 @@ public class CompetitionResource {
     @Produces("application/xml,application/json")
     @Path("/future")
     public List<Competition> getFutureCompetitions() {
-        return competitionService.geFutureCompetitions();
+        return competitionService.getFutureCompetitions();
     }
 
     /**
@@ -92,6 +95,7 @@ public class CompetitionResource {
     @Consumes("application/xml,application/json")
     public void createCompetition(Competition competition) {
         competitionService.create(competition);
+        competitionService.addFutureCompetition(competition);
     }
 
     /**
@@ -115,6 +119,7 @@ public class CompetitionResource {
     @Path("/{competitionId}")
     public void removeCompetition(@PathParam("competitionId") Long competitionId) {
         competitionService.remove(competitionId);
+        competitionService.removeFutureCompetition(competitionService.findById(competitionId));
     }
     //</editor-fold>
 
@@ -206,8 +211,22 @@ public class CompetitionResource {
     @Path("/{competitionId}/start")
     public void startRound(@PathParam("competitionId") long competitionId) {        
         Competition c = competitionService.findById(competitionId);
+        if(c.getCompetitionState() == CompetitionState.NOT_STARTED && c.getRounds().size() > 0){
+            competitionService.addActiveCompetition(c);
+            competitionService.removeFutureCompetition(c);
+        }
+        
+        boolean ongoing;
+        if(c.getCompetitionState() == CompetitionState.ONGOING){
+            ongoing = true;
+        }else{
+            ongoing = false;
+        }
         c.startNextRound();
         competitionService.edit(c);
+        if (ongoing){
+            competitionService.replaceActiveCompetition(c);
+        }
     }
     //</editor-fold>
 }

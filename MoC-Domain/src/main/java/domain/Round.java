@@ -1,6 +1,7 @@
 package domain;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import domain.enums.RoundState;
 import domain.Events.CompetitionEvent;
 import domain.Events.HintReleasedEvent;
 import domain.Events.RoundEndedEvent;
@@ -54,20 +55,7 @@ public class Round implements Serializable {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    protected Round() {
-        init();
-        challenge = null;
-        duration = -1;
-    }
-
-    public Round(Challenge challenge) {
-        if (challenge == null) {
-            throw new IllegalArgumentException("Challenge can't be null");
-        }
-        init();
-        this.challenge = challenge;
-        this.duration = challenge.getSuggestedDuration();
-    }
+    protected Round() {}
 
     public Round(Challenge challenge, long roundTime) {
         if (challenge == null) {
@@ -170,16 +158,11 @@ public class Round implements Serializable {
      * @return A RoundState object indicating the state of this Round.
      */
     public RoundState getRoundState() {
-        return roundState;
+        return this.roundState;
     }
-
-    /**
-     * Sets the roundState to the specified state
-     *
-     * @param roundState The new state of the round.
-     */
-    protected void setRoundState(RoundState roundState) {
-        this.roundState = roundState;
+    
+    public void setRoundSate(RoundState state){
+        this.roundState = state;
     }
 
     /**

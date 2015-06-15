@@ -146,6 +146,8 @@ public class BrokerGateway implements IRequestListener<Request> {
      * @return A reply respective to the original request.
      */
     private Reply handleRequest(Request r) {
+        String jarPath;
+        String folderPath;
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
@@ -170,23 +172,22 @@ public class BrokerGateway implements IRequestListener<Request> {
                 return new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
             case FOLDER_STRUCTURE:
                 FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                String folderPath = pathInstance.teamChallengePath(
+                folderPath = pathInstance.teamChallengePath(
                         Long.toString(folderStructureRequest.getCompetitionId()),
                         folderStructureRequest.getTeamName(),
                         folderStructureRequest.getChallengeName());
-                String jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
+                jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
                         + File.separator
                         + folderStructureRequest.getChallengeName()
                         + ".jar";
                 return new NormalReply("{\"filestructure\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
-                String jarPathForFile = pathInstance.teamChallengePath(
-                        Long.toString(fileRequest.getCompetitionId()),
-                        fileRequest.getTeamName(),
-                        fileRequest.getChallengeName())
-                        + File.separator + fileRequest.getChallengeName() + ".jar";
-                return new NormalReply(FileManagement.getInstance(jarPathForFile).getFileContentJSON(fileRequest.getFilepath()));
+                jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId()))
+                        + File.separator
+                        + fileRequest.getChallengeName()
+                        + ".jar";
+                return new NormalReply(FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()));
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             default:

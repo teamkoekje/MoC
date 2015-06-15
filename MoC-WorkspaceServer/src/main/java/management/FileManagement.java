@@ -33,17 +33,18 @@ public class FileManagement {
     private Map<String, Set<String>> annotationIndex;
     private ArrayList<String> editables;
     //</editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
     private static final Map<String, FileManagement> fileManagers = new HashMap<>();
+
     /**
      * Get an instance of FileManagement
      *
      * @param filepath Path to the .jar of the challenge
      * @return A FileManagement instance
      */
-    public static FileManagement getInstance(String filepath){
-        if(fileManagers.get(filepath) != null){
+    public static FileManagement getInstance(String filepath) {
+        if (fileManagers.get(filepath) != null) {
             return fileManagers.get(filepath);
         } else {
             fileManagers.put(filepath, new FileManagement(filepath));
@@ -124,6 +125,7 @@ public class FileManagement {
             } else if (isVisible(f.getName()) || f.getName().endsWith(".html")) {
                 JsonObjectBuilder job = Json.createObjectBuilder();
                 job.add("filename", f.getName());
+                job.add("filepath", f.getAbsolutePath());
                 job.add("editable", isFileEditable(f.getName()));
                 jsonArrayBuilder.add(job);
             }

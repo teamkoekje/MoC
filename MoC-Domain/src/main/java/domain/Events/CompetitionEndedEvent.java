@@ -1,5 +1,6 @@
 package domain.Events;
 
+import domain.enums.EventType;
 import domain.Competition;
 
 public class CompetitionEndedEvent extends CompetitionEvent {

@@ -162,6 +162,26 @@ public class WorkspaceResource {
             return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
         }
     }
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{competitionId}/file/{filePath}")
+    public Response file(@PathParam("competitionId") long competitionId, @PathParam("filePath") String filePath) {
+        Competition competition = competitionService.findById(competitionId);
+        if (competition != null && competition.getCurrentRound() != null) {
+            Team team = competition.getTeamByUsername(request.getRemoteUser());
+            Challenge challenge = competition.getCurrentRound().getChallenge();
+            if (team != null) {
+                String messageId = workspaceService.file(competitionId, challenge.getName(), team.getName(), filePath);
+                workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
+                return Response.ok("File content is being request being generated").build();
+            } else {
+                return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
+            }
+        } else {
+            return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
+        }
+    }
+    
 
     //</editor-fold>
 }

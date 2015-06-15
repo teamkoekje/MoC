@@ -1,7 +1,6 @@
 package service;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,7 +35,6 @@ import workspace.Requests.TestRequest;
 import workspace.Requests.UpdateRequest;
 
 // </editor-fold>
-
 /**
  * Service class used to manage users
  *
@@ -49,7 +47,7 @@ public class WorkspaceService {
     private WorkspaceGateway gateway;
 
     private final HashMap<String, String> requests = new HashMap<>();
-    
+
     private int numberOfBroadcastMessages;
     private SysInfoAggregate sia;
 
@@ -102,12 +100,12 @@ public class WorkspaceService {
     }
 
     public String delete(long competitionId, String teamName) {
-       return gateway.deleteWorkspace(new DeleteRequest(competitionId, teamName));
+        return gateway.deleteWorkspace(new DeleteRequest(competitionId, teamName));
     }
 
     public String update(long competitionId, String teamName, String filePath, String fileContent) {
         System.out.println("Updating file: " + filePath + " with content: " + fileContent);
-                
+
         return gateway.sendRequestToTeam(new UpdateRequest(competitionId, teamName, filePath, fileContent));
     }
 
@@ -140,8 +138,9 @@ public class WorkspaceService {
         return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
 
-    public void file(long competitionId, String teamName, String challengeName, String filePath) {
-        gateway.sendRequestToTeam(new FileRequest(competitionId, teamName, challengeName, filePath));
+    public String file(long competitionId, String challengeName, String teamName, String filePath) {
+        System.out.println("Get file content: " + filePath);
+        return gateway.sendRequestToTeam(new FileRequest(competitionId, teamName, challengeName, filePath));
     }
 
     public void sysInfo(String username) {

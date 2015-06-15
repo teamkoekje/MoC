@@ -51,20 +51,8 @@ public class WebsocketEndpoint {
 
     public void sendToUser(String msg, String username) {
         System.out.println("Sending message to: " + username);
-        System.out.println("A");
         Session s = peers.get(username);
-        System.out.println("B");
         Async b = s.getAsyncRemote();
-        System.out.println("C");
         b.sendText(msg);
-        System.out.println("D");
-        
-        
-        
-        /*System.out.println(s.toString());
-        Async a = s.getAsyncRemote();
-        System.out.println("temp");
-        a.sendText(msg);
-        System.out.println("Message sent to user: " + username);*/
     }
 }

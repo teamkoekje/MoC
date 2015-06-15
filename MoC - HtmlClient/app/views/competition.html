@@ -16,9 +16,10 @@
         {{minutes}} {{ "MINUTS_LEFT" | translate }} | {{points}} {{ "POINTS" | translate }}
     </h3>
     <div>
-        <ul class="nav nav-tabs" role="tablist" ng-repeat="file in files">
-            <li role="presentation" class="active" ng-click="selectFile(file.filename)">file.filename</li>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-class="{active : isSelected(file)}" ng-repeat="file in files"><a ng-click="selectFile(file)" style="cursor:pointer;">{{file.filename}}</a></li>
         </ul>
+
         <!--        <div class="row" style="margin-left:0px">
                     <button class="btn btn-default">Description</button>
                     <button class="btn btn-default">JavaDoc</button>
@@ -77,7 +78,7 @@
         <br>
         <div class="row">
             <div class="col-xs-2">
-                <button class="btn btn-default" ng-click="toggleTests();">{{"RUN_SPECIFIC_TEST" | translate}}</button>
+                <button class="btn btn-default" ng-click="toggleTests();">{{"RUN_SPECIFIC_TEST"| translate}}</button>
             </div>
             <div class="col-xs-2">
                 <button class="btn btn-default" ng-click="testAll()">{{ "RUN_ALL_TEST" | translate}}</button>

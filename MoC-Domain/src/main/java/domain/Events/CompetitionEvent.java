@@ -1,5 +1,7 @@
 package domain.Events;
 
+import domain.enums.EventType;
+
 /**
  * Base class for events that occur within the domain. has an EventType to
  * indicate which type of event it is, so that it can easily be casted to the
