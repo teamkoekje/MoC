@@ -53,8 +53,22 @@ controllers.service('newsfeedService', function () {
 
 });
 
+controllers.service('loadingService', function () {
+    var loading = [];
 
-controllers.controller('mainController', ['$scope', '$translate','user', 'newsfeedService', '$cookies', function ($scope, $translate, $user, newsfeedService, $cookies) {
+    var getLoading = function () {
+        return loading;
+    };
+    var setLoading = function (loading) {
+        this.loading = loading;
+    };
+    return {
+        getLoading: getLoading,
+        setLoading: setLoading
+    };
+});
+
+controllers.controller('mainController', ['$scope', '$translate', 'user', 'newsfeedService', '$cookies', 'loadingService', function ($scope, $translate, $user, newsfeedService, $cookies, loadingService) {
 
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
@@ -77,6 +91,7 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
          * If login is successful, a websocket is created and the user is redirected to the competitions page
          */
         $scope.login = function (username, password) {
+            loadingService.setLoading(true);
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/login",
@@ -88,10 +103,12 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
                     withCredentials: true
                 }
             }).success(function (data) {
+                loadingService.setLoading(false);
                 console.log("Logged in succesfully: " + username);
                 location.href = "#/competitions";
                 location.reload();
             }).error(function (data) {
+                loadingService.setLoading(false);
                 console.log("Error while logging in");
                 console.log(data);
             });
@@ -101,6 +118,7 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
          * Logs out the current user and, if successful, sends the user to the login page
          */
         $scope.logout = function () {
+            loadingService.setLoading(true);
             $.ajax({
                 type: "POST",
                 url: "http://localhost:8080/MoC-Service/api/user/logout",
@@ -108,10 +126,12 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
                     withCredentials: true
                 }
             }).success(function (data) {
+                loadingService.setLoading(false);
                 console.log("Logged out succesfully");
                 location.href = "#/login";
                 location.reload();
             }).error(function (data) {
+                loadingService.setLoading(false);
                 console.log("Error while logging out");
                 console.log(data);
             });
@@ -136,12 +156,12 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
                     newsfeedService.setFiles(result.filestructure);
                 }
             };
-            ws.onclose = function(){
+            ws.onclose = function () {
                 console.log("closing websocket");
                 return false;
             };
         };
-        
+
         openWebsocket();
 
         $scope.messages = [];
@@ -165,14 +185,16 @@ controllers.controller('mainController', ['$scope', '$translate','user', 'newsfe
     }
 
 ]);
-controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
-    function ($scope, $routeParams, $user, $team) {
+controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team','loadingService',
+    function ($scope, $routeParams, $user, $team, loadingService) {
         /**
          * Registers a user
          */
         $scope.register = function () {
             console.log("Create User");
+            loadingService.setLoading(true);
             $scope.user.$save(function () {
+                loadingService.setLoading(false);
                 $scope.showSuccesAlert = true;
                 $scope.user = new $user.register();
                 setTimeout(function () {
@@ -180,6 +202,7 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
                 }, 3000);
             }, function (data) {
                 console.log(data);
+                loadingService.setLoading(false);
                 $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
@@ -348,8 +371,8 @@ controllers.controller('teamsController', ['$scope', '$cookies', 'team', 'user',
         loadData();
     }
 ]);
-controllers.controller('newTeamController', ['$scope', 'competition', 'team',
-    function ($scope, $competition, $team) {
+controllers.controller('newTeamController', ['$scope', 'competition', 'team', 'loadingService',
+    function ($scope, $competition, $team, loadingService) {
         /**
          * Creates new team and redirects to team page if successful
          */
@@ -357,10 +380,12 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
             console.log("Create Team");
             console.log($scope.team);
             console.log($scope.team.competition.id);
+            loadingService.setLoading(true);
             $scope.team.$save(function () {
                 location.href = "#/teams";
             });
             $scope.team = new $team.all();
+            loadingService.setLoading(false);
         };
 
         /**
@@ -373,28 +398,29 @@ controllers.controller('newTeamController', ['$scope', 'competition', 'team',
         loadData();
     }
 ]);
-controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams',
-    function ($scope, $team, $user, $routeParams) {
+controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$routeParams', 'loadingService',
+    function ($scope, $team, $user, $routeParams, loadingService) {
         /**
          * Creates an invite for the given email address
          */
         $scope.inviteUser = function () {
             // TODO: replace following line using Angular (instead of jQuery)
             var email = $("#emailInput").val();
-            $scope.loading = true;
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
+                loadingService.setLoading(true);
                 $scope.showSuccesAlert = true;
-                $scope.loading = false;
             }, function (data) {
+                loadingService.setLoading(false);
                 $scope.showFailedAlert = true;
-                $scope.loading = false;
                 $scope.error = data.data;
             });
         };
 
         $scope.searchUser = function () {
             var searchInput = $("#searchInput").val();
+            loadingService.setLoading(true);
             $scope.foundUsers = $user.search.query({searchInput: searchInput});
+            loadingService.setLoading(false);
             console.log($scope.foundUsers);
         };
 
@@ -402,28 +428,41 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
         $scope.inviteExistingUser = function () {
             var email = $("#foundUserInput").val();
             $team.invite.save({teamId: $routeParams.teamid}, email, function () {
+                loadingService.setLoading(true);
                 $scope.showSuccesAlert = true;
             }, function (data) {
+                loadingService.setLoading(false);
                 $scope.showFailedAlert = true;
                 $scope.error = data.data;
             });
         };
 
 
-        loading = function () {
-            console.log($scope.loading);
-            return $scope.loading;
 
-        };
 
         loadData = function () {
             $scope.foundUsers = $user.search.query({searchInput: ""});
-            $scope.loading = false;
         };
         loadData();
     }
 ]);
 
+
+controllers.controller('loadController', ['$scope', 'loadingService',
+    function ($scope, loadingService) {
+
+        loading = function () {
+            console.log(loadingService.getLoading());
+            return loadingService.getLoading();
+
+        };
+
+        loadData = function () {
+            $scope.loading = loadingService.setLoading(false);
+        };
+        loadData();
+    }
+]);
 
 controllers.controller('competitionController', ['$scope', 'workspace', '$routeParams', 'newsfeedService',
     function ($scope, $workspace, $routeParams, newsfeedService) {

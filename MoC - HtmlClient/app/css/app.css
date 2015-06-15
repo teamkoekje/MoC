@@ -30,5 +30,5 @@ form input:not([type="submit"]){
     bottom:0;
     position:absolute;
     margin:auto;
-    background-image:url('http://cdn.satmarin.com/images/loading.gif');
+    background-image:url('../images/spinner.gif');
 }
