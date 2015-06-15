@@ -405,10 +405,8 @@ controllers.controller('inviteUserController', ['$scope', 'team', 'user', '$rout
                 $scope.loading = false;
             }, function (data) {
                 $scope.loading = false;
-                $scope.showSuccesAlert = false;
-            }, function (data) {
-                $scope.loading = false;
                 $scope.showFailedAlert = true;
+                $scope.showSuccesAlert = false;
                 $scope.error = data.data;
             });
         };
