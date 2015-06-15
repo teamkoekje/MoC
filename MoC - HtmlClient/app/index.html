@@ -16,24 +16,24 @@
         <link rel="stylesheet" href="css/app.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-        
+
         <!--SCRIPTS -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
     </head>
     <body role="document">
-        <div class="loadOverlay" ng-show="loading">
-            <div class="loader"></div>
-        </div>
         <div class="container theme-showcase" role="main" ng-controller="mainController">
+            <div class="loadOverlay" ng-show="loading">
+                <div class="loader"></div>
+            </div>
             <div class="page-header">
-                <img ng-click="changeLanguage('nl')" src="images/nl.png"/>
-                <img ng-click="changeLanguage('en')" src="images/en.png"/>
-                <img ng-click="changeLanguage('fi')" src="images/fi.png"/>
-                <img ng-click="changeLanguage('pl')" src="images/pl.png"/>
-                <img ng-click="changeLanguage('de')" src="images/de.png"/>
-                <img ng-click="changeLanguage('ru')" src="images/ru.png"/>
+                <img ng-click="changeLanguage('nl')" src="images/nl.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('en')" src="images/en.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('fi')" src="images/fi.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('pl')" src="images/pl.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('de')" src="images/de.png" style="cursor: pointer"/>
+                <img ng-click="changeLanguage('ru')" src="images/ru.png" style="cursor: pointer"/>
                 <!-- <button ng-click="changeLanguage('nl')" translate="BUTTON_LANG_NL"></button>
                 <button ng-click="changeLanguage('en')" translate="BUTTON_LANG_EN"></button> -->
                 <a href="#login" ng-if="!isLoggedIn" class="btn btn-primary" style="float:right">Login</a>
@@ -53,7 +53,7 @@
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
         <script src="bower_components/angular-translate/angular-translate.js"></script>
-               
+
         <script src="components/version/version.js"></script>
         <script src="components/version/version-directive.js"></script>
         <script src="components/version/interpolate-filter.js"></script>
