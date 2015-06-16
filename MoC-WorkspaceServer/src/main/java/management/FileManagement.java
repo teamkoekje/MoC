@@ -122,7 +122,9 @@ public class FileManagement {
     private JsonArrayBuilder listFolderJSON(File file, JsonArrayBuilder jsonArrayBuilder) {
         for (File f : file.listFiles()) {
             if (f.isDirectory()) {
-                listFolderJSON(f, jsonArrayBuilder);
+                if (!f.getName().equals("target")) {
+                    listFolderJSON(f, jsonArrayBuilder);
+                }
             } else if (isVisible(f.getName()) || f.getName().endsWith(".html")) {
                 JsonObjectBuilder job = Json.createObjectBuilder();
                 job.add("filename", f.getName());

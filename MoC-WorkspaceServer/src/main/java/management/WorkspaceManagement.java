@@ -28,7 +28,7 @@ public class WorkspaceManagement {
      * Key: Competition name Value: ArrayList<String> with team names
      */
     private final HashMap<String, ArrayList<String>> competitions = new HashMap<>();
-    private static final File MAVEN_HOME = new File("C:/apache-maven-3.3.1");
+    private static final File MAVEN_HOME = new File("C:\\Program Files\\apache-maven-3.2.5");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
     private StringBuilder invocationOutput = new StringBuilder();
@@ -283,9 +283,9 @@ public class WorkspaceManagement {
 
     /**
      * Extracts a challenge zip file and moves the jar file out of the folder
-     * 
+     *
      * @param challengeZip The zip file of the challenge
-     * @throws IOException 
+     * @throws IOException
      */
     private void extractZip(File challengeZip) throws IOException {
         ZipFile zip = new ZipFile(challengeZip);
@@ -312,14 +312,27 @@ public class WorkspaceManagement {
 
     /**
      * Copies the specified challenge to the workspace of the specified team
-     * 
+     *
      * @param challengeName Name of the challenge
      * @param teamName Name of the team
      * @param competitionId Id of the competition
      */
     private void copyChallengeToTeam(String challengeName, String teamName, String competitionId) {
+
+        //TODO: DO IETS MET EXTRA JAR FILE IDK VRAAG AAN CASPER OF ROBIN
+        //TODO: EN TEST HET PUSHEN MET ONDERSTAANDE CODE EN KIJK OF COMPILEN DAN NOG GOED GAAT
+        
+//        File file = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName);
+//        String[] directories = file.list(new FilenameFilter() {
+//            @Override
+//            public boolean accept(File current, String name) {
+//                return new File(current, name).isDirectory();
+//            }
+//        });
+//        File srcFolder = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName + File.separator + directories[0]);
+
         File srcFolder = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName);
-        File destFolder = new File(pathInstance.teamPath(competitionId, teamName) + File.separator + challengeName);
+        File destFolder = new File(pathInstance.teamPath(competitionId, teamName));
 
         if (srcFolder.exists()) {
             try {
@@ -332,10 +345,10 @@ public class WorkspaceManagement {
 
     /**
      * Recursive copy of a folder/file
-     * 
+     *
      * @param src The source directory or file to copy
      * @param dest The destination directory or file
-     * @throws IOException 
+     * @throws IOException
      */
     private void copyFolder(File src, File dest) throws IOException {
         if (src.isDirectory()) {

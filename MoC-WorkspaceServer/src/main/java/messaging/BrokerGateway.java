@@ -125,7 +125,7 @@ public class BrokerGateway implements IRequestListener<Request> {
      * @param request The request to handle
      */
     @Override
-    public synchronized void receivedRequest(Request request) {
+    public void receivedRequest(Request request) {
         System.out.println("Request received on workspace server: " + request.getAction());
         Reply reply = handleRequest(request);
         //TODO:
