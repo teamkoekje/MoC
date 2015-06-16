@@ -9,10 +9,14 @@ package workspace.Requests;
 public class TestAllRequest extends TeamRequest{
     
     private final String challengeName;
+    private final String filePath;
+    private final String fileContent;
 
-    public TestAllRequest(long competitionId, String teamName, String challengeName) {
+    public TestAllRequest(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
         super(RequestAction.TESTALL, competitionId, teamName);
         this.challengeName = challengeName;
+        this.filePath = filePath;
+        this.fileContent = fileContent;
     }
 
     public String getChallengeName() {
