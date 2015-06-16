@@ -5,20 +5,25 @@ import annotations.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import org.scannotation.AnnotationDB;
+import org.testng.annotations.Test;
 // </editor-fold>
 
 /**
@@ -32,6 +37,9 @@ public class FileManagement {
     private AnnotationDB db;
     private Map<String, Set<String>> annotationIndex;
     private ArrayList<String> editables;
+    private final List<Test> userTests;
+    private final List<Test> systemTests;
+    private final List<Test> ambivalentTests;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
@@ -53,26 +61,76 @@ public class FileManagement {
     }
 
     private FileManagement(String filepath) {
+        //init variables
+        userTests = new ArrayList<>();
+        systemTests = new ArrayList<>();
+        ambivalentTests = new ArrayList<>();
+        visibleClasses = new ArrayList<>();
+        editables = new ArrayList<>();
+        db = new AnnotationDB();
+
         try {
             System.out.println(filepath);
-            db = new AnnotationDB();
-            URL testJarUrl = new URL("file:///" + filepath);
-            db.scanArchives(testJarUrl);
+            URL jarUrl = new URL("file:///" + filepath);
+            db.scanArchives(jarUrl);
             annotationIndex = db.getAnnotationIndex();
 
-            visibleClasses = new ArrayList<>();
             addToVisibleClasses(annotationIndex.get(Challenge.class.getName()));
             addToVisibleClasses(annotationIndex.get(Editable.class.getName()));
             addToVisibleClasses(annotationIndex.get(ReadOnly.class.getName()));
             addToVisibleClasses(annotationIndex.get(Hint.class.getName()));
 
-            editables = new ArrayList<>();
             for (String s : annotationIndex.get(Editable.class.getName())) {
                 String[] parts = s.split("\\.");
                 String lastPart = parts[parts.length - 1];
                 editables.add(lastPart);
             }
+            //variables
+            String testJarPath = filepath.substring(0, filepath.length() - 5);
+            testJarPath += "-tests.jar";
+            Enumeration e = new JarFile(testJarPath).entries();
+            URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
+            URLClassLoader cl = URLClassLoader.newInstance(testJarUrl);
+            //loop through the jar
+            System.out.println("_____SCANNING TESTS JAR_____");
+            while (e.hasMoreElements()) {
+                JarEntry je = (JarEntry) e.nextElement();
+                if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                    continue;
+                }
+                // -6 because of .class
+                String className = je.getName().substring(0, je.getName().length() - 6);
+                className = className.replace('/', '.');
+                Class c = cl.loadClass(className);
+                System.out.println("__________________________________________");
+                System.out.println("class name: " + c.getName());
+                System.out.println("class simple name: " + c.getSimpleName());
+                Test t = (Test) c.getAnnotation(Test.class);
+                if (t.groups().length == 2) {
+                    ambivalentTests.add(t);
+                } else {
+                    switch (t.groups()[0]) {
+                        case "user":
+                            userTests.add(t);
+                            break;
+                        case "system":
+                            systemTests.add(t);
+                            break;
+                        default:
+                            throw new AssertionError("unexpected value: " + t.groups()[0]);
+                    }
+                }
+                System.out.println("test name: " + t.testName());
+                System.out.println("test description: " + t.description());
+                for (String s : t.groups()) {
+                    System.out.println("-Group member: " + s);
+                }
+            }
+            System.out.println("__________________________________________");
+
         } catch (IOException ex) {
+            Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -81,7 +139,7 @@ public class FileManagement {
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
     public String getFolderStructureJSON(String folderPath) {
         File folder = new File(folderPath);
-        if (!folder.isDirectory()) {
+        if (!folder.isDirectory() || (folder.isDirectory() && folder.getName().equals("target"))) {
             return null;
         }
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
@@ -141,6 +199,27 @@ public class FileManagement {
             }
         }
         return false;
+    }
+
+    public String getAvailableTests() {
+        JsonArrayBuilder userTestsJSON = Json.createArrayBuilder();
+        for (Test t : userTests) {
+            JsonObjectBuilder job = Json.createObjectBuilder();
+            job.add("name", t.testName());
+            //add more
+            userTestsJSON.add(job);
+        }
+        JsonArrayBuilder ambivalentTestsJSON = Json.createArrayBuilder();
+        for (Test t : ambivalentTests) {
+            JsonObjectBuilder job = Json.createObjectBuilder();
+            job.add("name", t.testName());
+            //add more
+            ambivalentTestsJSON.add(job);
+        }
+        JsonObjectBuilder result = Json.createObjectBuilder();
+        result.add("userTests", userTestsJSON);
+        result.add("ambivalentTests", ambivalentTestsJSON);
+        return result.build().toString();
     }
     //</editor-fold>
 }
