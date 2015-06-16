@@ -6,12 +6,12 @@
 <div class="dialog-contents" style='padding:25px;padding-bottom: 50px'>
     <div>
         <h3>
-            New team
+            {{"NEW_TEAM"| translate}}
         </h3>
-        <label for='newTeamName'>Name</label>
+        <label for='newTeamName'>{{"NAME"| translate}}</label>
         <input style='float: right' type='text' id='newTeamName'/>
         <br><br>
-        <label for='newTeamOwner'>Owner</label>
+        <label for='newTeamOwner'>{{"OWNER"| translate}}</label>
         <select style='float: right' id='newTeamOwner'>
             <option ng-repeat="user in availableParticipants">
                 {{user}}

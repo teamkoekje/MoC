@@ -1,11 +1,11 @@
 <div class="dialog-contents" style='padding:25px; padding-bottom: 50px'>
     <div>
-        <label for='newCompetitionName'>Competition name </label>
+        <label for='newCompetitionName'>{{"NAME"|translate}} </label>
         <input type='text' id='newCompetitionName' data-ng-model='newCompetition.name' style='float: right'/>
     </div>
     <br>
     <div>
-        <label for='newCompetitionDate'>Competition start </label>
+        <label for='newCompetitionDate'>{{"STARTS_AT"| translate}} </label>
         <div class="dropdown" style='float: right'>
             <a class="dropdown-toggle my-toggle-select" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
                 <div class="input-append"><span>{{newCompetition.competitionDate| date:'yyyy-MM-dd HH:mm'}}</span>
@@ -19,10 +19,10 @@
         <br>
     </div>
     <div>
-        <label for='newCompetitionDate'>Competition end </label>
+        <label for='newCompetitionDate'>End time</label>
         <div class="dropdown" style='float: right'>
             <a class="dropdown-toggle my-toggle-select" id="dLabel2" role="button" data-toggle="dropdown" data-target="#" href="">
-                <div class="input-append"><span>{{newCompetition.endTime | date:'yyyy-MM-dd HH:mm'}}</span>
+                <div class="input-append"><span>{{newCompetition.endTime| date:'yyyy-MM-dd HH:mm'}}</span>
                 </div>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel2">
@@ -33,8 +33,9 @@
         <br>
     </div>
     <div>
-        <label for='newCompetitionName'>Competition location </label>
+        <label for='newCompetitionName'>Location </label>
         <input type='text' id='newCompetitionLocation' data-ng-model='newCompetition.location' style='float: right'/>
     </div>
-    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="save();closeThisDialog()"/>
+    <input type="button" class="btn btn-primary" style='float: right; margin-top: 10px;' value="OK" ng-click="save();
+        closeThisDialog()"/>
 </div>
