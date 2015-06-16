@@ -12,15 +12,27 @@
             <version>1.0.3</version>
         </dependency>
         <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <dependency>
             <groupId>MoC</groupId>
             <artifactId>MoCFramework</artifactId>
             <version>1.0-final</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.0.4</version>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>project-with-annotations</groupId>
+            <artifactId>annotatedProject</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
