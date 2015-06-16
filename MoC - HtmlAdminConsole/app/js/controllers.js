@@ -164,7 +164,7 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
         };
         //Default info when no competition is selected
         $scope.selectedCompetition = {
-            name: "No competition selected",
+            name: null,
             startTime: null,
             status: null
         };
