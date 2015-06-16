@@ -3,7 +3,7 @@
 </a>
 <div class="col-xs-5">
     <h3 style="width: 100%;text-align:center">
-        Competitions <span data-ng-click="addCompetition()" style='float:right' class="glyphicon glyphicon-plus glyphiconButton"></span>
+        {{"COMPETITIONS"| translate}} <span data-ng-click="addCompetition()" style='float:right' class="glyphicon glyphicon-plus glyphiconButton"></span>
     </h3>
     <br>
     <ul class="notARealList">
@@ -19,20 +19,20 @@
 </div>
 <div class="col-xs-7" style="border-left: 2px solid #337ab7">
     <h3>
-        Details 
+        {{"COMPETITION"| translate}} 
         <a ng-if="selectedCompetition.id" ng-href="#/competitionView?id={{selectedCompetition.id}}">
             <span style='float: right; font-size:0.8em' class="glyphicon glyphicon-arrow-right glyphiconButton"></span>
         </a>
     </h3>
     <ul class="notARealList">
-        <li>Name: <span style="float:right">{{selectedCompetition.name}}</span> </li>
-        <li>Start: <span style="float:right">{{selectedCompetition.competitionDate| date:'medium'}}</span> </li>
-        <li>End: <span style="float:right">{{selectedCompetition.endTime| date:'medium'}}</span> </li>
-        <li>Location: <span style="float:right">{{selectedCompetition.location| date:'medium'}}</span> </li>
-        <li>Status: <span style="float:right">{{selectedCompetition.status}}</span> </li>
+        <li>{{"NAME"| translate}} <span style="float:right">{{selectedCompetition.name}}</span> </li>
+        <li>{{"STARTS_AT"| translate}} <span style="float:right">{{selectedCompetition.competitionDate| date:'medium'}}</span> </li>
+        <li>End <span style="float:right">{{selectedCompetition.endTime| date:'medium'}}</span> </li>
+        <li>Location <span style="float:right">{{selectedCompetition.location| date:'medium'}}</span> </li>
+        <li>{{"STATUS"| translate}} <span style="float:right">{{selectedCompetition.status}}</span> </li>
     </ul>
     <h3>
-        Challenges
+        {{"CHALLENGES"| translate}}
     </h3>
     <ul class="notARealList">
         <li ng-repeat="challenge in selectedCompetition.challenges">
@@ -40,19 +40,19 @@
         </li>
     </ul>
     <h3>
-        Teams
+        {{"TEAMS"| translate}}
     </h3>
     <div class='row'>
         <div class='col-xs-6'>
             <h4>
-                Teamname
+                {{"TEAM_NAME"| translate}}
                 <span class="glyphicon glyphicon-sort glyphiconButton" style="font-size:14px;" ng-click="teamSort = 'name';
                             reverseSort = !reverseSort"></span>
             </h4>
         </div>
         <div class='col-xs-6'>
             <h4 style="float: right">
-                Score 
+                {{"POINTS"| translate}}
                 <span class="glyphicon glyphicon-sort glyphiconButton" style="font-size:14px;" ng-click="teamSort = 'score';
                             reverseSort = !reverseSort"></span>
             </h4>

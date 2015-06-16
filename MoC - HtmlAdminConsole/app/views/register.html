@@ -14,7 +14,7 @@
         </ul>
 
         <h3>
-            Teams
+            {{"TEAMS"| translate}}
         </h3>
         <ul class='notARealList'>
             <li style='cursor: pointer' ng-repeat="team in teams" ng-click='$parent.showDetailsFor = "team";'>
@@ -29,16 +29,16 @@
             </h3>
             <ul class='notARealList'>
                 <li>
-                    Name: <span style='float: right'>{{currentUser.name}}</span>
+                    {{"NAME"| translate}} <span style='float: right'>{{currentUser.name}}</span>
                 </li>
                 <li>
                     Email: <span style='float: right'>{{currentUser.email}}</span> 
                 </li>
                 <li>
-                    Organisation: <span style='float: right'>{{currentUser.organisation}}</span> 
+                    {{"ORGANISATION"| translate}} <span style='float: right'>{{currentUser.organisation}}</span> 
                 </li>
                 <li>
-                    Teams: 
+                    {{"TEAMS"| translate}} 
                     <br>
                     <ul style='text-align: right'>
                         <li ng-repeat="team in currentUser.teams">
@@ -61,31 +61,31 @@
     </div>
     <div class='col-xs-4'>
         <h3>
-            New user
+            {{"NEW_USER"| translate}}
         </h3>
         <form ng-submit="register()">
             <div class='row'>
                 <div class='col-xs-12'>
-                    <label for='usernameInput'>Username</label>
-                    <input type='text' required ng-model='user.username' id='usernameInput' placeholder='username' style='float: right'/>
+                    <label for='usernameInput'>{{"USERNAME"| translate}}</label>
+                    <input type='text' required ng-model='user.username' id='usernameInput' placeholder='{{"USERNAME"| translate}}' style='float: right'/>
                 </div>
             </div>
             <div class='row'>
                 <div class="col-xs-12">
-                    <label for='passwordInput'>Password</label>
-                    <input type='password' required ng-model='user.password' id='passwordInput' placeholder="password" style='float: right'/>
+                    <label for='passwordInput'>{{"PASSWORD"| translate}}</label>
+                    <input type='password' required ng-model='user.password' id='passwordInput' placeholder='{{"PASSWORD"| translate}}' style='float: right'/>
                 </div>
             </div>
             <div class='row'>
                 <div class="col-xs-12">
-                    <label for='nameInput'>Name</label>
-                    <input type='text' required ng-model='user.name' id='nameInput' placeholder='name' style='float: right'/>
+                    <label for='nameInput'>{{"NAME"| translate}}</label>
+                    <input type='text' required ng-model='user.name' id='nameInput' placeholder='{{"NAME"| translate}}' style='float: right'/>
                 </div>
             </div>
             <div class='row'>
                 <div class="col-xs-12">
-                    <label for='organisationInput'>Organisation</label>
-                    <input type='text' required ng-model='user.organisation' id='organisationInput' placeholder='organisation' style='float: right'/>
+                    <label for='organisationInput'>{{"ORGANISATION"| translate}}</label>
+                    <input type='text' required ng-model='user.organisation' id='organisationInput' placeholder='{{"ORGANISATION"| translate}}' style='float: right'/>
                 </div>
             </div>
             <div class='row'>

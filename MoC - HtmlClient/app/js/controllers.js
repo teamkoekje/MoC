@@ -630,8 +630,11 @@ controllers.controller('competitionController', ['$scope', '$rootScope', 'worksp
          * Sends compile request
          */
         $scope.compile = function () {
-            save(function () {
-                new $workspace.compile({competitionId: $routeParams.id}).$save();
+            var file = new $workspace.compile({competitionId: $routeParams.id});
+            file.fileContent = $scope.getTextFromEditor();
+            file.filePath = $scope.file.filepath;
+            file.$save(function (data) {
+                console.log(data.data);
             });
         };
 

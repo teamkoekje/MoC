@@ -28,6 +28,7 @@ import workspace.Requests.FolderStructureRequest;
 import workspace.Requests.PushRequest;
 import workspace.Replies.Reply;
 import workspace.Replies.ReplyAction;
+import workspace.Requests.AvailableTestsRequest;
 import workspace.Requests.Request;
 import workspace.Requests.SysInfoRequest;
 import workspace.Requests.TestAllRequest;
@@ -109,16 +110,16 @@ public class WorkspaceService {
         return gateway.sendRequestToTeam(new UpdateRequest(competitionId, teamName, filePath, fileContent));
     }
 
-    public String compile(long competitionId, String teamName, String challengeName) {
-        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName));
+    public String compile(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent));
     }
 
-    public String testAll(long competitionId, String teamName, String challengeName) {
-        return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName));
+    public String testAll(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName, filePath, fileContent));
     }
 
-    public String test(long competitionId, String teamName, String challengeName, String testFile, String testName) {
-        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testFile, testName));
+    public String test(long competitionId, String teamName, String challengeName, String testFile, String testName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testFile, testName, filePath, fileContent));
     }
 
     public void push(long competitionId, String challengeName) {
@@ -136,6 +137,11 @@ public class WorkspaceService {
     public String folderStructure(long competitionId, String challengeName, String teamName) {
         System.out.println("Get folder structure for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
+    }
+    
+    public String availableTests(long competitionId, String challengeName, String teamName){
+        System.out.println("Get available tests for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
+        return gateway.sendRequestToTeam(new AvailableTestsRequest(competitionId, challengeName, teamName));
     }
 
     public String file(long competitionId, String challengeName, String teamName, String filePath) {
