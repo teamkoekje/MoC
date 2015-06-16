@@ -109,16 +109,16 @@ public class WorkspaceService {
         return gateway.sendRequestToTeam(new UpdateRequest(competitionId, teamName, filePath, fileContent));
     }
 
-    public String compile(long competitionId, String teamName, String challengeName) {
-        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName));
+    public String compile(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent));
     }
 
-    public String testAll(long competitionId, String teamName, String challengeName) {
-        return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName));
+    public String testAll(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName, filePath, fileContent));
     }
 
-    public String test(long competitionId, String teamName, String challengeName, String testFile, String testName) {
-        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testFile, testName));
+    public String test(long competitionId, String teamName, String challengeName, String testFile, String testName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testFile, testName, filePath, fileContent));
     }
 
     public void push(long competitionId, String challengeName) {
