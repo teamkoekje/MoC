@@ -6,20 +6,29 @@
 </a>
 
 <div class="row" style="text-align: center">
-    <h3>Current Challenge : {{currentCompetition.challenges[currentCompetition.currentChallenge].name}} - {{currentCompetition.challenges[currentCompetition.currentChallenge].state}} - {{currentCompetition.challenges[currentCompetition.currentChallenge].timeLeft}}</h3>
+    <h3>
+        Current Challenge : 
+        {{currentCompetition.challenges[currentCompetition.currentChallenge].name}} - 
+        {{currentCompetition.challenges[currentCompetition.currentChallenge].competitionState}} - 
+        <!--TODO: Add this to API -->
+        {{currentCompetition.challenges[currentCompetition.currentChallenge].timeLeft}}
+    </h3>
 </div>
 <div class="row" style="text-align: center;width: 80%;margin: 0 auto;padding-bottom: 15px; border-bottom: 2px solid #337ab7">
     <div class="col-xs-3">
         <button class="btn btn-primary" style="width: 125px" ng-click="startCompetition()">Start / Resume</button>
     </div>
     <div class="col-xs-3">
-        <button class="btn btn-primary" style="width: 125px">Pause</button>
+        <!--TODO: Add this to API -->
+        <button class="btn btn-primary" style="width: 125px" ng-click="pauseCompetition()">Pause</button>
     </div>
     <div class="col-xs-3">
-        <button class="btn btn-primary" style="width: 125px">Freeze</button>
+        <!--TODO: Add this to API -->
+        <button class="btn btn-primary" style="width: 125px" ng-click="freezeCompetition()">Freeze</button>
     </div>
     <div class="col-xs-3">
-        <button class="btn btn-primary" style="width: 125px">Stop</button>
+        <!--TODO: Add this to API -->
+        <button class="btn btn-primary" style="width: 125px" ng-click="stopCompetition()">Stop</button>
     </div>
 </div>
 
@@ -29,40 +38,43 @@
             General
         </h3>
         <ul class="notARealList">
-            <li>Name: <span style="float:right">{{currentCompetition.name}}</span> </li>
-            <li>Start: <span style="float:right">{{currentCompetition.date | date:'medium'}}</span> </li>
-            <li>Status: <span style="float:right">{{currentCompetition.status}}</span> </li>
+            <li>{{"NAME"| translate}} <span style="float:right">{{currentCompetition.name}}</span> </li>
+            <li>{{"STARTS_AT"| translate}} <span style="float:right">{{currentCompetition.startTime| date:'medium'}}</span> </li>
+            <li>{{"STATUS"| translate}} <span style="float:right">{{currentCompetition.competitionState}}</span> </li>
         </ul>
 
         <h3>
-            Challenges
+            {{"CHALLENGES"| translate}}
         </h3>
         <ul class="notARealList">
             <li class="row" ng-repeat="chal in currentCompetition.challenges">
-                <div class="col-xs-3" ng-switch on="chal.state">
-                    <div ng-switch-when="completed" class="glyphicon glyphicon-asterisk" style="color: green"></div>
-                    <div ng-switch-when="working" class="glyphicon glyphicon-asterisk" style="color: yellow"></div>
-                    <div ng-switch-when="waiting" class="glyphicon glyphicon-asterisk" style="color: red"></div>
+                <div class="col-xs-3" ng-switch on="chal.competitionState">
+                    <!--TODO: Add this to API -->
+                    <div ng-switch-when="ENDED" class="glyphicon glyphicon-asterisk" style="color: green"></div>
+                    <div ng-switch-when="ONGOING" class="glyphicon glyphicon-asterisk" style="color: yellow"></div>
+                    <div ng-switch-when="NOT_STARTED" class="glyphicon glyphicon-asterisk" style="color: red"></div>
                 </div>
                 <div class="col-xs-9">
-                    <span style="float:right">{{chal.name}}</span>
+                    <span style="float:right; cursor: pointer" ng-click="$parent.currentCompetition.currentChallenge = $index">
+                        {{chal.name}}
+                    </span>
                 </div>
             </li>
         </ul>
         <h3>
-            Teams
+            {{"TEAMS"| translate}}
         </h3>
         <div class="row">
             <div class="col-xs-6">
                 <h4>
-                    Teamname
+                    {{"TEAM_NAME"| translate}}
                     <span class="glyphicon glyphicon-sort glyphiconButton" style="font-size:14px;" ng-click="teamSort = 'name';
                                 reverseSort = !reverseSort"></span>
                 </h4>
             </div>
             <div class="col-xs-6">
                 <h4 style="float: right">
-                    Score 
+                    {{"POINTS"| translate}} 
                     <span class="glyphicon glyphicon-sort glyphiconButton" style="font-size:14px;" ng-click="teamSort = 'score';
                                 reverseSort = !reverseSort"></span>
                 </h4>
@@ -82,17 +94,21 @@
             Challenge details
         </h3>
         <ul class="notARealList">
-            <li>Name <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].name}}</span></li>
+            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].name}}</span></li>
+            <!--TODO: add this API -->
             <li>Duration <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].duration}}</span></li>
-            <li>Status <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].state}}</span></li>
-            <li>Difficulty <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].difficulty}}</span></li>
+            <!--TODO: add this API -->
+            <li>{{"STATUS"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].state}}</span></li>
+            <li>{{"DIFFICULTY"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].difficulty}}</span></li>
         </ul>
         <h3>
             Author
         </h3>
         <ul class="notARealList">
-            <li>Name <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.name}}</span></li>
-            <li>Organisation <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.organisation}}</span></li>
+            <!--TODO: add this API -->
+            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.name}}</span></li>
+            <!--TODO: add this API -->
+            <li>{{"ORGANISATION"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.organisation}}</span></li>
         </ul>
         <h3>
             Descriptions
@@ -101,14 +117,16 @@
         <button class="btn btn-default" ng-click="description = 'spectator'">Spectators</button>
         <div ng-switch on="description">
             <div ng-switch-when="participant">
+                <!--TODO: add this API -->
                 {{currentCompetition.challenges[currentCompetition.currentChallenge].descriptions.participant}}
             </div>
             <div ng-switch-default>
+                <!--TODO: add this API -->
                 {{currentCompetition.challenges[currentCompetition.currentChallenge].descriptions.spectator}}
             </div>
         </div>
         <h3>
-            Hints
+            {{"HINTS"| translate}}
         </h3>
         <ul class="notARealList">
             <li class="row" ng-repeat="hint in currentCompetition.challenges[currentCompetition.currentChallenge].hints">

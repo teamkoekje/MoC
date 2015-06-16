@@ -128,7 +128,7 @@ var translationsNL= {
   EMAIL_ERROR_REGISTER: 'Er ging iets fout tijdens het registeren van je account.',
   
   DIFFICULTY: 'Moeilijkheidsgraad',
-  STARTS_AT: 'Begind om',
+  STARTS_AT: 'Begint om',
   START_CODING: 'Begin coderen!',
   VARIABLE_REPLACEMENT: 'Hi {{name}}',
   

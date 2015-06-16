@@ -34,6 +34,7 @@ import messaging.MessagingConstants.DestinationType;
 import messaging.IRequestListener;
 import messaging.MessagingConstants.JMSSettings;
 import messaging.MessagingGateway;
+import workspace.Requests.AvailableTestsRequest;
 //</editor-fold>
 
 /**
@@ -128,12 +129,6 @@ public class BrokerGateway implements IRequestListener<Request> {
     public synchronized void receivedRequest(Request request) {
         System.out.println("Request received on workspace server: " + request.getAction());
         Reply reply = handleRequest(request);
-        //TODO:
-        //if (threads available in pool)
-        //  create new correct thread and run it
-        //  confirm message with MessagingGateway.confirmMessage(true)
-        //else
-        //  rollback message using MessagingGateway.confirmMessage(false)
         requestReplier.sendReply(request, reply);
     }
 
@@ -190,6 +185,15 @@ public class BrokerGateway implements IRequestListener<Request> {
                 return new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
+            case AVAILABLE_TESTS:
+                AvailableTestsRequest atRequest = (AvailableTestsRequest)r;
+                
+                jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId()))
+                        + File.separator
+                        + atRequest.getChallengeName()
+                        + ".jar";
+                
+                return new NormalReply(FileManagement.getInstance(jarPath).getAvailableTests());
             default:
                 return new NormalReply("error, unknown action: " + r.getAction().name());
         }

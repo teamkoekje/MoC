@@ -28,6 +28,9 @@ services.factory('competition', ['$resource',
             future: $resource(baseUrl + '/competition/future'),
             teams: $resource(baseUrl + '/competition/:competitionId/teams', {competitionId: '@competitionId'}),
             start: $resource(baseUrl + '/competition/:competitionId/start', {competitionId: '@competitionId'}),
+            pause: $resource(baseUrl + '/competition/:competitionId/pause', {competitionId: '@competitionId'}),
+            freeze: $resource(baseUrl + '/competition/:competitionId/freeze', {competitionId: '@competitionId'}),
+            stop: $resource(baseUrl + '/competition/:competitionId/stop', {competitionId: '@competitionId'}),
             add: $resource(baseUrl + '/competition')
         };
     }
