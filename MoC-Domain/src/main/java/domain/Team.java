@@ -42,7 +42,7 @@ public class Team implements Serializable {
     private User owner;
 
     private String name;
-    
+
     @XmlAttribute
     private int score = 0;
 
@@ -100,24 +100,26 @@ public class Team implements Serializable {
     public void increaseScore(int score) {
         this.score += score;
     }
-    
-    //</editor-fold>
 
+    //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Function adds a participant to the team.
      *
      * @param participant participant that should be added
      * @return True if the participant was added, otherwise false (already in
-     * this team)
+     * this team or team is full)
      */
     public boolean addParticipant(User participant) {
-        if (!participants.contains(participant)) {
+        if (teamIsFull()) {
+            return false; // team is full
+        } else if (participants.contains(participant)) {
+            return false; // user already in team
+        } else {
             participants.add(participant);
             participant.addTeam(this);
             return true;
         }
-        return false;
     }
 
     /**
@@ -153,6 +155,10 @@ public class Team implements Serializable {
             }
         }
         return false;
+    }
+
+    boolean teamIsFull() {
+        return participants.size() >= competition.getMaxTeamSize();
     }
     //</editor-fold>
 }
