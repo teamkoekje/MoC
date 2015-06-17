@@ -11,6 +11,7 @@ var baseUrl = 'http://localhost\\:8080/MoC-Service/api';
 services.factory('user', ['$resource',
     function ($resource) {
         return{
+            allUsers: $resource(baseUrl + '/user'),
             all: $resource(baseUrl + '/user/:userId', {userId: '@userId'}, {remove: {method: 'DELETE'}}),
             register: $resource(baseUrl + '/user/register/:token', {token: '@token'}),
             teams: $resource(baseUrl + '/user/:userId/teams', {userId: '@userId'}),
@@ -38,6 +39,7 @@ services.factory('competition', ['$resource',
 services.factory('team', ['$resource',
     function ($resource) {
         return{
+            allTeams: $resource(baseUrl + '/team'),
             all: $resource(baseUrl + '/team/:teamId', {teamId: '@teamId'}, {remove: {method: 'DELETE'}}),
             myTeams: $resource(baseUrl + '/team/myTeams'),
             byToken: $resource(baseUrl + '/team/token/:token', {token: '@token'}),
@@ -51,6 +53,7 @@ services.factory('workspace', ['$resource',
         return{
             all: $resource(baseUrl + '/workspace/:teamId', {teamId: '@teamId'}),
             myTeams: $resource(baseUrl + '/team/myTeams'),
+            sysInfo: $resource(baseUrl + '/workspace/sysinfo'),
             byToken: $resource(baseUrl + '/team/token/:token', {token: '@token'}),
             participants: $resource(baseUrl + '/team/:teamId/users', {teamId: '@teamId'})
         };
