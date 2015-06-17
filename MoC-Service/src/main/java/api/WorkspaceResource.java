@@ -61,7 +61,7 @@ public class WorkspaceResource {
             if (team != null) {
                 String messageId = workspaceService.update(competitionId, team.getName(), file.getFilePath(), file.getFileContent());
                 workspaceService.storeRequestMessage(messageId, request.getRemoteUser());
-                return Response.ok("File updated").build();
+                return Response.ok().build();
             } else {
                 return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
             }
