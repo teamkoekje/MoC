@@ -91,22 +91,8 @@ controllers.controller('loginController', ['$scope', '$translate', '$cookies', '
 controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
     function ($scope, $routeParams, $user, $team) {
         $scope.showDetailsFor = 'user'; // can be 'user' or 'team' depending on what to show
-        $scope.users = [
-            'luc',
-            'astrid',
-            'casper',
-            'daan',
-            'arno',
-            'robin'
-        ];
-
-        $scope.teams = [
-            'team 1',
-            'team 2',
-            'team 3',
-            'team 4',
-            'team 5'
-        ];
+        $scope.users = $user.allUsers.query();
+        $scope.teams = $team.allTeams.query();
 
         $scope.currentUser = {
             name: 'Flupke',
