@@ -63,7 +63,7 @@ public class TestDataService {
         cal.add(Calendar.DATE, +2);
         Date tomorrow = cal.getTime();
         Competition c1 = new Competition("Competition1", tomorrow, new Date(), new Date(), "Fontys");
-        Competition c2 = new Competition("Competition2", yesterday, new Date(), new Date(), "Fontys");
+        Competition c2 = new Competition("Competition2", yesterday, new Date(), new Date(), "Fontys", 1, 3);
         Competition c3 = new Competition("Competition3", today, new Date(), new Date(), "Fontys");
         Competition c4 = new Competition("Competition4", tomorrow, new Date(), new Date(), "Fontys");
 

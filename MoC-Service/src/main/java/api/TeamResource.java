@@ -194,7 +194,7 @@ public class TeamResource {
             return Response.serverError().entity("Team not found").build();
         } else if (invitationService.emailAlreadyInTeam(email, teamId)) {
             return Response.serverError().entity("Email already in a team").build();
-        }else if (invitationService.emailAlreadyInvited(email, teamId)){
+        } else if (invitationService.emailAlreadyInvited(email, teamId)) {
             return Response.serverError().entity("Email already invited").build();
         } else {
             invitationService.inviteMember(email, teamId);
@@ -224,10 +224,13 @@ public class TeamResource {
     @POST
     @Consumes("application/xml,application/json")
     @Path("/accept/{invitationId}")
-    public void acceptInvitation(@PathParam("invitationId") long invitationId) {
+    public Response acceptInvitation(@PathParam("invitationId") long invitationId) {
         User user = userService.findById(request.getRemoteUser());
         Invitation invitation = invitationService.findById(invitationId);
-        invitationService.acceptInvitation(user, invitation.getToken());
+        if (invitationService.acceptInvitation(user, invitation.getToken())) {
+            return Response.ok(user).build();
+        }
+        return Response.serverError().entity("Error while adding user, User is already in this team or team is full").build();
     }
 
     @POST
@@ -249,10 +252,9 @@ public class TeamResource {
     @RolesAllowed({"User", "Admin"})
     public void leaveTeam(@PathParam("teamId") long teamId, @PathParam("username") String username) {
         /*
-        todo email owner that a user has left
-        */
-        
-        
+         todo email owner that a user has left
+         */
+
         User user = userService.findById(username);
         if (user != null) {
             teamService.leaveTeam(user, teamId);
