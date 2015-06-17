@@ -52,7 +52,8 @@ services.factory('workspace', ['$resource',
         return{
             update: $resource(baseUrl + '/workspace/:competitionId/update', {competitionId: '@competitionId'}),
             compile: $resource(baseUrl + '/workspace/:competitionId/compile', {competitionId: '@competitionId'}),
-            folderStructure: $resource(baseUrl + '/workspace/:competitionId/folderStructure', {competitionId: '@competitionId'}),
+            folderStructure: $resource(baseUrl + '/workspace/:competitionId/folderStructure', {competitionId: '@competitionId'}),            
+            availableTests: $resource(baseUrl + '/workspace/:competitionId/availableTests', {competitionId: '@competitionId'}),
             file: $resource(baseUrl + '/workspace/:competitionId/file', {competitionId: '@competitionId'}),
             test: $resource(baseUrl + '/workspace/:competitionId/test/:testFile/:testName', {competitionId: '@competitionId', testFile: '@testFile', testName: '@testName'})
         };

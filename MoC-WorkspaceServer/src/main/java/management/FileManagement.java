@@ -212,21 +212,19 @@ public class FileManagement {
     }
 
     public String getAvailableTests() {
-        JsonArrayBuilder userTestsJSON = Json.createArrayBuilder();
+        JsonArrayBuilder testsJson = Json.createArrayBuilder();
         for (Test t : userTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("name", t.testName());
-            userTestsJSON.add(job);
+            testsJson.add(job);
         }
-        JsonArrayBuilder ambivalentTestsJSON = Json.createArrayBuilder();
         for (Test t : ambivalentTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("name", t.testName());
-            ambivalentTestsJSON.add(job);
+            testsJson.add(job);
         }
         JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("userTests", userTestsJSON);
-        result.add("ambivalentTests", ambivalentTestsJSON);
+        result.add("tests", testsJson);
         return result.build().toString();
     }
     //</editor-fold>
