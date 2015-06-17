@@ -309,9 +309,17 @@ controllers.controller('teamsController', ['$scope', '$rootScope', '$cookies', '
          * @param {User} user
          */
         $scope.leaveTeam = function (user) {
-            new $team.leaveTeam({teamId: $scope.team.id, username: user.username}).$save(function () {
-                $scope.participants = $team.participants.query({teamId: $scope.team.id});
-            });
+
+            var r = confirm("Are you sure u want to remove: " + user.username + "?");
+            if (r) {
+                new $team.leaveTeam({teamId: $scope.team.id, username: user.username}).$save(function () {
+                    $scope.participants = $team.participants.query({teamId: $scope.team.id});
+                });
+                console.log("User " + user.username + " is removed");
+            } else {
+
+            }
+
 
         };
 
