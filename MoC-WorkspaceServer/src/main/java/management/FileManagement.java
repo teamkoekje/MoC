@@ -24,6 +24,8 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import org.scannotation.AnnotationDB;
 import org.testng.annotations.Test;
+import tests.AbstractTest;
+import tests.TestGroups;
 // </editor-fold>
 
 /**
@@ -86,11 +88,12 @@ public class FileManagement {
                 editables.add(lastPart);
             }
             //variables
-            String testJarPath = filepath.substring(0, filepath.length() - 4);
+            /*String testJarPath = filepath.substring(0, filepath.length() - 4);
             testJarPath += "-tests.jar";
             Enumeration e = new JarFile(testJarPath).entries();
-            URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
+            URL[] testJarUrl = {new URL("jar:file:C:\\MoC\\Competitions\\4\\Challenges\\MoCFramework-1.0-final.jar!/"), new URL("jar:file:" + testJarPath + "!/"), new URL("jar:file:" + filepath + "!/")};
             URLClassLoader cl = URLClassLoader.newInstance(testJarUrl);
+            //cl.loadClass("tests.AbstractTest");
             //loop through the jar
             System.out.println("_____SCANNING TESTS JAR_____");
             while (e.hasMoreElements()) {
@@ -105,7 +108,7 @@ public class FileManagement {
                 System.out.println("__________________________________________");
                 System.out.println("class name: " + c.getName());
                 System.out.println("class simple name: " + c.getSimpleName());
-                Test t = (Test) c.getAnnotation(Test.class);
+                org.testng.annotations.Test t = (org.testng.annotations.Test) c.getAnnotation(Test.class);
                 if (t.groups().length == 2) {
                     ambivalentTests.add(t);
                 } else {
@@ -127,13 +130,11 @@ public class FileManagement {
                 }
             }
             System.out.println("__________________________________________");
-
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.err.println(ex.getMessage());
+            */
+        
         } catch(Exception ex){
-            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+            //System.err.println(ex.getMessage());
         }
     }
     // </editor-fold>

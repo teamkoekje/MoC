@@ -22,7 +22,6 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import org.scannotation.*;
 import org.testng.annotations.Test;
-import projectwithannotations.annotatedproject.challenge.ChallengeExample;
 
 /**
  * @author Casper

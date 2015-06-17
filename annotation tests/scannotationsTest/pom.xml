@@ -23,18 +23,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>project-with-annotations</groupId>
-            <artifactId>annotatedProject</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
