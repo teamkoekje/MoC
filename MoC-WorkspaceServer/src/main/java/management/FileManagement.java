@@ -75,7 +75,7 @@ public class FileManagement {
             db.scanArchives(jarUrl);
             annotationIndex = db.getAnnotationIndex();
 
-            addToVisibleClasses(annotationIndex.get(Challenge.class.getName()));
+            //addToVisibleClasses(annotationIndex.get(Challenge.class.getName()));
             addToVisibleClasses(annotationIndex.get(Editable.class.getName()));
             addToVisibleClasses(annotationIndex.get(ReadOnly.class.getName()));
             addToVisibleClasses(annotationIndex.get(Hint.class.getName()));
@@ -85,14 +85,17 @@ public class FileManagement {
                 String lastPart = parts[parts.length - 1];
                 editables.add(lastPart);
             }
+            //<editor-fold defaultstate="collapsed" desc="scan tests">   
             //variables
             String testJarPath = filepath.substring(0, filepath.length() - 4);
             testJarPath += "-tests.jar";
-            Enumeration e = new JarFile(testJarPath).entries();
+            System.out.println();
+            System.out.println("______SCANNING FOR TESTS______");
+            JarFile jarFile = new JarFile(testJarPath);
+            Enumeration e = jarFile.entries();
             URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
             URLClassLoader cl = URLClassLoader.newInstance(testJarUrl);
-            //loop through the jar
-            System.out.println("_____SCANNING TESTS JAR_____");
+
             while (e.hasMoreElements()) {
                 JarEntry je = (JarEntry) e.nextElement();
                 if (je.isDirectory() || !je.getName().endsWith(".class")) {
@@ -127,13 +130,11 @@ public class FileManagement {
                 }
             }
             System.out.println("__________________________________________");
+            // </editor-fold>
 
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.err.println(ex.getMessage());
-        } catch(Exception ex){
-            System.err.println(ex.getMessage());
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            //System.err.println(ex.getMessage());
         }
     }
     // </editor-fold>
@@ -210,14 +211,12 @@ public class FileManagement {
         for (Test t : userTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("name", t.testName());
-            //add more
             userTestsJSON.add(job);
         }
         JsonArrayBuilder ambivalentTestsJSON = Json.createArrayBuilder();
         for (Test t : ambivalentTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("name", t.testName());
-            //add more
             ambivalentTestsJSON.add(job);
         }
         JsonObjectBuilder result = Json.createObjectBuilder();
