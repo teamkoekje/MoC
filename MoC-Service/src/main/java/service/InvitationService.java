@@ -135,16 +135,18 @@ public class InvitationService extends GenericService<Invitation> {
      * @param user user that should join the team
      * @param token string to verify if the user is allowed to join the team
      */
-    public void acceptInvitation(User user, String token) {
+    public boolean acceptInvitation(User user, String token) {
         Invitation inv = findByToken(token);
         Team team = inv.getTeam();
 
         boolean result = team.addParticipant(user);
-        inv.setState(Invitation.InvitationState.ACCEPTED);
         if (result) {
+            inv.setState(Invitation.InvitationState.ACCEPTED);
             teamService.edit(team);
             this.edit(inv);
+            return true;
         }
+        return false;
     }
 
     public void declineInvitation(long invitationId) {
@@ -177,7 +179,7 @@ public class InvitationService extends GenericService<Invitation> {
         q.setParameter("email", email);
         q.setParameter("team", teamService.findById(teamId));
         q.setParameter("state", InvitationState.UNDECIDED);
-        return ((Long)q.getSingleResult()) > 0;
+        return ((Long) q.getSingleResult()) > 0;
     }
 
  //</editor-fold>
