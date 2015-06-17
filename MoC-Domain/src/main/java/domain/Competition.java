@@ -82,6 +82,18 @@ public class Competition implements Serializable {
         this.location = location;
         this.competitionState = CompetitionState.NOT_STARTED;
     }
+    
+     public Competition(String name, Date competitionDate, Date startingTime, Date endTime, String location, int minTeamSize, int maxTeamSize) {
+        this.name = name;
+        this.competitionDate = competitionDate;
+        this.startTime = startingTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.competitionState = CompetitionState.NOT_STARTED;
+        this.minTeamSize = minTeamSize;
+        this.maxTeamSize = maxTeamSize;
+    }
+    
     //</editor-fold>    
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >

@@ -9,7 +9,7 @@
         </h3>
         <ul class='notARealList'>
             <li style='cursor: pointer' ng-repeat="user in users" ng-click='$parent.showDetailsFor = "user";'>
-                {{user}}
+                {{user.name}}
             </li>
         </ul>
 
@@ -18,7 +18,7 @@
         </h3>
         <ul class='notARealList'>
             <li style='cursor: pointer' ng-repeat="team in teams" ng-click='$parent.showDetailsFor = "team";'>
-                {{team}}
+                {{team.name}}
             </li>
         </ul>
     </div>
