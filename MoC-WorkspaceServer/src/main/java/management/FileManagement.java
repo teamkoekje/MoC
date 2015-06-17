@@ -86,7 +86,7 @@ public class FileManagement {
                 editables.add(lastPart);
             }
             //variables
-            String testJarPath = filepath.substring(0, filepath.length() - 5);
+            String testJarPath = filepath.substring(0, filepath.length() - 4);
             testJarPath += "-tests.jar";
             Enumeration e = new JarFile(testJarPath).entries();
             URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
@@ -129,9 +129,11 @@ public class FileManagement {
             System.out.println("__________________________________________");
 
         } catch (IOException ex) {
-            Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
+        } catch(Exception ex){
+            System.err.println(ex.getMessage());
         }
     }
     // </editor-fold>
