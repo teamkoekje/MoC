@@ -230,9 +230,7 @@ public class FileManagement {
             job.add("name", s);
             testsJson.add(job);
         }
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("tests", testsJson);
-        return result.build().toString();
+        return testsJson.build().toString();
     }
     //</editor-fold>
 }
