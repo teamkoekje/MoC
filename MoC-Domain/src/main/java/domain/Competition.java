@@ -66,7 +66,7 @@ public class Competition implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Round currentRound;
 
-    private CompetitionState competitionState;
+    private CompetitionState competitionState = CompetitionState.NOT_STARTED;
 
     //</editor-fold>
     
@@ -80,7 +80,6 @@ public class Competition implements Serializable {
         this.startTime = startingTime;
         this.endTime = endTime;
         this.location = location;
-        this.competitionState = CompetitionState.NOT_STARTED;
     }
     //</editor-fold>    
 

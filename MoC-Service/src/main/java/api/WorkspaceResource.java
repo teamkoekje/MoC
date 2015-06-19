@@ -139,10 +139,10 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
     @Path("/sysinfo")
-    public void sysInfo() {
+    public Response sysInfo() {
         workspaceService.sysInfo(request.getUserPrincipal().getName());
+        return Response.ok().build();
     }
     
     @POST
@@ -207,12 +207,6 @@ public class WorkspaceResource {
     }
     
     
-    @GET
-    @Produces("application/xml,application/json")
-    @Path("/sysinfo")
-    public void Sysinfo()
-    {
-        workspaceService.sysInfo(request.getRemoteUser());
-    }
+    
     //</editor-fold>
 }
