@@ -37,9 +37,9 @@ public class FileManagement {
     private AnnotationDB db;
     private Map<String, Set<String>> annotationIndex;
     private ArrayList<String> editables;
-    private final List<Test> userTests;
-    private final List<Test> systemTests;
-    private final List<Test> ambivalentTests;
+    private final List<String> userTests;
+    private final List<String> systemTests;
+    private final List<String> ambivalentTests;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
@@ -111,14 +111,14 @@ public class FileManagement {
                     System.out.println("class simple name: " + c.getSimpleName());
                     Test t = (Test) c.getAnnotation(Test.class);
                     if (t.groups().length == 2) {
-                        ambivalentTests.add(t);
+                        ambivalentTests.add(t.testName());
                     } else {
                         switch (t.groups()[0]) {
                             case "user":
-                                userTests.add(t);
+                                userTests.add(t.testName());
                                 break;
                             case "system":
-                                systemTests.add(t);
+                                systemTests.add(t.testName());
                                 break;
                             default:
                                 throw new AssertionError("unexpected value: " + t.groups()[0]);
@@ -145,6 +145,13 @@ public class FileManagement {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
+    public List<String> getAvailableTests(){
+        List toReturn = new ArrayList<>();
+        toReturn.addAll(userTests);
+        toReturn.addAll(ambivalentTests);
+        return toReturn;
+    }
+    
     public String getFolderStructureJSON(String folderPath) {
         File folder = new File(folderPath);
         if (!folder.isDirectory() || (folder.isDirectory() && folder.getName().equals("target"))) {
@@ -211,16 +218,16 @@ public class FileManagement {
         return false;
     }
 
-    public String getAvailableTests() {
+    public String getAvailableTestsJSON() {
         JsonArrayBuilder testsJson = Json.createArrayBuilder();
-        for (Test t : userTests) {
+        for (String s : userTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
-            job.add("name", t.testName());
+            job.add("name", s);
             testsJson.add(job);
         }
-        for (Test t : ambivalentTests) {
+        for (String s : ambivalentTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
-            job.add("name", t.testName());
+            job.add("name", s);
             testsJson.add(job);
         }
         JsonObjectBuilder result = Json.createObjectBuilder();

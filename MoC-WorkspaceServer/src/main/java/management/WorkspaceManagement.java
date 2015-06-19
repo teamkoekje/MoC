@@ -481,16 +481,15 @@ public class WorkspaceManagement {
      * @param competitionId The id of the competition
      * @param teamName The name of the team within the competition
      * @param challengeName The name of the challenge to test
-     * @param testFile The file to test
      * @param testName The name of the test to test
      * @return A String indicating the result of the test
      */
-    public String test(String competitionId, String teamName, String challengeName, String testFile, String testName) {
+    public String test(String competitionId, String teamName, String challengeName, String testName) {
         try {
             beforeMavenInvocation(competitionId, teamName, challengeName);
             request.setGoals(Arrays.asList("test"));
             Properties p = new Properties();
-            p.setProperty("test", testFile + "#" + testName);
+            p.setProperty("test", testName);
             request.setProperties(p);
 
             MAVEN_INVOKER.execute(request);

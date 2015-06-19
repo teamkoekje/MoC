@@ -1,6 +1,7 @@
 package api;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import javax.ws.rs.core.Response;
 import domain.Challenge;
 import domain.Competition;
 import domain.Round;
@@ -118,8 +119,8 @@ public class CompetitionResource {
     @DELETE
     @Path("/{competitionId}")
     public void removeCompetition(@PathParam("competitionId") Long competitionId) {
-        competitionService.remove(competitionId);
         competitionService.removeFutureCompetition(competitionService.findById(competitionId));
+        competitionService.remove(competitionId);
     }
     //</editor-fold>
 
@@ -157,7 +158,7 @@ public class CompetitionResource {
         Competition c = competitionService.findById(competitionId);
         return c.getChallenges();
     }
-    
+
     @GET
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/teams")
@@ -205,28 +206,59 @@ public class CompetitionResource {
      * Starts a round
      *
      * @param competitionId
+     * @return Response object
      */
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/start")
-    public void startRound(@PathParam("competitionId") long competitionId) {        
+    public Response startRound(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);
-        if(c.getCompetitionState() == CompetitionState.NOT_STARTED && c.getRounds().size() > 0){
+        if (c.getCompetitionState() == CompetitionState.NOT_STARTED && c.getRounds().size() > 0) {
             competitionService.addActiveCompetition(c);
             competitionService.removeFutureCompetition(c);
         }
-        
-        boolean ongoing;
-        if(c.getCompetitionState() == CompetitionState.ONGOING){
-            ongoing = true;
-        }else{
-            ongoing = false;
+
+        boolean ongoing = c.getCompetitionState() == CompetitionState.ONGOING;
+        try {
+            c.startNextRound();
+        } catch (IllegalStateException ex) {
+            return Response.serverError().entity(ex.getLocalizedMessage()).build();
         }
-        c.startNextRound();
         competitionService.edit(c);
-        if (ongoing){
+        if (ongoing) {
             competitionService.replaceActiveCompetition(c);
         }
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{competitionId}/pause")
+    public Response pauseRound(@PathParam("competitionId") long competitionId) {
+        System.out.println("pause competition: " + competitionId);
+        Competition c = competitionService.findById(competitionId);
+        c.getCurrentRound().pause();
+        competitionService.edit(c);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{competitionId}/freeze")
+    public Response freezeRound(@PathParam("competitionId") long competitionId) {
+        System.out.println("freeze competition: " + competitionId);
+        Competition c = competitionService.findById(competitionId);
+        c.getCurrentRound().freeze();
+        competitionService.edit(c);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{competitionId}/stop")
+    public Response stopRound(@PathParam("competitionId") long competitionId) {
+        System.out.println("stop competition: " + competitionId);
+        Competition c = competitionService.findById(competitionId);
+        c.getCurrentRound().stop();
+        competitionService.edit(c);
+        return Response.ok().build();
     }
     //</editor-fold>
 }

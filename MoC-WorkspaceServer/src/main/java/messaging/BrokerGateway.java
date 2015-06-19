@@ -151,7 +151,17 @@ public class BrokerGateway implements IRequestListener<Request> {
             case TEST:
                 TestRequest testRequest = (TestRequest) r;
                 wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
-                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()) + "\"}");
+
+                jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
+                        + File.separator
+                        + testRequest.getChallengeName()
+                        + ".jar";
+                FileManagement instance = FileManagement.getInstance(jarPath);
+                if (instance.getAvailableTests().contains(testRequest.getTestName())) {
+                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
+                }else{
+                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
+                }
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
                 wm.updateFile(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getFilePath(), testAllRequest.getFileContent());
@@ -189,8 +199,8 @@ public class BrokerGateway implements IRequestListener<Request> {
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             case AVAILABLE_TESTS:
-                AvailableTestsRequest atRequest = (AvailableTestsRequest)r;
-                
+                AvailableTestsRequest atRequest = (AvailableTestsRequest) r;
+
                 jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId()))
                         + File.separator
                         + atRequest.getChallengeName()

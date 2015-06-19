@@ -118,8 +118,8 @@ public class WorkspaceService {
         return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName, filePath, fileContent));
     }
 
-    public String test(long competitionId, String teamName, String challengeName, String testFile, String testName, String filePath, String fileContent) {
-        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testFile, testName, filePath, fileContent));
+    public String test(long competitionId, String teamName, String challengeName, String testName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testName, filePath, fileContent));
     }
 
     public void push(long competitionId, String challengeName) {
