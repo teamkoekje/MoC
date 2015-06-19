@@ -13,8 +13,8 @@
         <br><br>
         <label for='newTeamOwner'>{{"OWNER"| translate}}</label>
         <select style='float: right' id='newTeamOwner'>
-            <option ng-repeat="user in availableParticipants">
-                {{user}}
+            <option ng-repeat="user in availableParticipants" value="{{user.id}}">
+                {{user.username}}
             </option>
         </select>
     </div>

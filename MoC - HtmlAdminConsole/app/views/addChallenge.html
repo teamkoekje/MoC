@@ -13,18 +13,18 @@
         <h4>
             Upload
         </h4>
-        <form id='newChallengeUploadForm'>
+        <form id='newChallengeUploadForm' method="post" enctype="multipart/form-data">
             <script>
                 function updateFilePath(input, output) {
                     //Chrome likes to do C:/fakepath/<filename> instead of the real path so we only use the filename
                     output.value = input.files[0].name;
                 }
             </script>
-            <input type='file' style='display: none;' onchange="updateFilePath(this, document.getElementById('newChallengeUploadDisplay'))" id='newChallengeUpload'/>
+            <input type='file' style='display: none;' id='newChallengeUpload' onchange="updateFilePath(this, document.getElementById('newChallengeUploadDisplay'))"/>
             <input class='col-xs-8' type="text" id='newChallengeUploadDisplay' readonly=""/>
             <span class='col-xs-4' style='text-align: right;' >
                 <span style='margin-right: 5px' class='glyphicon glyphicon-folder-open glyphiconButton' onclick='newChallengeUpload.click()'></span>
-                <span class='glyphicon glyphicon-upload glyphiconButton' onclick='document.getElementById("newChallengeUploadForm").submit();'></span>
+                <span class='glyphicon glyphicon-upload glyphiconButton' ng-click="upload()"></span>
             </span>
         </form>
         <br><br>

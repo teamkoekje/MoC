@@ -112,14 +112,14 @@ public class WorkspaceResource {
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/test/{testFile}/{testname}")
-    public Response test(@PathParam("competitionId") long competitionId, @PathParam("testFile") String testFile, @PathParam("testName") String testName, CodeFile file) {
+    @Path("/{competitionId}/test/{testname}")
+    public Response test(@PathParam("competitionId") long competitionId, @PathParam("testName") String testName, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
         if (competition != null && competition.getCurrentRound() != null) {
             Team team = competition.getTeamByUsername(request.getRemoteUser());
             Challenge challenge = competition.getCurrentRound().getChallenge();
             if (team != null) {
-                String messageId = workspaceService.test(competitionId, team.getName(), challenge.getName(), testFile, testName, file.getFilePath(), file.getFileContent());
+                String messageId = workspaceService.test(competitionId, team.getName(), challenge.getName(), testName, file.getFilePath(), file.getFileContent());
                 workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
                 return Response.ok("Test is being executed").build();
             } else {
@@ -139,10 +139,10 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
     @Path("/sysinfo")
-    public void sysInfo() {
+    public Response sysInfo() {
         workspaceService.sysInfo(request.getUserPrincipal().getName());
+        return Response.ok().build();
     }
     
     @POST
@@ -207,12 +207,6 @@ public class WorkspaceResource {
     }
     
     
-    @GET
-    @Produces("application/xml,application/json")
-    @Path("/sysinfo")
-    public void Sysinfo()
-    {
-        workspaceService.sysInfo(request.getRemoteUser());
-    }
+    
     //</editor-fold>
 }

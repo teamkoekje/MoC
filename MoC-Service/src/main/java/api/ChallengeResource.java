@@ -1,7 +1,13 @@
 package api;
 
 import domain.Challenge;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -13,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.jasypt.contrib.org.apache.commons.codec_1_3.binary.Base64;
 import service.ChallengeService;
 
 /**
@@ -54,13 +61,21 @@ public class ChallengeResource {
 
     /**
      * Create a new challenge
-     *
-     * @param challenge challenge that should be created
+     * @param file The file as a base64 encoded string
      */
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    public void createChallenge(Challenge challenge) {
-        challengeService.create(challenge);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void createChallenge(String file) {
+        try {
+            byte[] data = Base64.decodeBase64(file.getBytes());
+            try (OutputStream stream = new FileOutputStream("C:\\Luc\\yourFile2.zip")) {
+                stream.write(data);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Challenge c = new Challenge("name");
+        challengeService.create(c);
     }
 
     /**

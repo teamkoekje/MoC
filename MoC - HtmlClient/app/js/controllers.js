@@ -691,13 +691,14 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
 
         //Subscribe to newsfeed
         newsfeedService.subscribe(function (msg) {
-            console.log("hallllooo");
-            console.log(msg.type);
-            console.log(msg.data);
             switch (msg.type) {
                 case "filestructure":
                     $scope.files = msg.data;
                     $scope.selectFile($scope.files[0]);
+                    break;
+                case "availabletests":
+                    $scope.availableTests = msg.data;
+                    console.log($scope.availableTests);
                     break;
                 case "file":
                     $scope.file.filecontent = msg.data.filecontent;
@@ -705,9 +706,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     $rootScope.loading = false;
                     break;
                 case "buildresult":
-                    console.log("build result");
                     $rootScope.loading = false;
-                    //$scope.result = $sce.trustAsHtml(msg.data);
                     $scope.results.push($sce.trustAsHtml(msg.data));
                     break;
             }
@@ -716,6 +715,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
 
         //Request folderstructure
         $workspace.folderStructure.save({competitionId: $routeParams.id});
+        $workspace.availableTests.save({competitionId: $routeParams.id});
 
         $scope.results = [];
         $scope.messages = newsfeedService.getMessages();

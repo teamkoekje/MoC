@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * The Challenge class represents a coding challenge that can be given during a
@@ -61,7 +62,7 @@ public class Challenge implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public int getDifficulty() {
         return difficulty;
     }
@@ -78,6 +79,7 @@ public class Challenge implements Serializable {
         this.suggestedDuration = suggestedDuration;
     }
 
+    @XmlElement
     public List<Hint> getHintsCopy() {
         return new ArrayList<>(hints);
     }

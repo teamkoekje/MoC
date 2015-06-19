@@ -1,7 +1,84 @@
 /* global angular */
 
 var controllers = angular.module('mocControllers', ['ngCookies']);
-controllers.controller('loginController', ['$scope', '$translate', '$cookies', 'user', function ($scope, $translate, $cookies, $user) {
+controllers.controller('mainController', ['$rootScope', 'ngDialog', 'workspace', 'competition', 'user',
+    function ($rootScope, ngDialog, $workspace, $competition, $user) {
+        /*
+         YES THIS LOOKS LIKE SHIT, 
+         BUT EASIEST WAY I'VE FOUND TO BE ABLE TO USE THE POPUPS ON EVERY PAGE WITHOUT HAVING TO EDIT IT IN EVERY CONTROLLER
+         
+         -Luc
+         */
+        $rootScope.showServerInfo = function ($scope) {
+            ngDialog.open({
+                template: "popups/serverInfo.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+            $scope.servers = $workspace.sysInfo.save();
+            //TODO GET SERVER INFO OVER WEBSERVICE
+        };
+        $rootScope.addCompetition = function ($scope) {
+            $scope.newCompetition = new $competition.add();
+            $scope.newCompetition.name = '';
+            $scope.newCompetition.competitionDate = new Date();
+            $scope.newCompetition.endTime = new Date();
+            $scope.newCompetition.location = '';
+            ngDialog.open({
+                template: "popups/addCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+            $scope.save = function () {
+                console.log($scope.newCompetition);
+                $scope.newCompetition.$save(function () {
+                    $scope.competitions = new $competition.all.query();
+                });
+            };
+        };
+
+        $rootScope.editCompetition = function (i, $scope) {
+            ngDialog.open({
+                template: "popups/editCompetition.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+            $scope.currentCompetition = $competition.all.get({competitionId: i}, function () {
+                $scope.currentCompetition.challenges = $competition.challenges.query({competitionId: i});
+                $scope.currentCompetition.teams = $competition.teams.query({competitionId: i});
+            });
+            console.log($scope.currentCompetition);
+        };
+
+        $rootScope.editChallenge = function (id, $scope) {
+            ngDialog.open({
+                template: "popups/editChallenge.html?id=" + id,
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+
+        $rootScope.addTeam = function ($scope) {
+            ngDialog.open({
+                template: "popups/addTeam.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+            $scope.availableParticipants = $user.allUsers.query();
+            console.log($scope.availableParticipants);
+        };
+
+        $rootScope.addMembers = function ($scope) {
+            ngDialog.open({
+                template: "popups/addMember.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope
+            });
+        };
+    }]);
+
+controllers.controller('loginController', ['$scope', '$rootScope', '$translate', '$cookies', 'user',
+    function ($scope, $rootScope, $translate, $cookies, $user) {
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
             $cookies.language = langKey;
@@ -88,8 +165,8 @@ controllers.controller('loginController', ['$scope', '$translate', '$cookies', '
     }
 
 ]);
-controllers.controller('registerController', ['$scope', '$routeParams', 'user', 'team',
-    function ($scope, $routeParams, $user, $team) {
+controllers.controller('registerController', ['$scope', 'rootScope', '$routeParams', 'user', 'team',
+    function ($scope, $rootScope, $routeParams, $user, $team) {
         $scope.showDetailsFor = 'user'; // can be 'user' or 'team' depending on what to show
         $scope.users = $user.allUsers.query();
         $scope.teams = $team.allTeams.query();
@@ -131,8 +208,8 @@ controllers.controller('registerController', ['$scope', '$routeParams', 'user', 
     }
 ]);
 
-controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', 'competition',
-    function ($scope, ngDialog, $competition) {
+controllers.controller('competitionOverviewController', ['$scope', '$rootScope', 'ngDialog', 'competition', 'workspace',
+    function ($scope, $rootScope, ngDialog, $competition, $workspace) {
         $scope.competitions = new $competition.all.query();
         $scope.setSelectedCompetition = function (competition) {
             $scope.selectedCompetition = competition;
@@ -156,42 +233,13 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
         };
 
         $scope.addCompetition = function () {
-            $scope.newCompetition = new $competition.add();
-            $scope.newCompetition.name = '';
-            $scope.newCompetition.competitionDate = new Date();
-            $scope.newCompetition.endTime = new Date();
-            $scope.newCompetition.location = '';
-            ngDialog.open({
-                template: "popups/addCompetition.html",
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
-            $scope.save = function () {
-                console.log($scope.newCompetition);
-                $scope.newCompetition.$save(function () {
-                    $scope.competitions = new $competition.all.query();
-                });
-            };
+            $rootScope.addCompetition($scope);
         };
-        $scope.editCompetition = function (i) {
-            ngDialog.open({
-                template: "popups/editCompetition.html",
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
-            $scope.currentCompetition = $competition.all.get({competitionId: i}, function () {
-                $scope.currentCompetition.challenges = $competition.challenges.query({competitionId: i});
-                $scope.currentCompetition.teams = $competition.teams.query({competitionId: i});
-            });
-            console.log($scope.currentCompetition);
+        $scope.editCompetition = function (id) {
+            $rootScope.editCompetition(id, $scope);
         };
-        $scope.showServerInfo = function () {
-            ngDialog.open({
-                template: "popups/serverInfo.html",
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
-        };
+
+
         $scope.servers = [{
                 IP: '127.0.0.1',
                 CPU: '40%',
@@ -213,34 +261,15 @@ controllers.controller('competitionOverviewController', ['$scope', 'ngDialog', '
             }];
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
-        $scope.teams = [
-            {
-                name: 'team koekje',
-                score: 1337
-            },
-            {
-                name: 'team pannenkoek',
-                score: 137
-            },
-            {
-                name: 'team pizza',
-                score: 13337
-            },
-            {
-                name: 'team zoute popcorn',
-                score: 13337
-            },
-            {
-                name: 'team taart',
-                score: 13337
-            }
-        ];
 
+        $scope.showServerInfo = function () {
+            $rootScope.showServerInfo($scope);
+        };
     }
 ]);
 
-controllers.controller('competitionViewController', ['$scope', 'competition', '$routeParams', 'ngDialog',
-    function ($scope, $competition, $routeParams, ngDialog) {
+controllers.controller('competitionViewController', ['$scope', '$rootScope', 'competition', '$routeParams', 'ngDialog',
+    function ($scope, $rootScope, $competition, $routeParams, ngDialog) {
         $scope.teamSort = 'score';
         $scope.reverseSort = true;
         $scope.description = 'participant';
@@ -254,60 +283,73 @@ controllers.controller('competitionViewController', ['$scope', 'competition', '$
 
         $scope.startCompetition = function () {
             console.log("start competition");
-            $competition.start.save({competitionId: $routeParams.id});
+            $competition.start.save({competitionId: $routeParams.id}, function () {
+                alert("Started the competition");
+            }, function (response) {
+                console.log(response);
+                alert(response.data);
+            });
         };
 
         $scope.pauseCompetition = function () {
             console.log("pause competition");
-            $competition.pause.save({competitionId: $routeParams.id});
+            $competition.pause.save({competitionId: $routeParams.id}, function () {
+                alert("Paused the competition");
+            }, function (response) {
+                console.log(response);
+                alert(response.data);
+            });
         };
 
         $scope.freezeCompetition = function () {
             console.log("freeze competition");
-            $competition.freeze.save({competitionId: $routeParams.id});
+            $competition.freeze.save({competitionId: $routeParams.id}, function () {
+                alert("Froze the competition");
+            }, function (response) {
+                console.log(response);
+                alert(response.data);
+            });
         };
 
         $scope.stopCompetition = function () {
             console.log("stop competition");
-            $competition.stop.save({competitionId: $routeParams.id});
+            $competition.stop.save({competitionId: $routeParams.id}, function () {
+                alert("Stopped the competition");
+            }, function (response) {
+                console.log(response);
+                alert(response.data);
+            });
         };
 
         $scope.editCompetition = function () {
-            ngDialog.open({
-                template: "popups/editCompetition.html",
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
+            $rootScope.editCompetition($routeParams.id, $scope);
         };
 
         $scope.editChallenge = function (id) {
-            ngDialog.open({
-                template: "popups/editChallenge.html?id=" + id,
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
+            $rootScope.editChallenge(id, $scope);
         };
 
         $scope.addTeam = function () {
-            ngDialog.open({
-                template: "popups/addTeam.html",
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
+            $rootScope.addTeam($scope);
         };
 
         $scope.addMembers = function () {
-            ngDialog.open({
-                template: "popups/addMember.html",
-                className: 'ngdialog-theme-default',
-                scope: $scope
-            });
+            $rootScope.addMembers($scope);
         };
     }
 ]);
 
-controllers.controller('addChallengeController', ['$scope',
-    function ($scope) {
+controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge',
+    function ($scope, $rootScope, $challenge) {
+        $scope.upload = function () {
+            $rootScope.loading = true;
+            //Lazy async task in JavaScript 
+            setTimeout(function () {
+                $challenge.create.save($scope.base64File);
+                $rootScope.loading = false;
+            }, 100);
+        };
+
         $scope.challenge = {
             name: 'challenge name',
             duration: '10:00',
@@ -320,6 +362,29 @@ controllers.controller('addChallengeController', ['$scope',
                 spectator: "Spectator description is boring as fuck but for some reason people want to read a description here so I've to type some stuff now.",
                 participant: "Guess what? the participant description might be even more boring because those who read it will actually have to do the shit assignment"
             }
+        };
+
+        var handleFileSelect = function (evt) {
+            var files = evt.target.files;
+            var file = files[0];
+
+            if (files && file) {
+                var reader = new FileReader();
+
+                reader.onload = function (readerEvt) {
+                    var binaryString = readerEvt.target.result;
+                    $scope.base64File = btoa(binaryString);
+                    console.log($scope.base64File);
+                };
+
+                reader.readAsBinaryString(file);
+            }
+        };
+
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            document.getElementById('newChallengeUpload').addEventListener('change', handleFileSelect, false);
+        } else {
+            alert('The File APIs are not fully supported in this browser.');
         }
     }
 ]);

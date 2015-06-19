@@ -59,3 +59,11 @@ services.factory('workspace', ['$resource',
         };
     }
 ]);
+
+services.factory('challenge', ['$resource',
+    function ($resource) {
+        return {
+            create: $resource(baseUrl + '/challenge')
+        };
+    }
+]);
