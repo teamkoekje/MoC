@@ -318,7 +318,11 @@ public class WorkspaceManagement {
             if (!entry.isDirectory()) {
                 writeZipEntry(zip, entry, destFile);
                 if (destFile.getName().endsWith("jar") && !destFile.getName().startsWith("MoCFramework")) {
-                    destFile.renameTo(new File(challengeZip.getParent() + File.separator + destFile.getName()));
+                    File f = new File(challengeZip.getParent() + File.separator + destFile.getName());
+                    if(f.exists()){
+                        f.delete();
+                    }
+                    destFile.renameTo(f);
                 }
             }
         }

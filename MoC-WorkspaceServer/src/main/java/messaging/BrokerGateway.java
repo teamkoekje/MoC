@@ -196,7 +196,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                         + atRequest.getChallengeName()
                         + ".jar";
                 
-                return new NormalReply(FileManagement.getInstance(jarPath).getAvailableTests());
+                return new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTests() + "}");
             default:
                 return new NormalReply("error, unknown action: " + r.getAction().name());
         }
