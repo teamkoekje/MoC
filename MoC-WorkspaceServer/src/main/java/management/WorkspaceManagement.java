@@ -11,6 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.shared.invoker.*;
+import org.codehaus.plexus.util.cli.CommandLineException;
 // </editor-fold>
 
 /**
@@ -32,6 +33,8 @@ public class WorkspaceManagement {
     private static InvocationRequest request;
     private StringBuilder invocationOutput = new StringBuilder();
     private String serverId;
+    private boolean firstError;
+    private boolean firstTest;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
@@ -69,8 +72,20 @@ public class WorkspaceManagement {
         MAVEN_INVOKER.setOutputHandler(new InvocationOutputHandler() {
             @Override
             public void consumeLine(String string) {
-                invocationOutput.append(string);
-                invocationOutput.append("\n");
+                if(string.startsWith("Tests run:") && firstTest){
+                    invocationOutput.append(string);
+                    invocationOutput.append("\n------------------------------------------------------\n");
+                    firstTest = false;
+                }
+                if(string.startsWith("[ERROR]") && string.contains("MoC/Competitions")){
+                    if(firstError){
+                        invocationOutput.append("Build failed");
+                        invocationOutput.append("\n------------------------------------------------------\n");
+                        firstError = false;
+                    }
+                    invocationOutput.append("[ERROR] " + string.substring(string.lastIndexOf("/") + 1));
+                    invocationOutput.append("\n");
+                }
             }
         });
     }
@@ -183,7 +198,7 @@ public class WorkspaceManagement {
     public String updateFile(String competitionId, String teamName, String filePath, String fileContent) {
         //variables
         File teamFolder = new File(pathInstance.teamPath(competitionId, teamName));
-        File originalPath = new File(teamFolder.getAbsolutePath() + File.separator + filePath);
+        File originalPath = new File(filePath);
         File tempPath = new File(originalPath + ".temp");
         String deleteTempFileError = "Error while deleting temp file: ";
         //if the file exists, backup
@@ -419,9 +434,11 @@ public class WorkspaceManagement {
             beforeMavenInvocation(competitionId, teamName, challengeName);
             request.setGoals(Arrays.asList("install"));
             request.setProperties(new Properties());
-
+            
+            firstError = true;
+            firstTest = true;
             MAVEN_INVOKER.execute(request);
-
+            
             return getInvocationResult();
         } catch (IOException | MavenInvocationException ex) {
             Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);
@@ -460,16 +477,15 @@ public class WorkspaceManagement {
      * @param competitionId The id of the competition
      * @param teamName The name of the team within the competition
      * @param challengeName The name of the challenge to test
-     * @param testFile The file to test
      * @param testName The name of the test to test
      * @return A String indicating the result of the test
      */
-    public String test(String competitionId, String teamName, String challengeName, String testFile, String testName) {
+    public String test(String competitionId, String teamName, String challengeName, String testName) {
         try {
             beforeMavenInvocation(competitionId, teamName, challengeName);
             request.setGoals(Arrays.asList("test"));
             Properties p = new Properties();
-            p.setProperty("test", testFile + "#" + testName);
+            p.setProperty("test", testName);
             request.setProperties(p);
 
             MAVEN_INVOKER.execute(request);
@@ -512,7 +528,7 @@ public class WorkspaceManagement {
     private String getInvocationResult() {
         String result = invocationOutput.toString();
         invocationOutput = new StringBuilder();
-        return result;
+        return result.replaceAll("\n", "<br />");
     }
     // </editor-fold>
     // </editor-fold>    

@@ -37,9 +37,9 @@ public class FileManagement {
     private AnnotationDB db;
     private Map<String, Set<String>> annotationIndex;
     private ArrayList<String> editables;
-    private final List<Test> userTests;
-    private final List<Test> systemTests;
-    private final List<Test> ambivalentTests;
+    private final List<String> userTests;
+    private final List<String> systemTests;
+    private final List<String> ambivalentTests;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
@@ -75,7 +75,7 @@ public class FileManagement {
             db.scanArchives(jarUrl);
             annotationIndex = db.getAnnotationIndex();
 
-            addToVisibleClasses(annotationIndex.get(Challenge.class.getName()));
+            //addToVisibleClasses(annotationIndex.get(Challenge.class.getName()));
             addToVisibleClasses(annotationIndex.get(Editable.class.getName()));
             addToVisibleClasses(annotationIndex.get(ReadOnly.class.getName()));
             addToVisibleClasses(annotationIndex.get(Hint.class.getName()));
@@ -85,60 +85,73 @@ public class FileManagement {
                 String lastPart = parts[parts.length - 1];
                 editables.add(lastPart);
             }
+            //<editor-fold defaultstate="collapsed" desc="scan tests">   
             //variables
             String testJarPath = filepath.substring(0, filepath.length() - 4);
             testJarPath += "-tests.jar";
-            Enumeration e = new JarFile(testJarPath).entries();
-            URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
-            URLClassLoader cl = URLClassLoader.newInstance(testJarUrl);
-            //loop through the jar
-            System.out.println("_____SCANNING TESTS JAR_____");
-            while (e.hasMoreElements()) {
-                JarEntry je = (JarEntry) e.nextElement();
-                if (je.isDirectory() || !je.getName().endsWith(".class")) {
-                    continue;
-                }
-                // -6 because of .class
-                String className = je.getName().substring(0, je.getName().length() - 6);
-                className = className.replace('/', '.');
-                Class c = cl.loadClass(className);
-                System.out.println("__________________________________________");
-                System.out.println("class name: " + c.getName());
-                System.out.println("class simple name: " + c.getSimpleName());
-                Test t = (Test) c.getAnnotation(Test.class);
-                if (t.groups().length == 2) {
-                    ambivalentTests.add(t);
-                } else {
-                    switch (t.groups()[0]) {
-                        case "user":
-                            userTests.add(t);
-                            break;
-                        case "system":
-                            systemTests.add(t);
-                            break;
-                        default:
-                            throw new AssertionError("unexpected value: " + t.groups()[0]);
+            try {
+                System.out.println();
+                System.out.println("______SCANNING FOR TESTS______");
+                System.out.println("Test jar path: " + testJarPath);
+                JarFile jarFile = new JarFile(testJarPath);
+                Enumeration e = jarFile.entries();
+                URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
+                URLClassLoader cl = URLClassLoader.newInstance(testJarUrl, Thread.currentThread().getContextClassLoader());
+                while (e.hasMoreElements()) {
+                    JarEntry je = (JarEntry) e.nextElement();
+                    if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                        continue;
+                    }
+                    // -6 because of .class
+                    String className = je.getName().substring(0, je.getName().length() - 6);
+                    className = className.replace('/', '.');
+                    Class c = cl.loadClass(className);
+                    System.out.println("__________________________________________");
+                    System.out.println("class name: " + c.getName());
+                    System.out.println("class simple name: " + c.getSimpleName());
+                    Test t = (Test) c.getAnnotation(Test.class);
+                    if (t.groups().length == 2) {
+                        ambivalentTests.add(t.testName());
+                    } else {
+                        switch (t.groups()[0]) {
+                            case "user":
+                                userTests.add(t.testName());
+                                break;
+                            case "system":
+                                systemTests.add(t.testName());
+                                break;
+                            default:
+                                throw new AssertionError("unexpected value: " + t.groups()[0]);
+                        }
+                    }
+                    System.out.println("test name: " + t.testName());
+                    System.out.println("test description: " + t.description());
+                    for (String s : t.groups()) {
+                        System.out.println("-Group member: " + s);
                     }
                 }
-                System.out.println("test name: " + t.testName());
-                System.out.println("test description: " + t.description());
-                for (String s : t.groups()) {
-                    System.out.println("-Group member: " + s);
-                }
-            }
-            System.out.println("__________________________________________");
+                System.out.println("__________________________________________");
 
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            // </editor-fold>
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.err.println(ex.getMessage());
-        } catch(Exception ex){
-            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+            //System.err.println(ex.getMessage());
         }
     }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
+    public List<String> getAvailableTests(){
+        List toReturn = new ArrayList<>();
+        toReturn.addAll(userTests);
+        toReturn.addAll(ambivalentTests);
+        return toReturn;
+    }
+    
     public String getFolderStructureJSON(String folderPath) {
         File folder = new File(folderPath);
         if (!folder.isDirectory() || (folder.isDirectory() && folder.getName().equals("target"))) {
@@ -205,24 +218,20 @@ public class FileManagement {
         return false;
     }
 
-    public String getAvailableTests() {
-        JsonArrayBuilder userTestsJSON = Json.createArrayBuilder();
-        for (Test t : userTests) {
+    public String getAvailableTestsJSON() {
+        JsonArrayBuilder testsJson = Json.createArrayBuilder();
+        for (String s : userTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
-            job.add("name", t.testName());
-            //add more
-            userTestsJSON.add(job);
+            job.add("name", s);
+            testsJson.add(job);
         }
-        JsonArrayBuilder ambivalentTestsJSON = Json.createArrayBuilder();
-        for (Test t : ambivalentTests) {
+        for (String s : ambivalentTests) {
             JsonObjectBuilder job = Json.createObjectBuilder();
-            job.add("name", t.testName());
-            //add more
-            ambivalentTestsJSON.add(job);
+            job.add("name", s);
+            testsJson.add(job);
         }
         JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("userTests", userTestsJSON);
-        result.add("ambivalentTests", ambivalentTestsJSON);
+        result.add("tests", testsJson);
         return result.build().toString();
     }
     //</editor-fold>

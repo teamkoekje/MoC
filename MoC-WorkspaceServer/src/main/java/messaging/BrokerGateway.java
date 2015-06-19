@@ -146,13 +146,26 @@ public class BrokerGateway implements IRequestListener<Request> {
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
-                return new NormalReply(wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()));
+                wm.updateFile(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getFilePath(), compileRequest.getFileContent());
+                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
             case TEST:
                 TestRequest testRequest = (TestRequest) r;
-                return new NormalReply(wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestFile(), testRequest.getTestName()));
+                wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
+
+                jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
+                        + File.separator
+                        + testRequest.getChallengeName()
+                        + ".jar";
+                FileManagement instance = FileManagement.getInstance(jarPath);
+                if (instance.getAvailableTests().contains(testRequest.getTestName())) {
+                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
+                }else{
+                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
+                }
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
-                return new NormalReply(wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()));
+                wm.updateFile(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getFilePath(), testAllRequest.getFileContent());
+                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()) + "\"}");
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
                 return new NormalReply(wm.updateFile(Long.toString(updateRequest.getCompetitionId()), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
@@ -186,14 +199,14 @@ public class BrokerGateway implements IRequestListener<Request> {
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             case AVAILABLE_TESTS:
-                AvailableTestsRequest atRequest = (AvailableTestsRequest)r;
-                
+                AvailableTestsRequest atRequest = (AvailableTestsRequest) r;
+
                 jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId()))
                         + File.separator
                         + atRequest.getChallengeName()
                         + ".jar";
-                
-                return new NormalReply(FileManagement.getInstance(jarPath).getAvailableTests());
+
+                return new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTestsJSON() + "}");
             default:
                 return new NormalReply("error, unknown action: " + r.getAction().name());
         }

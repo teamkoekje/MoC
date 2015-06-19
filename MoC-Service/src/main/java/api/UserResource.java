@@ -200,9 +200,11 @@ public class UserResource {
             return Response.serverError().entity("Error creating user").build();
         }
         if (token != null) {
-            invitationService.acceptInvitation(user, token);
+          if(invitationService.acceptInvitation(user, token)){
+              return Response.ok(user).build();
+          }
         }
-        return Response.ok(user).build();
+        return Response.serverError().entity("Error while adding user, User is already in this team or team is full").build();
     }
 
     /**

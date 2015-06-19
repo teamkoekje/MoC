@@ -9,15 +9,13 @@ package workspace.Requests;
 public class TestRequest extends TeamRequest {
 
     private final String challengeName;
-    private final String testFile;
     private final String testName;
     private final String filePath;
     private final String fileContent;
 
-    public TestRequest(long competitionId, String teamname, String challengeName, String testFile, String testName, String filePath, String fileContent) {
+    public TestRequest(long competitionId, String teamname, String challengeName, String testName, String filePath, String fileContent) {
         super(RequestAction.TEST, competitionId, teamname);
         this.challengeName = challengeName;
-        this.testFile = testFile;
         this.testName = testName;
         this.filePath = filePath;
         this.fileContent = fileContent;
@@ -29,10 +27,6 @@ public class TestRequest extends TeamRequest {
 
     public String getTestName() {
         return testName;
-    }
-
-    public String getTestFile() {
-        return testFile;
     }
 
     public String getFilePath() {

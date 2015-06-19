@@ -22,4 +22,12 @@ public class TestAllRequest extends TeamRequest{
     public String getChallengeName() {
         return challengeName;
     }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public String getFileContent() {
+        return fileContent;
+    }
 }

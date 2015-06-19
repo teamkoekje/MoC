@@ -61,7 +61,7 @@ public class WorkspaceResource {
             if (team != null) {
                 String messageId = workspaceService.update(competitionId, team.getName(), file.getFilePath(), file.getFileContent());
                 workspaceService.storeRequestMessage(messageId, request.getRemoteUser());
-                return Response.ok("File updated").build();
+                return Response.ok().build();
             } else {
                 return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
             }
@@ -112,14 +112,14 @@ public class WorkspaceResource {
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/test/{testFile}/{testname}")
-    public Response test(@PathParam("competitionId") long competitionId, @PathParam("testFile") String testFile, @PathParam("testName") String testName, CodeFile file) {
+    @Path("/{competitionId}/test/{testname}")
+    public Response test(@PathParam("competitionId") long competitionId, @PathParam("testName") String testName, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
         if (competition != null && competition.getCurrentRound() != null) {
             Team team = competition.getTeamByUsername(request.getRemoteUser());
             Challenge challenge = competition.getCurrentRound().getChallenge();
             if (team != null) {
-                String messageId = workspaceService.test(competitionId, team.getName(), challenge.getName(), testFile, testName, file.getFilePath(), file.getFileContent());
+                String messageId = workspaceService.test(competitionId, team.getName(), challenge.getName(), testName, file.getFilePath(), file.getFileContent());
                 workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
                 return Response.ok("Test is being executed").build();
             } else {

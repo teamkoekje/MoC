@@ -57,7 +57,7 @@ controllers.service('newsfeedService', function () {
 
 });
 
-controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 'user', 'newsfeedService', '$cookies', 
+controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 'user', 'newsfeedService', '$cookies',
     function ($scope, $rootScope, $translate, $user, newsfeedService, $cookies) {
         $rootScope.loading = false;
         $scope.changeLanguage = function (langKey) {
@@ -139,6 +139,7 @@ controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 
             ws.onmessage = function (msg) {
                 console.log(msg);
                 var result = $.parseJSON(msg.data);
+                console.log(result);
                 if (typeof result.hint !== 'undefined') {
                     newsfeedService.addHint(result.hint.text);
                 } else if (typeof result.message !== 'undefined') {
@@ -147,7 +148,7 @@ controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 
                     newsfeedService.sendMessage(result);
                 }
             };
-			
+
             ws.onclose = function () {
                 console.log("closing websocket");
                 return false;
@@ -442,8 +443,8 @@ controllers.controller('inviteUserController', ['$scope', '$rootScope', 'team', 
         loadData();
     }
 ]);
-controllers.controller('competitionController', ['$scope', '$rootScope', 'workspace', '$routeParams', 'newsfeedService',
-    function ($scope, $rootScope, $workspace, $routeParams, newsfeedService) {
+controllers.controller('competitionController', ['$scope', '$sce', '$rootScope', 'workspace', '$routeParams', 'newsfeedService',
+    function ($scope, $sce, $rootScope, $workspace, $routeParams, newsfeedService) {
 
         //http://ace.c9.io/#nav=howto
         var editor;
@@ -630,9 +631,11 @@ controllers.controller('competitionController', ['$scope', '$rootScope', 'worksp
          * Sends compile request
          */
         $scope.compile = function () {
+            $rootScope.loading = true;
             var file = new $workspace.compile({competitionId: $routeParams.id});
             file.fileContent = $scope.getTextFromEditor();
             file.filePath = $scope.file.filepath;
+
             file.$save(function (data) {
                 console.log(data.data);
             });
@@ -659,9 +662,23 @@ controllers.controller('competitionController', ['$scope', '$rootScope', 'worksp
         };
 
         $scope.selectFile = function (file) {
-            console.log("Select file with path: " + file.filepath);
+            $rootScope.loading = true;
+
+            //Save previous selected file
+            if ($scope.file !== undefined) {
+                var f = new $workspace.update({competitionId: $routeParams.id});
+                f.filePath = $scope.file.filepath;
+                f.fileContent = $scope.getTextFromEditor();
+                f.$save(function (data) {
+                    //TODO: SYNTAXERROR UNEXPECTED TOKEN F
+                    //console.log(data);
+                });
+            }
+
             $scope.file = file;
             editor.setReadOnly(!file.editable);
+
+            //Get file content
             $workspace.file.save({competitionId: $routeParams.id}, file.filepath);
         };
 
@@ -674,16 +691,23 @@ controllers.controller('competitionController', ['$scope', '$rootScope', 'worksp
 
         //Subscribe to newsfeed
         newsfeedService.subscribe(function (msg) {
-            console.log(msg);
             switch (msg.type) {
                 case "filestructure":
                     $scope.files = msg.data;
                     $scope.selectFile($scope.files[0]);
                     break;
+                case "availabletests":
+                    $scope.availableTests = msg.data;
+                    console.log($scope.availableTests);
+                    break;
                 case "file":
-                    $scope.file = msg.data;
+                    $scope.file.filecontent = msg.data.filecontent;
                     $scope.setTextFromEditor(msg.data.filecontent);
-                    //$scope.selectFile(files[0]);
+                    $rootScope.loading = false;
+                    break;
+                case "buildresult":
+                    $rootScope.loading = false;
+                    $scope.results.push($sce.trustAsHtml(msg.data));
                     break;
             }
             $scope.$apply();
@@ -691,7 +715,9 @@ controllers.controller('competitionController', ['$scope', '$rootScope', 'worksp
 
         //Request folderstructure
         $workspace.folderStructure.save({competitionId: $routeParams.id});
+        $workspace.availableTests.save({competitionId: $routeParams.id});
 
+        $scope.results = [];
         $scope.messages = newsfeedService.getMessages();
         $scope.hints = newsfeedService.getHints();
     }
