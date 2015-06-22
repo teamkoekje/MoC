@@ -1,4 +1,4 @@
-package Messaging;
+package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="imports" >
 import workspace.Requests.UpdateRequest;
