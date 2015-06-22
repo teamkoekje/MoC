@@ -65,6 +65,7 @@ public class Competition implements Serializable {
     private final List<Team> teams = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
+    @XmlElement
     private Round currentRound;
 
     private CompetitionState competitionState = CompetitionState.NOT_STARTED;

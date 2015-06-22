@@ -29,13 +29,12 @@
         <div class="row" style='height: 350px'>
             <div class="col-xs-12" id="wrapperAroundEditor" style='height: 100%;'>
                 <div id="editor" style='height:100%'>Class test{}</div>
-                <div id="htmlContentViewer" ng-bind-html-unsafe="htmlFile"></div>
+                <div id="htmlContentViewer" ng-bind-html="htmlFile"></div>
             </div>
-            <div class="col-xs-6" style='display:none' id="wrapperAroundResults">
-                <div class="first" style="width: 50px;margin-left:7%;">Result</div>
+            <div class="col-xs-6" style='display:none; height:100%;' id="wrapperAroundResults">
                 <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
                     
-                    <div id="resultList" ng-bind-html="result" ng-repeat="result in results">
+                    <div class="result" ng-bind-html="result" ng-repeat="result in results">
                         
                     </div>
                 </div>

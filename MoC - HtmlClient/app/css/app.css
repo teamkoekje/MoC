@@ -96,3 +96,13 @@ form input:not([type="submit"]){
 #htmlContentViewer{
     display:none;
 }
+
+.result {
+    border-bottom:1px solid black;
+    margin-top:10px;
+}
+
+.second {
+   height:100%;
+   overflow:auto;
+}
