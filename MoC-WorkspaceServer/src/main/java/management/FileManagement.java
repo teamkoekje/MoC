@@ -198,7 +198,7 @@ public class FileManagement {
                 if (!f.getName().equals("target")) {
                     listFolderJSON(f, jsonArrayBuilder);
                 }
-            } else if (isVisible(f.getName()) || f.getName().endsWith(".html")) {
+            } else if (isVisible(f.getName()) || f.getName().endsWith("Participants.html")) {
                 JsonObjectBuilder job = Json.createObjectBuilder();
                 job.add("filename", f.getName());
                 job.add("filepath", f.getAbsolutePath());
