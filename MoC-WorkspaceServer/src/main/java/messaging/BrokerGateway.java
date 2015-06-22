@@ -18,7 +18,6 @@ import controllers.PathController;
 import controllers.SystemInformation;
 import management.FileManagement;
 import management.WorkspaceManagement;
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -29,11 +28,8 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
-import messaging.AsynchronousReplier;
 import messaging.MessagingConstants.DestinationType;
-import messaging.IRequestListener;
 import messaging.MessagingConstants.JMSSettings;
-import messaging.MessagingGateway;
 import workspace.Requests.AvailableTestsRequest;
 //</editor-fold>
 
@@ -141,8 +137,8 @@ public class BrokerGateway implements IRequestListener<Request> {
      * @return A reply respective to the original request.
      */
     private Reply handleRequest(Request r) {
-        String jarPath;
         NormalReply reply;
+        long competitionId; String challengeName;
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
@@ -178,15 +174,17 @@ public class BrokerGateway implements IRequestListener<Request> {
                 break;
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
-                jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId())) + File.separator + fileRequest.getChallengeName() + ".jar";
-                reply = new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
+                competitionId = fileRequest.getCompetitionId();
+                challengeName = fileRequest.getChallengeName();                
+                reply = new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(competitionId, challengeName).getFileContentJSON(fileRequest.getFilepath()) + "}");
                 break;
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             case AVAILABLE_TESTS:
                 AvailableTestsRequest atRequest = (AvailableTestsRequest) r;
-                jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId())) + File.separator + atRequest.getChallengeName() + ".jar";
-                reply = new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTestsJSON() + "}");
+                competitionId = atRequest.getCompetitionId();
+                challengeName = atRequest.getChallengeName();      
+                reply = new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(competitionId, challengeName).getAvailableTestsJSON() + "}");
                 break;
             default:
                 reply = new NormalReply("error, unknown action: " + r.getAction().name());
@@ -203,11 +201,7 @@ public class BrokerGateway implements IRequestListener<Request> {
     private NormalReply runTest(TestRequest testRequest){
         wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
 
-        String jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
-                + File.separator
-                + testRequest.getChallengeName()
-                + ".jar";
-        FileManagement instance = FileManagement.getInstance(jarPath);
+        FileManagement instance = FileManagement.getInstance(testRequest.getCompetitionId(), testRequest.getChallengeName());
         if (instance.getAvailableTests().contains(testRequest.getTestName())) {
             return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
         }else{
@@ -217,19 +211,15 @@ public class BrokerGateway implements IRequestListener<Request> {
     
     /**
      * Returns the requested folder structure
-     * @param folderStructureRequest
+     * @param fsr
      * @return 
      */
-    private NormalReply getFolderStructure(FolderStructureRequest folderStructureRequest){
+    private NormalReply getFolderStructure(FolderStructureRequest fsr){
         String folderPath = pathInstance.teamChallengePath(
-                Long.toString(folderStructureRequest.getCompetitionId()),
-                folderStructureRequest.getTeamName(),
-                folderStructureRequest.getChallengeName());
-        String jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
-                + File.separator
-                + folderStructureRequest.getChallengeName()
-                + ".jar";
-        return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
+                Long.toString(fsr.getCompetitionId()),
+                fsr.getTeamName(),
+                fsr.getChallengeName());
+        return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(fsr.getCompetitionId(), fsr.getChallengeName()).getFolderStructureJSON(folderPath) + "}");
     }
     // </editor-fold>
 }
