@@ -221,6 +221,9 @@ public class Competition implements Serializable {
             Map<String, Long> roundMap = r.getSubmittedTeams();
             for (Entry<String, Long> roundValue : roundMap.entrySet()) {
                 Long currentTotalValue = toReturn.get(roundValue.getKey());
+                if(currentTotalValue == null){
+                    currentTotalValue = 0L;
+                }
                 toReturn.put(roundValue.getKey(), currentTotalValue + roundValue.getValue());
             }
         }
