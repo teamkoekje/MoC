@@ -138,25 +138,24 @@ public class BrokerGateway implements IRequestListener<Request> {
      * @return A reply respective to the original request.
      */
     private Reply handleRequest(Request r) {
-        Reply reply;
-        long competitionId;
-        String challengeName;
+        NormalReply reply;
+        long competitionId; String challengeName;
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
                 wm.updateFile(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getFilePath(), compileRequest.getFileContent());
-                reply = new NormalReply(wrapReturnData("submitresult", wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName())));
+                reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
                 if(compileRequest.isSubmitRequest()){
                     reply.setReplyAction(ReplyAction.SUBMIT);
                 }
-                break;
+				break;
             case TEST:
                 reply = runTest((TestRequest) r);
                 break;
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
                 wm.updateFile(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getFilePath(), testAllRequest.getFileContent());
-                reply = new NormalReply(wrapReturnData("buildresult", wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName())));
+                reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()) + "\"}");
                 break;
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
@@ -180,17 +179,16 @@ public class BrokerGateway implements IRequestListener<Request> {
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 competitionId = fileRequest.getCompetitionId();
-                challengeName = fileRequest.getChallengeName();
-                reply = new NormalReply(wrapReturnData("file", FileManagement.getInstance(competitionId, challengeName).getFileContentJSON(fileRequest.getFilepath())));
+                challengeName = fileRequest.getChallengeName();                
+                reply = new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(competitionId, challengeName).getFileContentJSON(fileRequest.getFilepath()) + "}");
                 break;
             case SYSINFO:
-                reply = new BroadcastReply(SystemInformation.getInfo());
-                break;
+                return new BroadcastReply(SystemInformation.getInfo());
             case AVAILABLE_TESTS:
                 AvailableTestsRequest atRequest = (AvailableTestsRequest) r;
                 competitionId = atRequest.getCompetitionId();
-                challengeName = atRequest.getChallengeName();
-                reply = new NormalReply(wrapReturnData("availabletests", FileManagement.getInstance(competitionId, challengeName).getAvailableTestsJSON()));
+                challengeName = atRequest.getChallengeName();      
+                reply = new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(competitionId, challengeName).getAvailableTestsJSON() + "}");
                 break;
             default:
                 reply = new NormalReply("error, unknown action: " + r.getAction().name());
@@ -198,40 +196,34 @@ public class BrokerGateway implements IRequestListener<Request> {
         }
         return reply;
     }
-
+    
     /**
      * Runs the specified test
-     *
      * @param testRequest
-     * @return
+     * @return 
      */
-    private NormalReply runTest(TestRequest testRequest) {
+    private NormalReply runTest(TestRequest testRequest){
         wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
 
         FileManagement instance = FileManagement.getInstance(testRequest.getCompetitionId(), testRequest.getChallengeName());
         if (instance.getAvailableTests().contains(testRequest.getTestName())) {
-            return new NormalReply(wrapReturnData("buildresult", wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName())));
-        } else {
-            return new NormalReply(wrapReturnData("buildresult", "\"Error: Specified test is not available.\""));
+            return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
+        }else{
+            return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
         }
     }
-
+    
     /**
      * Returns the requested folder structure
-     *
      * @param fsr
-     * @return
+     * @return 
      */
-    private NormalReply getFolderStructure(FolderStructureRequest fsr) {
+    private NormalReply getFolderStructure(FolderStructureRequest fsr){
         String folderPath = pathInstance.teamChallengePath(
                 Long.toString(fsr.getCompetitionId()),
                 fsr.getTeamName(),
                 fsr.getChallengeName());
-        return new NormalReply(wrapReturnData("filestructure", FileManagement.getInstance(fsr.getCompetitionId(), fsr.getChallengeName()).getFolderStructureJSON(folderPath)));
-    }
-
-    private String wrapReturnData(String type, String data) {
-        return "{\"type\":\"" + type + "\",\"data\":" + data + "}";
+        return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(fsr.getCompetitionId(), fsr.getChallengeName()).getFolderStructureJSON(folderPath) + "}");
     }
     // </editor-fold>
 }

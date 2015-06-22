@@ -215,14 +215,14 @@ controllers.controller('competitionOverviewController', ['$scope', '$rootScope',
             $scope.selectedCompetition = competition;
             /*
              Team has:
-                @XmlElement
-                private Competition competition;
+             @XmlElement
+             private Competition competition;
              So we can't have:
-                @XmlElement
-                public List<Team> getTeams() {
-                    return teams;
-                }
-            To prevent any cyclic references
+             @XmlElement
+             public List<Team> getTeams() {
+             return teams;
+             }
+             To prevent any cyclic references
              */
             $scope.selectedCompetition.teams = new $competition.teams.query({competitionId: competition.id});
         };
@@ -349,11 +349,17 @@ controllers.controller('competitionViewController', ['$scope', '$rootScope', 'co
 
 controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge',
     function ($scope, $rootScope, $challenge) {
+        $scope.fileName = null;
         $scope.upload = function () {
             $rootScope.loading = true;
             //Lazy async task in JavaScript 
             setTimeout(function () {
-                $challenge.create.save($scope.base64File);
+                var object = {
+                    fileContent: $scope.base64File,
+                    fileName: $scope.fileName
+                };
+                console.log(object);
+                $challenge.create.save(object);
                 $rootScope.loading = false;
             }, 100);
         };
@@ -373,8 +379,12 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
         };
 
         var handleFileSelect = function (evt) {
+            $scope.loading = true;
             var files = evt.target.files;
             var file = files[0];
+
+            $scope.fileName = file.name;
+            $scope.$apply();
 
             if (files && file) {
                 var reader = new FileReader();
@@ -382,7 +392,8 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
                 reader.onload = function (readerEvt) {
                     var binaryString = readerEvt.target.result;
                     $scope.base64File = btoa(binaryString);
-                    console.log($scope.base64File);
+                    console.log(2);
+                    $scope.loading = false;
                 };
 
                 reader.readAsBinaryString(file);
@@ -390,7 +401,11 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
         };
 
         if (window.File && window.FileReader && window.FileList && window.Blob) {
-            document.getElementById('newChallengeUpload').addEventListener('change', handleFileSelect, false);
+            document.getElementById('newChallengeUpload').addEventListener(
+                    'change',
+                    handleFileSelect,
+                    false
+                    );
         } else {
             alert('The File APIs are not fully supported in this browser.');
         }
