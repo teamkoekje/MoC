@@ -354,12 +354,11 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
             $rootScope.loading = true;
             //Lazy async task in JavaScript 
             setTimeout(function () {
-                var object = {
-                    fileContent: $scope.base64File,
-                    fileName: $scope.fileName
-                };
-                console.log(object);
-                $challenge.create.save(object);
+                var formData = new FormData();
+                formData.append('fileContent', $scope.base64File);
+                formData.append('fileName', $scope.fileName);
+                console.log(formData);
+                $challenge.create.save(formData);
                 $rootScope.loading = false;
             }, 100);
         };
