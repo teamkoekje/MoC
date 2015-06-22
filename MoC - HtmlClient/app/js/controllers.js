@@ -648,7 +648,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
             $rootScope.loading = true;
 
             //Save previous selected file
-            if ($scope.file !== undefined) {
+            if ($scope.file !== undefined && $scope.file.editable) {
                 var f = new $workspace.update({competitionId: $routeParams.id});
                 f.filePath = $scope.file.filepath;
                 f.fileContent = $scope.getTextFromEditor();
@@ -692,7 +692,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                 case "file":
                     console.log(msg.data);
                     if(msg.data.filename.endsWith(".html")){
-                        $scope.htmlFile = msg.data.filecontent;
+                        $scope.htmlFile = $sce.trustAsHtml(msg.data.filecontent);
                         $("#editor").hide();
                         $("#htmlContentViewer").show();
                     }else{
