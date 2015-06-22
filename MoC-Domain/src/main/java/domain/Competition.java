@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
 /**
@@ -156,6 +157,7 @@ public class Competition implements Serializable {
         this.maxTeamSize = maxTeamSize;
     }
 
+    @XmlElement
     public List<Round> getRounds() {
         return rounds;
     }
@@ -224,7 +226,7 @@ public class Competition implements Serializable {
                         } else {
                             currentRound = null;
                             competitionState = CompetitionState.ENDED;
-                            ArrayList<CompetitionEvent> temp = new ArrayList<>();
+                            List<CompetitionEvent> temp = new ArrayList<>();
                             temp.add(new CompetitionEndedEvent(this));
                             return temp;
                         }
@@ -255,7 +257,7 @@ public class Competition implements Serializable {
      * @param time time in seconds allowed for completing the challenge
      */
     public void addChallenge(Challenge challenge, int time) {
-        Round r = new Round(challenge, time);
+        Round r = new Round(challenge, time, teams);
         r.setRoundOrder(rounds.size());
         rounds.add(r);
     }
@@ -339,7 +341,7 @@ public class Competition implements Serializable {
     public void startNextRound() throws IllegalStateException {
         switch (competitionState) {
             case NOT_STARTED:
-                if (rounds.size() > 0) {
+                if (!rounds.isEmpty()) {
                     currentRound = rounds.get(0);
                     currentRound.start();
                     competitionState = CompetitionState.ONGOING;

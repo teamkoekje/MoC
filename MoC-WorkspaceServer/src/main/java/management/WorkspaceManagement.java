@@ -27,7 +27,7 @@ public class WorkspaceManagement {
     /**
      * Key: Competition name Value: ArrayList<String> with team names
      */
-    private final HashMap<String, ArrayList<String>> competitions = new HashMap<>();
+    private final Map<String, List<String>> competitions = new HashMap<>();
     private static final File MAVEN_HOME = new File("C:\\Program Files\\apache-maven-3.2.5");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
@@ -59,11 +59,11 @@ public class WorkspaceManagement {
                     if (!competitions.containsKey(competitionName)) {
                         competitions.put(competitionName, new ArrayList());
                     }
-                    ArrayList<String> tempList = competitions.get(competitionName);
+                    List<String> tempList = competitions.get(competitionName);
                     for (File f2 : f.listFiles()) {
                         tempList.add(f2.getName());
                     }
-                    competitions.put(competitionName, tempList);
+                    competitions.put(competitionName, (ArrayList<String>) tempList);
                 }
             }
         }
@@ -137,7 +137,7 @@ public class WorkspaceManagement {
         try {
             File teamFolder = new File(pathInstance.teamPath(competitionId, teamName));
             teamFolder.mkdirs();
-            ArrayList<String> tempList = competitions.get(competitionId);
+            List<String> tempList = competitions.get(competitionId);
             if (tempList == null) {
                 tempList = new ArrayList<>();
             }
@@ -162,7 +162,7 @@ public class WorkspaceManagement {
     public String removeWorkspace(String competitionId, String teamName) {
         File teamFolder = new File(pathInstance.teamPath(competitionId, teamName));
         if (deleteDirectory(teamFolder)) {
-            ArrayList<String> tempList = competitions.get(competitionId);
+            List<String> tempList = competitions.get(competitionId);
             tempList.remove(teamName);
             competitions.put(competitionId, tempList);
             return "Workspace succesfully deleted";
@@ -197,7 +197,6 @@ public class WorkspaceManagement {
      */
     public String updateFile(String competitionId, String teamName, String filePath, String fileContent) {
         //variables
-        File teamFolder = new File(pathInstance.teamPath(competitionId, teamName));
         File originalPath = new File(filePath);
         File tempPath = new File(originalPath + ".temp");
         String deleteTempFileError = "Error while deleting temp file: ";
@@ -465,6 +464,8 @@ public class WorkspaceManagement {
             request.setGoals(Arrays.asList("test"));
             request.setProperties(new Properties());
 
+            firstError = true;
+            firstTest = true;
             MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();
@@ -492,6 +493,8 @@ public class WorkspaceManagement {
             p.setProperty("test", testName);
             request.setProperties(p);
 
+            firstError = true;
+            firstTest = true;
             MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();

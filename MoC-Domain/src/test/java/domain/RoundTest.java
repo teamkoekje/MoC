@@ -1,10 +1,9 @@
 package domain;
 
 import domain.enums.RoundState;
-import org.junit.After;
-import org.junit.AfterClass;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -18,25 +17,30 @@ public class RoundTest {
     @Before
     public void setUp() {
         Challenge c = new Challenge("Challenge1");
-        r = new Round(c, 100);
+        dummyTeams.add(new Team("team 1", new Competition("comp 1", null, null, null, null, 0, 0)));
+        dummyTeams.add(new Team("team 2", new Competition("comp 1", null, null, null, null, 0, 0)));
+        dummyTeams.add(new Team("team 3", new Competition("comp 1", null, null, null, null, 0, 0)));
+        r = new Round(c, 100,dummyTeams);
     }
+    
+    private List<Team> dummyTeams;
 
     @Test
     public void createRoundTest() {
         Round r;
         Challenge c = new Challenge("Challenge1");
         try {
-            r = new Round(null, 1);
+            r = new Round(null, 1, dummyTeams);
             fail("Expected IllegalArgumentException to be thrown on challenge");
         } catch (IllegalArgumentException ex) {
         }
         try {
-            r = new Round(c, 0);
+            r = new Round(c, 0, dummyTeams);
             fail("Expected IllegalArgumentException to be thrown on roundTime");
         } catch (IllegalArgumentException ex) {
         }
         try {
-            r = new Round(c, 1);
+            r = new Round(c, 1, dummyTeams);
             assertEquals(r.getChallenge(), c);
             assertEquals(r.getDuration(), 1);
         } catch (IllegalArgumentException ex) {

@@ -49,6 +49,14 @@ public class WorkspaceResource {
         String messageId = workspaceService.delete(competitionId, teamName);
         workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
+    
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{competitionId}/{teamName}/submit")
+    public void submit(@PathParam("competitionId") long competitionId, @PathParam("teamName") String teamName){
+        //String messageId = workspaceService.submit(competitionId, teamName);
+        //workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
+    }
 
     @POST
     @Consumes("application/xml,application/json")
