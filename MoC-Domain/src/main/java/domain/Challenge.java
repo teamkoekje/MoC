@@ -28,7 +28,7 @@ public class Challenge implements Serializable {
     private Long id;
 
     private String name;
-    private int difficulty;
+    private int difficulty = 1;
     private long suggestedDuration;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
@@ -68,7 +68,13 @@ public class Challenge implements Serializable {
     }
 
     public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
+        if (difficulty < 1) {
+            this.difficulty = 1;
+        } else if (difficulty > 3) {
+            this.difficulty = 3;
+        } else {
+            this.difficulty = difficulty;
+        }
     }
 
     public long getSuggestedDuration() {

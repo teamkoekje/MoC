@@ -55,6 +55,7 @@ public class Round implements Serializable {
     private List<Hint> hintsCopy;
 
     private List<Team> teams;
+    @XmlElement
     private Map<Team, Long> submittedTeams;
 
     // </editor-fold>

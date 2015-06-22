@@ -730,6 +730,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
             date = Date.parse(new Date());
             remainingTime = currentRound.duration * 1000 - (date - starttime);
             $scope.remainingTime = new Date(remainingTime);
+            //$scope.points = Math.round(remainingTime / 1000, 0) * currentRound.challenge.difficulty;
             $scope.$apply();
         };
 
