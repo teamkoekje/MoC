@@ -53,6 +53,7 @@ public class Round implements Serializable {
     private Calendar endTime;
 
     private List<Hint> hintsCopy;
+    private List<Hint> releasedHints;
 
     private List<Team> teams;
     private Map<String, Long> submittedTeams;
@@ -70,15 +71,13 @@ public class Round implements Serializable {
         if (roundTime <= 0) {
             throw new IllegalArgumentException("RoundTime must be positive");
         }
-        init();
         this.challenge = challenge;
         this.duration = roundTime;
         this.teams = new ArrayList<>(teams);
+        this.submittedTeams = new HashMap();
+        this.releasedHints = new ArrayList<>();
     }
 
-    private void init() {
-        this.submittedTeams = new HashMap();
-    }
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
@@ -195,6 +194,10 @@ public class Round implements Serializable {
     public int submittedTeamCount() {
         return submittedTeams.size();
     }
+    
+    public List<Hint> getReleasedHints(){
+        return this.releasedHints;
+    }
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="methods" >
@@ -282,6 +285,7 @@ public class Round implements Serializable {
                 if (elapsedTime() >= h.getTime()) {
                     events.add(new HintReleasedEvent(h));
                     hintsCopy.remove(i);
+                    releasedHints.add(h);
                 }
             }
         }

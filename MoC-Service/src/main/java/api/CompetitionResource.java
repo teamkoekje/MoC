@@ -5,6 +5,7 @@ import com.sun.media.jfxmedia.logging.Logger;
 import javax.ws.rs.core.Response;
 import domain.Challenge;
 import domain.Competition;
+import domain.Hint;
 import domain.Round;
 import domain.Team;
 import domain.enums.CompetitionState;
@@ -125,6 +126,26 @@ public class CompetitionResource {
     @Path("/{competitionId}/round")
     public List<Round> getRounds(@PathParam("competitionId") long competitionId) {
         return roundService.findByCompetition(competitionId);
+    }
+
+    /**
+     * Gets the released hints for the current round in the competition with the
+     * specified id. Only available for active competitions.
+     *
+     * @param competitionId the id of the competition
+     * @return A List of Hints that has been released, or null if the active
+     * competition was not found.
+     */
+    @GET
+    @Produces("application/xml,application/json")
+    @Path("/{competitionId}/releasedHints")
+    public List<Hint> getReleasedHints(@PathParam("competitionId") long competitionId) {
+        Competition activeCompetition = competitionService.getActiveCompetition(competitionId);
+        if (activeCompetition != null) {
+            return activeCompetition.getCurrentRound().getReleasedHints();
+        } else {
+            return null;
+        }
     }
 
     /**
