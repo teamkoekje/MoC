@@ -5,7 +5,7 @@ import com.sun.media.jfxmedia.logging.Logger;
 import java.util.*;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
-import messaging.MessagingConstants.JMSSettings;
+import messaging.messagingConstants.JMSSettings;
 // </editor-fold>
 
 /**

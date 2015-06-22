@@ -1,19 +1,19 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="imports" >
-import workspace.Requests.UpdateRequest;
-import workspace.Requests.FolderStructureRequest;
-import workspace.Requests.DeleteRequest;
-import workspace.Requests.CreateRequest;
-import workspace.Requests.CompileRequest;
-import workspace.Requests.Request;
-import workspace.Requests.FileRequest;
-import workspace.Requests.TestRequest;
-import workspace.Requests.PushRequest;
-import workspace.Requests.TestAllRequest;
-import workspace.Replies.Reply;
-import workspace.Replies.BroadcastReply;
-import workspace.Replies.NormalReply;
+import workspace.requests.UpdateRequest;
+import workspace.requests.FolderStructureRequest;
+import workspace.requests.DeleteRequest;
+import workspace.requests.CreateRequest;
+import workspace.requests.CompileRequest;
+import workspace.requests.Request;
+import workspace.requests.FileRequest;
+import workspace.requests.TestRequest;
+import workspace.requests.PushRequest;
+import workspace.requests.TestAllRequest;
+import workspace.replies.Reply;
+import workspace.replies.BroadcastReply;
+import workspace.replies.NormalReply;
 import controllers.PathController;
 import controllers.SystemInformation;
 import management.FileManagement;
@@ -28,10 +28,10 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
-import messaging.MessagingConstants.DestinationType;
-import messaging.MessagingConstants.JMSSettings;
-import workspace.Replies.ReplyAction;
-import workspace.Requests.AvailableTestsRequest;
+import messaging.messagingConstants.DestinationType;
+import messaging.messagingConstants.JMSSettings;
+import workspace.replies.ReplyAction;
+import workspace.requests.AvailableTestsRequest;
 //</editor-fold>
 
 /**

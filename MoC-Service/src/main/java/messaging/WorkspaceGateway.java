@@ -2,9 +2,9 @@ package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import com.sun.media.jfxmedia.logging.Logger;
-import messaging.MessagingConstants.DestinationType;
-import messaging.MessagingConstants.GatewayType;
-import messaging.MessagingConstants.JMSSettings;
+import messaging.messagingConstants.DestinationType;
+import messaging.messagingConstants.GatewayType;
+import messaging.messagingConstants.JMSSettings;
 import java.io.Serializable;
 import java.util.List;
 import javax.jms.JMSException;
@@ -12,9 +12,9 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.naming.NamingException;
-import workspace.Replies.Reply;
-import workspace.Requests.Request;
-import workspace.Requests.TeamRequest;
+import workspace.replies.Reply;
+import workspace.requests.Request;
+import workspace.requests.TeamRequest;
 import workspace.WorkspaceSenderRouter;
 import workspace.WorkspaceServer;
 

@@ -1,4 +1,4 @@
-package workspace.Requests;
+package workspace.requests;
 
 /**
  * Indicates the action for the request. This is used on the workspace servers

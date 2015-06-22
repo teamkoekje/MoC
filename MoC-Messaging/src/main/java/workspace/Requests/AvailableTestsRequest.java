@@ -1,4 +1,4 @@
-package workspace.Requests;
+package workspace.requests;
 
 // <editor-fold defaultstate="collapsed" desc="imports" >
 // </editor-fold>
