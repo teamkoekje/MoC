@@ -18,10 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import service.CompetitionService;
-import service.InvitationService;
 import service.RoundService;
-import service.TeamService;
-import service.UserService;
 // </editor-fold>
 
 /**

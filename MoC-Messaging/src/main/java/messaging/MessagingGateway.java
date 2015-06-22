@@ -1,6 +1,7 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import messaging.MessagingConstants.GatewayType;
 import messaging.MessagingConstants.JMSSettings;
 import java.io.Serializable;
@@ -97,6 +98,9 @@ public class MessagingGateway {
                 this.receiverDestination = (Destination) jndiContext.lookup(destinationName);
                 this.consumer = session.createConsumer(receiverDestination);
                 break;
+            default:
+                Logger.logMsg(Logger.ERROR, "ERROR Default switch is not supported. MessagingGateway");
+                break;
         }
     }
     // </editor-fold>
@@ -144,7 +148,7 @@ public class MessagingGateway {
         try {
             consumer.setMessageListener(listener);
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
     // </editor-fold>
@@ -162,7 +166,7 @@ public class MessagingGateway {
             producer.send(msg);
             return true;
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             return false;
         }
     }
@@ -180,7 +184,7 @@ public class MessagingGateway {
             producer.send(d, msg);
             return true;
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             return false;
         }
     }
@@ -214,7 +218,7 @@ public class MessagingGateway {
         try {
             connection.start();
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
 
@@ -225,7 +229,7 @@ public class MessagingGateway {
         try {
             connection.close();
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
     // </editor-fold>
