@@ -142,52 +142,57 @@ public class BrokerGateway implements IRequestListener<Request> {
      */
     private Reply handleRequest(Request r) {
         String jarPath;
+        NormalReply reply;
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
                 wm.updateFile(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getFilePath(), compileRequest.getFileContent());
-                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
+                reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
+                break;
             case TEST:
-                return runTest((TestRequest) r);
+                reply = runTest((TestRequest) r);
+                break;
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
                 wm.updateFile(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getFilePath(), testAllRequest.getFileContent());
-                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()) + "\"}");
+                reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()) + "\"}");
+                break;
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
-                return new NormalReply(wm.updateFile(Long.toString(updateRequest.getCompetitionId()), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                reply = new NormalReply(wm.updateFile(Long.toString(updateRequest.getCompetitionId()), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                break;
             case CREATE:
                 CreateRequest createRequest = (CreateRequest) r;
-                return new NormalReply(wm.createWorkspace(Long.toString(createRequest.getCompetitionId()), createRequest.getTeamName()));
+                reply = new NormalReply(wm.createWorkspace(Long.toString(createRequest.getCompetitionId()), createRequest.getTeamName()));
+                break;
             case DELETE:
                 DeleteRequest deleteRequest = (DeleteRequest) r;
-                return new NormalReply(wm.removeWorkspace(Long.toString(deleteRequest.getCompetitionId()), deleteRequest.getTeamName()));
+                reply = new NormalReply(wm.removeWorkspace(Long.toString(deleteRequest.getCompetitionId()), deleteRequest.getTeamName()));
+                break;
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
+                reply = new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
+                break;
             case FOLDER_STRUCTURE:
-                return getFolderStructure((FolderStructureRequest) r);
+                reply = getFolderStructure((FolderStructureRequest) r);
+                break;
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
-                jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId()))
-                        + File.separator
-                        + fileRequest.getChallengeName()
-                        + ".jar";
-                return new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
+                jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId())) + File.separator + fileRequest.getChallengeName() + ".jar";
+                reply = new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
+                break;
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             case AVAILABLE_TESTS:
                 AvailableTestsRequest atRequest = (AvailableTestsRequest) r;
-
-                jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId()))
-                        + File.separator
-                        + atRequest.getChallengeName()
-                        + ".jar";
-                
-                return new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTestsJSON() + "}");
+                jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId())) + File.separator + atRequest.getChallengeName() + ".jar";
+                reply = new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTestsJSON() + "}");
+                break;
             default:
-                return new NormalReply("error, unknown action: " + r.getAction().name());
+                reply = new NormalReply("error, unknown action: " + r.getAction().name());
+                break;
         }
+        return reply;
     }
     
     /**
