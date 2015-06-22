@@ -1,3 +1,7 @@
+/* 
+You can use this SQL file to drop all tables from the database instead of having to fuck around with the foreign keys and trying to delete everything 4 times.
+Didn't really know the best spot to put this, but guessing that most database stuff is handled in service I'll just drop it here
+*/
 SET FOREIGN_KEY_CHECKS = 0;
 SET GROUP_CONCAT_MAX_LEN=32768;
 SET @tables = NULL;

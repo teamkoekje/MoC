@@ -91,6 +91,15 @@ public class CompetitionService extends GenericService<Competition> {
     public List<Competition> getFutureCompetitions() {
         return futureCompetitions;
     }
+    
+    public Competition getActiveCompetition(long competitionId){
+        for(Competition c : activeCompetitions){
+            if(c.getId() == competitionId){
+                return c;
+            }
+        }
+        return null;
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >

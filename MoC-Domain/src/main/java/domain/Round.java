@@ -53,12 +53,13 @@ public class Round implements Serializable {
     private Calendar endTime;
 
     private List<Hint> hintsCopy;
+    private List<Hint> releasedHints;
 
     private List<Team> teams;
-    @XmlElement
-    private Map<Team, Long> submittedTeams;
+    private Map<String, Long> submittedTeams;
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Round() {
     }
@@ -70,15 +71,13 @@ public class Round implements Serializable {
         if (roundTime <= 0) {
             throw new IllegalArgumentException("RoundTime must be positive");
         }
-        init();
         this.challenge = challenge;
         this.duration = roundTime;
         this.teams = new ArrayList<>(teams);
+        this.submittedTeams = new HashMap();
+        this.releasedHints = new ArrayList<>();
     }
 
-    private void init() {
-        this.submittedTeams = new HashMap();
-    }
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
@@ -176,7 +175,8 @@ public class Round implements Serializable {
      *
      * @return Set of teams
      */
-    public Map<Team, Long> getSubmittedTeams() {
+    @XmlElement
+    public Map<String, Long> getSubmittedTeams() {
         return submittedTeams;
     }
 
@@ -193,6 +193,10 @@ public class Round implements Serializable {
      */
     public int submittedTeamCount() {
         return submittedTeams.size();
+    }
+    
+    public List<Hint> getReleasedHints(){
+        return this.releasedHints;
     }
     //</editor-fold>
 
@@ -281,6 +285,7 @@ public class Round implements Serializable {
                 if (elapsedTime() >= h.getTime()) {
                     events.add(new HintReleasedEvent(h));
                     hintsCopy.remove(i);
+                    releasedHints.add(h);
                 }
             }
         }
@@ -293,7 +298,7 @@ public class Round implements Serializable {
      */
     private void addNonSubmittedTeams() {
         for (Team t : teams) {
-            submittedTeams.putIfAbsent(t, 0L);
+            submittedTeams.putIfAbsent(t.getName(), 0L);
         }
     }
 
@@ -332,7 +337,7 @@ public class Round implements Serializable {
      * @param toSubmit The team to submit
      */
     public void submit(Team toSubmit) {
-        submittedTeams.put(toSubmit, getRemainingPoints());
+        submittedTeams.put(toSubmit.getName(), getRemainingPoints());
     }
     //</editor-fold>
 }

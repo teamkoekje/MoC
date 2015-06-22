@@ -335,19 +335,6 @@ public class WorkspaceManagement {
      * @param competitionId Id of the competition
      */
     private void copyChallengeToTeam(String challengeName, String teamName, String competitionId) {
-
-        //TODO: DO IETS MET EXTRA JAR FILE IDK VRAAG AAN CASPER OF ROBIN
-        //TODO: EN TEST HET PUSHEN MET ONDERSTAANDE CODE EN KIJK OF COMPILEN DAN NOG GOED GAAT
-        
-//        File file = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName);
-//        String[] directories = file.list(new FilenameFilter() {
-//            @Override
-//            public boolean accept(File current, String name) {
-//                return new File(current, name).isDirectory();
-//            }
-//        });
-//        File srcFolder = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName + File.separator + directories[0]);
-
         File srcFolder = new File(pathInstance.challengesPath(competitionId) + File.separator + challengeName);
         File destFolder = new File(pathInstance.teamPath(competitionId, teamName));
 
