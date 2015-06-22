@@ -5,5 +5,5 @@ package workspace.Replies;
  * @author TeamKoekje
  */
 public enum ReplyAction {
-    BROADCAST, NORMAL
+    BROADCAST, NORMAL, SUBMIT
 }

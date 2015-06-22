@@ -1,7 +1,12 @@
 package service;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.codesnippets4all.json.parsers.JSONParser;
+import com.codesnippets4all.json.parsers.JsonParserFactory;
 import com.sun.media.jfxmedia.logging.Logger;
+import com.sun.org.apache.bcel.internal.generic.L2D;
+import domain.Competition;
+import domain.Team;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -55,6 +60,9 @@ public class WorkspaceService {
     @Inject
     private WebsocketEndpoint we;
 
+    @Inject
+    private CompetitionService cse;
+
     @PostConstruct
     private void init() {
         Logger.logMsg(Logger.INFO, "Workspace gateway created");
@@ -68,10 +76,33 @@ public class WorkspaceService {
                         String username = requests.get(message.getJMSCorrelationID());
                         ObjectMessage objMsg = (ObjectMessage) message;
                         Reply reply = (Reply) objMsg.getObject();
+                        Logger.logMsg(Logger.INFO, "Message received from workspace: " + reply.getMessage());
                         if (reply.getAction() == ReplyAction.BROADCAST) {
                             sia.addReply(reply);
+                        } else if (reply.getAction() == ReplyAction.SUBMIT) {
+                            //TODO: untested whether this entire if block works.
+                            JsonParserFactory factory = JsonParserFactory.getInstance();
+                            JSONParser parser = factory.newJsonParser();
+                            Map jsonMap = parser.parseJson(reply.getMessage());
+                            String get = (String) jsonMap.get("data");
+                            if (get.contains(", Failures: 0, Errors: 0,")) {
+                                for (Competition c : cse.getActiveCompetitions()) {
+                                    Team t = c.getTeamByUsername(username);
+                                    if (t != null) {
+                                        c.submit(t);
+                                        Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
+                                        we.sendToUser("Successfully submitted", username);
+                                        Logger.logMsg(Logger.INFO, "Message sent to client");
+                                        return;
+                                    }
+                                }
+                                Logger.logMsg(Logger.ERROR, "Could not find the user connected with the reply of this submit request. Did the active competition end?");
+                            } else {
+                                Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
+                                we.sendToUser("Errors / Test failures when attempting to submit.", username);
+                                Logger.logMsg(Logger.INFO, "Message sent to client");
+                            }
                         } else {
-                            Logger.logMsg(Logger.INFO, "Message received from workspace: " + reply.getMessage());
                             Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
                             we.sendToUser(reply.getMessage(), username);
                             Logger.logMsg(Logger.INFO, "Message sent to client");
@@ -102,7 +133,7 @@ public class WorkspaceService {
 
     public String delete(long competitionId, String teamName) {
         return gateway.deleteWorkspace(new DeleteRequest(competitionId, teamName));
-    }    
+    }
 
     public String update(long competitionId, String teamName, String filePath, String fileContent) {
         Logger.logMsg(Logger.INFO, "Updating file: " + filePath + " with content: " + fileContent);
@@ -111,7 +142,11 @@ public class WorkspaceService {
     }
 
     public String compile(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
-        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent));
+        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent, false));
+    }
+
+    public String submit(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
+        return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent, true));
     }
 
     public String testAll(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
@@ -129,7 +164,7 @@ public class WorkspaceService {
             gateway.broadcast(new PushRequest(competitionId, challengeName, data));
 
         } catch (IOException ex) {
-            Logger.logMsg(Logger.ERROR,ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
 
@@ -137,8 +172,8 @@ public class WorkspaceService {
         Logger.logMsg(Logger.INFO, "Get folder structure for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
-    
-    public String availableTests(long competitionId, String challengeName, String teamName){
+
+    public String availableTests(long competitionId, String challengeName, String teamName) {
         Logger.logMsg(Logger.INFO, "Get available tests for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new AvailableTestsRequest(competitionId, challengeName, teamName));
     }
@@ -162,5 +197,4 @@ public class WorkspaceService {
         });
     }
 
-    
 }

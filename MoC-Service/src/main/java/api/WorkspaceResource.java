@@ -48,14 +48,6 @@ public class WorkspaceResource {
         String messageId = workspaceService.delete(competitionId, teamName);
         workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
-    
-    @POST
-    @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/{teamName}/submit")
-    public void submit(@PathParam("competitionId") long competitionId, @PathParam("teamName") String teamName){
-        //String messageId = workspaceService.submit(competitionId, teamName);
-        //workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
-    }
 
     @POST
     @Consumes("application/xml,application/json")
@@ -89,6 +81,26 @@ public class WorkspaceResource {
                 String messageId = workspaceService.compile(competitionId, team.getName(), challenge.getName(), file.getFilePath(), file.getFileContent());
                 workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
                 return Response.ok("Files compiled").build();
+            } else {
+                return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
+            }
+        } else {
+            return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
+        }
+    }
+
+    @POST
+    @Consumes("application/xml,application/json")
+    @Path("/{competitionId}/submit")
+    public Response submit(@PathParam("competitionId") long competitionId, CodeFile file) {
+        Competition competition = competitionService.findById(competitionId);
+        if (competition != null && competition.getCurrentRound() != null) {
+            Team team = competition.getTeamByUsername(request.getRemoteUser());
+            Challenge challenge = competition.getCurrentRound().getChallenge();
+            if (team != null) {
+                String messageId = workspaceService.submit(competitionId, team.getName(), challenge.getName(), file.getFilePath(), file.getFileContent());
+                workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
+                return Response.ok("Attempting to submit...").build();
             } else {
                 return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
             }
@@ -152,7 +164,7 @@ public class WorkspaceResource {
         workspaceService.sysInfo(request.getUserPrincipal().getName());
         return Response.ok().build();
     }
-    
+
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/folderStructure")
@@ -172,11 +184,11 @@ public class WorkspaceResource {
             return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
         }
     }
-    
+
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/availableTests")
-    public Response availableTests(@PathParam("competitionId") long competitionId){
+    public Response availableTests(@PathParam("competitionId") long competitionId) {
         Competition competition = competitionService.findById(competitionId);
         if (competition != null && competition.getCurrentRound() != null) {
             Team team = competition.getTeamByUsername(request.getRemoteUser());
@@ -191,9 +203,9 @@ public class WorkspaceResource {
         } else {
             return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
         }
-        
+
     }
-    
+
     @POST
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/file")
@@ -213,8 +225,6 @@ public class WorkspaceResource {
             return Response.serverError().entity("The competition doesn't exist or isn't active at the moment").build();
         }
     }
-    
-    
-    
+
     //</editor-fold>
 }

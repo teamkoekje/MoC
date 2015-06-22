@@ -1,6 +1,7 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import messaging.MessagingConstants.DestinationType;
 import messaging.MessagingConstants.GatewayType;
 import java.io.Serializable;
@@ -103,7 +104,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
             activeRequests.put(request, message);
             requestListener.receivedRequest(request);
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
 
@@ -129,7 +130,7 @@ public class AsynchronousReplier<REQUEST, REPLY> {
             replyMsg.setJMSCorrelationID(messageID);
             return gateway.sendMessage(replyMsg, requestMsg.getJMSReplyTo());
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             return false;
         }
     }
