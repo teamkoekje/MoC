@@ -20,6 +20,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
 /**
@@ -46,6 +47,7 @@ public class Round implements Serializable {
     private long duration;
 
     @Temporal(javax.persistence.TemporalType.DATE)
+    @XmlElement
     private Calendar startTime;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar endTime;
@@ -177,6 +179,10 @@ public class Round implements Serializable {
         return submittedTeams;
     }
 
+    public Calendar getStartTime() {
+        return startTime;
+    }
+    
     /**
      * Gets the amount of teams that have submitted. If the amount of teams that
      * have submitted equals the amount of teams in the competition, the round
