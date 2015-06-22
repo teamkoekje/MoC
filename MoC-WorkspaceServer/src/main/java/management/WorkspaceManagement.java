@@ -465,6 +465,8 @@ public class WorkspaceManagement {
             request.setGoals(Arrays.asList("test"));
             request.setProperties(new Properties());
 
+            firstError = true;
+            firstTest = true;
             MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();
@@ -492,6 +494,8 @@ public class WorkspaceManagement {
             p.setProperty("test", testName);
             request.setProperties(p);
 
+            firstError = true;
+            firstTest = true;
             MAVEN_INVOKER.execute(request);
 
             return getInvocationResult();
