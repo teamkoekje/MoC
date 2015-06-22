@@ -224,7 +224,7 @@ public class Competition implements Serializable {
                         } else {
                             currentRound = null;
                             competitionState = CompetitionState.ENDED;
-                            ArrayList<CompetitionEvent> temp = new ArrayList<>();
+                            List<CompetitionEvent> temp = new ArrayList<>();
                             temp.add(new CompetitionEndedEvent(this));
                             return temp;
                         }
@@ -339,7 +339,7 @@ public class Competition implements Serializable {
     public void startNextRound() throws IllegalStateException {
         switch (competitionState) {
             case NOT_STARTED:
-                if (rounds.size() > 0) {
+                if (!rounds.isEmpty()) {
                     currentRound = rounds.get(0);
                     currentRound.start();
                     competitionState = CompetitionState.ONGOING;

@@ -265,7 +265,7 @@ public class Round implements Serializable {
             }
 
             //loop through hints and release + remove any expired ones
-            for (int i = hintsCopy.size() - 1; i >= 0; i++) {
+            for (int i = hintsCopy.size() - 1; i >= 0; i--) {
                 Hint h = hintsCopy.get(i);
                 if (elapsedTime() >= h.getTime()) {
                     events.add(new HintReleasedEvent(h));
