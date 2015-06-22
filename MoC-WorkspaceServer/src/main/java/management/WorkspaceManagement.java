@@ -27,7 +27,7 @@ public class WorkspaceManagement {
     /**
      * Key: Competition name Value: ArrayList<String> with team names
      */
-    private final Map<String, ArrayList<String>> competitions = new HashMap<>();
+    private final Map<String, List<String>> competitions = new HashMap<>();
     private static final File MAVEN_HOME = new File("C:\\Program Files\\apache-maven-3.2.5");
     private static final Invoker MAVEN_INVOKER = new DefaultInvoker();
     private static InvocationRequest request;
@@ -142,7 +142,7 @@ public class WorkspaceManagement {
                 tempList = new ArrayList<>();
             }
             tempList.add(teamName);
-            competitions.put(competitionId, (ArrayList<String>) tempList);
+            competitions.put(competitionId, tempList);
             return "Created workspace for team: " + teamName;
         } catch (Exception ex) {
             System.err.println(ex.getLocalizedMessage());
@@ -164,7 +164,7 @@ public class WorkspaceManagement {
         if (deleteDirectory(teamFolder)) {
             List<String> tempList = competitions.get(competitionId);
             tempList.remove(teamName);
-            competitions.put(competitionId, (ArrayList<String>) tempList);
+            competitions.put(competitionId, tempList);
             return "Workspace succesfully deleted";
         } else {
             return "Error while deleting workspace";
