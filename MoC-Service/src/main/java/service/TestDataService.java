@@ -2,6 +2,7 @@ package service;
 
 import domain.Challenge;
 import domain.Competition;
+import domain.Hint;
 import domain.Team;
 import domain.User;
 import java.util.Calendar;
@@ -89,6 +90,9 @@ public class TestDataService {
         Challenge ch1 = new Challenge("Challenge1");
         Challenge ch2 = new Challenge("Challenge2");
         Challenge ch3 = new Challenge("Challenge3");
+
+        ch1.addHint(new Hint("Hint 1", 10));
+        ch1.addHint(new Hint("Hint 2", 20));
 
         c1.addChallenge(ch1, 10000);
         c1.addChallenge(ch2, 30);

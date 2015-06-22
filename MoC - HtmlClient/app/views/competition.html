@@ -13,7 +13,7 @@
         </span>
     </span>
     <h3>
-        {{ "TIME_LEFT" | translate }}: {{remainingTime | date : 'h:mm:ss'}}
+        {{ "TIME_LEFT" | translate }}: {{remainingTime| date : 'h:mm:ss'}}
     </h3>
     <div>
         <ul class="nav nav-tabs" role="tablist">
@@ -33,9 +33,9 @@
             </div>
             <div class="col-xs-6" style='display:none; height:100%;' id="wrapperAroundResults">
                 <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
-                    
+
                     <div class="result" ng-bind-html="result" ng-repeat="result in results">
-                        
+
                     </div>
                 </div>
             </div>
@@ -67,6 +67,7 @@
             <div class="buttonContainer">
                 <button class="btn btn-default" ng-click="toggleTests();">{{"RUN_SPECIFIC_TEST"| translate}}</button>
                 <button class="btn btn-default" ng-click="compile()">{{ "COMPILE" | translate}}</button>
+                <button class="btn btn-default" ng-click="submit()">{{ "SUBMIT" | translate}}</button>
                 <button class="btn btn-default" 
                         ng-click="toggleResults()"
                         >

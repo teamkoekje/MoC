@@ -77,6 +77,7 @@ public class WorkspaceService {
                         ObjectMessage objMsg = (ObjectMessage) message;
                         Reply reply = (Reply) objMsg.getObject();
                         Logger.logMsg(Logger.INFO, "Message received from workspace: " + reply.getMessage());
+                        System.out.println("Message received from workspace: " + reply.getMessage());
                         if (reply.getAction() == ReplyAction.BROADCAST) {
                             sia.addReply(reply);
                         } else if (reply.getAction() == ReplyAction.SUBMIT) {
@@ -91,7 +92,7 @@ public class WorkspaceService {
                                     if (t != null) {
                                         c.submit(t);
                                         Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
-                                        we.sendToUser("Successfully submitted", username);
+                                        we.sendToUser("{\"type\":\"submitresult\",\"data\":\"Successfully submitted\"}", username);
                                         Logger.logMsg(Logger.INFO, "Message sent to client");
                                         return;
                                     }
@@ -99,7 +100,7 @@ public class WorkspaceService {
                                 Logger.logMsg(Logger.ERROR, "Could not find the user connected with the reply of this submit request. Did the active competition end?");
                             } else {
                                 Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
-                                we.sendToUser("Errors / Test failures when attempting to submit.", username);
+                                we.sendToUser("{\"type\":\"submitresult\",\"data\":\"Errors / Test failures when attempting to submit.\"}", username);
                                 Logger.logMsg(Logger.INFO, "Message sent to client");
                             }
                         } else {
