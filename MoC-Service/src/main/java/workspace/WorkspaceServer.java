@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
-import messaging.messagingConstants2.DestinationType;
-import messaging.messagingConstants2.GatewayType;
+import messaging.messagingConstants.DestinationType;
+import messaging.messagingConstants.GatewayType;
 import messaging.MessagingGateway;
 // </editor-fold>
 

@@ -24,21 +24,21 @@ import messaging.IReplyListener;
 import messaging.SysInfoAggregate;
 import messaging.WorkspaceGateway;
 import websocket.WebsocketEndpoint;
-import workspace.requests2.RequestAction;
-import workspace.requests2.CompileRequest;
-import workspace.requests2.CreateRequest;
-import workspace.requests2.DeleteRequest;
-import workspace.requests2.FileRequest;
-import workspace.requests2.FolderStructureRequest;
-import workspace.requests2.PushRequest;
-import workspace.replies2.Reply;
-import workspace.replies2.ReplyAction;
-import workspace.requests2.AvailableTestsRequest;
-import workspace.requests2.Request;
-import workspace.requests2.SysInfoRequest;
-import workspace.requests2.TestAllRequest;
-import workspace.requests2.TestRequest;
-import workspace.requests2.UpdateRequest;
+import workspace.requests.RequestAction;
+import workspace.requests.CompileRequest;
+import workspace.requests.CreateRequest;
+import workspace.requests.DeleteRequest;
+import workspace.requests.FileRequest;
+import workspace.requests.FolderStructureRequest;
+import workspace.requests.PushRequest;
+import workspace.replies.Reply;
+import workspace.replies.ReplyAction;
+import workspace.requests.AvailableTestsRequest;
+import workspace.requests.Request;
+import workspace.requests.SysInfoRequest;
+import workspace.requests.TestAllRequest;
+import workspace.requests.TestRequest;
+import workspace.requests.UpdateRequest;
 
 // </editor-fold>
 /**

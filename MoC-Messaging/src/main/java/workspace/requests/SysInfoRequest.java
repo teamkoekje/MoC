@@ -1,4 +1,4 @@
-package workspace.requests2;
+package workspace.requests;
 
 /**
  * A Request used to tell a Workspace Server to retrieve it's System

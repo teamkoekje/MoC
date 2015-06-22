@@ -4,9 +4,9 @@ package messaging;
 
 import java.util.ArrayList;
 import java.util.List;
-import workspace.replies2.Reply;
-import workspace.requests2.Request;
-import workspace.replies2.BroadcastReply;
+import workspace.replies.Reply;
+import workspace.requests.Request;
+import workspace.replies.BroadcastReply;
 
 //</editor-fold>
 

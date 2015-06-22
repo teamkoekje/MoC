@@ -1,4 +1,4 @@
-package workspace.replies2;
+package workspace.replies;
 
 /**
  *

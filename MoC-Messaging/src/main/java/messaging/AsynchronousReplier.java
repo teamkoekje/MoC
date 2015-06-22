@@ -2,8 +2,8 @@ package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import com.sun.media.jfxmedia.logging.Logger;
-import messaging.messagingConstants2.DestinationType;
-import messaging.messagingConstants2.GatewayType;
+import messaging.messagingConstants.DestinationType;
+import messaging.messagingConstants.GatewayType;
 import java.io.Serializable;
 import javax.jms.Message;
 import java.util.HashMap;
