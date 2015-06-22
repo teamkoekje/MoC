@@ -1,6 +1,7 @@
 package workspace;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import java.util.*;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
@@ -88,6 +89,7 @@ public class WorkspaceSenderRouter {
             workspaceServers.add(ws);
             return lastServerId;
         } catch (NamingException | JMSException ex) {
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             System.err.println(ex.getMessage());
         }
         return null;

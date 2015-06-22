@@ -1,5 +1,6 @@
 package api;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import domain.Challenge;
 import domain.CodeFile;
 import domain.Competition;
@@ -7,11 +8,9 @@ import domain.Team;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import service.CompetitionService;
@@ -54,7 +53,7 @@ public class WorkspaceResource {
     @Consumes("application/xml,application/json")
     @Path("/{competitionId}/update")
     public Response update(@PathParam("competitionId") long competitionId, CodeFile file) {
-        System.out.println("Updating file: " + file.getFilePath());
+        Logger.logMsg(Logger.INFO, "Updating file: " + file.getFilePath());
         Competition competition = competitionService.findById(competitionId);
         if (competition != null) {
             Team team = competition.getTeamByUsername(request.getRemoteUser());

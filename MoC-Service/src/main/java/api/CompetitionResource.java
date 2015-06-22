@@ -1,6 +1,7 @@
 package api;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import javax.ws.rs.core.Response;
 import domain.Challenge;
 import domain.Competition;
@@ -37,15 +38,6 @@ public class CompetitionResource {
 
     @Inject
     private RoundService roundService;
-
-    @Inject
-    private TeamService teamService;
-
-    @Inject
-    private InvitationService invitationService;
-
-    @Inject
-    private UserService userService;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
@@ -234,7 +226,7 @@ public class CompetitionResource {
     @POST
     @Path("/{competitionId}/pause")
     public Response pauseRound(@PathParam("competitionId") long competitionId) {
-        System.out.println("pause competition: " + competitionId);
+        Logger.logMsg(Logger.INFO, "pause competition: " + competitionId);
         Competition c = competitionService.findById(competitionId);
         c.getCurrentRound().pause();
         competitionService.edit(c);
@@ -244,7 +236,7 @@ public class CompetitionResource {
     @POST
     @Path("/{competitionId}/freeze")
     public Response freezeRound(@PathParam("competitionId") long competitionId) {
-        System.out.println("freeze competition: " + competitionId);
+        Logger.logMsg(Logger.INFO, "freeze competition: " + competitionId);
         Competition c = competitionService.findById(competitionId);
         c.getCurrentRound().freeze();
         competitionService.edit(c);
@@ -254,7 +246,7 @@ public class CompetitionResource {
     @POST
     @Path("/{competitionId}/stop")
     public Response stopRound(@PathParam("competitionId") long competitionId) {
-        System.out.println("stop competition: " + competitionId);
+        Logger.logMsg(Logger.INFO, "stop competition: " + competitionId);
         Competition c = competitionService.findById(competitionId);
         c.getCurrentRound().stop();
         competitionService.edit(c);

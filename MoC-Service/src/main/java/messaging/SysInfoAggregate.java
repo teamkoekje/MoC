@@ -3,6 +3,7 @@ package messaging;
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 
 import java.util.ArrayList;
+import java.util.List;
 import workspace.Replies.Reply;
 import workspace.Requests.Request;
 import workspace.Replies.BroadcastReply;
@@ -18,7 +19,7 @@ public class SysInfoAggregate {
 
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     private final Request request;
-    private final ArrayList<Reply> replies;
+    private final List<Reply> replies;
     private final int nrExpectedReplies;
     private final IReplyListener<Request, Reply> replyListener;
     private final String username;

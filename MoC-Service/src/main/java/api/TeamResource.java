@@ -1,5 +1,6 @@
 package api;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import domain.Invitation;
 import domain.Invitation.InvitationState;
 import domain.Team;
@@ -186,7 +187,7 @@ public class TeamResource {
     @Consumes("application/xml,application/json")
     @Path("/{teamId}/invite")
     public Response inviteMember(String email, @PathParam("teamId") long teamId) {
-        System.out.println(email + " - " + teamId);
+        Logger.logMsg(Logger.INFO, email + " - " + teamId);
 
         if (email == null || email.isEmpty()) {
             return Response.serverError().entity("No email").build();

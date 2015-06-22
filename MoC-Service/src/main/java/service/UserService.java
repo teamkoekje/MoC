@@ -1,7 +1,9 @@
 package service;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import domain.User;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -14,6 +16,7 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -52,7 +55,7 @@ public class UserService extends GenericService<User> {
             BigInteger bigInt = new BigInteger(1, digest);
             hash = bigInt.toString(16);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            System.err.println(ex.getMessage());
+           Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
         return hash;
     }
@@ -95,9 +98,9 @@ public class UserService extends GenericService<User> {
              end email content
              */
             Transport.send(message);
-            System.out.println("Sent message successfully....");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.logMsg(Logger.INFO, "Sent message successfully....");
+        } catch (MessagingException | IOException ex) {
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
     

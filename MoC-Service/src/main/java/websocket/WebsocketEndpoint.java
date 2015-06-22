@@ -1,15 +1,13 @@
 package websocket;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
-import java.io.IOException;
+import com.sun.media.jfxmedia.logging.Logger;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
 import javax.websocket.RemoteEndpoint.Async;
-import javax.websocket.RemoteEndpoint.Basic;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 // </editor-fold>
@@ -22,15 +20,14 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(value = "/ws/api")
 public class WebsocketEndpoint {
 
-    static HashMap<String, Session> peers = new HashMap<>();
+    static Map<String, Session> peers = new HashMap<>();
 
     @OnOpen
     public void openConnection(Session session) {
         //System.out.println("Client opened websocket");
         Principal p = session.getUserPrincipal();
         if (p != null) {
-                    System.out.println("Client opened websocket: " + p.getName());
-
+            Logger.logMsg(Logger.INFO, "Client opened websocket: " + p.getName());
             peers.put(p.getName(), session);
         }
     }
@@ -50,7 +47,7 @@ public class WebsocketEndpoint {
     }
 
     public void sendToUser(String msg, String username) {
-        System.out.println("Sending message to: " + username);
+        Logger.logMsg(Logger.INFO, "Sending message to: " + username);
         Session s = peers.get(username);
         Async b = s.getAsyncRemote();
         b.sendText(msg);
