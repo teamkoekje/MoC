@@ -443,8 +443,8 @@ controllers.controller('inviteUserController', ['$scope', '$rootScope', 'team', 
         loadData();
     }
 ]);
-controllers.controller('competitionController', ['$scope', '$sce', '$rootScope', 'workspace', '$routeParams', 'newsfeedService',
-    function ($scope, $sce, $rootScope, $workspace, $routeParams, newsfeedService) {
+controllers.controller('competitionController', ['$scope', '$sce', '$rootScope', 'workspace', 'competition', '$routeParams', 'newsfeedService',
+    function ($scope, $sce, $rootScope, $workspace, $competition, $routeParams, newsfeedService) {
 
         //http://ace.c9.io/#nav=howto
         var editor;
@@ -691,11 +691,11 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     break;
                 case "file":
                     console.log(msg.data);
-                    if(msg.data.filename.endsWith(".html")){
+                    if (msg.data.filename.endsWith(".html")) {
                         $scope.htmlFile = $sce.trustAsHtml(msg.data.filecontent);
                         $("#editor").hide();
                         $("#htmlContentViewer").show();
-                    }else{
+                    } else {
                         $("#htmlContentViewer").hide();
                         $("#editor").show();
                         $scope.file.filecontent = msg.data.filecontent;
@@ -717,6 +717,25 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
         //Request folderstructure
         $workspace.folderStructure.save({competitionId: $routeParams.id});
         $workspace.availableTests.save({competitionId: $routeParams.id});
+
+        var currentRound;
+
+        competition = $competition.all.get({competitionId: $routeParams.id}, function () {
+            currentRound = competition.currentRound;
+            update();
+        });
+
+        update = function () {
+            starttime = Date.parse(currentRound.startTime);
+            date = Date.parse(new Date());
+            remainingTime = currentRound.duration * 1000 - (date - starttime);
+            $scope.remainingTime = new Date(remainingTime);
+            $scope.$apply();
+        };
+
+        setInterval(function () {
+            update();
+        }, 1000);
 
         $scope.results = [];
         $scope.messages = newsfeedService.getMessages();

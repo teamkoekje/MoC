@@ -5,7 +5,7 @@ var translationsEN = {
   INVALID_USER: 'Invalid username',
   HINTS: 'Hints',
   MESSAGES: 'Messages',
-  MINUTS_LEFT: 'minutes left',
+  TIME_LEFT: 'Time left',
   
   BACK: 'Back',
   NEW: 'New',
@@ -84,7 +84,7 @@ var translationsNL= {
   INVALID_USER: 'Gebruikersnaam ongeldig',
   HINTS: 'Hints',
   MESSAGES: 'Berichten',
-  MINUTS_LEFT: 'tijd over',
+  TIME_LEFT: 'Tijd over',
   
   BACK: 'Terug',
   NEW: 'Nieuw',
