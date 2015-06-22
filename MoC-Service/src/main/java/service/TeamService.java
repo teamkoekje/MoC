@@ -6,7 +6,6 @@ import domain.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
-import javax.inject.Inject;
 import javax.persistence.Query;
 
 @Stateless

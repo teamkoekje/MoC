@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class Reply implements Serializable {
 
-    private final ReplyAction action;
+    private ReplyAction action;
     private final String message;
     
     public Reply(ReplyAction action, String message){
@@ -23,5 +23,9 @@ public class Reply implements Serializable {
     
     public ReplyAction getAction() {
         return action;
+    }
+    
+    public void setReplyAction(ReplyAction toSet){
+        this.action = toSet;
     }
 }
