@@ -1,17 +1,17 @@
 package service;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import domain.Competition;
-import domain.Events.CompetitionEndedEvent;
-import domain.Events.CompetitionEvent;
-import domain.Events.HintReleasedEvent;
-import domain.Events.MessageReleasedEvent;
-import domain.Events.RoundEndedEvent;
-import domain.Events.UpdateEvent;
+import domain.events.CompetitionEndedEvent;
+import domain.events.CompetitionEvent;
+import domain.events.HintReleasedEvent;
+import domain.events.MessageReleasedEvent;
+import domain.events.RoundEndedEvent;
+import domain.events.UpdateEvent;
 import domain.enums.CompetitionState;
 import domain.enums.EventType;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,7 +51,7 @@ public class CompetitionService extends GenericService<Competition> {
 
     @PostConstruct
     private void init() {
-        System.out.println("Init of competitionService");
+        Logger.logMsg(Logger.INFO, "Init of competitionService");
         timer = new Timer();
         timer.scheduleAtFixedRate(new CompetitionUpdateTask(), 1000, 1000);
     }
@@ -65,13 +65,13 @@ public class CompetitionService extends GenericService<Competition> {
     }
 
     public void loadComps() {
-        System.out.println("Loading competitions...");
+        Logger.logMsg(Logger.INFO, "Loading competitions...");
         List<Competition> competitions = findAll();
-        System.out.println("Total competitions: " + competitions.size());
+        Logger.logMsg(Logger.INFO, "Total competitions: " + competitions.size());
         Query q = em.createNamedQuery("Competition.findActive");
         q.setParameter("state", CompetitionState.ONGOING);
         activeCompetitions = (List<Competition>) q.getResultList();
-        System.out.println("Active competitions: " + activeCompetitions.size());
+        Logger.logMsg(Logger.INFO, "Active competitions: " + activeCompetitions.size());
 
         futureCompetitions = new ArrayList();
         for (Competition c : competitions) {
@@ -79,7 +79,7 @@ public class CompetitionService extends GenericService<Competition> {
                 futureCompetitions.add(c);
             }
         }
-        System.out.println("Not-started competitions: " + futureCompetitions.size());
+        Logger.logMsg(Logger.INFO, "Not-started competitions: " + futureCompetitions.size());
     }
     // </editor-fold>
 

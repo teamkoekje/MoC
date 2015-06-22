@@ -1,12 +1,12 @@
 package service;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
@@ -47,7 +47,7 @@ public class WorkspaceService {
 
     private WorkspaceGateway gateway;
 
-    private final HashMap<String, String> requests = new HashMap<>();
+    private final Map<String, String> requests = new HashMap<>();
 
     private int numberOfBroadcastMessages;
     private SysInfoAggregate sia;
@@ -57,12 +57,12 @@ public class WorkspaceService {
 
     @PostConstruct
     private void init() {
-        System.out.println("Workspace gateway created");
+        Logger.logMsg(Logger.INFO, "Workspace gateway created");
         gateway = new WorkspaceGateway() {
 
             @Override
             public void onWorkspaceMessageReceived(Message message) {
-                System.out.println("OnWorkspaceMessageReceived");
+                Logger.logMsg(Logger.INFO, "OnWorkspaceMessageReceived");
                 if (message instanceof ObjectMessage) {
                     try {
                         String username = requests.get(message.getJMSCorrelationID());
@@ -71,13 +71,13 @@ public class WorkspaceService {
                         if (reply.getAction() == ReplyAction.BROADCAST) {
                             sia.addReply(reply);
                         } else {
-                            System.out.println("Message received from workspace: " + reply.getMessage());
-                            System.out.println("Sending reply to user: " + username);
+                            Logger.logMsg(Logger.INFO, "Message received from workspace: " + reply.getMessage());
+                            Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
                             we.sendToUser(reply.getMessage(), username);
-                            System.out.println("Message sent to client");
+                            Logger.logMsg(Logger.INFO, "Message sent to client");
                         }
                     } catch (JMSException ex) {
-                        Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.logMsg(Logger.ERROR, ex.getMessage());
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class WorkspaceService {
     public void storeRequestMessage(String messageId, String username) {
         if (username != null && messageId != null) {
             this.requests.put(messageId, username);
-            System.out.println("Request message send with id: " + messageId + " from user: " + username);
+            Logger.logMsg(Logger.INFO, "Request message send with id: " + messageId + " from user: " + username);
         }
     }
 
@@ -105,7 +105,7 @@ public class WorkspaceService {
     }    
 
     public String update(long competitionId, String teamName, String filePath, String fileContent) {
-        System.out.println("Updating file: " + filePath + " with content: " + fileContent);
+        Logger.logMsg(Logger.INFO, "Updating file: " + filePath + " with content: " + fileContent);
 
         return gateway.sendRequestToTeam(new UpdateRequest(competitionId, teamName, filePath, fileContent));
     }
@@ -129,23 +129,22 @@ public class WorkspaceService {
             gateway.broadcast(new PushRequest(competitionId, challengeName, data));
 
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceService.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.logMsg(Logger.ERROR,ex.getMessage());
         }
     }
 
     public String folderStructure(long competitionId, String challengeName, String teamName) {
-        System.out.println("Get folder structure for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
+        Logger.logMsg(Logger.INFO, "Get folder structure for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
     
     public String availableTests(long competitionId, String challengeName, String teamName){
-        System.out.println("Get available tests for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
+        Logger.logMsg(Logger.INFO, "Get available tests for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new AvailableTestsRequest(competitionId, challengeName, teamName));
     }
 
     public String file(long competitionId, String challengeName, String teamName, String filePath) {
-        System.out.println("Get file content: " + filePath);
+        Logger.logMsg(Logger.INFO, "Get file content: " + filePath);
         return gateway.sendRequestToTeam(new FileRequest(competitionId, teamName, challengeName, filePath));
     }
 
@@ -155,8 +154,8 @@ public class WorkspaceService {
         sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, username, new IReplyListener<Request, Reply>() {
             @Override
             public void onReply(Request request, Reply reply) {
-                System.out.println("All servers responded to the broadcast. Message to send to user: ");
-                System.out.println(reply.getMessage());
+                Logger.logMsg(Logger.INFO, "All servers responded to the broadcast. Message to send to user: ");
+                Logger.logMsg(Logger.INFO, reply.getMessage());
                 we.sendToUser(reply.getMessage(), sia.getUsername());
                 // TODO: Think of something in case a server drops out.
             }

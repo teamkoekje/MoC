@@ -1,5 +1,6 @@
 package api;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import domain.Invitation;
 import domain.Team;
 import domain.User;
@@ -199,10 +200,8 @@ public class UserResource {
         if (createdUser == null) {
             return Response.serverError().entity("Error creating user").build();
         }
-        if (token != null) {
-          if(invitationService.acceptInvitation(user, token)){
-              return Response.ok(user).build();
-          }
+        if (token != null && invitationService.acceptInvitation(user, token)) {
+            return Response.ok(user).build();
         }
         return Response.serverError().entity("Error while adding user, User is already in this team or team is full").build();
     }
@@ -244,11 +243,11 @@ public class UserResource {
         try {
             request.getSession();
             request.login(username, password);
-            System.out.println("User: " + request.isUserInRole("User"));
-            System.out.println("Admin: " + request.isUserInRole("Admin"));
-            System.out.println("Logged in user: " + request.getRemoteUser());
+            Logger.logMsg(Logger.INFO, "User: " + request.isUserInRole("User"));
+            Logger.logMsg(Logger.INFO, "Admin: " + request.isUserInRole("Admin"));
+            Logger.logMsg(Logger.INFO, "Logged in user: " + request.getRemoteUser());
         } catch (ServletException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             return Response.serverError().entity(ex.getMessage()).build();
         }
         return Response.ok("Logged in as " + username).build();
@@ -259,7 +258,6 @@ public class UserResource {
     @PermitAll
     public boolean isLoggedIn(
             @PathParam("username") String username) {
-        System.out.println("Checking if user is logged in: " + username);
         return username.equals(request.getRemoteUser());
     }
 
@@ -281,13 +279,13 @@ public class UserResource {
     @RolesAllowed({"User", "Admin"})
     public Response logout() {
         try {
-            System.out.println("User: " + request.isUserInRole("User"));
-            System.out.println("Admin: " + request.isUserInRole("Admin"));
-            System.out.println("logged out user: " + request.getRemoteUser());
+            Logger.logMsg(Logger.INFO, "User: " + request.isUserInRole("User"));
+            Logger.logMsg(Logger.INFO, "Admin: " + request.isUserInRole("Admin"));
+            Logger.logMsg(Logger.INFO, "Logged in user: " + request.getRemoteUser());
             request.getSession().invalidate();
             request.logout();
         } catch (ServletException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             return Response.serverError().entity(ex.getMessage()).build();
         }
         return Response.ok("Logged out!").build();

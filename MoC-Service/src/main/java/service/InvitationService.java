@@ -1,17 +1,18 @@
 package service;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import domain.Competition;
 import domain.Invitation;
 import domain.Invitation.InvitationState;
 import domain.Team;
 import domain.User;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -99,13 +100,10 @@ public class InvitationService extends GenericService<Invitation> {
             mail = mail.replace("#teamname", team.getName());
             //set Content
             message.setContent(mail, "text/html");
-            /*
-             end email content
-             */
             Transport.send(message);
-            System.out.println("Sent message successfully....");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (MessagingException | IOException ex) {
+            System.out.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
 
         //Persist invite

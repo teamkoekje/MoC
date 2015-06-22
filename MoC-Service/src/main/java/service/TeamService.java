@@ -1,22 +1,17 @@
 package service;
 
 import domain.Competition;
-import domain.Invitation;
 import domain.Team;
 import domain.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 @Stateless
 @RequestScoped
 public class TeamService extends GenericService<Team> {
-
-    @Inject
-    private UserService userService;
 
     public TeamService() {
         super(Team.class);

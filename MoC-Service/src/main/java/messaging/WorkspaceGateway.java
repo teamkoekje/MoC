@@ -1,17 +1,17 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
+import com.sun.media.jfxmedia.logging.Logger;
 import messaging.MessagingConstants.DestinationType;
 import messaging.MessagingConstants.GatewayType;
 import messaging.MessagingConstants.JMSSettings;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.naming.NamingException;
 import workspace.Replies.Reply;
 import workspace.Requests.Request;
 import workspace.Requests.TeamRequest;
@@ -54,9 +54,9 @@ public abstract class WorkspaceGateway {
                         try {
                             ObjectMessage objMsg = (ObjectMessage) message;
                             Reply reply = (Reply) objMsg.getObject();
-                            System.out.println("Message received: " + reply.getMessage());
+                            Logger.logMsg(Logger.INFO, reply.getMessage());
                         } catch (JMSException ex) {
-                            Logger.getLogger(WorkspaceGateway.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.logMsg(Logger.ERROR, ex.getMessage());
                         }
                     }
                     onWorkspaceMessageReceived(message);
@@ -66,8 +66,8 @@ public abstract class WorkspaceGateway {
             receiverGtw.openConnection();
             initGtw.openConnection();
             router.openConnection();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+        } catch (NamingException | JMSException ex) {
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
     }
     // </editor-fold>
@@ -81,14 +81,14 @@ public abstract class WorkspaceGateway {
 
     private void processInitMessage(Message msg) {
         try {
-            System.out.println("Init message received: " + msg.getJMSMessageID());
+            Logger.logMsg(Logger.INFO, "Init message received: " + msg.getJMSMessageID());
             long id = router.addWorkspaceServer();
             Message replyMsg = initGtw.createTextMessage(id + "");
             replyMsg.setJMSCorrelationID(msg.getJMSMessageID());
             initGtw.sendMessage(replyMsg);
-            System.out.println("Init reply send: " + replyMsg.getJMSCorrelationID());
+            Logger.logMsg(Logger.INFO, "Init reply send: " + replyMsg.getJMSCorrelationID());
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
         }
 
     }
@@ -98,10 +98,10 @@ public abstract class WorkspaceGateway {
             ObjectMessage msg = gtw.createObjectMessage((Serializable) request);
             msg.setJMSReplyTo(receiverGtw.getReceiverDestination());
             gtw.sendMessage(msg);
-            System.out.println("Message sent");
+            Logger.logMsg(Logger.INFO, "Message sent");
             return msg.getJMSMessageID();
         } catch (JMSException ex) {
-            System.err.println(ex.getMessage());
+            Logger.logMsg(Logger.ERROR, ex.getMessage());
             return null;
         }
     }
@@ -111,7 +111,7 @@ public abstract class WorkspaceGateway {
         if (ws != null) {
             return sendRequest(request, ws.getSender());
         } else {
-            System.out.println("Workspace not found on available servers");
+            Logger.logMsg(Logger.INFO, "Workspace not found on available servers");
             return null;
         }
     }
@@ -130,7 +130,7 @@ public abstract class WorkspaceGateway {
             ws.addWorkspace(request.getTeamName());
             return sendRequest(request, ws.getSender());
         } else {
-            System.out.println("No servers available");
+            Logger.logMsg(Logger.INFO, "No servers available");
             return null;
         }
     }
@@ -141,7 +141,7 @@ public abstract class WorkspaceGateway {
             ws.deleteWorkspace(request.getTeamName());
             return sendRequest(request, ws.getSender());
         } else {
-            System.out.println("Workspace not found");
+            Logger.logMsg(Logger.INFO, "Workspace not found");
             return null;
         }
     }

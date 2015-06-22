@@ -2,6 +2,7 @@ package workspace;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import java.util.ArrayList;
+import java.util.List;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
 import messaging.MessagingConstants.DestinationType;
@@ -21,7 +22,7 @@ public class WorkspaceServer {
     // <editor-fold defaultstate="collapsed" desc="Variables" >
     private final Long id;
     private final String queue;
-    private final ArrayList<String> workspaces;
+    private final List<String> workspaces;
     private final MessagingGateway sender;
     // </editor-fold>
 
