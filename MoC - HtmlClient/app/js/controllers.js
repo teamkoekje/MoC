@@ -690,8 +690,17 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     $scope.selectedTest = $scope.availableTests[0];
                     break;
                 case "file":
-                    $scope.file.filecontent = msg.data.filecontent;
-                    $scope.setTextFromEditor(msg.data.filecontent);
+                    console.log(msg.data);
+                    if(msg.data.filename.endsWith(".html")){
+                        $scope.htmlFile = msg.data.filecontent;
+                        $("#editor").hide();
+                        $("#htmlContentViewer").show();
+                    }else{
+                        $("#htmlContentViewer").hide();
+                        $("#editor").show();
+                        $scope.file.filecontent = msg.data.filecontent;
+                        $scope.setTextFromEditor(msg.data.filecontent);
+                    }
                     $rootScope.loading = false;
                     break;
                 case "buildresult":
