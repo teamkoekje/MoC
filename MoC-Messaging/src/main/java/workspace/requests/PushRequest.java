@@ -1,4 +1,4 @@
-package workspace.Requests;
+package workspace.requests;
 
 /**
  * A Request used to send a zip to a Workspace Server in order to extract it to

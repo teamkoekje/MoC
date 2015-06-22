@@ -1,22 +1,28 @@
-package workspace.Requests;
+package workspace.requests;
 
-/** 
+/**
  * A Request used to tell a Workspace Server to compile a project of a specified
  * team, in a specified competition.
  *
  * @author TeamKoekje
  */
-public class TestAllRequest extends TeamRequest{
-    
+public class CompileRequest extends TeamRequest {
+
     private final String challengeName;
     private final String filePath;
     private final String fileContent;
+    private final boolean submitRequest;
 
-    public TestAllRequest(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
-        super(RequestAction.TESTALL, competitionId, teamName);
+    public CompileRequest(long competitionId, String teamName, String challengeName, String filePath, String fileContent, boolean submitRequest) {
+        super(RequestAction.COMPILE, competitionId, teamName);
         this.challengeName = challengeName;
         this.filePath = filePath;
         this.fileContent = fileContent;
+        this.submitRequest = submitRequest;
+    }
+    
+    public boolean isSubmitRequest(){
+        return submitRequest;
     }
 
     public String getChallengeName() {

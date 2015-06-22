@@ -1,4 +1,4 @@
-package workspace.Replies;
+package workspace.replies;
 
 public class NormalReply extends Reply {
     

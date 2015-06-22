@@ -1,4 +1,4 @@
-package workspace.Replies;
+package workspace.replies;
 
 import java.io.Serializable;
 

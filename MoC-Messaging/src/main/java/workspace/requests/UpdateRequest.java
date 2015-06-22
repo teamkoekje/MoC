@@ -1,4 +1,4 @@
-package workspace.Requests;
+package workspace.requests;
 
 /**
  * A Request used to tell a Workspace Server to update the contents of a
