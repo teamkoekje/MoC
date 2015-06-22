@@ -1,4 +1,4 @@
-package Messaging;
+package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="imports" >
 import workspace.Requests.UpdateRequest;
@@ -142,74 +142,94 @@ public class BrokerGateway implements IRequestListener<Request> {
      */
     private Reply handleRequest(Request r) {
         String jarPath;
-        String folderPath;
+        NormalReply reply;
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
                 wm.updateFile(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getFilePath(), compileRequest.getFileContent());
-                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
+                reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
+                break;
             case TEST:
-                TestRequest testRequest = (TestRequest) r;
-                wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
-
-                jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
-                        + File.separator
-                        + testRequest.getChallengeName()
-                        + ".jar";
-                FileManagement instance = FileManagement.getInstance(jarPath);
-                if (instance.getAvailableTests().contains(testRequest.getTestName())) {
-                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
-                }else{
-                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
-                }
+                reply = runTest((TestRequest) r);
+                break;
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
                 wm.updateFile(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getFilePath(), testAllRequest.getFileContent());
-                return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()) + "\"}");
+                reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.testAll(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getChallengeName()) + "\"}");
+                break;
             case UPDATE:
                 UpdateRequest updateRequest = (UpdateRequest) r;
-                return new NormalReply(wm.updateFile(Long.toString(updateRequest.getCompetitionId()), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                reply = new NormalReply(wm.updateFile(Long.toString(updateRequest.getCompetitionId()), updateRequest.getTeamName(), updateRequest.getFilePath(), updateRequest.getFileContent()));
+                break;
             case CREATE:
                 CreateRequest createRequest = (CreateRequest) r;
-                return new NormalReply(wm.createWorkspace(Long.toString(createRequest.getCompetitionId()), createRequest.getTeamName()));
+                reply = new NormalReply(wm.createWorkspace(Long.toString(createRequest.getCompetitionId()), createRequest.getTeamName()));
+                break;
             case DELETE:
                 DeleteRequest deleteRequest = (DeleteRequest) r;
-                return new NormalReply(wm.removeWorkspace(Long.toString(deleteRequest.getCompetitionId()), deleteRequest.getTeamName()));
+                reply = new NormalReply(wm.removeWorkspace(Long.toString(deleteRequest.getCompetitionId()), deleteRequest.getTeamName()));
+                break;
             case PUSH_CHALLENGE:
                 PushRequest pushRequest = (PushRequest) r;
-                return new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
+                reply = new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
+                break;
             case FOLDER_STRUCTURE:
-                FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                folderPath = pathInstance.teamChallengePath(
-                        Long.toString(folderStructureRequest.getCompetitionId()),
-                        folderStructureRequest.getTeamName(),
-                        folderStructureRequest.getChallengeName());
-                jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
-                        + File.separator
-                        + folderStructureRequest.getChallengeName()
-                        + ".jar";
-                return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
+                reply = getFolderStructure((FolderStructureRequest) r);
+                break;
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
-                jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId()))
-                        + File.separator
-                        + fileRequest.getChallengeName()
-                        + ".jar";
-                return new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
+                jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId())) + File.separator + fileRequest.getChallengeName() + ".jar";
+                reply = new NormalReply("{\"type\":\"file\",\"data\":" + FileManagement.getInstance(jarPath).getFileContentJSON(fileRequest.getFilepath()) + "}");
+                break;
             case SYSINFO:
                 return new BroadcastReply(SystemInformation.getInfo());
             case AVAILABLE_TESTS:
                 AvailableTestsRequest atRequest = (AvailableTestsRequest) r;
-
-                jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId()))
-                        + File.separator
-                        + atRequest.getChallengeName()
-                        + ".jar";
-                
-                return new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTestsJSON() + "}");
+                jarPath = pathInstance.challengesPath(Long.toString(atRequest.getCompetitionId())) + File.separator + atRequest.getChallengeName() + ".jar";
+                reply = new NormalReply("{\"type\":\"availabletests\",\"data\":" + FileManagement.getInstance(jarPath).getAvailableTestsJSON() + "}");
+                break;
             default:
-                return new NormalReply("error, unknown action: " + r.getAction().name());
+                reply = new NormalReply("error, unknown action: " + r.getAction().name());
+                break;
         }
+        return reply;
+    }
+    
+    /**
+     * Runs the specified test
+     * @param testRequest
+     * @return 
+     */
+    private NormalReply runTest(TestRequest testRequest){
+        wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
+
+        String jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
+                + File.separator
+                + testRequest.getChallengeName()
+                + ".jar";
+        FileManagement instance = FileManagement.getInstance(jarPath);
+        if (instance.getAvailableTests().contains(testRequest.getTestName())) {
+            return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
+        }else{
+            return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
+        }
+    }
+    
+    /**
+     * Returns the requested folder structure
+     * @param folderStructureRequest
+     * @return 
+     */
+    private NormalReply getFolderStructure(FolderStructureRequest folderStructureRequest){
+        String folderPath = pathInstance.teamChallengePath(
+                Long.toString(folderStructureRequest.getCompetitionId()),
+                folderStructureRequest.getTeamName(),
+                folderStructureRequest.getChallengeName());
+        String jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
+                + File.separator
+                + folderStructureRequest.getChallengeName()
+                + ".jar";
+        return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
     }
     // </editor-fold>
 }

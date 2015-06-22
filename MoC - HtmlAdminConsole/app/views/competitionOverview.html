@@ -35,8 +35,8 @@
         {{"CHALLENGES"| translate}}
     </h3>
     <ul class="notARealList">
-        <li ng-repeat="challenge in selectedCompetition.challenges">
-            {{challenge.name}}
+        <li ng-repeat="round in selectedCompetition.rounds">
+            {{round.challenge.name}}
         </li>
     </ul>
     <h3>

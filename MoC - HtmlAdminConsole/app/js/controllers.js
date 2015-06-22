@@ -213,8 +213,18 @@ controllers.controller('competitionOverviewController', ['$scope', '$rootScope',
         $scope.competitions = new $competition.all.query();
         $scope.setSelectedCompetition = function (competition) {
             $scope.selectedCompetition = competition;
-            $scope.selectedCompetition.challenges = $competition.challenges.query({competitionId: competition.id});
-            $scope.selectedCompetition.teams = $competition.teams.query({competitionId: competition.id});
+            /*
+             Team has:
+                @XmlElement
+                private Competition competition;
+             So we can't have:
+                @XmlElement
+                public List<Team> getTeams() {
+                    return teams;
+                }
+            To prevent any cyclic references
+             */
+            $scope.selectedCompetition.teams = new $competition.teams.query({competitionId: competition.id});
         };
 
         $scope.removeCompetition = function (competition) {
@@ -222,7 +232,6 @@ controllers.controller('competitionOverviewController', ['$scope', '$rootScope',
                 $competition.all.remove({competitionId: competition.id}, function () {
                     $scope.competitions = new $competition.all.query();
                 });
-
             }
         };
         //Default info when no competition is selected
@@ -275,8 +284,7 @@ controllers.controller('competitionViewController', ['$scope', '$rootScope', 'co
         $scope.description = 'participant';
         $scope.selectedTeam = 0;
         $scope.currentCompetition = $competition.all.get({competitionId: $routeParams.id}, function () {
-            $scope.currentCompetition.challenges = $competition.challenges.query({competitionId: $routeParams.id});
-            $scope.currentCompetition.currentChallenge = 0;
+            $scope.currentRound = 0;
             $scope.currentCompetition.teams = $competition.teams.query({competitionId: $routeParams.id});
             console.log($scope.currentCompetition);
         });

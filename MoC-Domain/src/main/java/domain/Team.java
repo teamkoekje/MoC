@@ -102,6 +102,7 @@ public class Team implements Serializable {
     }
 
     //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Function adds a participant to the team.
@@ -160,5 +161,24 @@ public class Team implements Serializable {
     boolean teamIsFull() {
         return participants.size() >= competition.getMaxTeamSize();
     }
+    
+
     //</editor-fold>
+    
+    @Override
+    public boolean equals(Object obj) {
+       if (!(obj instanceof Team))
+            return false;
+        if (obj == this)
+            return true;
+        Team other = (Team)obj;
+        return id == other.id;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
+        return hash;
+    }
 }

@@ -2,11 +2,11 @@ package domain;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.enums.RoundState;
-import domain.Events.CompetitionEndedEvent;
-import domain.Events.CompetitionEvent;
-import domain.Events.HintReleasedEvent;
-import domain.Events.MessageReleasedEvent;
-import domain.Events.RoundEndedEvent;
+import domain.events.CompetitionEndedEvent;
+import domain.events.CompetitionEvent;
+import domain.events.HintReleasedEvent;
+import domain.events.MessageReleasedEvent;
+import domain.events.RoundEndedEvent;
 import domain.enums.CompetitionState;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
 /**
@@ -156,6 +157,7 @@ public class Competition implements Serializable {
         this.maxTeamSize = maxTeamSize;
     }
 
+    @XmlElement
     public List<Round> getRounds() {
         return rounds;
     }
@@ -255,7 +257,7 @@ public class Competition implements Serializable {
      * @param time time in seconds allowed for completing the challenge
      */
     public void addChallenge(Challenge challenge, int time) {
-        Round r = new Round(challenge, time);
+        Round r = new Round(challenge, time, teams);
         r.setRoundOrder(rounds.size());
         rounds.add(r);
     }

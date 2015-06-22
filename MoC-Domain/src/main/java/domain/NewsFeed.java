@@ -1,10 +1,9 @@
 package domain;
 
-import domain.Events.NewsItemPublishedEvent;
-import domain.Events.NewsItemPublishedListener;
-
-import domain.Events.HintReleasedEvent;
-import domain.Events.RoundEndedEvent;
+import domain.events.NewsItemPublishedEvent;
+import domain.events.NewsItemPublishedListener;
+import domain.events.HintReleasedEvent;
+import domain.events.RoundEndedEvent;
 import java.io.Serializable;
 import javax.enterprise.event.Observes;
 import javax.swing.event.EventListenerList;

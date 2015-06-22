@@ -8,10 +8,10 @@
 <div class="row" style="text-align: center">
     <h3>
         Current Challenge : 
-        {{currentCompetition.challenges[currentCompetition.currentChallenge].name}} - 
-        {{currentCompetition.challenges[currentCompetition.currentChallenge].competitionState}} - 
+        {{currentCompetition.rounds[currentRound].challenge.name}} - 
+        {{currentCompetition.rounds[currentRound].challenge.competitionState}} - 
         <!--TODO: Add this to API -->
-        {{currentCompetition.challenges[currentCompetition.currentChallenge].timeLeft}}
+        {{currentCompetition.rounds[currentRound].challenge.timeLeft}}
     </h3>
 </div>
 <div class="row" style="text-align: center;width: 80%;margin: 0 auto;padding-bottom: 15px; border-bottom: 2px solid #337ab7">
@@ -55,7 +55,7 @@
                     <div ng-switch-when="NOT_STARTED" class="glyphicon glyphicon-asterisk" style="color: red"></div>
                 </div>
                 <div class="col-xs-9">
-                    <span style="float:right; cursor: pointer" ng-click="$parent.currentCompetition.currentChallenge = $index">
+                    <span style="float:right; cursor: pointer" ng-click="$parent.currentRound = $index">
                         {{chal.name}}
                     </span>
                 </div>
@@ -94,21 +94,21 @@
             Challenge details
         </h3>
         <ul class="notARealList">
-            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].name}}</span></li>
+            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.name}}</span></li>
             <!--TODO: add this API -->
-            <li>Suggested duration <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].suggestedDuration}}</span></li>
+            <li>Suggested duration <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.suggestedDuration}}</span></li>
             <!--TODO: add this API -->
-            <li>{{"STATUS"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].state}}</span></li>
-            <li>{{"DIFFICULTY"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].difficulty}}</span></li>
+            <li>{{"STATUS"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].roundState}}</span></li>
+            <li>{{"DIFFICULTY"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.difficulty}}</span></li>
         </ul>
         <h3>
             Author
         </h3>
         <ul class="notARealList">
             <!--TODO: add this API -->
-            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.name}}</span></li>
+            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.author.name}}</span></li>
             <!--TODO: add this API -->
-            <li>{{"ORGANISATION"| translate}} <span style="float: right">{{currentCompetition.challenges[currentCompetition.currentChallenge].author.organisation}}</span></li>
+            <li>{{"ORGANISATION"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.author.organisation}}</span></li>
         </ul>
         <h3>
             Descriptions
@@ -118,18 +118,18 @@
         <div ng-switch on="description">
             <div ng-switch-when="participant">
                 <!--TODO: add this API -->
-                {{currentCompetition.challenges[currentCompetition.currentChallenge].descriptions.participant}}
+                {{currentCompetition.rounds[currentRound].challenge.descriptions.participant}}
             </div>
             <div ng-switch-default>
                 <!--TODO: add this API -->
-                {{currentCompetition.challenges[currentCompetition.currentChallenge].descriptions.spectator}}
+                {{currentCompetition.rounds[currentRound].challenge.descriptions.spectator}}
             </div>
         </div>
         <h3>
             {{"HINTS"| translate}}
         </h3>
         <ul class="notARealList">
-            <li class="row" ng-repeat="hint in currentCompetition.challenges[currentCompetition.currentChallenge].hints">
+            <li class="row" ng-repeat="hint in currentCompetition.rounds[currentRound].challenge.hintsCopy">
                 <div class="col-xs-1" ng-switch on="hint.isReleased">
                     <span ng-switch-when="true">
                         <span class="glyphicon glyphicon-ok" style="color:green"></span>

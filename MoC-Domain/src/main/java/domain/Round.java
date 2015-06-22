@@ -2,17 +2,18 @@ package domain;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.enums.RoundState;
-import domain.Events.CompetitionEvent;
-import domain.Events.HintReleasedEvent;
-import domain.Events.RoundEndedEvent;
+import domain.events.CompetitionEvent;
+import domain.events.HintReleasedEvent;
+import domain.events.RoundEndedEvent;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,6 +37,9 @@ public class Round implements Serializable {
     @GeneratedValue
     private long id;
 
+    private int roundOrder;
+    private RoundState roundState = RoundState.NOT_STARTED;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Challenge challenge;
 
@@ -48,16 +52,15 @@ public class Round implements Serializable {
 
     private List<Hint> hintsCopy;
 
-    private Set<Team> submittedTeams;
-    private int roundOrder;
-    private RoundState roundState;
+    private List<Team> teams;
+    private Map<Team, Long> submittedTeams;
 
     // </editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
-    protected Round() {}
+    protected Round() {
+    }
 
-    public Round(Challenge challenge, long roundTime) {
+    public Round(Challenge challenge, long roundTime, Collection<Team> teams) {
         if (challenge == null) {
             throw new IllegalArgumentException("Challenge can't be null");
         }
@@ -67,11 +70,11 @@ public class Round implements Serializable {
         init();
         this.challenge = challenge;
         this.duration = roundTime;
+        this.teams = new ArrayList<>(teams);
     }
 
     private void init() {
-        this.submittedTeams = new HashSet<>();
-        this.roundState = RoundState.NOT_STARTED;
+        this.submittedTeams = new HashMap();
     }
     //</editor-fold>
 
@@ -160,8 +163,8 @@ public class Round implements Serializable {
     public RoundState getRoundState() {
         return this.roundState;
     }
-    
-    public void setRoundSate(RoundState state){
+
+    public void setRoundSate(RoundState state) {
         this.roundState = state;
     }
 
@@ -170,7 +173,7 @@ public class Round implements Serializable {
      *
      * @return Set of teams
      */
-    public Set<Team> getSubmittedTeams() {
+    public Map<Team, Long> getSubmittedTeams() {
         return submittedTeams;
     }
 
@@ -261,6 +264,7 @@ public class Round implements Serializable {
 
             if (getRemainingTime() <= 0) {
                 stop();
+                addNonSubmittedTeams();
                 events.add(new RoundEndedEvent(this));
             }
 
@@ -276,7 +280,17 @@ public class Round implements Serializable {
         return events;
     }
 
-    // </editor-fold>
+    /**
+     * Adds the teams that have not been submitted to the Map containing the
+     * scores for teams. The value of the score will be 0.
+     */
+    private void addNonSubmittedTeams() {
+        for (Team t : teams) {
+            submittedTeams.putIfAbsent(t, 0L);
+        }
+    }
+
+// </editor-fold>
     /**
      * Increase the remaining roundTime of the round with a certain amount of
      * roundTime.
@@ -311,7 +325,7 @@ public class Round implements Serializable {
      * @param toSubmit The team to submit
      */
     public void submit(Team toSubmit) {
-        submittedTeams.add(toSubmit);
+        submittedTeams.put(toSubmit, getRemainingPoints());
     }
     //</editor-fold>
 }

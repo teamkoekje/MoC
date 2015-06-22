@@ -53,11 +53,7 @@
             <div class="col-xs-6" style="display:none" id="wrapperTests">
                 <div class="first" style="width: 40px;margin-left:7%;">Tests</div>
                 <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
-                    <select class="form-control" size="6" style="width: 100%">
-                        <option ng-repeat="test in availableTests">
-                            {{test.name}}
-                        </option>
-                        
+                    <select class="form-control" size="6" style="width:100%" ng-options="test as test.name for test in availableTests" ng-model="selectedTest">
                     </select>
                     <br>
                     <button class="btn btn-default" ng-click="test()">
@@ -68,23 +64,14 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-xs-2">
+            <div class="buttonContainer">
                 <button class="btn btn-default" ng-click="toggleTests();">{{"RUN_SPECIFIC_TEST"| translate}}</button>
-            </div>
-            <div class="col-xs-2">
-                <button class="btn btn-default" ng-click="testAll()">{{ "RUN_ALL_TEST" | translate}}</button>
-            </div>
-            <div class="col-xs-2">
                 <button class="btn btn-default" ng-click="compile()">{{ "COMPILE" | translate}}</button>
-            </div>
-            <div class='col-xs-2'>
                 <button class="btn btn-default" 
                         ng-click="toggleResults()"
                         >
                     {{ "SHOW_HIDE_RESULT" | translate }}
                 </button>
-            </div>
-            <div class="col-xs-2">
                 <button class="btn btn-default" ng-click="fullScreenEditor()">{{ "FULLSCREEN" | translate }}</button>
             </div>
         </div>
