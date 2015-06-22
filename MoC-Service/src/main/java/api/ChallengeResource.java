@@ -1,5 +1,6 @@
 package api;
 
+import com.sun.jersey.multipart.FormDataParam;
 import domain.Challenge;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,13 +62,17 @@ public class ChallengeResource {
 
     /**
      * Create a new challenge
-     * @param file The file as a base64 encoded string
+     * @param fileContent The file as a base64 encoded string
+     * @param fileName The name of the file
      */
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void createChallenge(String file) {
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void createChallenge(
+            @FormDataParam("fileContent")String fileContent,
+            @FormDataParam("fileName")String fileName
+    ) {
         try {
-            byte[] data = Base64.decodeBase64(file.getBytes());
+            byte[] data = Base64.decodeBase64(fileContent.getBytes());
             try (OutputStream stream = new FileOutputStream("C:\\Luc\\yourFile2.zip")) {
                 stream.write(data);
             }
