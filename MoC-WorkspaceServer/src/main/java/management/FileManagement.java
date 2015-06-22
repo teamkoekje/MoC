@@ -2,6 +2,7 @@ package management;
 
 // <editor-fold defaultstate="collapsed" desc="imports" >
 import annotations.*;
+import controllers.PathController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -11,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,27 +40,35 @@ public class FileManagement {
     private final List<String> userTests;
     private final List<String> systemTests;
     private final List<String> ambivalentTests;
+    private final String jarPath;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
-    private static final Map<String, FileManagement> FILEMANAGERS = new HashMap<>();
+    private static final List<FileManagement> FILEMANAGERS = new ArrayList<>();
+    private static final PathController pathInstance = PathController.getInstance();
 
     /**
      * Get an instance of FileManagement
      *
-     * @param filepath Path to the .jar of the challenge
+     * @param competitionId
+     * @param challengeName
      * @return A FileManagement instance
      */
-    public static FileManagement getInstance(String filepath) {
-        if (FILEMANAGERS.get(filepath) != null) {
-            return FILEMANAGERS.get(filepath);
-        } else {
-            FILEMANAGERS.put(filepath, new FileManagement(filepath));
-            return getInstance(filepath);
+    public static FileManagement getInstance(Long competitionId, String challengeName) {
+        String jarPath = pathInstance.challengesPath(Long.toString(competitionId)) + File.separator + challengeName + ".jar";
+        
+        for(FileManagement f : FILEMANAGERS){
+            if(f.jarPath.equals(jarPath)){
+                return f;
+            }
         }
+        
+        FileManagement f = new FileManagement(jarPath);
+        FILEMANAGERS.add(f);
+        return f;        
     }
 
-    private FileManagement(String filepath) {
+    private FileManagement(String jarPath) {
         //init variables
         userTests = new ArrayList<>();
         systemTests = new ArrayList<>();
@@ -68,10 +76,11 @@ public class FileManagement {
         visibleClasses = new ArrayList<>();
         editables = new ArrayList<>();
         db = new AnnotationDB();
+        this.jarPath = jarPath;
 
         try {
-            System.out.println(filepath);
-            URL jarUrl = new URL("file:///" + filepath);
+            System.out.println(jarPath);
+            URL jarUrl = new URL("file:///" + jarPath);
             db.scanArchives(jarUrl);
             annotationIndex = db.getAnnotationIndex();
 
@@ -87,7 +96,7 @@ public class FileManagement {
             }
             //<editor-fold defaultstate="collapsed" desc="scan tests">   
             //variables
-            String testJarPath = filepath.substring(0, filepath.length() - 4);
+            String testJarPath = jarPath.substring(0, jarPath.length() - 4);
             testJarPath += "-tests.jar";
             try {
                 System.out.println();
