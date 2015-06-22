@@ -1,4 +1,4 @@
-package messaging.messagingConstants;
+package messaging.messagingConstants2;
 /**
  * Class providing Strings for naming purposes of JMS.
  * 

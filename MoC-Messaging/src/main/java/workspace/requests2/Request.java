@@ -1,4 +1,4 @@
-package workspace.requests;
+package workspace.requests2;
 
 import java.io.Serializable;
 

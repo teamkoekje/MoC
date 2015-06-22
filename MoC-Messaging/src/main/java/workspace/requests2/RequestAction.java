@@ -1,4 +1,4 @@
-package workspace.requests;
+package workspace.requests2;
 
 /**
  * Indicates the action for the request. This is used on the workspace servers

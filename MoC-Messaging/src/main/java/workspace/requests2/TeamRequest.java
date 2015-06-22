@@ -1,4 +1,4 @@
-package workspace.requests;
+package workspace.requests2;
 
 /**
  * Abstract class used to tell a Workspace Server to perform a Specified Action

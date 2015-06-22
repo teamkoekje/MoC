@@ -1,4 +1,4 @@
-package workspace.requests;
+package workspace.requests2;
 
 /** 
  * A Request used to tell a Workspace Server to compile a project of a specified

@@ -1,4 +1,4 @@
-package workspace.replies;
+package workspace.replies2;
 
 public class BroadcastReply extends Reply {
     

@@ -2,8 +2,8 @@ package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import com.sun.media.jfxmedia.logging.Logger;
-import messaging.messagingConstants.GatewayType;
-import messaging.messagingConstants.JMSSettings;
+import messaging.messagingConstants2.GatewayType;
+import messaging.messagingConstants2.JMSSettings;
 import java.io.Serializable;
 import java.util.Properties;
 import javax.jms.Connection;
