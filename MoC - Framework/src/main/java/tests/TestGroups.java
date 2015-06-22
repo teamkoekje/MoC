@@ -2,6 +2,10 @@ package tests;
 
 public class TestGroups {
     
+    protected TestGroups() {
+        
+    }
+    
     /**
      * The tests runnable by the MoC system
      */
