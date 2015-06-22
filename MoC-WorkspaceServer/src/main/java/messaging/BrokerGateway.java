@@ -142,26 +142,13 @@ public class BrokerGateway implements IRequestListener<Request> {
      */
     private Reply handleRequest(Request r) {
         String jarPath;
-        String folderPath;
         switch (r.getAction()) {
             case COMPILE:
                 CompileRequest compileRequest = (CompileRequest) r;
                 wm.updateFile(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getFilePath(), compileRequest.getFileContent());
                 return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
             case TEST:
-                TestRequest testRequest = (TestRequest) r;
-                wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
-
-                jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
-                        + File.separator
-                        + testRequest.getChallengeName()
-                        + ".jar";
-                FileManagement instance = FileManagement.getInstance(jarPath);
-                if (instance.getAvailableTests().contains(testRequest.getTestName())) {
-                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
-                }else{
-                    return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
-                }
+                return runTest((TestRequest) r);
             case TESTALL:
                 TestAllRequest testAllRequest = (TestAllRequest) r;
                 wm.updateFile(Long.toString(testAllRequest.getCompetitionId()), testAllRequest.getTeamName(), testAllRequest.getFilePath(), testAllRequest.getFileContent());
@@ -179,16 +166,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                 PushRequest pushRequest = (PushRequest) r;
                 return new NormalReply(wm.extractChallenge(Long.toString(pushRequest.getCompetitionId()), pushRequest.getChallengeName(), pushRequest.getData()));
             case FOLDER_STRUCTURE:
-                FolderStructureRequest folderStructureRequest = (FolderStructureRequest) r;
-                folderPath = pathInstance.teamChallengePath(
-                        Long.toString(folderStructureRequest.getCompetitionId()),
-                        folderStructureRequest.getTeamName(),
-                        folderStructureRequest.getChallengeName());
-                jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
-                        + File.separator
-                        + folderStructureRequest.getChallengeName()
-                        + ".jar";
-                return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
+                return getFolderStructure((FolderStructureRequest) r);
             case FILE:
                 FileRequest fileRequest = (FileRequest) r;
                 jarPath = pathInstance.challengesPath(Long.toString(fileRequest.getCompetitionId()))
@@ -210,6 +188,43 @@ public class BrokerGateway implements IRequestListener<Request> {
             default:
                 return new NormalReply("error, unknown action: " + r.getAction().name());
         }
+    }
+    
+    /**
+     * Runs the specified test
+     * @param testRequest
+     * @return 
+     */
+    private NormalReply runTest(TestRequest testRequest){
+        wm.updateFile(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getFilePath(), testRequest.getFileContent());
+
+        String jarPath = pathInstance.challengesPath(Long.toString(testRequest.getCompetitionId()))
+                + File.separator
+                + testRequest.getChallengeName()
+                + ".jar";
+        FileManagement instance = FileManagement.getInstance(jarPath);
+        if (instance.getAvailableTests().contains(testRequest.getTestName())) {
+            return new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.test(Long.toString(testRequest.getCompetitionId()), testRequest.getTeamName(), testRequest.getChallengeName(), testRequest.getTestName()) + "\"}");
+        }else{
+            return new NormalReply("{\"type\":\"buildresult\",\"data\":\"Error: Specified test is not available.\"}");
+        }
+    }
+    
+    /**
+     * Returns the requested folder structure
+     * @param folderStructureRequest
+     * @return 
+     */
+    private NormalReply getFolderStructure(FolderStructureRequest folderStructureRequest){
+        String folderPath = pathInstance.teamChallengePath(
+                Long.toString(folderStructureRequest.getCompetitionId()),
+                folderStructureRequest.getTeamName(),
+                folderStructureRequest.getChallengeName());
+        String jarPath = pathInstance.challengesPath(Long.toString(folderStructureRequest.getCompetitionId()))
+                + File.separator
+                + folderStructureRequest.getChallengeName()
+                + ".jar";
+        return new NormalReply("{\"type\":\"filestructure\",\"data\":" + FileManagement.getInstance(jarPath).getFolderStructureJSON(folderPath) + "}");
     }
     // </editor-fold>
 }
