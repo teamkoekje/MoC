@@ -102,7 +102,7 @@ public class WorkspaceService {
 
     public String delete(long competitionId, String teamName) {
         return gateway.deleteWorkspace(new DeleteRequest(competitionId, teamName));
-    }
+    }    
 
     public String update(long competitionId, String teamName, String filePath, String fileContent) {
         System.out.println("Updating file: " + filePath + " with content: " + fileContent);
@@ -162,4 +162,6 @@ public class WorkspaceService {
             }
         });
     }
+
+    
 }

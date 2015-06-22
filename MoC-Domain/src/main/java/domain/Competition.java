@@ -255,7 +255,7 @@ public class Competition implements Serializable {
      * @param time time in seconds allowed for completing the challenge
      */
     public void addChallenge(Challenge challenge, int time) {
-        Round r = new Round(challenge, time);
+        Round r = new Round(challenge, time, teams);
         r.setRoundOrder(rounds.size());
         rounds.add(r);
     }
