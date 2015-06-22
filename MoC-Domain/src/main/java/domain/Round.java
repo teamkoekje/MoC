@@ -55,10 +55,10 @@ public class Round implements Serializable {
     private List<Hint> hintsCopy;
 
     private List<Team> teams;
-    @XmlElement
-    private Map<Team, Long> submittedTeams;
+    private Map<String, Long> submittedTeams;
 
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Round() {
     }
@@ -176,7 +176,8 @@ public class Round implements Serializable {
      *
      * @return Set of teams
      */
-    public Map<Team, Long> getSubmittedTeams() {
+    @XmlElement
+    public Map<String, Long> getSubmittedTeams() {
         return submittedTeams;
     }
 
@@ -293,7 +294,7 @@ public class Round implements Serializable {
      */
     private void addNonSubmittedTeams() {
         for (Team t : teams) {
-            submittedTeams.putIfAbsent(t, 0L);
+            submittedTeams.putIfAbsent(t.getName(), 0L);
         }
     }
 
@@ -332,7 +333,7 @@ public class Round implements Serializable {
      * @param toSubmit The team to submit
      */
     public void submit(Team toSubmit) {
-        submittedTeams.put(toSubmit, getRemainingPoints());
+        submittedTeams.put(toSubmit.getName(), getRemainingPoints());
     }
     //</editor-fold>
 }

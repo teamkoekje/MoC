@@ -11,7 +11,10 @@ import domain.enums.CompetitionState;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -71,7 +74,6 @@ public class Competition implements Serializable {
     private CompetitionState competitionState = CompetitionState.NOT_STARTED;
 
     //</editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Competition() {
     }
@@ -83,8 +85,8 @@ public class Competition implements Serializable {
         this.endTime = endTime;
         this.location = location;
     }
-    
-     public Competition(String name, Date competitionDate, Date startingTime, Date endTime, String location, int minTeamSize, int maxTeamSize) {
+
+    public Competition(String name, Date competitionDate, Date startingTime, Date endTime, String location, int minTeamSize, int maxTeamSize) {
         this.name = name;
         this.competitionDate = competitionDate;
         this.startTime = startingTime;
@@ -94,9 +96,8 @@ public class Competition implements Serializable {
         this.minTeamSize = minTeamSize;
         this.maxTeamSize = maxTeamSize;
     }
-    
-    //</editor-fold>    
 
+    //</editor-fold>    
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     public long getId() {
         return id;
@@ -205,6 +206,26 @@ public class Competition implements Serializable {
      */
     protected void setCompetitionState(CompetitionState competitionState) {
         this.competitionState = competitionState;
+    }
+
+    /**
+     * Gets an overview of the scores of the entire Competition.
+     *
+     * @return A Map<String, Long> Where the String indicates the team name, and
+     * the Long the total score of that team.
+     */
+    @XmlElement
+    public Map<String, Long> getScores() {
+        Map<String, Long> toReturn = new HashMap();
+        for (Round r : rounds) {
+            Map<String, Long> roundMap = r.getSubmittedTeams();
+            for (Entry<String, Long> roundValue : roundMap.entrySet()) {
+                Long currentTotalValue = toReturn.get(roundValue.getKey());
+                toReturn.put(roundValue.getKey(), currentTotalValue + roundValue.getValue());
+            }
+        }
+
+        return toReturn;
     }
     // </editor-fold>
 
