@@ -86,3 +86,9 @@ form input:not([type="submit"]){
         height: 5em;
     }
 }
+
+.buttonContainer button{
+    float:left;
+    margin-left:15px;
+    margin-bottom:5px;
+}

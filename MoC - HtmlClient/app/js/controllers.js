@@ -613,21 +613,6 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
         };
 
         /**
-         * Saves the file to the workspace
-         * @param {Function} onSucces
-         */
-        save = function (onSucces) {
-            var file = new $workspace.update({competitionId: $routeParams.id});
-            file.fileContent = $scope.getTextFromEditor();
-            //TODO: Get path of current file
-            file.filePath = "";
-            console.log("content: " + file.fileContent);
-            file.$save(onSucces, function (data) {
-                console.log(data.data);
-            });
-        };
-
-        /**
          * Sends compile request
          */
         $scope.compile = function () {
@@ -642,25 +627,23 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
         };
 
         /**
-         * Sends test all request
+         * Sends test request
          */
-        $scope.testAll = function () {
-            save(function () {
-                new $workspace.test({competitionId: $routeParams.id}).$save();
+        $scope.test = function () {
+            $rootScope.loading = true;
+            var file = new $workspace.test({competitionId: $routeParams.id, testName: $scope.selectedTest.name});
+            file.fileContent = $scope.getTextFromEditor();
+            file.filePath = $scope.file.filepath;
+
+            file.$save(function (data) {
+                console.log(data.data);
             });
         };
 
         /**
-         * Sends test request
-         * @param {String} testFile
-         * @param {String} testName
+         * Selects a file and requests the content of that file from the server
+         * @param {type} file the file to select
          */
-        $scope.test = function (testFile, testName) {
-            save(function () {
-                new $workspace.test({competitionId: $routeParams.id, testFile: testFile, testName: testName}).$save();
-            });
-        };
-
         $scope.selectFile = function (file) {
             $rootScope.loading = true;
 
@@ -675,6 +658,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                 });
             }
 
+            // Select the file
             $scope.file = file;
             editor.setReadOnly(!file.editable);
 
@@ -682,6 +666,11 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
             $workspace.file.save({competitionId: $routeParams.id}, file.filepath);
         };
 
+        /**
+         * Checks if a file is selected
+         * @param {type} file the file to check
+         * @returns {Boolean} true if the file is selected, else false
+         */
         $scope.isSelected = function (file) {
             return $scope.file.filename === file.filename;
         };
@@ -698,7 +687,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     break;
                 case "availabletests":
                     $scope.availableTests = msg.data;
-                    console.log($scope.availableTests);
+                    $scope.selectedTest = $scope.availableTests[0];
                     break;
                 case "file":
                     $scope.file.filecontent = msg.data.filecontent;
@@ -708,6 +697,9 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                 case "buildresult":
                     $rootScope.loading = false;
                     $scope.results.push($sce.trustAsHtml(msg.data));
+                    if (!$('#wrapperAroundResults').is(":visible")) {
+                        $scope.toggleResults();
+                    }
                     break;
             }
             $scope.$apply();

@@ -55,7 +55,7 @@ services.factory('workspace', ['$resource',
             folderStructure: $resource(baseUrl + '/workspace/:competitionId/folderStructure', {competitionId: '@competitionId'}),            
             availableTests: $resource(baseUrl + '/workspace/:competitionId/availableTests', {competitionId: '@competitionId'}),
             file: $resource(baseUrl + '/workspace/:competitionId/file', {competitionId: '@competitionId'}),
-            test: $resource(baseUrl + '/workspace/:competitionId/test/:testFile/:testName', {competitionId: '@competitionId', testFile: '@testFile', testName: '@testName'})
+            test: $resource(baseUrl + '/workspace/:competitionId/test/:testName', {competitionId: '@competitionId', testName: '@testName'})
         };
     }
 ]);

@@ -112,9 +112,10 @@ public class WorkspaceResource {
 
     @POST
     @Consumes("application/xml,application/json")
-    @Path("/{competitionId}/test/{testname}")
+    @Path("/{competitionId}/test/{testName}")
     public Response test(@PathParam("competitionId") long competitionId, @PathParam("testName") String testName, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
+        System.out.println("TESTING: " + testName);
         if (competition != null && competition.getCurrentRound() != null) {
             Team team = competition.getTeamByUsername(request.getRemoteUser());
             Challenge challenge = competition.getCurrentRound().getChallenge();
