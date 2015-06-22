@@ -2,12 +2,12 @@ package service;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.Competition;
-import domain.Events.CompetitionEndedEvent;
-import domain.Events.CompetitionEvent;
-import domain.Events.HintReleasedEvent;
-import domain.Events.MessageReleasedEvent;
-import domain.Events.RoundEndedEvent;
-import domain.Events.UpdateEvent;
+import domain.events.CompetitionEndedEvent;
+import domain.events.CompetitionEvent;
+import domain.events.HintReleasedEvent;
+import domain.events.MessageReleasedEvent;
+import domain.events.RoundEndedEvent;
+import domain.events.UpdateEvent;
 import domain.enums.CompetitionState;
 import domain.enums.EventType;
 import java.util.ArrayList;

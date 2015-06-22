@@ -2,11 +2,11 @@ package domain;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
 import domain.enums.RoundState;
-import domain.Events.CompetitionEndedEvent;
-import domain.Events.CompetitionEvent;
-import domain.Events.HintReleasedEvent;
-import domain.Events.MessageReleasedEvent;
-import domain.Events.RoundEndedEvent;
+import domain.events.CompetitionEndedEvent;
+import domain.events.CompetitionEvent;
+import domain.events.HintReleasedEvent;
+import domain.events.MessageReleasedEvent;
+import domain.events.RoundEndedEvent;
 import domain.enums.CompetitionState;
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package domain.Events;
+package domain.events;
 
 import domain.enums.EventType;
 
