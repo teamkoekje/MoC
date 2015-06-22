@@ -54,15 +54,10 @@
                 <div class="first" style="width: 40px;margin-left:7%;">Tests</div>
                 <div class="second" style="margin-left:5%;margin-right:5%;width: 90%">
                     <select class="form-control" size="6" style="width: 100%">
-                        <option>
-                            This is a test
+                        <option ng-repeat="test in availableTests">
+                            {{test.name}}
                         </option>
-                        <option>
-                            This is another test
-                        </option>
-                        <option>
-                            And lets have one more test
-                        </option>
+                        
                     </select>
                     <br>
                     <button class="btn btn-default" ng-click="test()">

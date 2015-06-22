@@ -7,7 +7,8 @@ public class CodeFile implements Serializable{
     private String filePath;
     private String fileContent;
 
-    protected CodeFile() {}
+    protected CodeFile() {
+    }
 
     public CodeFile(String filePath, String fileContent) {
         this.filePath = filePath;

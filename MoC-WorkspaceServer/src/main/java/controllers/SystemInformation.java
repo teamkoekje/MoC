@@ -21,6 +21,9 @@ import management.WorkspaceManagement;
  */
 public class SystemInformation {
 
+    private SystemInformation() {
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Methods" >
     /**
      * Gets the system information.
@@ -44,10 +47,10 @@ public class SystemInformation {
             long freeSpace = new File("/").getFreeSpace();
             long usableSpace = new File("/").getUsableSpace();
             long totalSpace = new File("/").getTotalSpace();
-            String IP = InetAddress.getLocalHost().getHostAddress();
+            String ip = InetAddress.getLocalHost().getHostAddress();
 
             sb.append("\"" + wmInstance.getServerId() + "\":{");
-            sb.append("\"IP\": \"" + IP + "\",");
+            sb.append("\"IP\": \"" + ip + "\",");
             sb.append("\"freediskspace\": \"" + format.format(freeSpace) + "\",");
             sb.append("\"allocateddiskspace\": \"" + format.format(usableSpace) + "\",");
             sb.append("\"totaldiskspace\": \"" + format.format(totalSpace) + "\",");

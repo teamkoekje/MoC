@@ -36,14 +36,14 @@ public class FileManagement {
     private List<String> visibleClasses;
     private AnnotationDB db;
     private Map<String, Set<String>> annotationIndex;
-    private ArrayList<String> editables;
+    private List<String> editables;
     private final List<String> userTests;
     private final List<String> systemTests;
     private final List<String> ambivalentTests;
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
-    private static final Map<String, FileManagement> fileManagers = new HashMap<>();
+    private static final Map<String, FileManagement> FILEMANAGERS = new HashMap<>();
 
     /**
      * Get an instance of FileManagement
@@ -52,10 +52,10 @@ public class FileManagement {
      * @return A FileManagement instance
      */
     public static FileManagement getInstance(String filepath) {
-        if (fileManagers.get(filepath) != null) {
-            return fileManagers.get(filepath);
+        if (FILEMANAGERS.get(filepath) != null) {
+            return FILEMANAGERS.get(filepath);
         } else {
-            fileManagers.put(filepath, new FileManagement(filepath));
+            FILEMANAGERS.put(filepath, new FileManagement(filepath));
             return getInstance(filepath);
         }
     }
@@ -230,9 +230,7 @@ public class FileManagement {
             job.add("name", s);
             testsJson.add(job);
         }
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("tests", testsJson);
-        return result.build().toString();
+        return testsJson.build().toString();
     }
     //</editor-fold>
 }
