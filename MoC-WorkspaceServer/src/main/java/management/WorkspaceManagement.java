@@ -74,12 +74,12 @@ public class WorkspaceManagement {
             public void consumeLine(String string) {
                 if(string.startsWith("Tests run:") && firstTest){
                     invocationOutput.append(string);
-                    invocationOutput.append("\n------------------------------------------------------\n");
+                    invocationOutput.append("\n");
                     firstTest = false;
                 }
                 if(string.startsWith("[ERROR]") && string.contains("MoC/Competitions")){
                     if(firstError){
-                        invocationOutput.append("Build failed");
+                        invocationOutput.append("<p style='color:red;'>Build failed</p>");
                         invocationOutput.append("\n------------------------------------------------------\n");
                         firstError = false;
                     }
