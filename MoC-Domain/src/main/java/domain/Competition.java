@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
 /**
@@ -156,6 +157,7 @@ public class Competition implements Serializable {
         this.maxTeamSize = maxTeamSize;
     }
 
+    @XmlElement
     public List<Round> getRounds() {
         return rounds;
     }

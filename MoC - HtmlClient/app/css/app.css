@@ -15,7 +15,7 @@ form input:not([type="submit"]){
 .loadOverlay{
     left: 0;
     top: 0;
-    position:absolute;
+    position:fixed;
     height:100%;
     width:100%;
     background-color:#000;

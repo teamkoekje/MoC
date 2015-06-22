@@ -38,7 +38,7 @@ public class Round implements Serializable {
     private long id;
 
     private int roundOrder;
-    private RoundState roundState;
+    private RoundState roundState = RoundState.NOT_STARTED;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Challenge challenge;
@@ -75,7 +75,6 @@ public class Round implements Serializable {
 
     private void init() {
         this.submittedTeams = new HashMap();
-        this.roundState = RoundState.NOT_STARTED;
     }
     //</editor-fold>
 
