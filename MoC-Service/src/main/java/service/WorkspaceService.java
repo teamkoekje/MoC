@@ -89,7 +89,7 @@ public class WorkspaceService {
                                     Team t = c.getTeamByUsername(username);
                                     if (t != null) {
                                         c.submit(t);
-                                        cse.edit(c);//the submitted round should be part of the competition, so this should updated the submitted teams & scores in the db
+                                        //cse.edit(c);//the submitted round should be part of the competition, so this should updated the submitted teams & scores in the db
                                         Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
                                         we.sendToUser("{\"type\":\"submitresult\",\"data\":\"Successfully submitted\"}", username);
                                         Logger.logMsg(Logger.INFO, "Message sent to client");

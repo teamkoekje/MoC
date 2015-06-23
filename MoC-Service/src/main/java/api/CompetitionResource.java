@@ -136,7 +136,7 @@ public class CompetitionResource {
      * @return A List of Hints that has been released, or null if the active
      * competition was not found.
      */
-    @GET
+    /*@GET
     @Produces("application/xml,application/json")
     @Path("/{competitionId}/releasedHints")
     public List<Hint> getReleasedHints(@PathParam("competitionId") long competitionId) {
@@ -146,7 +146,7 @@ public class CompetitionResource {
         } else {
             return null;
         }
-    }
+    }*/
 
     /**
      * A round with a certain id
