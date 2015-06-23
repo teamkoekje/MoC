@@ -9,7 +9,7 @@ import javax.faces.bean.RequestScoped;
 /**
  * Service class used to manage users
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Stateless
 @RequestScoped

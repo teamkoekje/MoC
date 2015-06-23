@@ -25,7 +25,7 @@ import service.RoundService;
 /**
  * API used to manage competitions, round and teams
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Path("competition")
 public class CompetitionResource {

@@ -25,7 +25,7 @@ import service.ChallengeService;
 
 /**
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Stateless
 @Path("challenge")

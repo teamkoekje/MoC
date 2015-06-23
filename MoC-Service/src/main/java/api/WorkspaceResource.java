@@ -18,7 +18,7 @@ import service.WorkspaceService;
 
 /**
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Path("workspace")
 public class WorkspaceResource {

@@ -29,7 +29,7 @@ import service.UserService;
 
 /**
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Stateless
 @Path("team")

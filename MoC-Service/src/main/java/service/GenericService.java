@@ -8,7 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 /**
  * Abstract DAO used to manage data of a certain type
  *
- * @author Astrid
+ * @author TeamKoekje
  * @param <T> the type of data that the DAO class should manage
  */
 public class GenericService<T> {
@@ -65,7 +65,7 @@ public class GenericService<T> {
     }
 
     /**
-     * Finds all exisiting entities
+     * Finds all existing entities
      *
      * @return list with all entities
      */

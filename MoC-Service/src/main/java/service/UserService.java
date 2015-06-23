@@ -26,7 +26,7 @@ import javax.persistence.Query;
 /**
  * Service class used to manage users
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Stateless
 @RequestScoped

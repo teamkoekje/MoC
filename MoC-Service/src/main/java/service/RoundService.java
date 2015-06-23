@@ -9,7 +9,7 @@ import javax.persistence.Query;
 /**
  * Service class used to manage rounds of a competition
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Stateless
 @RequestScoped

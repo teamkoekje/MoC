@@ -15,7 +15,7 @@ import javax.inject.Inject;
 /**
  * Service class used to manage users
  *
- * @author Astrid
+ * @author TeamKoekje
  */
 @Singleton
 @Startup

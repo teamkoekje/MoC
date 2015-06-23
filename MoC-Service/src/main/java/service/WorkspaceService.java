@@ -1,10 +1,7 @@
 package service;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
-import com.codesnippets4all.json.parsers.JSONParser;
-import com.codesnippets4all.json.parsers.JsonParserFactory;
 import com.sun.media.jfxmedia.logging.Logger;
-import com.sun.org.apache.bcel.internal.generic.L2D;
 import domain.Competition;
 import domain.Team;
 import java.io.IOException;
@@ -41,6 +38,7 @@ import workspace.requests.TestRequest;
 import workspace.requests.UpdateRequest;
 
 // </editor-fold>
+
 /**
  * Service class used to manage users
  *
@@ -81,16 +79,17 @@ public class WorkspaceService {
                         if (reply.getAction() == ReplyAction.BROADCAST) {
                             sia.addReply(reply);
                         } else if (reply.getAction() == ReplyAction.SUBMIT) {
-                            //TODO: untested whether this entire if block works.
-                            JsonParserFactory factory = JsonParserFactory.getInstance();
+                            //TODO: The following code block should be removable - not tested
+                            /*JsonParserFactory factory = JsonParserFactory.getInstance();
                             JSONParser parser = factory.newJsonParser();
                             Map jsonMap = parser.parseJson(reply.getMessage());
-                            String get = (String) jsonMap.get("data");
-                            if (get.contains(", Failures: 0, Errors: 0,")) {
+                            String get = (String) jsonMap.get("data");*/
+                            if (reply.getMessage().contains(", Failures: 0, Errors: 0,")) {
                                 for (Competition c : cse.getActiveCompetitions()) {
                                     Team t = c.getTeamByUsername(username);
                                     if (t != null) {
                                         c.submit(t);
+                                        cse.edit(c);//the submitted round should be part of the competition, so this should updated the submitted teams & scores in the db
                                         Logger.logMsg(Logger.INFO, "Sending reply to user: " + username);
                                         we.sendToUser("{\"type\":\"submitresult\",\"data\":\"Successfully submitted\"}", username);
                                         Logger.logMsg(Logger.INFO, "Message sent to client");
