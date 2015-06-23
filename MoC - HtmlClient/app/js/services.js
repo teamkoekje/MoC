@@ -27,7 +27,7 @@ services.factory('competition', ['$resource',
             challenges: $resource(baseUrl + '/competition/:competitionId/challenges', {competitionId: '@competitionId'}),
             active: $resource(baseUrl + '/competition/active'),
             future: $resource(baseUrl + '/competition/future'),
-            teams: $resource(baseUrl + '/competition/:competitionId/teams', {userId: '@competitionId'})
+            teams: $resource(baseUrl + '/competition/:competitionId/teams', {competitionId: '@competitionId'})
         };
     }
 ]);

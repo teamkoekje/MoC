@@ -48,6 +48,10 @@ app.config(['$routeProvider',
                     templateUrl: 'views/newteammember.html',
                     controller: 'inviteUserController'
                 })
+                .when('/roundResult', {
+                    templateUrl: 'views/roundResult.html',
+                    controller: 'roundResultController'
+                })
                 .otherwise({redirectTo: '/login'});
     }
 ]);

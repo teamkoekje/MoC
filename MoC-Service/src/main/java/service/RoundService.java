@@ -4,6 +4,7 @@ import domain.Round;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.Query;
 
 /**
@@ -15,6 +16,9 @@ import javax.persistence.Query;
 @RequestScoped
 public class RoundService extends GenericService<Round> {
 
+    @Inject
+    private CompetitionService competitionService;
+    
     public RoundService() {
         super(Round.class);
     }
@@ -26,8 +30,6 @@ public class RoundService extends GenericService<Round> {
      * @return list with rounds that belong to the competition
      */
     public List<Round> findByCompetition(long competitionId) {
-        Query q = em.createNamedQuery("Round.findByCompetition");
-        q.setParameter("competitionId", competitionId);
-        return q.getResultList();
+        return competitionService.findById(competitionId).getRounds();
     }
 }

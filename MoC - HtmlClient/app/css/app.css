@@ -106,3 +106,15 @@ form input:not([type="submit"]){
    height:100%;
    overflow:auto;
 }
+
+.newMessageItem{
+    position:absolute;
+    left:30px;
+    top:4px;
+    background-color:#fff;
+    border:1px solid #333;
+    color:red;
+    height:20px;
+    width:10px;
+    text-align:center;
+}

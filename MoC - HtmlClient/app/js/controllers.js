@@ -8,6 +8,7 @@ controllers.service('newsfeedService', function () {
     var files = [];
 
     var onMessage;
+    var newHints = false;
 
     //Subscribe
     var subscribe = function (callback) {
@@ -34,6 +35,7 @@ controllers.service('newsfeedService', function () {
     // Hints
     var addHint = function (hint) {
         hints.push(hint);
+        newHints = true;
     };
 
     var clearHints = function () {
@@ -44,6 +46,14 @@ controllers.service('newsfeedService', function () {
         return hints;
     };
 
+    var isNewHints = function () {
+        return newHints;
+    };
+
+    var setNewHints = function (b) {
+        newHints = b;
+    };
+
     return {
         addMessage: addMessage,
         clearMessages: clearMessages,
@@ -51,6 +61,8 @@ controllers.service('newsfeedService', function () {
         addHint: addHint,
         clearHints: clearHints,
         getHints: getHints,
+        isNewHints: isNewHints,
+        setNewHints: setNewHints,
         subscribe: subscribe,
         sendMessage: sendMessage
     };
@@ -555,6 +567,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
          * Shows or hides the hints block
          */
         $scope.toggleHints = function toggleHints() {
+            newsfeedService.setNewHints(false);
             if ($('#wrapperHints').is(":visible")) {
                 $('#wrapperAroundEditor').addClass('col-xs-12').removeClass('col-xs-6');
                 $('#wrapperHints').hide();
@@ -714,7 +727,13 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     break;
                 case "submitresult":
                     $rootScope.loading = false;
+                    if(msg.data === "Successfully submitted"){
+                        location.href = "#/roundResult?id=" + $routeParams.id;
+                    }
                     console.log(msg.data);
+                    break;
+                case "roundended":
+                    location.href = "#/roundResult?id=" + $routeParams.id;
                     break;
             }
             $scope.$apply();
@@ -737,6 +756,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
             remainingTime = currentRound.duration * 1000 - (date - starttime);
             $scope.remainingTime = new Date(remainingTime);
             //$scope.points = Math.round(remainingTime / 1000, 0) * currentRound.challenge.difficulty;
+            $scope.newHints = newsfeedService.isNewHints();
             $scope.$apply();
         };
 
@@ -747,5 +767,12 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
         $scope.results = [];
         $scope.messages = newsfeedService.getMessages();
         $scope.hints = newsfeedService.getHints();
+    }
+]);
+controllers.controller('roundResultController', ['$scope', 'competition', 'newsfeedService', '$routeParams',
+    function ($scope, $competition, newsfeedService, $routeParams) {
+        
+        $scope.teams = $competition.teams.query({competitionId: $routeParams.id});
+        
     }
 ]);

@@ -58,6 +58,7 @@ public class Round implements Serializable {
     //private List<Hint> releasedHints;
 
     private List<Team> teams;
+    @XmlAnyElement
     private Map<String, Long> submittedTeams;
 
     // </editor-fold>
@@ -177,7 +178,6 @@ public class Round implements Serializable {
      *
      * @return Set of teams
      */
-    @XmlAnyElement
     public Map<String, Long> getSubmittedTeams() {
         return submittedTeams;
     }

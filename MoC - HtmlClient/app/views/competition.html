@@ -6,10 +6,11 @@
     <span style="position: absolute; top: 10px; right: 35px">
         <span style="cursor: pointer" ng-click="toggleHints();">
             {{ "HINTS" | translate }}
+            <span ng-show="newHints" class="newMessageItem">!</span>
         </span>
         |
         <span style="cursor: pointer" ng-click="toggleMessages();">
-            {{ "MESSAGE" | translate }}
+            {{ "MESSAGES" | translate }}
         </span>
     </span>
     <h3>

@@ -122,6 +122,7 @@ public class CompetitionService extends GenericService<Competition> {
             case ROUND_ENDED:
                 RoundEndedEvent ree = (RoundEndedEvent) event;
                 this.edit(ree.getCompetition());
+                we.broadCast("{\"type\":\"roundended\",\"data\":\"roundended\"");
                 break;
             case COMPETITION_ENDED:
                 CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
