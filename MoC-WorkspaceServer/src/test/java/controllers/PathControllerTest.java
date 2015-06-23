@@ -2,6 +2,7 @@ package controllers;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Assume;
 
 /**
  *
@@ -9,7 +10,15 @@ import static org.junit.Assert.*;
  */
 public class PathControllerTest {
 
+    private boolean windows;
+
     public PathControllerTest() {
+        String osName = System.getProperty("os.name");
+        if ("windows".equalsIgnoreCase(osName)) {
+            windows = true;
+        } else {
+            windows = false;
+        }
     }
 
     /**
@@ -38,6 +47,7 @@ public class PathControllerTest {
      */
     @Test
     public void testGetCompetitionsPath() {
+        Assume.assumeTrue(windows);
         PathController pc = PathController.getInstance();
         assertTrue(pc.getCompetitionsPath().endsWith("MoC\\Competitions"));
     }
@@ -47,6 +57,7 @@ public class PathControllerTest {
      */
     @Test
     public void testCompetitionPath() {
+        Assume.assumeTrue(windows);
         PathController pc = PathController.getInstance();
         assertTrue(pc.competitionPath("testCompetition").endsWith("MoC\\Competitions\\testCompetition"));
     }
@@ -56,6 +67,7 @@ public class PathControllerTest {
      */
     @Test
     public void testChallengesPath() {
+        Assume.assumeTrue(windows);
         PathController pc = PathController.getInstance();
         assertTrue(pc.challengesPath("testCompetition").endsWith("MoC\\Competitions\\testCompetition\\Challenges"));
     }
@@ -65,6 +77,7 @@ public class PathControllerTest {
      */
     @Test
     public void testTeamsPath() {
+        Assume.assumeTrue(windows);
         PathController pc = PathController.getInstance();
         assertTrue(pc.teamsPath("testCompetition").endsWith("MoC\\Competitions\\testCompetition\\Teams"));
     }
@@ -74,6 +87,7 @@ public class PathControllerTest {
      */
     @Test
     public void testTeamPath() {
+        Assume.assumeTrue(windows);
         PathController pc = PathController.getInstance();
         assertTrue(pc.teamPath("testCompetition", "testTeam").endsWith("MoC\\Competitions\\testCompetition\\Teams\\testTeam"));
     }
@@ -83,6 +97,7 @@ public class PathControllerTest {
      */
     @Test
     public void testTeamChallengePath() {
+        Assume.assumeTrue(windows);
         PathController pc = PathController.getInstance();
         assertTrue(pc.teamChallengePath("testCompetition", "testTeam", "testChallenge").endsWith("MoC\\Competitions\\testCompetition\\Teams\\testTeam\\testChallenge"));
     }

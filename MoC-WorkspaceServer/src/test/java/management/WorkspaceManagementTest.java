@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Assume;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
@@ -85,6 +86,8 @@ public class WorkspaceManagementTest {
      */
     @Test
     public void test5ExtractChallenge() {
+        Assume.assumeTrue(System.getProperty("os.name").equalsIgnoreCase("windows"));
+        Assume.assumeTrue(new File("C:\\MoC\\Challenges\\testChallenge.zip").exists());
         WorkspaceManagement wm = WorkspaceManagement.getInstance();
         PathController pc = PathController.getInstance();
         Path p = Paths.get(pc.getDefaultPath() + "/Challenges/" + challengeName + ".zip");
@@ -111,6 +114,9 @@ public class WorkspaceManagementTest {
      */
     @Test
     public void test6UpdateFile() {
+        Assume.assumeTrue(System.getProperty("os.name").equalsIgnoreCase("windows"));
+        Assume.assumeTrue(new File("C:\\MoC\\Competitions\\testCompetition\\Teams\\testTeam\\testChallenge\\test file.txt").exists());
+        
         WorkspaceManagement wm = WorkspaceManagement.getInstance();
         PathController pc = PathController.getInstance();
         String testFilePath = pc.teamChallengePath(compName, teamName, challengeName + "/" + testFile);
