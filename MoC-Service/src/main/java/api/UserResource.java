@@ -51,7 +51,7 @@ public class UserResource {
      * @return list with users
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     //@RolesAllowed("Admin")
     public List<User> getUsers() {
         return userService.findAll();
@@ -64,7 +64,7 @@ public class UserResource {
      * @return a user
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{userId}")
     @PermitAll
     public User getUserById(@PathParam("userId") String userId) {
@@ -78,7 +78,7 @@ public class UserResource {
      * @return a list of users
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/search/{searchInput}")
     @PermitAll
     public List<User> searchUsers(@PathParam("searchInput") String searchInput) {
@@ -110,7 +110,7 @@ public class UserResource {
      * @return list with teams of the user
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/teams")
     //@RolesAllowed({"User", "Admin"})
     public List<Team> getTeamsFromUser(@PathParam("username") String username) {
@@ -125,7 +125,7 @@ public class UserResource {
      * @return list with invitations of the user
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/invitations")
     //@RolesAllowed({"User", "Admin"})
     public List<Invitation> getInvitationsFromUser(@PathParam("username") String username) {
@@ -161,7 +161,7 @@ public class UserResource {
      * @return
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/register")
@@ -186,7 +186,7 @@ public class UserResource {
      * @return
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
     @Path("/register/{token}")
@@ -213,7 +213,7 @@ public class UserResource {
      * @return
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
     @RolesAllowed({"User", "Admin"})

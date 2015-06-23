@@ -45,28 +45,7 @@ public class FileManagement {
 
     // <editor-fold defaultstate="collapsed" desc="constructor(s)" >
     private static final List<FileManagement> FILEMANAGERS = new ArrayList<>();
-    private static final PathController pathInstance = PathController.getInstance();
-
-    /**
-     * Get an instance of FileManagement
-     *
-     * @param competitionId
-     * @param challengeName
-     * @return A FileManagement instance
-     */
-    public static FileManagement getInstance(Long competitionId, String challengeName) {
-        String jarPath = pathInstance.challengesPath(Long.toString(competitionId)) + File.separator + challengeName + ".jar";
-        
-        for(FileManagement f : FILEMANAGERS){
-            if(f.jarPath.equals(jarPath)){
-                return f;
-            }
-        }
-        
-        FileManagement f = new FileManagement(jarPath);
-        FILEMANAGERS.add(f);
-        return f;        
-    }
+    private static final PathController PATHINSTANCE = PathController.getInstance();
 
     private FileManagement(String jarPath) {
         //init variables
@@ -84,7 +63,6 @@ public class FileManagement {
             db.scanArchives(jarUrl);
             annotationIndex = db.getAnnotationIndex();
 
-            //addToVisibleClasses(annotationIndex.get(Challenge.class.getName()));
             addToVisibleClasses(annotationIndex.get(Editable.class.getName()));
             addToVisibleClasses(annotationIndex.get(ReadOnly.class.getName()));
             addToVisibleClasses(annotationIndex.get(Hint.class.getName()));
@@ -94,76 +72,85 @@ public class FileManagement {
                 String lastPart = parts[parts.length - 1];
                 editables.add(lastPart);
             }
-            //<editor-fold defaultstate="collapsed" desc="scan tests">   
-            //variables
-            String testJarPath = jarPath.substring(0, jarPath.length() - 4);
-            testJarPath += "-tests.jar";
-            try {
-                System.out.println();
-                System.out.println("______SCANNING FOR TESTS______");
-                System.out.println("Test jar path: " + testJarPath);
-                JarFile jarFile = new JarFile(testJarPath);
-                Enumeration e = jarFile.entries();
-                URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
-                URLClassLoader cl = URLClassLoader.newInstance(testJarUrl, Thread.currentThread().getContextClassLoader());
-                while (e.hasMoreElements()) {
-                    JarEntry je = (JarEntry) e.nextElement();
-                    if (je.isDirectory() || !je.getName().endsWith(".class")) {
-                        continue;
-                    }
-                    // -6 because of .class
-                    String className = je.getName().substring(0, je.getName().length() - 6);
-                    className = className.replace('/', '.');
-                    Class c = cl.loadClass(className);
-                    System.out.println("__________________________________________");
-                    System.out.println("class name: " + c.getName());
-                    System.out.println("class simple name: " + c.getSimpleName());
-                    Test t = (Test) c.getAnnotation(Test.class);
-                    if (t.groups().length == 2) {
-                        ambivalentTests.add(t.testName());
-                    } else {
-                        switch (t.groups()[0]) {
-                            case "user":
-                                userTests.add(t.testName());
-                                break;
-                            case "system":
-                                systemTests.add(t.testName());
-                                break;
-                            default:
-                                throw new AssertionError("unexpected value: " + t.groups()[0]);
-                        }
-                    }
-                    System.out.println("test name: " + t.testName());
-                    System.out.println("test description: " + t.description());
-                    for (String s : t.groups()) {
-                        System.out.println("-Group member: " + s);
+
+            scanTests();
+        } catch (IOException ex) {
+            Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void scanTests() {
+        String testJarPath = jarPath.substring(0, jarPath.length() - 4);
+        testJarPath += "-tests.jar";
+        try {
+            JarFile jarFile = new JarFile(testJarPath);
+            Enumeration e = jarFile.entries();
+            URL[] testJarUrl = {new URL("jar:file:" + testJarPath + "!/")};
+            URLClassLoader cl = URLClassLoader.newInstance(testJarUrl, Thread.currentThread().getContextClassLoader());
+            while (e.hasMoreElements()) {
+                JarEntry je = (JarEntry) e.nextElement();
+                if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                    continue;
+                }
+                // -6 because of .class
+                String className = je.getName().substring(0, je.getName().length() - 6);
+                className = className.replace('/', '.');
+                Class c = cl.loadClass(className);
+                Test t = (Test) c.getAnnotation(Test.class);
+                if (t.groups().length == 2) {
+                    ambivalentTests.add(t.testName());
+                } else {
+                    switch (t.groups()[0]) {
+                        case "user":
+                            userTests.add(t.testName());
+                            break;
+                        case "system":
+                            systemTests.add(t.testName());
+                            break;
+                        default:
+                            throw new AssertionError("unexpected value: " + t.groups()[0]);
                     }
                 }
-                System.out.println("__________________________________________");
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
 
-            // </editor-fold>
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            //System.err.println(ex.getMessage());
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(FileManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Get an instance of FileManagement
+     *
+     * @param competitionId
+     * @param challengeName
+     * @return A FileManagement instance
+     */
+    public static FileManagement getInstance(Long competitionId, String challengeName) {
+        String jarPath = PATHINSTANCE.challengesPath(Long.toString(competitionId)) + File.separator + challengeName + ".jar";
+
+        for (FileManagement f : FILEMANAGERS) {
+            if (f.jarPath.equals(jarPath)) {
+                return f;
+            }
+        }
+
+        FileManagement f = new FileManagement(jarPath);
+        FILEMANAGERS.add(f);
+        return f;
     }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
-    public List<String> getAvailableTests(){
+    public List<String> getAvailableTests() {
         List toReturn = new ArrayList<>();
         toReturn.addAll(userTests);
         toReturn.addAll(ambivalentTests);
         return toReturn;
     }
-    
+
     public String getFolderStructureJSON(String folderPath) {
         File folder = new File(folderPath);
-        if (!folder.isDirectory() || (folder.isDirectory() && folder.getName().equals("target"))) {
+        if (!folder.isDirectory() || (folder.isDirectory() && "target".equals(folder.getName()))) {
             return null;
         }
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
@@ -204,7 +191,7 @@ public class FileManagement {
     private JsonArrayBuilder listFolderJSON(File file, JsonArrayBuilder jsonArrayBuilder) {
         for (File f : file.listFiles()) {
             if (f.isDirectory()) {
-                if (!f.getName().equals("target")) {
+                if (!"target".equals(f.getName())) {
                     listFolderJSON(f, jsonArrayBuilder);
                 }
             } else if (isVisible(f.getName()) || f.getName().endsWith("Participants.html")) {
