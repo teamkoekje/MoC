@@ -42,7 +42,7 @@ public class ChallengeResource {
      * @return list with challenges
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Challenge> getChallenges() {
         return challengeService.findAll();
     }
@@ -54,7 +54,7 @@ public class ChallengeResource {
      * @return a challenge
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{challengeId}")
     public Challenge getChallengeById(@PathParam("challengeId") long challengeId) {
         return challengeService.findById(challengeId);
@@ -97,7 +97,7 @@ public class ChallengeResource {
      * @param challenge challenge with the updated information
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/update")
     public void editChallenge(Challenge challenge) {
         challengeService.edit(challenge);

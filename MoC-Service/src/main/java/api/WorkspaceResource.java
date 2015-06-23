@@ -12,6 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import service.CompetitionService;
 import service.WorkspaceService;
@@ -34,7 +35,7 @@ public class WorkspaceResource {
 
     //<editor-fold defaultstate="collapsed" desc="Workspace">
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/{teamName}/create")
     public void create(@PathParam("competitionId") long competitionId, @PathParam("teamName") String teamName) {
         String messageId = workspaceService.create(competitionId, teamName);
@@ -42,7 +43,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/{teamName}/delete")
     public void delete(@PathParam("competitionId") long competitionId, @PathParam("teamName") String teamName) {
         String messageId = workspaceService.delete(competitionId, teamName);
@@ -50,7 +51,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/update")
     public Response update(@PathParam("competitionId") long competitionId, CodeFile file) {
         Logger.logMsg(Logger.INFO, "Updating file: " + file.getFilePath());
@@ -70,7 +71,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/compile")
     public Response compile(@PathParam("competitionId") long competitionId, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
@@ -90,7 +91,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/submit")
     public Response submit(@PathParam("competitionId") long competitionId, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
@@ -110,7 +111,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/test")
     public Response testAll(@PathParam("competitionId") long competitionId, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
@@ -130,7 +131,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/test/{testName}")
     public Response test(@PathParam("competitionId") long competitionId, @PathParam("testName") String testName, CodeFile file) {
         Competition competition = competitionService.findById(competitionId);
@@ -151,7 +152,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/{challengeName}/push")
     public String pushChallenge(@PathParam("competitionId") long competitionId, @PathParam("challengeName") String challengeName) {
         workspaceService.push(competitionId, challengeName);
@@ -166,7 +167,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/folderStructure")
     public Response folderStructure(@PathParam("competitionId") long competitionId) {
         Competition competition = competitionService.findById(competitionId);
@@ -186,7 +187,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/availableTests")
     public Response availableTests(@PathParam("competitionId") long competitionId) {
         Competition competition = competitionService.findById(competitionId);
@@ -207,7 +208,7 @@ public class WorkspaceResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/file")
     public Response file(@PathParam("competitionId") long competitionId, String filePath) {
         Competition competition = competitionService.findById(competitionId);

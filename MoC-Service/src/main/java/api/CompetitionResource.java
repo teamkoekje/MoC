@@ -18,6 +18,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import service.CompetitionService;
 import service.RoundService;
 // </editor-fold>
@@ -45,20 +46,20 @@ public class CompetitionResource {
      * @return list with competitions
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Competition> getCompetitions() {
         return competitionService.findAll();
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/active")
     public List<Competition> getActiveCompetitions() {
         return competitionService.getActiveCompetitions();
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/future")
     public List<Competition> getFutureCompetitions() {
         return competitionService.getFutureCompetitions();
@@ -71,7 +72,7 @@ public class CompetitionResource {
      * @return a competition
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}")
     public Competition getCompetitionById(@PathParam("competitionId") long competitionId) {
         return competitionService.findById(competitionId);
@@ -83,7 +84,7 @@ public class CompetitionResource {
      * @param competition the competition that should be created
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     public void createCompetition(Competition competition) {
         competitionService.create(competition);
         competitionService.addFutureCompetition(competition);
@@ -95,7 +96,7 @@ public class CompetitionResource {
      * @param competition competition with the updated information
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/update")
     public void editCompetition(Competition competition) {
         competitionService.edit(competition);
@@ -122,7 +123,7 @@ public class CompetitionResource {
      * @return list with rounds
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/round")
     public List<Round> getRounds(@PathParam("competitionId") long competitionId) {
         return roundService.findByCompetition(competitionId);
@@ -137,17 +138,16 @@ public class CompetitionResource {
      * competition was not found.
      */
     /*@GET
-    @Produces("application/xml,application/json")
-    @Path("/{competitionId}/releasedHints")
-    public List<Hint> getReleasedHints(@PathParam("competitionId") long competitionId) {
-        Competition activeCompetition = competitionService.getActiveCompetition(competitionId);
-        if (activeCompetition != null) {
-            return activeCompetition.getCurrentRound().getReleasedHints();
-        } else {
-            return null;
-        }
-    }*/
-
+     @Produces(MediaType.APPLICATION_JSON)
+     @Path("/{competitionId}/releasedHints")
+     public List<Hint> getReleasedHints(@PathParam("competitionId") long competitionId) {
+     Competition activeCompetition = competitionService.getActiveCompetition(competitionId);
+     if (activeCompetition != null) {
+     return activeCompetition.getCurrentRound().getReleasedHints();
+     } else {
+     return null;
+     }
+     }*/
     /**
      * A round with a certain id
      *
@@ -155,14 +155,14 @@ public class CompetitionResource {
      * @return a round
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/round/{roundId}")
     public Round getRoundById(@PathParam("roundId") long roundId) {
         return roundService.findById(roundId);
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/challenges")
     public List<Challenge> getChallengesByCompetition(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);
@@ -170,7 +170,7 @@ public class CompetitionResource {
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/teams")
     public List<Team> getTeamsByCompetition(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);
@@ -183,7 +183,7 @@ public class CompetitionResource {
      * @param round the round that should be created
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/round")
     public void createRound(Round round) {
         roundService.create(round);
@@ -195,7 +195,7 @@ public class CompetitionResource {
      * @param round round with the updated information
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/round/update")
     public void editRound(Round round) {
         roundService.edit(round);
@@ -219,7 +219,7 @@ public class CompetitionResource {
      * @return Response object
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/start")
     public Response startRound(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);

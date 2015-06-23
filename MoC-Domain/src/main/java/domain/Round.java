@@ -164,6 +164,7 @@ public class Round implements Serializable {
      *
      * @return A RoundState object indicating the state of this Round.
      */
+    @XmlElement
     public RoundState getRoundState() {
         return this.roundState;
     }

@@ -55,7 +55,7 @@ public class TeamResource {
      * @return list with teams
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     //@RolesAllowed("Admin")
     public List<Team> getTeams() {
         return teamService.findAll();
@@ -68,7 +68,7 @@ public class TeamResource {
      * @return a user
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{teamId}")
     @RolesAllowed({"User", "Admin"})
     public Team getTeamById(@PathParam("teamId") long teamId) {
@@ -76,7 +76,7 @@ public class TeamResource {
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{teamId}/users")
     @PermitAll
     public List<User> getUsersFromTeam(@PathParam("teamId") long teamId) {
@@ -85,7 +85,7 @@ public class TeamResource {
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/token/{token}")
     @PermitAll
     public Team getTeamByToken(@PathParam("token") String token) {
@@ -103,7 +103,7 @@ public class TeamResource {
      * @return a user
      */
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/myTeams")
     @RolesAllowed({"User"})
     public List<Team> getMyTeams(@Context HttpServletRequest request) {
@@ -117,7 +117,7 @@ public class TeamResource {
     }
 
     @GET
-    @Produces("application/xml,application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/myTeamInvitations")
     @RolesAllowed({"User"})
     public List<Invitation> getMyTeamInvitations() {
@@ -157,7 +157,7 @@ public class TeamResource {
      * @param team team with the updated information
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/update")
     public void editTeam(Team team) {
         teamService.edit(team);
@@ -184,7 +184,7 @@ public class TeamResource {
      * @return
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{teamId}/invite")
     public Response inviteMember(String email, @PathParam("teamId") long teamId) {
         Logger.logMsg(Logger.INFO, email + " - " + teamId);
@@ -210,7 +210,7 @@ public class TeamResource {
      * @param token string to verify if the user is allowed to join the team
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/join/{token}")
     public void joinTeam(User user, @PathParam("token") String token) {
         /*
@@ -223,7 +223,7 @@ public class TeamResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/accept/{invitationId}")
     public Response acceptInvitation(@PathParam("invitationId") long invitationId) {
         User user = userService.findById(request.getRemoteUser());
@@ -235,7 +235,7 @@ public class TeamResource {
     }
 
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/decline/{invitationId}")
     public void declineInvitation(@PathParam("invitationId") long invitationId) {
         invitationService.declineInvitation(invitationId);
@@ -248,7 +248,7 @@ public class TeamResource {
      * @param teamId id of the team that the user should leave
      */
     @POST
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{teamId}/leave/{username}")
     @RolesAllowed({"User", "Admin"})
     public void leaveTeam(@PathParam("teamId") long teamId, @PathParam("username") String username) {
@@ -269,7 +269,7 @@ public class TeamResource {
      * @return list of Invitations
      */
     @GET
-    @Consumes("application/xml,application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{teamId}/findInvited")
     @RolesAllowed({"User", "Admin"})
     public List<Invitation> findInvitationsByTeam(@PathParam("teamId") long teamId) {

@@ -47,8 +47,8 @@
             {{"CHALLENGES"| translate}}
         </h3>
         <ul class="notARealList">
-            <li class="row" ng-repeat="chal in currentCompetition.challenges">
-                <div class="col-xs-3" ng-switch on="chal.competitionState">
+            <li class="row" ng-repeat="round in currentCompetition.rounds">
+                <div class="col-xs-3" ng-switch on="round.roundState">
                     <!--TODO: Add this to API -->
                     <div ng-switch-when="ENDED" class="glyphicon glyphicon-asterisk" style="color: green"></div>
                     <div ng-switch-when="ONGOING" class="glyphicon glyphicon-asterisk" style="color: yellow"></div>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-xs-9">
                     <span style="float:right; cursor: pointer" ng-click="$parent.currentRound = $index">
-                        {{chal.name}}
+                        {{round.challenge.name}}
                     </span>
                 </div>
             </li>
