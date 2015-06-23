@@ -1,13 +1,16 @@
 package api;
 
 import domain.Challenge;
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -72,23 +75,34 @@ public class ChallengeResource {
             @FormDataParam("fileContent") String fileContent,
             @FormDataParam("fileName") String fileName
     ) {
-        System.out.println(fileContent);
-        System.out.println(fileName);
-
         try {
-            File folder = new File("C:\\Luc");
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
+            System.out.println(fileContent);
+            System.out.println(fileName);
+
             byte[] data = Base64.decodeBase64(fileContent.getBytes());
-            try (OutputStream stream = new FileOutputStream(folder + File.separator + fileName)) {
-                stream.write(data);
+            String jarFileName = fileName.substring(0, fileName.length() - 8) + ".jar";
+            ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data));
+            for (ZipEntry zipEntry; (zipEntry = zipInputStream.getNextEntry()) != null;) {
+                System.out.println(zipEntry.getName());
+                if (zipEntry.getName().endsWith(jarFileName)) {
+                    try (BufferedInputStream is = new BufferedInputStream(zipInputStream)) {
+                        int currentByte;
+                        byte[] data2 = new byte[2024];
+                        FileOutputStream fos = new FileOutputStream("C://Luc//" + jarFileName);
+                        try (BufferedOutputStream dest = new BufferedOutputStream(fos, 2024)) {
+                            while ((currentByte = is.read(data2, 0, 2024)) != -1) {
+                                dest.write(data2, 0, currentByte);
+                            }
+                            dest.flush();
+                        }
+                        return;
+                    }
+                }
             }
+            System.out.println(fileName);
         } catch (IOException ex) {
             Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Challenge c = new Challenge(fileName.substring(0, fileName.lastIndexOf(".zip", 0)));
-        challengeService.create(c);
     }
 
     /**
@@ -99,7 +113,8 @@ public class ChallengeResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public void editChallenge(Challenge challenge) {
+    public void editChallenge(Challenge challenge
+    ) {
         challengeService.edit(challenge);
     }
 
@@ -110,7 +125,8 @@ public class ChallengeResource {
      */
     @DELETE
     @Path("/{challengeId}")
-    public void removeChallenge(@PathParam("challengeId") long challengeId) {
+    public void removeChallenge(@PathParam("challengeId") long challengeId
+    ) {
         challengeService.remove(challengeId);
     }
 
