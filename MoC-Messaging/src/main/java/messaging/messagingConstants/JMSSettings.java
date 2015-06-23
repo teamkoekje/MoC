@@ -10,8 +10,8 @@ public class JMSSettings {
         
     }
     
-    static String IP = "192.168.24.34";
-    //static String IP = "localhost";
+    //static String IP = "192.168.24.34";
+    static String IP = "localhost";
 
     public static final String URL_ACTIVE_MQ = "tcp://" + IP + ":61616?jms.prefetchPolicy.queuePrefetch=10";
     public static final String WORKSPACE_REQUEST = "WORKSPACE_REQUEST";

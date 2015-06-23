@@ -24,6 +24,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlAnyAttribute;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
@@ -214,7 +216,7 @@ public class Competition implements Serializable {
      * @return A Map<String, Long> Where the String indicates the team name, and
      * the Long the total score of that team.
      */
-    @XmlElement
+    @XmlAnyElement
     public Map<String, Long> getScores() {
         Map<String, Long> toReturn = new HashMap();
         for (Round r : rounds) {

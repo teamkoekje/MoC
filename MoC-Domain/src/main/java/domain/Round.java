@@ -18,8 +18,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
@@ -53,7 +55,7 @@ public class Round implements Serializable {
     private Calendar endTime;
 
     private List<Hint> hintsCopy;
-    private List<Hint> releasedHints;
+    //private List<Hint> releasedHints;
 
     private List<Team> teams;
     private Map<String, Long> submittedTeams;
@@ -75,7 +77,7 @@ public class Round implements Serializable {
         this.duration = roundTime;
         this.teams = new ArrayList<>(teams);
         this.submittedTeams = new HashMap();
-        this.releasedHints = new ArrayList<>();
+        //this.releasedHints = new ArrayList<>();
     }
 
     //</editor-fold>
@@ -175,7 +177,7 @@ public class Round implements Serializable {
      *
      * @return Set of teams
      */
-    @XmlElement
+    @XmlAnyElement
     public Map<String, Long> getSubmittedTeams() {
         return submittedTeams;
     }
@@ -195,9 +197,9 @@ public class Round implements Serializable {
         return submittedTeams.size();
     }
     
-    public List<Hint> getReleasedHints(){
+    /*public List<Hint> getReleasedHints(){
         return this.releasedHints;
-    }
+    }*/
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="methods" >
@@ -276,7 +278,7 @@ public class Round implements Serializable {
             if (getRemainingTime() <= 0) {
                 stop();
                 addNonSubmittedTeams();
-                events.add(new RoundEndedEvent(this));
+                //events.add(new RoundEndedEvent(this));
             }
 
             //loop through hints and release + remove any expired ones
@@ -285,7 +287,7 @@ public class Round implements Serializable {
                 if (elapsedTime() >= h.getTime()) {
                     events.add(new HintReleasedEvent(h));
                     hintsCopy.remove(i);
-                    releasedHints.add(h);
+                    //releasedHints.add(h);
                 }
             }
         }
