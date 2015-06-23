@@ -70,6 +70,7 @@ var translationsEN = {
   RUN_SPECIFIC_TEST: 'Run specific test',
   RUN_ALL_TEST: 'Run all tests',
   COMPILE: 'Compile',
+  SUBMIT: 'Submit',
   SHOW_HIDE_RESULT: 'Show/hide result',
   FULLSCREEN: 'Fullscreen',
   
@@ -149,6 +150,7 @@ var translationsNL= {
   RUN_SPECIFIC_TEST: 'Voer specifieke test uit',
   RUN_ALL_TEST: 'Voer alle testen uit',
   COMPILE: 'Compileren',
+  SUBMIT: 'Inleveren',
   SHOW_HIDE_RESULT: 'Resultaat weergeven/verbergen',
   FULLSCREEN: 'Volledig scherm',
   

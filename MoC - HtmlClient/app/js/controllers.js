@@ -163,21 +163,9 @@ controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 
             console.log($scope.user);
             $scope.isLoggedIn = $scope.user.username !== undefined;
         });
-        // TODO: Remove test data
-        newsfeedService.addMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, tortor et commodo scelerisque, justo sapien elementum lacus, sed mollis lacus turpis quis mauris");
-        newsfeedService.addMessage("Aenean lacus quam, placerat in mi vel, interdum pellentesque nisl. Cras tincidunt cursus eros, vel fermentum lectus fringilla vitae. Donec eget neque faucibus, bibendum orci vel, porta metus. Aliquam odio orci, auctor nec dictum quis, molestie a nisi. Maecenas vitae erat eu sapien fringilla pellentesque eu id velit. Mauris quis mauris tempus, tempor ex et, pharetra justo. Vivamus varius fringilla mauris");
-        newsfeedService.addMessage("Fusce ac neque elementum, pharetra ");
-        newsfeedService.addMessage("ro nec libero vehicula, in cursus nunc ultrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addMessage("ro nec libero vehicula, in cursus nasdfaltrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addMessage("ro nec libero vehicula, in cursus aaaUt turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addMessage("ro nec libero vehicula, in cursus nungfdsgrttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addHint("ro nec libero vehicula, in cursus nunc ultrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addHint("ro nec libero vehicula, in cursus nasdfaltrices. Ut turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addHint("ro nec libero vehicula, in cursus aaaUt turpis metus, porttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
-        newsfeedService.addHint("ro nec libero vehicula, in cursus nungfdsgrttitor et augue ultricies, imperdiet facilisis est. Etiam molestie sed metus sit amet accumsan. Mauris gravida ultricies molestie. Quisque metus lacus, pharetra eget cursus sed, aliquam quis er");
     }
-
 ]);
+
 controllers.controller('registerController', ['$scope', '$rootScope', '$routeParams', 'user', 'team',
     function ($scope, $rootScope, $routeParams, $user, $team) {
         /**
@@ -627,6 +615,20 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
         };
 
         /**
+         * Sends submit request
+         */
+        $scope.submit = function () {
+            $rootScope.loading = true;
+            var file = new $workspace.submit({competitionId: $routeParams.id});
+            file.fileContent = $scope.getTextFromEditor();
+            file.filePath = $scope.file.filepath;
+
+            file.$save(function (data) {
+                console.log(data.data);
+            });
+        };
+
+        /**
          * Sends test request
          */
         $scope.test = function () {
@@ -680,6 +682,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
 
         //Subscribe to newsfeed
         newsfeedService.subscribe(function (msg) {
+            console.log(msg);
             switch (msg.type) {
                 case "filestructure":
                     $scope.files = msg.data;
@@ -690,7 +693,6 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     $scope.selectedTest = $scope.availableTests[0];
                     break;
                 case "file":
-                    console.log(msg.data);
                     if (msg.data.filename.endsWith(".html")) {
                         $scope.htmlFile = $sce.trustAsHtml(msg.data.filecontent);
                         $("#editor").hide();
@@ -709,6 +711,10 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     if (!$('#wrapperAroundResults').is(":visible")) {
                         $scope.toggleResults();
                     }
+                    break;
+                case "submitresult":
+                    $rootScope.loading = false;
+                    console.log(msg.data);
                     break;
             }
             $scope.$apply();

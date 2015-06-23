@@ -1,6 +1,5 @@
 package api;
 
-import com.sun.jersey.multipart.FormDataParam;
 import domain.Challenge;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jasypt.contrib.org.apache.commons.codec_1_3.binary.Base64;
 import service.ChallengeService;
 
@@ -62,24 +62,32 @@ public class ChallengeResource {
 
     /**
      * Create a new challenge
+     *
      * @param fileContent The file as a base64 encoded string
      * @param fileName The name of the file
      */
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public void createChallenge(
-            @FormDataParam("fileContent")String fileContent,
-            @FormDataParam("fileName")String fileName
+            @FormDataParam("fileContent") String fileContent,
+            @FormDataParam("fileName") String fileName
     ) {
+        System.out.println(fileContent);
+        System.out.println(fileName);
+
         try {
+            File folder = new File("C:\\Luc");
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
             byte[] data = Base64.decodeBase64(fileContent.getBytes());
-            try (OutputStream stream = new FileOutputStream("C:\\Luc\\yourFile2.zip")) {
+            try (OutputStream stream = new FileOutputStream(folder + File.separator + fileName)) {
                 stream.write(data);
             }
         } catch (IOException ex) {
             Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Challenge c = new Challenge("name");
+        Challenge c = new Challenge(fileName.substring(0, fileName.lastIndexOf(".zip", 0)));
         challengeService.create(c);
     }
 
