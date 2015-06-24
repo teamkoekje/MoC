@@ -1,6 +1,8 @@
 package api;
 
+import annotations.Hint;
 import domain.Challenge;
+import enums.ChallengeDifficulty;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -8,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -23,6 +26,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -62,14 +66,45 @@ public class ChallengeResource {
     /**
      * Gets a challenge with a certain id
      *
-     * @param challengeId id of the challenge
+     * @param challengeName
      * @return a challenge
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{challengeId}")
-    public Challenge getChallengeById(@PathParam("challengeId") long challengeId) {
-        return challengeService.findById(challengeId);
+    @Path("/{challengeName}")
+    public String getChallengeById(@PathParam("challengeName") String challengeName) {
+        challengeName = challengeName.trim();
+        String folder;
+        String osName = System.getProperty("os.name");
+        if ("linux".equalsIgnoreCase(osName)) {
+            folder = "MoC" + File.separator + "Challenges" + File.separator;
+        } else {
+            folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
+        }
+        annotations.Challenge chal = scanChallenge(folder + challengeName + ".jar");
+        System.out.println(chal);
+        JsonObjectBuilder job = Json.createObjectBuilder();
+        job.add("challengeName", chal.name());
+        job.add("difficulty", chal.difficulty().toString());
+        JsonObjectBuilder description = Json.createObjectBuilder();
+        description.add("participant", chal.descriptionParticipants());
+        description.add("spectator", chal.descriptionPublic());
+        job.add("description", description);
+        JsonArrayBuilder hints = Json.createArrayBuilder();
+        for (Hint hint : chal.hints()) {
+            JsonObjectBuilder hintBuilder = Json.createObjectBuilder();
+            hintBuilder.add("delay", hint.delay());
+            hintBuilder.add("content", hint.content());
+            hints.add(hintBuilder);
+        }
+        job.add("hints", hints);
+        JsonObjectBuilder authorBuilder = Json.createObjectBuilder();
+        authorBuilder.add("name", chal.author());
+        authorBuilder.add("organisation", chal.organisation());
+        authorBuilder.add("website", chal.weblink());
+        authorBuilder.add("logo", chal.logoUrl());
+        job.add("author", authorBuilder);
+        return job.build().toString();
     }
 
     /**
@@ -96,27 +131,29 @@ public class ChallengeResource {
             } else {
                 folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
             }
+
+            String jarFileName = fileName.substring(0, fileName.length() - 8);
+            folder += jarFileName + File.separator;
+
             new File(folder).mkdirs();
-            try (FileOutputStream fos = new FileOutputStream(folder + File.separator + fileName)) {
+            try (FileOutputStream fos = new FileOutputStream(folder + fileName)) {
                 fos.write(data);
             }
 
-            String jarFileName = fileName.substring(0, fileName.length() - 8) + ".jar";
             ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data));
             for (ZipEntry zipEntry; (zipEntry = zipInputStream.getNextEntry()) != null;) {
-                System.out.println(zipEntry.getName());
-                if (zipEntry.getName().endsWith(jarFileName)) {
+                if (zipEntry.getName().endsWith(jarFileName + ".jar")) {
                     try (BufferedInputStream is = new BufferedInputStream(zipInputStream)) {
                         int currentByte;
                         byte[] data2 = new byte[2024];
-                        FileOutputStream fos2 = new FileOutputStream(folder + File.separator + jarFileName);
+                        FileOutputStream fos2 = new FileOutputStream(folder + jarFileName + ".jar");
                         try (BufferedOutputStream dest = new BufferedOutputStream(fos2, 2024)) {
                             while ((currentByte = is.read(data2, 0, 2024)) != -1) {
                                 dest.write(data2, 0, currentByte);
                             }
                             dest.flush();
                         }
-                        scanChallenge(folder + "/" + jarFileName);
+                        scanChallenge(folder + jarFileName + ".jar");
                         return;
                     }
                 }
@@ -139,13 +176,12 @@ public class ChallengeResource {
             folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
         }
         for (File f : new File(folder).listFiles(new FilenameFilter() {
-
             @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".zip");
+            public boolean accept(File current, String name) {
+                return new File(current, name).isDirectory();
             }
         })) {
-            jab.add(f.getName().substring(0, f.getName().length() - 4));
+            jab.add(f.getName());
         }
         return jab.build().toString();
     }

@@ -63,14 +63,17 @@ services.factory('workspace', ['$resource',
 services.factory('challenge', ['$resource',
     function ($resource) {
         return {
+            available: $resource(baseUrl + '/challenge/available'),
             create: $resource(baseUrl + '/challenge', {}, {
                 save: {
                     method: 'POST',
                     /*
+                     * TODO: REMOVE COMMENT
                      * I would have used "multipart/form-data" here, but for some reason that gives a 400: Bad request error...
                      */
                     headers: {'Content-Type': undefined}
-                }})
+                }}),
+            challengeInfo: $resource(baseUrl + '/challenge/:challengeName', {challengeName: '@challengeName'})
         };
     }
 ]);
