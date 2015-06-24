@@ -1,6 +1,19 @@
 <div class="container" style="width:100%;">
     <h3>Round score</h3>
-    <div ng-repeat="team in teams">
-        {{team.name}} - {{team.score}}
-    </div>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>{{ "TEAM" | translate }}</th>
+                <th>Round Score</th>
+                <th>Total Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="score in scores">
+                <td>{{score.team}}</td>
+                <td>{{score.roundScore}}</td>
+                <td>{{score.score}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

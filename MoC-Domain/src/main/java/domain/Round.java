@@ -11,17 +11,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 // </editor-fold>
 
@@ -58,8 +54,8 @@ public class Round implements Serializable {
     //private List<Hint> releasedHints;
 
     private List<Team> teams;
-    @XmlAnyElement
-    private Map<String, Long> submittedTeams;
+    @XmlElement
+    private List<TeamScore> teamScores;
 
     // </editor-fold>
     
@@ -77,7 +73,6 @@ public class Round implements Serializable {
         this.challenge = challenge;
         this.duration = roundTime;
         this.teams = new ArrayList<>(teams);
-        this.submittedTeams = new HashMap();
         //this.releasedHints = new ArrayList<>();
     }
 
@@ -174,13 +169,8 @@ public class Round implements Serializable {
         this.roundState = state;
     }
 
-    /**
-     * Gets all submitted teams
-     *
-     * @return Set of teams
-     */
-    public Map<String, Long> getSubmittedTeams() {
-        return submittedTeams;
+    public List<TeamScore> getTeamScores() {
+        return teamScores;
     }
 
     public Calendar getStartTime() {
@@ -195,7 +185,7 @@ public class Round implements Serializable {
      * @return The amount of teams that have submitted
      */
     public int submittedTeamCount() {
-        return submittedTeams.size();
+        return teamScores.size();
     }
     
     /*public List<Hint> getReleasedHints(){
@@ -278,8 +268,8 @@ public class Round implements Serializable {
 
             if (getRemainingTime() <= 0) {
                 stop();
-                addNonSubmittedTeams();
-                //events.add(new RoundEndedEvent(this));
+                //addNonSubmittedTeams();
+                events.add(new RoundEndedEvent(this));
             }
 
             //loop through hints and release + remove any expired ones
@@ -293,16 +283,6 @@ public class Round implements Serializable {
             }
         }
         return events;
-    }
-
-    /**
-     * Adds the teams that have not been submitted to the Map containing the
-     * scores for teams. The value of the score will be 0.
-     */
-    private void addNonSubmittedTeams() {
-        for (Team t : teams) {
-            submittedTeams.putIfAbsent(t.getName(), 0L);
-        }
     }
 
 // </editor-fold>
@@ -340,7 +320,7 @@ public class Round implements Serializable {
      * @param toSubmit The team to submit
      */
     public void submit(Team toSubmit) {
-        submittedTeams.put(toSubmit.getName(), getRemainingPoints());
+        teamScores.add(new TeamScore(toSubmit.getName(), getRemainingPoints()));
     }
     //</editor-fold>
 }

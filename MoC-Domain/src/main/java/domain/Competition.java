@@ -216,21 +216,36 @@ public class Competition implements Serializable {
      * @return A Map<String, Long> Where the String indicates the team name, and
      * the Long the total score of that team.
      */
-    @XmlAnyElement
-    public Map<String, Long> getScores() {
-        Map<String, Long> toReturn = new HashMap();
-        for (Round r : rounds) {
-            Map<String, Long> roundMap = r.getSubmittedTeams();
-            for (Entry<String, Long> roundValue : roundMap.entrySet()) {
-                Long currentTotalValue = toReturn.get(roundValue.getKey());
-                if(currentTotalValue == null){
-                    currentTotalValue = 0L;
+    @XmlElement
+    public List<TeamScore> getScores() {
+        List<TeamScore> totalScores = new ArrayList();
+        for (Round round : rounds) {
+            for (TeamScore roundScore : round.getTeamScores()) {
+                boolean b = false;
+                for (TeamScore totalScore : totalScores) {
+                    if (totalScore.getTeam().equals(roundScore.getTeam())) {
+                        totalScore.increaseScore(roundScore.getScore());
+                        b = true;
+                    }
                 }
-                toReturn.put(roundValue.getKey(), currentTotalValue + roundValue.getValue());
+                if (!b) {
+                    totalScores.add(roundScore);
+                }
             }
         }
+        return totalScores;
 
-        return toReturn;
+        /*Map<String, Long> toReturn = new HashMap();
+         for (Round r : rounds) {
+         Map<String, Long> roundMap = r.getSubmittedTeams();
+         for (Entry<String, Long> roundValue : roundMap.entrySet()) {
+         Long currentTotalValue = toReturn.get(roundValue.getKey());
+         if(currentTotalValue == null){
+         currentTotalValue = 0L;
+         }
+         toReturn.put(roundValue.getKey(), currentTotalValue + roundValue.getValue());
+         }
+         }*/
     }
     // </editor-fold>
 
@@ -248,7 +263,6 @@ public class Competition implements Serializable {
                         int nextRoundOrder = ree.getEndedRound().getRoundOrder() + 1;
                         if (rounds.size() > nextRoundOrder) {
                             currentRound = rounds.get(nextRoundOrder);
-
                             //oterwise, tell the calling service the entire competition has ended
                         } else {
                             currentRound = null;

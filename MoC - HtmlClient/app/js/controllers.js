@@ -727,7 +727,7 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
                     break;
                 case "submitresult":
                     $rootScope.loading = false;
-                    if(msg.data === "Successfully submitted"){
+                    if (msg.data === "Successfully submitted") {
                         location.href = "#/roundResult?id=" + $routeParams.id;
                     }
                     console.log(msg.data);
@@ -771,8 +771,29 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
 ]);
 controllers.controller('roundResultController', ['$scope', 'competition', 'newsfeedService', '$routeParams',
     function ($scope, $competition, newsfeedService, $routeParams) {
-        
-        $scope.teams = $competition.teams.query({competitionId: $routeParams.id});
-        
+
+        $scope.competition = $competition.all.get({competitionId: $routeParams.id}, function () {
+            $scope.scores = $scope.competition.scores;
+            var teamScores = $scope.competition.currentRound.teamScores;
+            for (var i = 0; i < teamScores.length; i++) {
+                for (var i = 0; i < $scope.scores.length; i++) {
+                    if ($scope.scores[i].team == teamScores[i].team) {
+                        $scope.scores[i].roundScore = teamScores[i].score;
+                    }
+                }
+            }
+        });
+
+        newsfeedService.subscribe(function (msg) {
+            console.log(msg);
+            switch (msg.type) {
+                case "roundended":
+                    location.reload();
+                    break;
+                case "roundstarted":
+                    location.href = "#/competition?id=" + $routeParams.id;
+                    break;
+            }
+        });
     }
 ]);

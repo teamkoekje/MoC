@@ -11,6 +11,7 @@ import domain.events.RoundEndedEvent;
 import domain.events.UpdateEvent;
 import domain.enums.CompetitionState;
 import domain.enums.EventType;
+import domain.events.RoundStartedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -137,6 +138,10 @@ public class CompetitionService extends GenericService<Competition> {
             case MESSAGE_RELEASED:
                 MessageReleasedEvent mre = (MessageReleasedEvent) event;
                 we.broadCast("{\"message\":{\"text\":\"" + mre.getReleasedMessage().getContent() + "\"}}");
+                break;
+            case ROUND_STARTED:
+                RoundStartedEvent rse = (RoundStartedEvent) event;
+                we.broadCast("{\"type\":\"roundstarted\",\"data\":\"roundstarted\"");
                 break;
             default:
                 throw new AssertionError(event.getType().name());

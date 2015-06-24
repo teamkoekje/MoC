@@ -9,7 +9,11 @@ import domain.Hint;
 import domain.Round;
 import domain.Team;
 import domain.enums.CompetitionState;
+import domain.events.CompetitionEvent;
+import domain.events.RoundStartedEvent;
 import java.util.List;
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -37,6 +41,10 @@ public class CompetitionResource {
 
     @Inject
     private RoundService roundService;
+    
+        @Inject
+    @Any
+    Event<CompetitionEvent> competitionEvent;
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Competition">
@@ -223,14 +231,17 @@ public class CompetitionResource {
     @Path("/{competitionId}/start")
     public Response startRound(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);
-        if (c.getCompetitionState() == CompetitionState.NOT_STARTED && c.getRounds().size() > 0) {
+        if ((c.getCompetitionState() == CompetitionState.NOT_STARTED ) && c.getRounds().size() > 0) {
             competitionService.addActiveCompetition(c);
             competitionService.removeFutureCompetition(c);
+        }else if(c.getCompetitionState() == CompetitionState.ENDED && c.getRounds().size() > 0){
+            competitionService.replaceActiveCompetition(c);
         }
 
         boolean ongoing = c.getCompetitionState() == CompetitionState.ONGOING;
         try {
             c.startNextRound();
+            competitionEvent.fire(new RoundStartedEvent(c.getCurrentRound()));
         } catch (IllegalStateException ex) {
             return Response.serverError().entity(ex.getLocalizedMessage()).build();
         }
