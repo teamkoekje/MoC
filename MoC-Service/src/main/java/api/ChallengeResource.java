@@ -6,7 +6,12 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -99,8 +104,35 @@ public class ChallengeResource {
                     }
                 }
             }
+            scanTests("C://Luc//" + jarFileName);
             System.out.println(fileName);
         } catch (IOException ex) {
+            Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void scanTests(String jarPath) {
+        try {
+            JarFile jarFile = new JarFile(jarPath);
+            Enumeration e = jarFile.entries();
+            URL[] testJarUrl = {new URL("jar:file:" + jarPath + "!/")};
+            URLClassLoader cl = URLClassLoader.newInstance(testJarUrl, Thread.currentThread().getContextClassLoader());
+            while (e.hasMoreElements()) {
+                JarEntry je = (JarEntry) e.nextElement();
+                if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                    continue;
+                }
+                // -6 because of .class
+                String className = je.getName().substring(0, je.getName().length() - 6);
+                className = className.replace('/', '.');
+                Class c = cl.loadClass(className);
+                if(c.isAnnotationPresent(Challenge.class)){
+                    annotations.Challenge chalAnno = (annotations.Challenge)c.getAnnotation(Challenge.class);
+                    System.out.println("Challenge name: " + chalAnno.name());
+                }
+            }
+
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
