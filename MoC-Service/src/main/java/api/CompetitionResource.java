@@ -5,7 +5,6 @@ import com.sun.media.jfxmedia.logging.Logger;
 import javax.ws.rs.core.Response;
 import domain.Challenge;
 import domain.Competition;
-import domain.Hint;
 import domain.Round;
 import domain.Team;
 import domain.enums.CompetitionState;
@@ -50,7 +49,7 @@ public class CompetitionResource {
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
      * Gets all competitions
-     *
+     * 
      * @return list with competitions
      */
     @GET
@@ -123,7 +122,7 @@ public class CompetitionResource {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Rounds">
+    //<editor-fold defaultstate="collapsed" desc="Rounds">    
     /**
      * Gets all rounds of a certain competition
      *

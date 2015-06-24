@@ -4,7 +4,9 @@ import domain.Challenge;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,6 +21,8 @@ import java.util.zip.ZipInputStream;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -85,6 +89,18 @@ public class ChallengeResource {
             System.out.println(fileName);
 
             byte[] data = Base64.decodeBase64(fileContent.getBytes());
+            String folder;
+            String osName = System.getProperty("os.name");
+            if ("linux".equalsIgnoreCase(osName)) {
+                folder = "MoC" + File.separator + "Challenges" + File.separator;
+            } else {
+                folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
+            }
+            new File(folder).mkdirs();
+            try (FileOutputStream fos = new FileOutputStream(folder + File.separator + fileName)) {
+                fos.write(data);
+            }
+
             String jarFileName = fileName.substring(0, fileName.length() - 8) + ".jar";
             ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(data));
             for (ZipEntry zipEntry; (zipEntry = zipInputStream.getNextEntry()) != null;) {
@@ -93,26 +109,50 @@ public class ChallengeResource {
                     try (BufferedInputStream is = new BufferedInputStream(zipInputStream)) {
                         int currentByte;
                         byte[] data2 = new byte[2024];
-                        FileOutputStream fos = new FileOutputStream("C://Luc//" + jarFileName);
-                        try (BufferedOutputStream dest = new BufferedOutputStream(fos, 2024)) {
+                        FileOutputStream fos2 = new FileOutputStream(folder + File.separator + jarFileName);
+                        try (BufferedOutputStream dest = new BufferedOutputStream(fos2, 2024)) {
                             while ((currentByte = is.read(data2, 0, 2024)) != -1) {
                                 dest.write(data2, 0, currentByte);
                             }
                             dest.flush();
                         }
+                        scanChallenge(folder + "/" + jarFileName);
                         return;
                     }
                 }
             }
-            scanTests("C://Luc//" + jarFileName);
-            System.out.println(fileName);
         } catch (IOException ex) {
             Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void scanTests(String jarPath) {
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/available")
+    public String getAvailableChallenges() {
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        String folder;
+        String osName = System.getProperty("os.name");
+        if ("linux".equalsIgnoreCase(osName)) {
+            folder = "MoC" + File.separator + "Challenges" + File.separator;
+        } else {
+            folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
+        }
+        for (File f : new File(folder).listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".zip");
+            }
+        })) {
+            jab.add(f.getName().substring(0, f.getName().length() - 4));
+        }
+        return jab.build().toString();
+    }
+
+    private annotations.Challenge scanChallenge(String jarPath) {
         try {
+            System.out.println(jarPath);
             JarFile jarFile = new JarFile(jarPath);
             Enumeration e = jarFile.entries();
             URL[] testJarUrl = {new URL("jar:file:" + jarPath + "!/")};
@@ -126,15 +166,17 @@ public class ChallengeResource {
                 String className = je.getName().substring(0, je.getName().length() - 6);
                 className = className.replace('/', '.');
                 Class c = cl.loadClass(className);
-                if(c.isAnnotationPresent(Challenge.class)){
-                    annotations.Challenge chalAnno = (annotations.Challenge)c.getAnnotation(Challenge.class);
-                    System.out.println("Challenge name: " + chalAnno.name());
+                System.out.println(c.getCanonicalName());
+                annotations.Challenge chalAnno = (annotations.Challenge) c.getAnnotation(annotations.Challenge.class);
+                if (chalAnno != null) {
+                    return chalAnno;
                 }
             }
 
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     /**
@@ -145,8 +187,7 @@ public class ChallengeResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public void editChallenge(Challenge challenge
-    ) {
+    public void editChallenge(Challenge challenge) {
         challengeService.edit(challenge);
     }
 
@@ -157,10 +198,8 @@ public class ChallengeResource {
      */
     @DELETE
     @Path("/{challengeId}")
-    public void removeChallenge(@PathParam("challengeId") long challengeId
-    ) {
+    public void removeChallenge(@PathParam("challengeId") long challengeId) {
         challengeService.remove(challengeId);
     }
-
     //</editor-fold>
 }
