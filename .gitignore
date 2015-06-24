@@ -34,3 +34,5 @@ MoC - HtmlClient/npm-debug.log
 /MoC-Messaging/nb-configuration.xml
 /MoC-Service/nb-configuration.xml
 /MoC-WorkspaceServer/nb-configuration.xml
+/cookiechallenge/target/
+/TestChallengeOne/target/
