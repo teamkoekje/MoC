@@ -60,6 +60,9 @@
             <div class="row">
                 <div class="col-xs-6" style="overflow-x: scroll;">
                     <ul class="notARealList">
+                        <li>
+                            <!--TODO<span ng-bind="currentCompetition.selectedTeam.owner"></span>-->
+                        </li>
                         <li ng-repeat="team in currentCompetition.teams" ng-click="$parent.selectedTeam = $index;">
                             <span ng-bind="team.name" style="cursor: pointer; white-space: nowrap;"></span> <span style="float: right;" class="glyphicon glyphicon-trash glyphiconButton"></span>
                         </li>
@@ -95,7 +98,9 @@
                     <span style='float:right'>
                         <span class='glyphicon glyphicon-chevron-up glyphiconButton' ng-if="!$first"></span>
                         <span class='glyphicon glyphicon-chevron-down glyphiconButton' ng-if='!$last'></span>
+                        <!--
                         <span class='glyphicon glyphicon-cog glyphiconButton' ng-click="editChallenge(challenge.id)"></span>
+                        -->
                         <span class='glyphicon glyphicon-trash glyphiconButton'></span>
                     </span>
                 </li>
