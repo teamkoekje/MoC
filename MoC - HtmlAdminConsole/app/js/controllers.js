@@ -347,9 +347,11 @@ controllers.controller('competitionViewController', ['$scope', '$rootScope', 'co
     }
 ]);
 
-controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge',
-    function ($scope, $rootScope, $challenge) {
+controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge','$routeParams',
+    function ($scope, $rootScope, $challenge, $routeParams) {
         $scope.fileName = null;
+        $scope.currentChallenge = {};
+        
         $scope.upload = function () {
             $rootScope.loading = true;
             //Lazy async task in JavaScript 
@@ -358,12 +360,22 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
                 formData.append('fileContent', $scope.base64File);
                 formData.append('fileName', $scope.fileName);
                 console.log(formData);
-                $challenge.create.save(formData);
-                $rootScope.loading = false;
+                $challenge.create.save(formData, function () {
+                    $rootScope.loading = false;
+                    updateAvailable();
+                });
             }, 100);
         };
+        
+        updateAvailable();
+        function updateAvailable() {
+            $rootScope.loading = true;
+            $scope.availableChallenges = $challenge.available.query(function () {
+                $rootScope.loading = false;
+            });
+        }
 
-        $scope.currentChallenge = {};
+        
         $scope.challengeInfo = function (challengeName) {
             $challenge.challengeInfo.get({challengeName: challengeName}, function (data) {
                 $scope.currentChallenge = data;
@@ -374,11 +386,29 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
             });
         };
 
-        $scope.availableChallenges = $challenge.available.query(function () {
-//            for (var i = 0; i < $scope.availableChallenges.length; i++) {
-//                $scope.availableChallenges[i] = $scope.availableChallenges[i].substring(0, $scope.availableChallenges[i].length - 4);
-//            }
-        });
+        $scope.addToCompetition = function () {
+            if (Object.keys($scope.currentChallenge).length < 1) { //http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+                alert("Please select a challenge first");
+                return;
+            }
+            var competionID = $routeParams.compId;
+            console.log(competionID);
+            var challenge = new $challenge.addToCompetition();
+            challenge.name = $scope.currentChallenge.challengeName;
+            challenge.difficulty = $scope.currentChallenge.difficulty;
+            challenge.suggestedDuration = 1; //TODO
+            //releaseTime
+            challenge.hints = [];
+            for(var i = 0; i < $scope.currentChallenge.hints.length; i++){
+                challenge.hints.push({
+                    content: $scope.currentChallenge.hints[i].content,
+                    time: $scope.currentChallenge.hints[i].delay
+                });
+            }            
+            challenge.$save({
+                competitionId: competionID
+            });
+        };
 
         $scope.challenge = {
             name: 'challenge name',

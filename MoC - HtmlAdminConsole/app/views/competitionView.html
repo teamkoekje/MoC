@@ -129,7 +129,7 @@
             {{"HINTS"| translate}}
         </h3>
         <ul class="notARealList">
-            <li class="row" ng-repeat="hint in currentCompetition.rounds[currentRound].challenge.hintsCopy">
+            <li class="row" ng-repeat="hint in currentCompetition.rounds[currentRound].challenge.hints">
                 <div class="col-xs-1" ng-switch on="hint.isReleased">
                     <span ng-switch-when="true">
                         <span class="glyphicon glyphicon-ok" style="color:green"></span>
@@ -139,10 +139,10 @@
                     </span>
                 </div>
                 <div class="col-xs-1">
-                    {{hint.releaseTime}}
+                    {{hint.time}}
                 </div>
                 <div class="col-xs-10">
-                    {{hint.context}}
+                    {{hint.content}}
                 </div>
             </li>
         </ul>

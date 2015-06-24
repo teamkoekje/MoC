@@ -63,6 +63,15 @@ public class Hint implements Serializable {
     public String getContent() {
         return content;
     }
+    
+    /**
+     * Set the content
+     *
+     * @param content the content
+     */
+    public void setContent(String content){
+        this.content = content;
+    }
 
     /**
      * Get the time when the hint should be released.

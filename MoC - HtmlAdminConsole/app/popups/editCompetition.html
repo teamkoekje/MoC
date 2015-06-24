@@ -84,7 +84,7 @@
             <h3>
                 {{"CHALLENGES"| translate}} 
                 <span style='float: right'>
-                    <a ng-click="closeThisDialog()" href="#/addChallenge">
+                    <a ng-click="closeThisDialog()" ng-href="#/addChallenge?compId={{currentCompetition.id}}">
                         <span class='glyphicon glyphicon-plus glyphiconButton'></span>
                     </a>
                 </span>

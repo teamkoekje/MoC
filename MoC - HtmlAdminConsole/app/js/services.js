@@ -73,7 +73,11 @@ services.factory('challenge', ['$resource',
                      */
                     headers: {'Content-Type': undefined}
                 }}),
-            challengeInfo: $resource(baseUrl + '/challenge/:challengeName', {challengeName: '@challengeName'})
+            challengeInfo: $resource(baseUrl + '/challenge/:challengeName', {challengeName: '@challengeName'}),
+            addToCompetition: $resource(baseUrl + '/challenge/:competitionId/:challengeName', {
+                competitionId: '@competitionId',
+                challengeName: '@challengeName'
+            })
         };
     }
 ]);
