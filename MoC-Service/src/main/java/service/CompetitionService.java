@@ -147,6 +147,16 @@ public class CompetitionService extends GenericService<Competition> {
                 throw new AssertionError(event.getType().name());
         }
     }
+    
+    public void replaceFutureCompetition(Competition c) {
+        for (Competition fc : futureCompetitions) {
+            if (c.getId() == fc.getId()) {
+                futureCompetitions.remove(fc);
+                futureCompetitions.add(c);
+                return;
+            }
+        }
+    }
 
     public void replaceActiveCompetition(Competition c) {
         for (Competition ac : activeCompetitions) {

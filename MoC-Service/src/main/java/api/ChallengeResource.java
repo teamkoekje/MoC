@@ -2,7 +2,7 @@ package api;
 
 import annotations.Hint;
 import domain.Challenge;
-import enums.ChallengeDifficulty;
+import domain.Competition;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -35,9 +34,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jasypt.contrib.org.apache.commons.codec_1_3.binary.Base64;
 import service.ChallengeService;
+import service.CompetitionService;
 
 /**
  *
@@ -50,6 +51,9 @@ public class ChallengeResource {
 
     @Inject
     private ChallengeService challengeService;
+
+    @Inject
+    private CompetitionService competitionService;
 
     //<editor-fold defaultstate="collapsed" desc="Challenge">
     /**
@@ -81,8 +85,7 @@ public class ChallengeResource {
         } else {
             folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
         }
-        annotations.Challenge chal = scanChallenge(folder + challengeName + ".jar");
-        System.out.println(chal);
+        annotations.Challenge chal = scanChallenge(folder + challengeName + File.separator + challengeName + ".jar");
         JsonObjectBuilder job = Json.createObjectBuilder();
         job.add("challengeName", chal.name());
         job.add("difficulty", chal.difficulty().toString());
@@ -120,9 +123,6 @@ public class ChallengeResource {
             @FormDataParam("fileName") String fileName
     ) {
         try {
-            System.out.println(fileContent);
-            System.out.println(fileName);
-
             byte[] data = Base64.decodeBase64(fileContent.getBytes());
             String folder;
             String osName = System.getProperty("os.name");
@@ -175,6 +175,7 @@ public class ChallengeResource {
         } else {
             folder = "C:" + File.separator + "MoC" + File.separator + "Challenges" + File.separator;
         }
+        new File(folder).mkdirs();
         for (File f : new File(folder).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File current, String name) {
@@ -184,6 +185,20 @@ public class ChallengeResource {
             jab.add(f.getName());
         }
         return jab.build().toString();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("{competitionID}")
+    public Response addToCompetition(
+            @PathParam("competitionID") Long competitionId,
+            domain.Challenge challenge
+    ) {
+        Competition c = competitionService.findById(competitionId);
+        c.addChallenge(challenge, 100);
+        competitionService.edit(c);
+        competitionService.replaceFutureCompetition(c);
+        return Response.ok(challenge).build();
     }
 
     private annotations.Challenge scanChallenge(String jarPath) {

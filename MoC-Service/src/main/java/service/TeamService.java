@@ -6,11 +6,15 @@ import domain.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.Query;
 
 @Stateless
 @RequestScoped
 public class TeamService extends GenericService<Team> {
+    
+    @Inject
+    private CompetitionService competitionService;
 
     public TeamService() {
         super(Team.class);
@@ -19,7 +23,10 @@ public class TeamService extends GenericService<Team> {
     public void createTeam(Team team) {
         Competition c = team.getCompetition();
         if (!c.participantIsInTeam(team.getOwner())) {
+            c.addTeam(team);
             this.create(team);
+            competitionService.edit(c);
+            competitionService.replaceFutureCompetition(c);
         }
     }
 

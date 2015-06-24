@@ -32,6 +32,7 @@ public class Challenge implements Serializable {
     private long suggestedDuration;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
+    @XmlElement
     private List<Hint> hints;
     // </editor-fold>
 
@@ -85,7 +86,6 @@ public class Challenge implements Serializable {
         this.suggestedDuration = suggestedDuration;
     }
 
-    @XmlElement
     public List<Hint> getHintsCopy() {
         return new ArrayList<>(hints);
     }
