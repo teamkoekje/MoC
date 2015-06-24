@@ -55,10 +55,9 @@ public class Round implements Serializable {
 
     private List<Team> teams;
     @XmlElement
-    private List<TeamScore> teamScores;
+    private List<TeamScore> teamScores = new ArrayList();
 
     // </editor-fold>
-    
     // <editor-fold defaultstate="collapsed" desc="Constructor" >
     protected Round() {
     }
@@ -77,7 +76,6 @@ public class Round implements Serializable {
     }
 
     //</editor-fold>
-
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters" >
     /**
      * Gets the Challenge associated with this Round.
@@ -176,7 +174,7 @@ public class Round implements Serializable {
     public Calendar getStartTime() {
         return startTime;
     }
-    
+
     /**
      * Gets the amount of teams that have submitted. If the amount of teams that
      * have submitted equals the amount of teams in the competition, the round
@@ -187,12 +185,11 @@ public class Round implements Serializable {
     public int submittedTeamCount() {
         return teamScores.size();
     }
-    
-    /*public List<Hint> getReleasedHints(){
-        return this.releasedHints;
-    }*/
-    //</editor-fold>
 
+    /*public List<Hint> getReleasedHints(){
+     return this.releasedHints;
+     }*/
+    //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="methods" >
     // <editor-fold defaultstate="collapsed" desc="roundstates" >
     /**
@@ -220,6 +217,17 @@ public class Round implements Serializable {
             throw new IllegalArgumentException("Cannot stop a round that has not been started yet.");
         } else {
             roundState = RoundState.ENDED;
+            for (Team t : teams) {
+                boolean absent = true;
+                for(TeamScore ts : teamScores){
+                    if(ts.getTeam().equals(t.getName())){
+                        absent = false;
+                    }
+                }
+                if(absent){
+                    teamScores.add(new TeamScore(t.getName(), 0));
+                }
+            }
         }
     }
 
@@ -320,7 +328,12 @@ public class Round implements Serializable {
      * @param toSubmit The team to submit
      */
     public void submit(Team toSubmit) {
-        teamScores.add(new TeamScore(toSubmit.getName(), getRemainingPoints()));
+        for (TeamScore ts : teamScores) {
+            if (ts.getTeam().equals(toSubmit.getName())) {
+                ts.increaseScore(toSubmit.getScore());
+                break;
+            }
+        }
     }
     //</editor-fold>
 }

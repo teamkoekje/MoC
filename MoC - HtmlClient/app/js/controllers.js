@@ -753,8 +753,19 @@ controllers.controller('competitionController', ['$scope', '$sce', '$rootScope',
         update = function () {
             starttime = Date.parse(currentRound.startTime);
             date = Date.parse(new Date());
-            remainingTime = currentRound.duration * 1000 - (date - starttime);
-            $scope.remainingTime = new Date(remainingTime);
+            remainingTime = currentRound.duration - (date - starttime) / 1000;
+            $scope.hours = Math.floor(remainingTime / 3600);
+            remainingTime = remainingTime - $scope.hours * 3600;
+            $scope.minutes = Math.floor(remainingTime / 60);
+            if ($scope.minutes < 10) {
+                $scope.minutes = "0" + $scope.minutes;
+            }
+            remainingTime = remainingTime - $scope.minutes * 60;
+            $scope.seconds = Math.floor(remainingTime);
+            if ($scope.seconds < 10) {
+                $scope.seconds = "0" + $scope.seconds;
+            }
+            //$scope.remainingTime = new Date(remainingTime);
             //$scope.points = Math.round(remainingTime / 1000, 0) * currentRound.challenge.difficulty;
             $scope.newHints = newsfeedService.isNewHints();
             $scope.$apply();
@@ -775,11 +786,23 @@ controllers.controller('roundResultController', ['$scope', 'competition', 'newsf
         $scope.competition = $competition.all.get({competitionId: $routeParams.id}, function () {
             $scope.scores = $scope.competition.scores;
             var teamScores = $scope.competition.currentRound.teamScores;
+console.log($scope.competition);
             for (var i = 0; i < teamScores.length; i++) {
+                var absent = true;
                 for (var i = 0; i < $scope.scores.length; i++) {
-                    if ($scope.scores[i].team == teamScores[i].team) {
+                    if ($scope.scores[i].team === teamScores[i].team) {
                         $scope.scores[i].roundScore = teamScores[i].score;
+                        absent = false;
+                        break;
                     }
+                }
+                if (absent) {
+                    console.log(teamScores[i]);
+                    var score;
+                    score.team = teamScores[i].team;
+                    score.score = teamScores[i].score;
+                    score.roundScore = teamScores[i].score;
+                    $scope.scores.push(score);
                 }
             }
         });
