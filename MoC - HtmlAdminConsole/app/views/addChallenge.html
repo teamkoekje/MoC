@@ -26,8 +26,8 @@
             Available
         </h4>
         <ul class='notARealList'>
-            <li ng-repeat="i in [1, 2, 3, 4, 5, 6]">
-                template {{i}}
+            <li ng-repeat="challenge in availableChallenges" style="cursor: pointer" ng-click="$parent.challengeInfo(challenge)">
+                {{challenge}}
             </li>
         </ul>
     </div>
@@ -39,10 +39,10 @@
                 </h3>
                 <ul class="notARealList">
                     <li>
-                        {{"NAME"| translate}} <span style="float: right">{{challenge.name}}</span>
+                        {{"NAME"| translate}} <span style="float: right">{{currentChallenge.challengeName}}</span>
                     </li>
                     <li>
-                        Duration: <span style="float: right">{{challenge.duration}}</span>
+                        Duration: <span style="float: right">{{currentChallenge.duration}}</span> <!-- TODO: fix in framework -->
                     </li>
                 </ul>
                 <h3>
@@ -57,15 +57,15 @@
                 </h3>
                 <ul class="notARealList">
                     <li>
-                        {{"NAME"| translate}} <span style="float: right">{{challenge.author.name}}</span>
+                        {{"NAME"| translate}} <span style="float: right">{{currentChallenge.author.name}}</span>
                     </li>
                     <li>
-                        {{"ORGANISATION"| translate}} <span style="float: right">{{challenge.author.organisation}}</span>
+                        {{"ORGANISATION"| translate}} <span style="float: right">{{currentChallenge.author.organisation}}</span>
                     </li>
                     <li>
                         Website: 
                         <span style="float: right">
-                            <a target="_blank" ng-href="{{challenge.author.website}}">{{challenge.author.website}}</a>
+                            <a target="_blank" ng-href="{{challenge.author.website}}">{{currentChallenge.author.website}}</a>
                         </span>
                     </li>
                 </ul>
@@ -73,10 +73,10 @@
             <div class="col-xs-12">
                 <div ng-switch on="description">
                     <div ng-switch-when="participant">
-                        {{challenge.description.participant}}
+                        {{currentChallenge.description.participant}}
                     </div>
                     <div ng-switch-default>
-                        {{challenge.description.spectator}}
+                        {{currentChallenge.description.spectator}}
                     </div>
                 </div>
             </div>

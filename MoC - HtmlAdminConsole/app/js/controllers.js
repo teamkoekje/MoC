@@ -363,6 +363,23 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
             }, 100);
         };
 
+        $scope.currentChallenge = {};
+        $scope.challengeInfo = function (challengeName) {
+            $challenge.challengeInfo.get({challengeName: challengeName}, function (data) {
+                $scope.currentChallenge = data;
+                console.log(data);
+            }, function (data) {
+                console.log('error');
+                console.log(data);
+            });
+        };
+
+        $scope.availableChallenges = $challenge.available.query(function () {
+//            for (var i = 0; i < $scope.availableChallenges.length; i++) {
+//                $scope.availableChallenges[i] = $scope.availableChallenges[i].substring(0, $scope.availableChallenges[i].length - 4);
+//            }
+        });
+
         $scope.challenge = {
             name: 'challenge name',
             duration: '10:00',
