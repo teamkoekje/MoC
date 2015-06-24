@@ -60,8 +60,8 @@ public class Competition implements Serializable {
 
     private String location;
 
-    private int minTeamSize;
-    private int maxTeamSize;
+    private int minTeamSize = 1;
+    private int maxTeamSize = 5;
 
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Round> rounds = new ArrayList<>();
