@@ -213,6 +213,13 @@ public class ChallengeResource {
         }
     }
 
+    /**
+     * Gets a String in JSON format indicating the challenges that have been
+     * uploaded.
+     *
+     * @return A String in JSON format indicating the challenges that have been
+     * uploaded.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/available")
@@ -237,6 +244,16 @@ public class ChallengeResource {
         return jab.build().toString();
     }
 
+    /**
+     * Adds the given challenge challenge to the specified competition. TODO:
+     * Suggested / setting duration is currently not implemented and the
+     * addChallenge() method in Competition should be adjusted to use the time
+     * in the challenge.
+     *
+     * @param competitionId The competition to add the challenge to.
+     * @param challenge The challenge to add to the competition.
+     * @return A Response indicating the success of the addition.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{competitionID}")

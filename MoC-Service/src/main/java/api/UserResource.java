@@ -88,7 +88,6 @@ public class UserResource {
     /**
      * Check if the request is made by an Admin
      *
-     * @param request The request
      * @return A response
      */
     @GET
@@ -112,7 +111,6 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/teams")
-    //@RolesAllowed({"User", "Admin"})
     public List<Team> getTeamsFromUser(@PathParam("username") String username) {
         User u = userService.findById(username);
         return u.getTeams();
@@ -127,7 +125,6 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/invitations")
-    //@RolesAllowed({"User", "Admin"})
     public List<Invitation> getInvitationsFromUser(@PathParam("username") String username) {
         User u = userService.findById(username);
         return invitationService.findByEmail(u.getEmail());
@@ -234,6 +231,12 @@ public class UserResource {
         userService.remove(userId);
     }
 
+    /**
+     * Logs in the user with the specified name and password.
+     * @param username The username of the user.
+     * @param password The password of the user
+     * @return A Response indicating the login success.
+     */
     @POST
     @Path("/login")
     @PermitAll
@@ -253,6 +256,11 @@ public class UserResource {
         return Response.ok("Logged in as " + username).build();
     }
 
+    /**
+     * Checks whether the specified user is logged in.
+     * @param username The name of the user to check
+     * @return True if the specified user is logged in, otherwise false.
+     */
     @GET
     @Path("/isLoggedIn/{username}")
     @PermitAll
@@ -261,6 +269,12 @@ public class UserResource {
         return username.equals(request.getRemoteUser());
     }
 
+    /**
+     * Gets the currently logged in User
+     *
+     * @return The currently logged in User object, or null if no one is logged
+     * in.
+     */
     @GET
     @Path("/authenticated")
     @PermitAll
@@ -273,6 +287,12 @@ public class UserResource {
 
     }
 
+    /**
+     * Logs out the current user. Cannot log out if no one is logged in.
+     *
+     * @return A Response indicating whether the logged in user logged out
+     * successfully.
+     */
     @POST
     @Path("/logout")
     @Produces(MediaType.TEXT_PLAIN)

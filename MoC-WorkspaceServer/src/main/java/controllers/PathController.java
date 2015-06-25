@@ -80,6 +80,14 @@ public class PathController {
         return getCompetitionsPath() + File.separator + competitionId;
     }
 
+    /**
+     * Gets the path where the challenges are stored for a specific competition.
+     * Path: "Default Path"/Competitions/"competitionId"/Challenges
+     *
+     * @param competitionId The id of the competition to search for
+     * @return A String indicating the path to the challenges folder of a
+     * specific competition.
+     */
     public String challengesPath(String competitionId) {
         return competitionPath(competitionId) + File.separator + "Challenges";
     }

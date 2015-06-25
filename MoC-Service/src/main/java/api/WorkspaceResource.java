@@ -34,6 +34,12 @@ public class WorkspaceResource {
     private HttpServletRequest request;
 
     //<editor-fold defaultstate="collapsed" desc="Workspace">
+    /**
+     * Send a request to create a workspace TODO: send a reply
+     *
+     * @param competitionId The Id of the competition
+     * @param teamName The name of the team
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/{teamName}/create")
@@ -42,6 +48,12 @@ public class WorkspaceResource {
         workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
+    /**
+     * Sends a request to delete a workspace. TODO: send a reply
+     *
+     * @param competitionId The Id of the competition
+     * @param teamName The name of the team
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/{teamName}/delete")
@@ -50,6 +62,14 @@ public class WorkspaceResource {
         workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
     }
 
+    /**
+     * Sends a request to update a file.
+     *
+     * @param competitionId The Id of the Competition.
+     * @param file Data to update.
+     * @return A Response indicating whether the request was send, or an error
+     * occurred.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/update")
@@ -70,6 +90,14 @@ public class WorkspaceResource {
         }
     }
 
+    /**
+     * Sends a request to compile
+     *
+     * @param competitionId The Id of the competition
+     * @param file Data to update before the code is build.
+     * @return A Response indicating whether the request was send, or an error
+     * occurred.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/compile")
@@ -90,6 +118,15 @@ public class WorkspaceResource {
         }
     }
 
+    /**
+     * Sends a request to submit, which first builds & tests, and if it
+     * succeeds, submits the team.
+     *
+     * @param competitionId The Id of the competition.
+     * @param file Data to update before the code is build.
+     * @return A Response indicating whether the request was send, or an error
+     * occurred.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/submit")
@@ -110,6 +147,14 @@ public class WorkspaceResource {
         }
     }
 
+    /**
+     * Sends a request to test all tests.
+     *
+     * @param competitionId The Id of the competition
+     * @param file Data to update before the tests are run
+     * @return A Response indicating whether the request was send, or an error
+     * occurred.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/test")
@@ -130,6 +175,15 @@ public class WorkspaceResource {
         }
     }
 
+    /**
+     * Sends a request to test a specific test.
+     *
+     * @param competitionId The Id of the competition
+     * @param testName The name of the test to run
+     * @param file Data to update before the test is run
+     * @return A Response indicating whether the request was send, or an error
+     * occurred.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/test/{testName}")
@@ -151,6 +205,14 @@ public class WorkspaceResource {
         }
     }
 
+    /**
+     * Sends a request to push the specified challenge to the specified
+     * competition.
+     *
+     * @param competitionId The Id of the competition
+     * @param challengeName The name of the challenge
+     * @return null TODO: send a proper Response object.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/{challengeName}/push")
@@ -159,6 +221,12 @@ public class WorkspaceResource {
         return null;
     }
 
+    /**
+     * Sends a request for the System information of the workspace servers.
+     *
+     * @return A Response indicating whether the requests were send properly.
+     * TODO: it is assumed this always goes o.k.
+     */
     @POST
     @Path("/sysinfo")
     public Response sysInfo() {
@@ -166,6 +234,14 @@ public class WorkspaceResource {
         return Response.ok().build();
     }
 
+    /**
+     * Sends a request for the folder structure of the current round in the
+     * specified competition, in a JSON format.
+     *
+     * @param competitionId The Id of the competition
+     * @return A Response indicating whether the request was sent, or an error
+     * occurred,
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/folderStructure")
@@ -186,6 +262,14 @@ public class WorkspaceResource {
         }
     }
 
+    /**
+     * Sends a request for the tests that are available to the participant, in a
+     * JSON format.
+     *
+     * @param competitionId The Id of the Competition.
+     * @return A Response indicating whether the request was send, or an error
+     * occurred
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/availableTests")
@@ -207,6 +291,14 @@ public class WorkspaceResource {
 
     }
 
+    /**
+     * Sends a request to retrieve the contents of the specified file in the
+     * specified competition, in a JSON format.
+     *
+     * @param competitionId The Id of the competition
+     * @param filePath The path to the file, relative of the project root.
+     * @return A response whether the request was send, or if an error occurred.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/file")
@@ -218,7 +310,7 @@ public class WorkspaceResource {
             if (team != null) {
                 String messageId = workspaceService.file(competitionId, challenge.getName(), team.getName(), filePath);
                 workspaceService.storeRequestMessage(messageId, request.getUserPrincipal().getName());
-                return Response.ok("File content is being request being generated").build();
+                return Response.ok("File content is being requested").build();
             } else {
                 return Response.serverError().entity("Authenticated user isn't a participant in this competition").build();
             }

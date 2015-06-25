@@ -15,6 +15,9 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class ChallengeService extends GenericService<Challenge> {
 
+    /**
+     * Creates a new instance of the ChallengeService class.
+     */
     public ChallengeService() {
         super(Challenge.class);
     }

@@ -72,13 +72,13 @@ public class WorkspaceManagement {
         MAVEN_INVOKER.setOutputHandler(new InvocationOutputHandler() {
             @Override
             public void consumeLine(String string) {
-                if(string.startsWith("Tests run:") && firstTest){
+                if (string.startsWith("Tests run:") && firstTest) {
                     invocationOutput.append(string);
                     invocationOutput.append("\n");
                     firstTest = false;
                 }
-                if(string.startsWith("[ERROR]") && string.contains("MoC/Competitions")){
-                    if(firstError){
+                if (string.startsWith("[ERROR]") && string.contains("MoC/Competitions")) {
+                    if (firstError) {
                         invocationOutput.append("<p style='color:red;'>Build failed</p>");
                         invocationOutput.append("\n------------------------------------------------------\n");
                         firstError = false;
@@ -105,14 +105,30 @@ public class WorkspaceManagement {
     //</editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="getters & setters" >
+    /**
+     * Gets the server Id of this WorkspaceManagement.
+     *
+     * @return A String indicating the server Id.
+     */
     public String getServerId() {
         return serverId;
     }
 
+    /**
+     * Sets the server Id of this WorkspaceManagement
+     *
+     * @param serverId The new value
+     */
     public void setServerId(String serverId) {
         this.serverId = serverId;
     }
 
+    /**
+     * Gets the amount of teams on this workspace server. The amount of teams is
+     * the amount of teams in each competition, added up.
+     *
+     * @return An Integer indicating the amount of teams on this server.
+     */
     public int getTeamsCount() {
         int temp = 0;
         Iterator it = competitions.entrySet().iterator();
@@ -318,7 +334,7 @@ public class WorkspaceManagement {
                 writeZipEntry(zip, entry, destFile);
                 if (destFile.getName().endsWith("jar") && !destFile.getName().startsWith("MoCFramework")) {
                     File f = new File(challengeZip.getParent() + File.separator + destFile.getName());
-                    if(f.exists()){
+                    if (f.exists()) {
                         f.delete();
                     }
                     destFile.renameTo(f);
@@ -424,11 +440,11 @@ public class WorkspaceManagement {
             beforeMavenInvocation(competitionId, teamName, challengeName);
             request.setGoals(Arrays.asList("install"));
             request.setProperties(new Properties());
-            
+
             firstError = true;
             firstTest = true;
             MAVEN_INVOKER.execute(request);
-            
+
             return getInvocationResult();
         } catch (IOException | MavenInvocationException ex) {
             Logger.getLogger(WorkspaceManagement.class.getName()).log(Level.SEVERE, null, ex);

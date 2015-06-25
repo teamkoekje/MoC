@@ -40,8 +40,8 @@ public class CompetitionResource {
 
     @Inject
     private RoundService roundService;
-    
-        @Inject
+
+    @Inject
     @Any
     Event<CompetitionEvent> competitionEvent;
     //</editor-fold>
@@ -49,7 +49,7 @@ public class CompetitionResource {
     //<editor-fold defaultstate="collapsed" desc="Competition">
     /**
      * Gets all competitions
-     * 
+     *
      * @return list with competitions
      */
     @GET
@@ -58,6 +58,13 @@ public class CompetitionResource {
         return competitionService.findAll();
     }
 
+    /**
+     * Gets a List of Competition objects which are currently ongoing, in JSON
+     * format.
+     *
+     * @return A List of Competition objects which are currently ongoing, in
+     * JSON format.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/active")
@@ -65,6 +72,13 @@ public class CompetitionResource {
         return competitionService.getActiveCompetitions();
     }
 
+    /**
+     * Gets a List of Competition objects which have not been started yet, in
+     * JSON format.
+     *
+     * @return A List of Competition objects which have not been started yet, in
+     * JSON format.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/future")
@@ -168,6 +182,13 @@ public class CompetitionResource {
         return roundService.findById(roundId);
     }
 
+    /**
+     * Gets the challenges of a specified competition, in a JSON format.
+     *
+     * @param competitionId The id of the competition to get the challenges
+     * from.
+     * @return A List of Challenge objects, in JSON format.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/challenges")
@@ -176,6 +197,12 @@ public class CompetitionResource {
         return c.getChallenges();
     }
 
+    /**
+     * Gets a List of Teams for a specified competition, in JSON format.
+     *
+     * @param competitionId The id of the Competition to get the Teams from.
+     * @return A List of Team objects, in JSON format.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{competitionId}/teams")
@@ -230,10 +257,10 @@ public class CompetitionResource {
     @Path("/{competitionId}/start")
     public Response startRound(@PathParam("competitionId") long competitionId) {
         Competition c = competitionService.findById(competitionId);
-        if ((c.getCompetitionState() == CompetitionState.NOT_STARTED ) && c.getRounds().size() > 0) {
+        if ((c.getCompetitionState() == CompetitionState.NOT_STARTED) && c.getRounds().size() > 0) {
             competitionService.addActiveCompetition(c);
             competitionService.removeFutureCompetition(c);
-        }else if(c.getCompetitionState() == CompetitionState.ENDED && c.getRounds().size() > 0){
+        } else if (c.getCompetitionState() == CompetitionState.ENDED && c.getRounds().size() > 0) {
             competitionService.replaceActiveCompetition(c);
         }
 
@@ -251,6 +278,14 @@ public class CompetitionResource {
         return Response.ok().build();
     }
 
+    /**
+     * Pauses the specified Competition, by pausing it's current Round.
+     *
+     * @param competitionId The id of the Competition to pause.
+     * @return A Reponse object indicating the success of the pause call. TODO:
+     * it is currently assumed it always succeeds, but it fails if the current
+     * rounds state is not ongoing.
+     */
     @POST
     @Path("/{competitionId}/pause")
     public Response pauseRound(@PathParam("competitionId") long competitionId) {
@@ -261,6 +296,14 @@ public class CompetitionResource {
         return Response.ok().build();
     }
 
+    /**
+     * Freezes the specified Competition, by freezing it's current Round.
+     *
+     * @param competitionId The id of the Competition to freeze.
+     * @return A Reponse object indicating the success of the freeze call. TODO:
+     * it is currently assumed it always succeeds, but it can fail, depending on
+     * the current round state.
+     */
     @POST
     @Path("/{competitionId}/freeze")
     public Response freezeRound(@PathParam("competitionId") long competitionId) {
@@ -271,6 +314,14 @@ public class CompetitionResource {
         return Response.ok().build();
     }
 
+    /**
+     * Stops the specified current round of the specified competition.
+     *
+     * @param competitionId The id of the Competition to stop.
+     * @return A Reponse object indicating the success of the stop call. TODO:
+     * it is currently assumed it always succeeds, but it can fail, depending on
+     * the current round state.
+     */
     @POST
     @Path("/{competitionId}/stop")
     public Response stopRound(@PathParam("competitionId") long competitionId) {

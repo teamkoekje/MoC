@@ -141,6 +141,11 @@ public class FileManagement {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >
+    /**
+     * Gets a List of Strings, which are available to be called by the user.
+     *
+     * @return A List of Strings, which are available to be called by the user.
+     */
     public List<String> getAvailableTests() {
         List toReturn = new ArrayList<>();
         toReturn.addAll(userTests);
@@ -148,6 +153,14 @@ public class FileManagement {
         return toReturn;
     }
 
+    /**
+     * Gets the structure of the folders & files under the specified path.
+     *
+     * @param folderPath The path of the folder to get the structure of.
+     * @return A String in JSON format indicating the structure of the folder.
+     * Or null if the specified path is not a directory, or the target
+     * directory.
+     */
     public String getFolderStructureJSON(String folderPath) {
         File folder = new File(folderPath);
         if (!folder.isDirectory() || (folder.isDirectory() && "target".equals(folder.getName()))) {
@@ -165,6 +178,13 @@ public class FileManagement {
         return editables.contains(filename);
     }
 
+    /**
+     * Gets the content of the file on the specified filepath, in JSON format.
+     * Including whether the file is editable by participants or not.
+     *
+     * @param filePath The path of the file to get the contents of.
+     * @return A String in JSON format with the contents of the specified file.
+     */
     public String getFileContentJSON(String filePath) {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         try {
@@ -214,6 +234,13 @@ public class FileManagement {
         return false;
     }
 
+    /**
+     * Gets a String in JSON format indicating all tests available to
+     * participants.
+     *
+     * @return A String in JSON format indicating all tests available to
+     * participants.
+     */
     public String getAvailableTestsJSON() {
         JsonArrayBuilder testsJson = Json.createArrayBuilder();
         for (String s : userTests) {

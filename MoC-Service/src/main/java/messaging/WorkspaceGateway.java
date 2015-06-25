@@ -35,6 +35,9 @@ public abstract class WorkspaceGateway {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
+    /**
+     * Creates a new instance of the WorkspaceGateway class and starts listening for requests.
+     */
     public WorkspaceGateway() {
         try {
             router = new WorkspaceSenderRouter();
@@ -73,6 +76,9 @@ public abstract class WorkspaceGateway {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
+    /**
+     * Closes the init gateway, the receiver gateway and the router.
+     */
     public void closeConnection() {
         initGtw.closeConnection();
         receiverGtw.closeConnection();
@@ -106,6 +112,16 @@ public abstract class WorkspaceGateway {
         }
     }
 
+    /**
+     * Sends a request to a specified workspace server, which is found by
+     * looking at the TeamName in the request. TODO: will most likely not work
+     * if there are 2+ competitions, where both competitions have a team with
+     * the same name.
+     *
+     * @param request The request to send
+     * @return The Id of the message sent to the server, or null if the
+     * workspace was not found on any of the connected servers.
+     */
     public synchronized String sendRequestToTeam(TeamRequest request) {
         WorkspaceServer ws = router.getServerByWorkspaceName(request.getTeamName());
         if (ws != null) {
@@ -116,6 +132,12 @@ public abstract class WorkspaceGateway {
         }
     }
 
+    /**
+     * Broadcasts the specified request to all servers.
+     *
+     * @param request The request to be send.
+     * @return The amount of servers the request was sent to.
+     */
     public synchronized int broadcast(Request request) {
         List<WorkspaceServer> servers = router.getAllServers();
         for (WorkspaceServer server : servers) {
@@ -124,6 +146,15 @@ public abstract class WorkspaceGateway {
         return servers.size();
     }
 
+    /**
+     * Adds a workspace for the team on the specified workspace and sends a
+     * message to the workspace server to add it there too.
+     *
+     * @param request The request that contains the information about the
+     * workspace to be added.
+     * @return The Id of the message send to the workspace server, or null if
+     * there are no connected workspace servers.
+     */
     public synchronized String addWorkspace(TeamRequest request) {
         WorkspaceServer ws = router.getServerWithLeastWorkspaces();
         if (ws != null) {
@@ -135,6 +166,15 @@ public abstract class WorkspaceGateway {
         }
     }
 
+    /**
+     * Removes a workspace for the team on the specified workspace and sends a
+     * message to the workspace server to remove it there too.
+     *
+     * @param request The request that contains the information about the
+     * workspace to be removed.
+     * @return The Id of the message send to the workspace server, or null if
+     * the workspace to remove was not found.
+     */
     public String deleteWorkspace(TeamRequest request) {
         WorkspaceServer ws = router.getServerByWorkspaceName(request.getTeamName());
         if (ws != null) {
@@ -146,6 +186,11 @@ public abstract class WorkspaceGateway {
         }
     }
 
+    /**
+     * Callback method for when a message is received from the workspace server
+     *
+     * @param message The received message
+     */
     public abstract void onWorkspaceMessageReceived(Message message);
     // </editor-fold>
 }

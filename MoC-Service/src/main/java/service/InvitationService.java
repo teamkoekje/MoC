@@ -22,6 +22,10 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import javax.persistence.Query;
 
+/**
+ * An extension of GenericService, used to accept/decline/invite participants.
+ * @author TeamKoekje
+ */
 @Stateless
 @RequestScoped
 public class InvitationService extends GenericService<Invitation> {
@@ -37,6 +41,9 @@ public class InvitationService extends GenericService<Invitation> {
     @Inject
     TeamService teamService;
 
+    /**
+     * Initializes a new instance of the InvitationService class.
+     */
     public InvitationService() {
         super(Invitation.class);
     }
@@ -115,12 +122,22 @@ public class InvitationService extends GenericService<Invitation> {
         return new BigInteger(130, random).toString(32);
     }
 
+    /**
+     * Get the invitation with the specified token.
+     * @param token The token to search for.
+     * @return The Invitation with the specified token, or null if not found.
+     */
     public Invitation findByToken(String token) {
         Query q = em.createNamedQuery("Invitation.findByToken");
         q.setParameter("token", token);
         return (Invitation) q.getSingleResult();
     }
 
+    /**
+     * Gets the invitations send to the specified email
+     * @param email The email to find the invitations for.
+     * @return A List of Invitation objects.
+     */
     public List<Invitation> findByEmail(String email) {
         Query q = em.createNamedQuery("Invitation.findByEmail");
         q.setParameter("email", email);
@@ -147,12 +164,21 @@ public class InvitationService extends GenericService<Invitation> {
         return false;
     }
 
+    /**
+     * Decline the specified invitation.
+     * @param invitationId The Id of the invitation to decline.
+     */
     public void declineInvitation(long invitationId) {
         Invitation inv = findById(invitationId);
         inv.setState(Invitation.InvitationState.DECLINED);
         edit(inv);
     }
 
+    /**
+     * Gets the Invitations sent by the specified team, which are not(yet) accepted.
+     * @param team The Team to get the Invitations of.
+     * @return A List of Invitation objects.
+     */
     public List<Invitation> findInvitationsByTeam(Team team) {
         Query q = em.createNamedQuery("Invitation.findByTeam");
         q.setParameter("team", team);
@@ -160,6 +186,14 @@ public class InvitationService extends GenericService<Invitation> {
         return (List<Invitation>) q.getResultList();
     }
 
+    /**
+     * Checks whether the specified email is already part of a team in the
+     * competition that the specified team is taking part in.
+     *
+     * @param email The email to check
+     * @param teamId The Id of the team to check the Competition of.
+     * @return True if the email is part of a team, otherwise false.
+     */
     public boolean emailAlreadyInTeam(String email, long teamId) {
         Team team = teamService.findById(teamId);
         for (Team t : teamService.findByCompetition(team.getCompetition())) {
@@ -172,6 +206,15 @@ public class InvitationService extends GenericService<Invitation> {
         return false;
     }
 
+    /**
+     * Checks whether the specified email has already been invited by the team
+     * with the specified id.
+     *
+     * @param email The email to check
+     * @param teamId The Id of the team to check
+     * @return True if the specified email is invited by the team, otherwise
+     * false.
+     */
     public boolean emailAlreadyInvited(String email, long teamId) {
         Query q = em.createNamedQuery("Invitation.countUndecidedInvitations");
         q.setParameter("email", email);
