@@ -347,11 +347,12 @@ controllers.controller('competitionViewController', ['$scope', '$rootScope', 'co
     }
 ]);
 
-controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge','$routeParams',
+controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge', '$routeParams',
     function ($scope, $rootScope, $challenge, $routeParams) {
         $scope.fileName = null;
         $scope.currentChallenge = {};
-        
+        $scope.currentCompetition = $routeParams.compId;
+
         $scope.upload = function () {
             $rootScope.loading = true;
             //Lazy async task in JavaScript 
@@ -366,7 +367,7 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
                 });
             }, 100);
         };
-        
+
         updateAvailable();
         function updateAvailable() {
             $rootScope.loading = true;
@@ -375,7 +376,7 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
             });
         }
 
-        
+
         $scope.challengeInfo = function (challengeName) {
             $challenge.challengeInfo.get({challengeName: challengeName}, function (data) {
                 $scope.currentChallenge = data;
@@ -391,22 +392,21 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
                 alert("Please select a challenge first");
                 return;
             }
-            var competionID = $routeParams.compId;
-            console.log(competionID);
+            console.log($scope.currentCompetition);
             var challenge = new $challenge.addToCompetition();
             challenge.name = $scope.currentChallenge.challengeName;
             challenge.difficulty = $scope.currentChallenge.difficulty;
             challenge.suggestedDuration = 1; //TODO
             //releaseTime
             challenge.hints = [];
-            for(var i = 0; i < $scope.currentChallenge.hints.length; i++){
+            for (var i = 0; i < $scope.currentChallenge.hints.length; i++) {
                 challenge.hints.push({
                     content: $scope.currentChallenge.hints[i].content,
                     time: $scope.currentChallenge.hints[i].delay
                 });
-            }            
+            }
             challenge.$save({
-                competitionId: competionID
+                competitionId: $scope.currentCompetition
             });
         };
 

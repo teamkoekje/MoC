@@ -1,4 +1,7 @@
-<a href="#/editCompetition" style='position: absolute; top: 10px; left: 10px;'>
+<a ng-if="currentCompetition" ng-href="#/competitionView?id={{currentCompetition}}" style='position: absolute; top: 10px; left: 10px;'>
+    <span style="font-size: 25px" class="glyphicon glyphicon-circle-arrow-left glyphiconButton"></span>
+</a>
+<a ng-if="!currentCompetition" ng-href="#/competitionOverview" style='position: absolute; top: 10px; left: 10px;'>
     <span style="font-size: 25px" class="glyphicon glyphicon-circle-arrow-left glyphiconButton"></span>
 </a>
 <a href="" ng-click="addToCompetition()" style='position: absolute; top: 10px; left: 45px;'>
