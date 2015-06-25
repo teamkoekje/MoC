@@ -75,6 +75,11 @@ public class TeamResource {
         return teamService.findById(teamId);
     }
 
+    /**
+     * Gets the users of the specified Team, in a JSON format.
+     * @param teamId The Id of the Team to get the users from.
+     * @return A List of Users, in JSON format.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{teamId}/users")
@@ -84,6 +89,11 @@ public class TeamResource {
         return t.getParticipants();
     }
 
+    /**
+     * Gets the Team that send the Invitation with the specified token. in a JSON format.
+     * @param token The token of the invitation
+     * @return The found Team, or null if the Team was not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/token/{token}")
@@ -116,6 +126,10 @@ public class TeamResource {
         }
     }
 
+    /**
+     * Gets the Invitations for the currently logged in user.
+     * @return A List of Invitation objects, or null if no user is logged in.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/myTeamInvitations")
@@ -212,16 +226,16 @@ public class TeamResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/join/{token}")
+    @Deprecated
     public void joinTeam(User user, @PathParam("token") String token) {
-        /*
-         THIS METHOD IS NOT USED NOW
-         you are either the owner of a team or you are invited,
-         this method is handled in UserResource.createUser()
-         */
-
         invitationService.acceptInvitation(user, token);
     }
 
+    /**
+     * Accepts the specified Invitation.
+     * @param invitationId The Id of the Invitation to accept.
+     * @return A Response indicating the success of accepting.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/accept/{invitationId}")
@@ -234,6 +248,12 @@ public class TeamResource {
         return Response.serverError().entity("Error while adding user, User is already in this team or team is full").build();
     }
 
+    /**
+     * Declines the specified Invitation.
+     * 
+     * TODO: send a proper reply
+     * @param invitationId The Id of the Invitation to decline
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/decline/{invitationId}")
@@ -244,7 +264,7 @@ public class TeamResource {
     /**
      * Lets a user leave a certain team
      *
-     * @param user user that should leave the team
+     * @param username user that should leave the team
      * @param teamId id of the team that the user should leave
      */
     @POST
@@ -252,9 +272,7 @@ public class TeamResource {
     @Path("/{teamId}/leave/{username}")
     @RolesAllowed({"User", "Admin"})
     public void leaveTeam(@PathParam("teamId") long teamId, @PathParam("username") String username) {
-        /*
-         todo email owner that a user has left
-         */
+        //TODO: email owner that a user has left
 
         User user = userService.findById(username);
         if (user != null) {
