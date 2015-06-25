@@ -106,9 +106,9 @@
         </h3>
         <ul class="notARealList">
             <!--TODO: add this API -->
-            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.author.name}}</span></li>
+            <li>{{"NAME"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.author}}</span></li>
             <!--TODO: add this API -->
-            <li>{{"ORGANISATION"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.author.organisation}}</span></li>
+            <li>{{"ORGANISATION"| translate}} <span style="float: right">{{currentCompetition.rounds[currentRound].challenge.organisation}}</span></li>
         </ul>
         <h3>
             Descriptions
@@ -118,11 +118,11 @@
         <div ng-switch on="description">
             <div ng-switch-when="participant">
                 <!--TODO: add this API -->
-                {{currentCompetition.rounds[currentRound].challenge.descriptions.participant}}
+                {{currentCompetition.rounds[currentRound].challenge.descriptionParticipant}}
             </div>
             <div ng-switch-default>
                 <!--TODO: add this API -->
-                {{currentCompetition.rounds[currentRound].challenge.descriptions.spectator}}
+                {{currentCompetition.rounds[currentRound].challenge.descriptionSpectator}}
             </div>
         </div>
         <h3>

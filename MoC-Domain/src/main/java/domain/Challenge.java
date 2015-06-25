@@ -30,6 +30,13 @@ public class Challenge implements Serializable {
     private String name;
     private int difficulty = 1;
     private long suggestedDuration;
+    
+    private String author = "Not filled in";
+    private String organisation = "Not filled in";
+    private String website = "";
+    
+    private String descriptionParticipant = "Not filled in";;
+    private String descriptionSpectator = "Not filled in";
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
     @XmlElement
@@ -92,6 +99,46 @@ public class Challenge implements Serializable {
 
     private void hintsChanged() {
         Collections.sort(hints, new HintComparator());
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
+    }
+    
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getDescriptionParticipant() {
+        return descriptionParticipant;
+    }
+
+    public void setDescriptionParticipant(String descriptionParticipant) {
+        this.descriptionParticipant = descriptionParticipant;
+    }
+
+    public String getDescriptionSpectator() {
+        return descriptionSpectator;
+    }
+
+    public void setDescriptionSpectator(String descriptionSpectator) {
+        this.descriptionSpectator = descriptionSpectator;
     }
     //</editor-fold>
 
