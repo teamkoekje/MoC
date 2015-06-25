@@ -398,6 +398,11 @@ controllers.controller('addChallengeController', ['$scope', '$rootScope', 'chall
             challenge.difficulty = $scope.currentChallenge.difficulty;
             challenge.suggestedDuration = 1; //TODO
             //releaseTime
+            challenge.author = $scope.currentChallenge.author.name;
+            challenge.organisation = $scope.currentChallenge.author.organisation;
+            challenge.website = $scope.currentChallenge.author.website;
+            challenge.descriptionParticipant = $scope.currentChallenge.description.participant;
+            challenge.descriptionSpectator = $scope.currentChallenge.description.spectator;
             challenge.hints = [];
             for (var i = 0; i < $scope.currentChallenge.hints.length; i++) {
                 challenge.hints.push({

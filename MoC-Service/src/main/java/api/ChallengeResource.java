@@ -146,14 +146,16 @@ public class ChallengeResource {
                     try (BufferedInputStream is = new BufferedInputStream(zipInputStream)) {
                         int currentByte;
                         byte[] data2 = new byte[2024];
-                        FileOutputStream fos2 = new FileOutputStream(folder + jarFileName + ".jar");
-                        try (BufferedOutputStream dest = new BufferedOutputStream(fos2, 2024)) {
-                            while ((currentByte = is.read(data2, 0, 2024)) != -1) {
-                                dest.write(data2, 0, currentByte);
+                        try (FileOutputStream fos2 = new FileOutputStream(folder + jarFileName + ".jar")) {
+                            try (BufferedOutputStream dest = new BufferedOutputStream(fos2, 2024)) {
+                                while ((currentByte = is.read(data2, 0, 2024)) != -1) {
+                                    dest.write(data2, 0, currentByte);
+                                }
+                                dest.flush();
                             }
-                            dest.flush();
+                            scanChallenge(folder + jarFileName + ".jar");
                         }
-                        scanChallenge(folder + jarFileName + ".jar");
+                        zipInputStream.close();
                         return;
                     }
                 }
@@ -211,6 +213,7 @@ public class ChallengeResource {
             @PathParam("competitionID") Long competitionId,
             domain.Challenge challenge
     ) {
+        System.out.println(challenge);
         Competition c = competitionService.findById(competitionId);
         c.addChallenge(challenge, 100);
         competitionService.edit(c);
