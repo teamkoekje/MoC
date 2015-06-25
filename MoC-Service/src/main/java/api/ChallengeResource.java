@@ -5,11 +5,15 @@ import domain.Challenge;
 import domain.Competition;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -19,6 +23,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateless;
@@ -90,8 +95,20 @@ public class ChallengeResource {
         job.add("challengeName", chal.name());
         job.add("difficulty", chal.difficulty().toString());
         JsonObjectBuilder description = Json.createObjectBuilder();
-        description.add("participant", chal.descriptionParticipants());
-        description.add("spectator", chal.descriptionPublic());
+        description.add("participant", getFileContentFromZip(
+                folder + challengeName + File.separator + challengeName + "-zip.zip",
+                chal.descriptionParticipants().substring(
+                        chal.descriptionParticipants().lastIndexOf("/") + 1, 
+                        chal.descriptionParticipants().length()
+                ))
+        );
+        description.add("spectator", getFileContentFromZip(
+                folder + challengeName + File.separator + challengeName + "-zip.zip",
+                chal.descriptionPublic().substring(
+                        chal.descriptionPublic().lastIndexOf("/") + 1, 
+                        chal.descriptionPublic().length()
+                ))
+        );
         job.add("description", description);
         JsonArrayBuilder hints = Json.createArrayBuilder();
         for (Hint hint : chal.hints()) {
@@ -108,6 +125,37 @@ public class ChallengeResource {
         authorBuilder.add("logo", chal.logoUrl());
         job.add("author", authorBuilder);
         return job.build().toString();
+    }
+
+    private String getFileContentFromZip(String pathToZip, String searchFileName) {
+        System.out.println(searchFileName);
+        String result = "";
+        try {
+            try (ZipFile zipFile = new ZipFile(pathToZip)) {
+                final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                while (entries.hasMoreElements()) {
+                    final ZipEntry zipEntry = entries.nextElement();
+                    if (!zipEntry.isDirectory()) {
+                        final String fileName = zipEntry.getName();
+                        System.out.println(fileName);
+                        if (fileName == null ? searchFileName == null : fileName.endsWith(searchFileName)) {
+                            try (BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(zipEntry))) {
+                                byte[] contents = new byte[1024];
+                                int bytesRead = 0;
+                                result = "";
+                                while ((bytesRead = is.read(contents)) != -1) {
+                                    result += new String(contents, 0, bytesRead);
+                                }
+                                return result;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 
     /**
@@ -196,7 +244,6 @@ public class ChallengeResource {
             @PathParam("competitionID") Long competitionId,
             domain.Challenge challenge
     ) {
-        System.out.println(challenge);
         Competition c = competitionService.findById(competitionId);
         c.addChallenge(challenge, 100);
         competitionService.edit(c);
@@ -211,6 +258,7 @@ public class ChallengeResource {
             Enumeration e = jarFile.entries();
             URL[] testJarUrl = {new URL("jar:file:" + jarPath + "!/")};
             URLClassLoader cl = URLClassLoader.newInstance(testJarUrl, Thread.currentThread().getContextClassLoader());
+            annotations.Challenge chalAnno = null;
             while (e.hasMoreElements()) {
                 JarEntry je = (JarEntry) e.nextElement();
                 if (je.isDirectory() || !je.getName().endsWith(".class")) {
@@ -221,11 +269,10 @@ public class ChallengeResource {
                 className = className.replace('/', '.');
                 Class c = cl.loadClass(className);
                 System.out.println(c.getCanonicalName());
-                annotations.Challenge chalAnno = (annotations.Challenge) c.getAnnotation(annotations.Challenge.class);
-                if (chalAnno != null) {
-                    return chalAnno;
-                }
+                chalAnno = (annotations.Challenge) c.getAnnotation(annotations.Challenge.class);
+                return chalAnno;
             }
+            return null;
 
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ChallengeResource.class.getName()).log(Level.SEVERE, null, ex);

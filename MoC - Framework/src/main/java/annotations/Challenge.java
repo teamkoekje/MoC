@@ -22,7 +22,7 @@ public @interface Challenge {
 
     String descriptionParticipants() default "src/main/java/moc/challenge/DescriptionParticipants.html";
 
-    String descriptionPublic() default "src/main/java/moc/challenge/DescriptionPublic.html";
+    String descriptionPublic() default "src/main/java/moc/challenge/DescriptionSpectators.html";
     
     Hint[] hints() default {};
     

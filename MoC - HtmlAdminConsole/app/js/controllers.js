@@ -347,8 +347,11 @@ controllers.controller('competitionViewController', ['$scope', '$rootScope', 'co
     }
 ]);
 
-controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge', '$routeParams',
-    function ($scope, $rootScope, $challenge, $routeParams) {
+controllers.controller('addChallengeController', ['$scope', '$rootScope', 'challenge', '$routeParams', '$sce',
+    function ($scope, $rootScope, $challenge, $routeParams, $sce) {
+        $scope.renderHtml = function (html_code) {
+            return $sce.trustAsHtml(html_code);
+        };
         $scope.fileName = null;
         $scope.currentChallenge = {};
         $scope.currentCompetition = $routeParams.compId;
