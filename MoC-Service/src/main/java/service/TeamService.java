@@ -9,17 +9,31 @@ import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 
+/**
+ * An extension of GenericService, which is used to create teams, retrieve
+ * teams from competitions and leave teams.
+ *
+ * @author TeamKoekje
+ */
 @Stateless
 @RequestScoped
 public class TeamService extends GenericService<Team> {
-    
+
     @Inject
     private CompetitionService competitionService;
 
+    /**
+     * Initializes a new instance of the TeamService class.
+     */
     public TeamService() {
         super(Team.class);
     }
 
+    /**
+     * Creates a team.
+     *
+     * @param team The team to create
+     */
     public void createTeam(Team team) {
         Competition c = team.getCompetition();
         if (!c.participantIsInTeam(team.getOwner())) {

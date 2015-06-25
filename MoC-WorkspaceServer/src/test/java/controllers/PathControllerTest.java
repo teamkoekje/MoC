@@ -10,15 +10,15 @@ import org.junit.Assume;
  */
 public class PathControllerTest {
 
-    private boolean windows;
+    private final boolean windows;
 
+    /**
+     * Initializes a new instance of the PathControllerTest class, which is used
+     * to test the PathController class.
+     */
     public PathControllerTest() {
         String osName = System.getProperty("os.name");
-        if ("windows".equalsIgnoreCase(osName)) {
-            windows = true;
-        } else {
-            windows = false;
-        }
+        windows = "windows".equalsIgnoreCase(osName);
     }
 
     /**

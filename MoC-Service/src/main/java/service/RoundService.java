@@ -19,6 +19,9 @@ public class RoundService extends GenericService<Round> {
     @Inject
     private CompetitionService competitionService;
 
+    /**
+     * Initializes a new instance of the RoundService class.
+     */
     public RoundService() {
         super(Round.class);
     }

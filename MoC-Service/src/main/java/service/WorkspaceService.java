@@ -38,7 +38,6 @@ import workspace.requests.TestRequest;
 import workspace.requests.UpdateRequest;
 
 // </editor-fold>
-
 /**
  * Service class used to manage users
  *
@@ -81,9 +80,9 @@ public class WorkspaceService {
                         } else if (reply.getAction() == ReplyAction.SUBMIT) {
                             //TODO: The following code block should be removable - not tested
                             /*JsonParserFactory factory = JsonParserFactory.getInstance();
-                            JSONParser parser = factory.newJsonParser();
-                            Map jsonMap = parser.parseJson(reply.getMessage());
-                            String get = (String) jsonMap.get("data");*/
+                             JSONParser parser = factory.newJsonParser();
+                             Map jsonMap = parser.parseJson(reply.getMessage());
+                             String get = (String) jsonMap.get("data");*/
                             if (reply.getMessage().contains(", Failures: 0, Errors: 0,")) {
                                 for (Competition c : cse.getActiveCompetitions()) {
                                     Team t = c.getTeamByUsername(username);
@@ -120,6 +119,13 @@ public class WorkspaceService {
         gateway.closeConnection();
     }
 
+    /**
+     * Stores the Id of a sent message, with a user. Used to link with the
+     * correlation Id when a message is received from the workspace server.
+     *
+     * @param messageId The Id of the message that is (to be) sent.
+     * @param username The name of the user that requested the message to be sent.
+     */
     public void storeRequestMessage(String messageId, String username) {
         if (username != null && messageId != null) {
             this.requests.put(messageId, username);
@@ -127,36 +133,122 @@ public class WorkspaceService {
         }
     }
 
+    /**
+     * Sends a CreateRequest to the workspace server.
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String create(long competitionId, String teamName) {
         return gateway.addWorkspace(new CreateRequest(competitionId, teamName));
     }
 
+    /**
+     * Sends a DeleteRequest to the workspace server.
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String delete(long competitionId, String teamName) {
         return gateway.deleteWorkspace(new DeleteRequest(competitionId, teamName));
     }
 
+    /**
+     * Sends an UpdateRequest to the workspace server.
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @param filePath The path of the file to update.
+     * @param fileContent The content of the file to update.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String update(long competitionId, String teamName, String filePath, String fileContent) {
         Logger.logMsg(Logger.INFO, "Updating file: " + filePath + " with content: " + fileContent);
 
         return gateway.sendRequestToTeam(new UpdateRequest(competitionId, teamName, filePath, fileContent));
     }
 
+    /**
+     * Sends a CompileRequest to the workspace server.
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @param challengeName The name of the challenge.
+     * @param filePath The path to the currently open file on the editor, to
+     * update before running the compilation.
+     * @param fileContent The content of the currently open file on the editor,
+     * to update before running the compilation.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String compile(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
         return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent, false));
     }
 
+    /**
+     * Sends a CompileRequest to the workspace server, indicated as a submit
+     * request
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @param challengeName The name of the challenge.
+     * @param filePath The path to the currently open file on the editor, to
+     * update before running the compilation.
+     * @param fileContent The content of the currently open file on the editor,
+     * to update before running the compilation.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String submit(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
         return gateway.sendRequestToTeam(new CompileRequest(competitionId, teamName, challengeName, filePath, fileContent, true));
     }
 
+    /**
+     * Sends a TestAllRequest to the workspace server
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @param challengeName The name of the challenge.
+     * @param filePath The path to the currently open file on the editor, to
+     * update before running the test.
+     * @param fileContent The content of the currently open file on the editor,
+     * to update before running the tests.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String testAll(long competitionId, String teamName, String challengeName, String filePath, String fileContent) {
         return gateway.sendRequestToTeam(new TestAllRequest(competitionId, teamName, challengeName, filePath, fileContent));
     }
 
+    /**
+     * Sends a TestRequest to the workspace server.
+     *
+     * @param competitionId The Id of the competition.
+     * @param teamName The name of the team.
+     * @param challengeName The name of the challenge.
+     * @param testName The name of the test
+     * @param filePath The path to the currently open file on the editor, to
+     * update before running the test.
+     * @param fileContent The content of the currently open file on the editor,
+     * to update before running the test.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String test(long competitionId, String teamName, String challengeName, String testName, String filePath, String fileContent) {
         return gateway.sendRequestToTeam(new TestRequest(competitionId, teamName, challengeName, testName, filePath, fileContent));
     }
 
+    /**
+     * Broadcasts a PushRequest to all workspace servers.
+     *
+     * @param competitionId The Id of the competition.
+     * @param challengeName The name of the challenge.
+     */
     public void push(long competitionId, String challengeName) {
         try {
             byte[] data = Files.readAllBytes(Paths.get("C:\\MoC\\Challenges\\" + challengeName + ".zip"));
@@ -168,21 +260,58 @@ public class WorkspaceService {
         }
     }
 
+    /**
+     * Sends an FolderStructureRequest to the workspace server.
+     *
+     * @param competitionId The Id of the competition.
+     * @param challengeName The name of the challenge
+     * @param teamName The name of the Team TODO: seems like an odd parameter,
+     * as the folder structure is the same for all teams. in a challenge.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String folderStructure(long competitionId, String challengeName, String teamName) {
         Logger.logMsg(Logger.INFO, "Get folder structure for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new FolderStructureRequest(competitionId, challengeName, teamName));
     }
 
+    /**
+     * Sends an AvailableTestsRequest to the workspace server.
+     *
+     * @param competitionId Id of the competition.
+     * @param challengeName Name of the challenge.
+     * @param teamName Name of the team. TODO: this parameter seems illogical,
+     * as the available tests are the same for all teams in a challenge.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String availableTests(long competitionId, String challengeName, String teamName) {
         Logger.logMsg(Logger.INFO, "Get available tests for competition: " + competitionId + " and challenge: " + challengeName + " and team: " + teamName);
         return gateway.sendRequestToTeam(new AvailableTestsRequest(competitionId, challengeName, teamName));
     }
 
+    /**
+     * Sends a FileRequest to the workspace server.
+     *
+     * @param competitionId Id of the competition.
+     * @param challengeName Name of the challenge.
+     * @param teamName Name of the team.
+     * @param filePath Path relative from the project root to the requested
+     * file.
+     * @return The Id of the message sent by the gateway, or null if an
+     * exception occurred.
+     */
     public String file(long competitionId, String challengeName, String teamName, String filePath) {
         Logger.logMsg(Logger.INFO, "Get file content: " + filePath);
         return gateway.sendRequestToTeam(new FileRequest(competitionId, teamName, challengeName, filePath));
     }
 
+    /**
+     * Sends a SysInfoRequest to all workspace servers and handles the replies
+     * by using a SysInfoAggregate object.
+     *
+     * @param username The name of the user that send this request.
+     */
     public void sysInfo(String username) {
         SysInfoRequest sir = new SysInfoRequest(RequestAction.SYSINFO);
         numberOfBroadcastMessages = gateway.broadcast(sir);

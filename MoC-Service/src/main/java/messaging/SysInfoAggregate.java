@@ -1,7 +1,6 @@
 package messaging;
 
 // <editor-fold defaultstate="collapsed" desc="Imports" >
-
 import java.util.ArrayList;
 import java.util.List;
 import workspace.replies.Reply;
@@ -9,7 +8,6 @@ import workspace.requests.Request;
 import workspace.replies.BroadcastReply;
 
 //</editor-fold>
-
 /**
  * Aggregator for the replies of System Information Broadcasts.
  *
@@ -26,6 +24,16 @@ public class SysInfoAggregate {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
+    /**
+     * Creates a new instance of the SysInfoAggregate class, which is used to
+     * accumulate broadcast replies of system information and eventually relay
+     * them to the listener.
+     *
+     * @param request The original request
+     * @param nrExpectedReplies The number of expected replies
+     * @param username The name of the user that originally send the request
+     * @param listener The handler for when all replies are accumulated.
+     */
     public SysInfoAggregate(Request request, int nrExpectedReplies, String username, IReplyListener<Request, Reply> listener) {
         this.request = request;
         this.replies = new ArrayList<>();

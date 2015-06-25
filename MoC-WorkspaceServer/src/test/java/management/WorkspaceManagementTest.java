@@ -28,6 +28,10 @@ public class WorkspaceManagementTest {
     private final String challengeName = "testChallenge";
     private final String testFile = "test file.txt";
 
+    /**
+     * Creates a new instance of the WorkspaceManagementTest, which is used to
+     * test the WorkspaceManagement class.
+     */
     public WorkspaceManagementTest() {
     }
 
@@ -116,11 +120,11 @@ public class WorkspaceManagementTest {
     public void test6UpdateFile() {
         Assume.assumeTrue(System.getProperty("os.name").equalsIgnoreCase("windows"));
         Assume.assumeTrue(new File("C:\\MoC\\Competitions\\testCompetition\\Teams\\testTeam\\testChallenge\\test file.txt").exists());
-        
+
         WorkspaceManagement wm = WorkspaceManagement.getInstance();
         PathController pc = PathController.getInstance();
         String testFilePath = pc.teamChallengePath(compName, teamName, challengeName + "/" + testFile);
-        
+
         wm.updateFile(compName, teamName, testFilePath, "something");
 
         File f = new File(testFilePath);
@@ -132,7 +136,10 @@ public class WorkspaceManagementTest {
             Logger.getLogger(WorkspaceManagementTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (br != null) {
-            try {br.close();} catch (IOException ex) {}
+            try {
+                br.close();
+            } catch (IOException ex) {
+            }
         }
     }
 }

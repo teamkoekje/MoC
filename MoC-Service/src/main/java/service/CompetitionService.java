@@ -27,6 +27,12 @@ import javax.persistence.Query;
 import websocket.WebsocketEndpoint;
 // </editor-fold>
 
+/**
+ * An extension of the GenericService, used to keep track of active and future
+ * competitions. Also handles the updates of the active competitions.
+ *
+ * @author TeamKoekje.
+ */
 @Singleton
 @Startup
 public class CompetitionService extends GenericService<Competition> {
@@ -46,6 +52,9 @@ public class CompetitionService extends GenericService<Competition> {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Constructor(s)" >
+    /**
+     * Initializes a new instance of the CompetitionService class.
+     */
     public CompetitionService() {
         super(Competition.class);
     }
@@ -65,6 +74,9 @@ public class CompetitionService extends GenericService<Competition> {
         }
     }
 
+    /**
+     * Loads the active and future competitions from the database.
+     */
     public void loadComps() {
         Logger.logMsg(Logger.INFO, "Loading competitions...");
         List<Competition> competitions = findAll();
@@ -85,17 +97,33 @@ public class CompetitionService extends GenericService<Competition> {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getter & Setters" >    
+    /**
+     * Gets a List of Competitions, which are currently active.
+     *
+     * @return A List of Competition objects.
+     */
     public List<Competition> getActiveCompetitions() {
         return activeCompetitions;
     }
 
+    /**
+     * Gets a List of Competitions, which have not been started yet.
+     *
+     * @return A List of Competition objects.
+     */
     public List<Competition> getFutureCompetitions() {
         return futureCompetitions;
     }
-    
-    public Competition getActiveCompetition(long competitionId){
-        for(Competition c : activeCompetitions){
-            if(c.getId() == competitionId){
+
+    /**
+     * Gets an active competition, with the specified Id.
+     *
+     * @param competitionId The Id of the competition to get.
+     * @return The found competition, or null if the competition was not found.
+     */
+    public Competition getActiveCompetition(long competitionId) {
+        for (Competition c : activeCompetitions) {
+            if (c.getId() == competitionId) {
                 return c;
             }
         }
@@ -104,6 +132,12 @@ public class CompetitionService extends GenericService<Competition> {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods" >
+    /**
+     * Callback for CompetitionEvents. Depending on the type of the event will
+     * perform different functions.
+     *
+     * @param event The CompetitionEvent that was fired.
+     */
     public void HandleEvent(@Observes CompetitionEvent event) {
         switch (event.getType()) {
             case UPDATE:
@@ -111,7 +145,7 @@ public class CompetitionService extends GenericService<Competition> {
                 for (Competition c : activeCompetitions) {
                     for (CompetitionEvent e : c.update()) {
                         if (e.getType() == EventType.COMPETITION_ENDED) {
-                            CompetitionEndedEvent cee = (CompetitionEndedEvent)e;
+                            CompetitionEndedEvent cee = (CompetitionEndedEvent) e;
                             competitionsToRemove.add(cee.getCompetition());
                         } else {
                             competitionEvent.fire(e);
@@ -127,7 +161,7 @@ public class CompetitionService extends GenericService<Competition> {
                 break;
             case COMPETITION_ENDED:
                 CompetitionEndedEvent cee = (CompetitionEndedEvent) event;
-                //test or when competition ends this works, if it is retrieved from the databse it may have another memmory adddress, so remove wont remove it.
+                //TODO: test or when competition ends this works, if it is retrieved from the databse it may have another memmory adddress, so remove wont remove it.
                 boolean result = activeCompetitions.remove(cee.getCompetition());
                 this.edit(cee.getCompetition());
                 break;
@@ -147,7 +181,16 @@ public class CompetitionService extends GenericService<Competition> {
                 throw new AssertionError(event.getType().name());
         }
     }
-    
+
+    /**
+     * Replaces a future competition with the specified competition, by matching
+     * their Id. This should be used when a competition is retrieved from the
+     * database, instead of here. TODO: override equals and hashcodes of domain
+     * objects (such as competition), so they are simply identified by their Id
+     * and more easily managed.
+     *
+     * @param c The new value of the competition.
+     */
     public void replaceFutureCompetition(Competition c) {
         for (Competition fc : futureCompetitions) {
             if (c.getId() == fc.getId()) {
@@ -158,6 +201,15 @@ public class CompetitionService extends GenericService<Competition> {
         }
     }
 
+    /**
+     * Replaces an active competition with the specified competition, by
+     * matching their Id. This should be used when a competition is retrieved
+     * from the database, instead of here. TODO: override equals and hashcodes
+     * of domain objects (such as competition), so they are simply identified by
+     * their Id and more easily managed.
+     *
+     * @param c The new value of the competition.
+     */
     public void replaceActiveCompetition(Competition c) {
         for (Competition ac : activeCompetitions) {
             if (c.getId() == ac.getId()) {
@@ -168,15 +220,34 @@ public class CompetitionService extends GenericService<Competition> {
         }
     }
 
+    /**
+     * Adds the specified Competition to the list of active competitions, and
+     * removes it from the list of future competitions. This is mainly used when
+     * a competition is started.
+     *
+     * @param c The competition to add.
+     */
     public void addActiveCompetition(Competition c) {
         activeCompetitions.add(c);
-        futureCompetitions.remove(c);
+        removeFutureCompetition(c);
     }
 
+    /**
+     * Adds the specified Competition to the list of future competitions. This
+     * is mainly used when a new competition is created.
+     *
+     * @param c The Competition to add.
+     */
     public void addFutureCompetition(Competition c) {
         futureCompetitions.add(c);
     }
 
+    /**
+     * Removes the specified Competition from the list of future competitions.
+     * This is mainly used when a competition is started.
+     *
+     * @param c The competition to remove
+     */
     public void removeFutureCompetition(Competition c) {
         for (Competition fc : futureCompetitions) {
             if (fc.getId() == c.getId()) {
