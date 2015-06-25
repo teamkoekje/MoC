@@ -98,14 +98,14 @@ public class ChallengeResource {
         description.add("participant", getFileContentFromZip(
                 folder + challengeName + File.separator + challengeName + "-zip.zip",
                 chal.descriptionParticipants().substring(
-                        chal.descriptionParticipants().lastIndexOf("/") + 1, 
+                        chal.descriptionParticipants().lastIndexOf("/") + 1,
                         chal.descriptionParticipants().length()
                 ))
         );
         description.add("spectator", getFileContentFromZip(
                 folder + challengeName + File.separator + challengeName + "-zip.zip",
                 chal.descriptionPublic().substring(
-                        chal.descriptionPublic().lastIndexOf("/") + 1, 
+                        chal.descriptionPublic().lastIndexOf("/") + 1,
                         chal.descriptionPublic().length()
                 ))
         );
@@ -287,7 +287,9 @@ public class ChallengeResource {
                 Class c = cl.loadClass(className);
                 System.out.println(c.getCanonicalName());
                 chalAnno = (annotations.Challenge) c.getAnnotation(annotations.Challenge.class);
-                return chalAnno;
+                if (chalAnno != null) {
+                    return chalAnno;
+                }
             }
             return null;
 
