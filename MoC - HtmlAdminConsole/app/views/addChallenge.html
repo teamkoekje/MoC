@@ -83,11 +83,9 @@
             </div>
             <div class="col-xs-12">
                 <div ng-switch on="description">
-                    <div ng-switch-when="participant">
-                        {{currentChallenge.description.participant}}
+                    <div ng-switch-when="participant" ng-bind-html="renderHtml(currentChallenge.description.participant)">
                     </div>
-                    <div ng-switch-default>
-                        {{currentChallenge.description.spectator}}
+                    <div ng-switch-default ng-bind-html="renderHtml(currentChallenge.description.spectator)">
                     </div>
                 </div>
             </div>
