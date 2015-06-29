@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="TestSuite" time="1.255" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="TestSuite" time="1.175" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="H:\Software\Programming\Java jdk\jdk1.8.0_45\jre\bin"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="Service Pack 1"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="C:\Users\Casper\Desktop\temp\2 - ChallengeTemplate"/>
+    <property name="user.dir" value="H:\College\Software Course\S6\PTS6\temp\MoC\A. Challenge Archetype\2 - ChallengeTemplate"/>
     <property name="java.runtime.version" value="1.8.0_45-b14"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="H:\Software\Programming\Java jdk\jdk1.8.0_45\jre\lib\endorsed"/>
@@ -63,7 +63,7 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="moc.tests.AmbivalentTest" name="doTest" time="0.054"/>
-  <testcase classname="moc.tests.SystemTest" name="doTest" time="0"/>
-  <testcase classname="moc.tests.UserTest" name="doTest" time="0"/>
+  <testcase classname="moc.tests.AmbivalentTest" name="doTest" time="0.061"/>
+  <testcase classname="moc.tests.SystemTest" name="doTest" time="0.003"/>
+  <testcase classname="moc.tests.UserTest" name="doTest" time="0.004"/>
 </testsuite>

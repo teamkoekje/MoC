@@ -15,7 +15,6 @@
         <exclude>**/${project.build.directory}/**</exclude>
 		<exclude>**/nb-configuration.xml</exclude>
 		<exclude>**/install archetype.bat</exclude>
-		<exclude>**/nbactions-MoC-build-without-tests.xml</exclude>
       </excludes>
     </fileSet>
 	<fileSet>
