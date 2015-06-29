@@ -10,5 +10,10 @@ package messaging;
  */
 public interface IReplyListener<REQUEST, REPLY> {
 
+    /**
+     * Handler for when a Reply is received.
+     * @param request The received REQUEST.
+     * @param reply The received REPLY.
+     */
     public void onReply(REQUEST request, REPLY reply);
 }

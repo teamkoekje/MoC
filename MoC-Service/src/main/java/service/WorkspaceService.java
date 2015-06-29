@@ -313,7 +313,7 @@ public class WorkspaceService {
      * @param username The name of the user that send this request.
      */
     public void sysInfo(String username) {
-        SysInfoRequest sir = new SysInfoRequest(RequestAction.SYSINFO);
+        SysInfoRequest sir = new SysInfoRequest();
         numberOfBroadcastMessages = gateway.broadcast(sir);
         sia = new SysInfoAggregate(sir, numberOfBroadcastMessages, username, new IReplyListener<Request, Reply>() {
             @Override

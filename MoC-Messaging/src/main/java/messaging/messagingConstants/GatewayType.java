@@ -7,5 +7,13 @@ package messaging.messagingConstants;
  */
 public enum GatewayType {
 
-    SENDER, RECEIVER
+    /**
+     * Indicates the gateway is a sender.
+     */
+    SENDER,
+
+    /**
+     * Indicates the gateway is a receiver.
+     */
+    RECEIVER
 }

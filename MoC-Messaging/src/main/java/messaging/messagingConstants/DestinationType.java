@@ -6,10 +6,9 @@ package messaging.messagingConstants;
  * @author TeamKoekje
  */
 public class DestinationType {
-
-    protected DestinationType() {
-        
-    }
+    
+    protected DestinationType() { }
+    
     public static final String QUEUE = "queue.";
     public static final String TOPIC = "topic.";
 }

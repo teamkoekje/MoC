@@ -9,6 +9,9 @@ package messaging;
  * @author TeamKoekje
  */
 public interface IRequestListener<REQUEST> {
-
+    /**
+     * Handler for when a REQUEST is received.
+     * @param request The received request.
+     */
     public void receivedRequest(REQUEST request);
 }

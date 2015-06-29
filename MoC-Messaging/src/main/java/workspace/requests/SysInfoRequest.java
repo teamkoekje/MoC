@@ -8,7 +8,10 @@ package workspace.requests;
  */
 public class SysInfoRequest extends Request {
 
-    public SysInfoRequest(RequestAction action) {
-        super(action);
+    /**
+     * Initializes a new instance of the SysInfoRequest class, used to retrieve the system information of a server.
+     */
+    public SysInfoRequest() {
+        super(RequestAction.SYSINFO);
     }
 }

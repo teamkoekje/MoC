@@ -145,7 +145,7 @@ public class BrokerGateway implements IRequestListener<Request> {
                 CompileRequest compileRequest = (CompileRequest) r;
                 wm.updateFile(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getFilePath(), compileRequest.getFileContent());
                 reply = new NormalReply("{\"type\":\"buildresult\",\"data\":\"" + wm.buildWorkspace(Long.toString(compileRequest.getCompetitionId()), compileRequest.getTeamName(), compileRequest.getChallengeName()) + "\"}");
-                if(compileRequest.isSubmitRequest()){
+                if(compileRequest.getSubmitRequest()){
                     reply.setReplyAction(ReplyAction.SUBMIT);
                 }
 				break;
