@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="3" passed="3">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Command line suite" duration-ms="146" started-at="2015-06-29T08:50:47Z" finished-at="2015-06-29T08:50:47Z">
+    <groups>
+      <group name="system">
+        <method signature="AmbivalentTest.doTest()[pri:0, instance:moc.tests.AmbivalentTest@4cdbe50f]" name="doTest" class="moc.tests.AmbivalentTest"/>
+        <method signature="SystemTest.doTest()[pri:0, instance:moc.tests.SystemTest@5b464ce8]" name="doTest" class="moc.tests.SystemTest"/>
+      </group> <!-- system -->
+      <group name="user">
+        <method signature="AmbivalentTest.doTest()[pri:0, instance:moc.tests.AmbivalentTest@4cdbe50f]" name="doTest" class="moc.tests.AmbivalentTest"/>
+        <method signature="UserTest.doTest()[pri:0, instance:moc.tests.UserTest@71be98f5]" name="doTest" class="moc.tests.UserTest"/>
+      </group> <!-- user -->
+    </groups>
+    <test name="AmbivalentTest" duration-ms="81" started-at="2015-06-29T08:50:47Z" finished-at="2015-06-29T08:50:47Z">
+      <class name="moc.tests.AmbivalentTest">
+        <test-method status="PASS" signature="doTest()[pri:0, instance:moc.tests.AmbivalentTest@4cdbe50f]" name="doTest" duration-ms="58" started-at="2015-06-29T10:50:47Z" description="Enter a description for this test" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- doTest -->
+      </class> <!-- moc.tests.AmbivalentTest -->
+    </test> <!-- AmbivalentTest -->
+    <test name="SystemTest" duration-ms="6" started-at="2015-06-29T08:50:47Z" finished-at="2015-06-29T08:50:47Z">
+      <class name="moc.tests.SystemTest">
+        <test-method status="PASS" signature="setUpClass()[pri:0, instance:moc.tests.SystemTest@5b464ce8]" name="setUpClass" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpClass -->
+        <test-method status="PASS" signature="setUpMethod()[pri:0, instance:moc.tests.SystemTest@5b464ce8]" name="setUpMethod" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpMethod -->
+        <test-method status="PASS" signature="doTest()[pri:0, instance:moc.tests.SystemTest@5b464ce8]" name="doTest" duration-ms="2" started-at="2015-06-29T10:50:47Z" description="Enter a description for this test" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- doTest -->
+        <test-method status="PASS" signature="tearDownMethod()[pri:0, instance:moc.tests.SystemTest@5b464ce8]" name="tearDownMethod" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDownMethod -->
+        <test-method status="PASS" signature="tearDownClass()[pri:0, instance:moc.tests.SystemTest@5b464ce8]" name="tearDownClass" is-config="true" duration-ms="1" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDownClass -->
+      </class> <!-- moc.tests.SystemTest -->
+    </test> <!-- SystemTest -->
+    <test name="UserTest" duration-ms="6" started-at="2015-06-29T08:50:47Z" finished-at="2015-06-29T08:50:47Z">
+      <class name="moc.tests.UserTest">
+        <test-method status="PASS" signature="setUpClass()[pri:0, instance:moc.tests.UserTest@71be98f5]" name="setUpClass" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpClass -->
+        <test-method status="PASS" signature="doTest()[pri:0, instance:moc.tests.UserTest@71be98f5]" name="doTest" duration-ms="2" started-at="2015-06-29T10:50:47Z" description="Enter a description for this test" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- doTest -->
+        <test-method status="PASS" signature="setUpMethod()[pri:0, instance:moc.tests.UserTest@71be98f5]" name="setUpMethod" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpMethod -->
+        <test-method status="PASS" signature="tearDownMethod()[pri:0, instance:moc.tests.UserTest@71be98f5]" name="tearDownMethod" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDownMethod -->
+        <test-method status="PASS" signature="tearDownClass()[pri:0, instance:moc.tests.UserTest@71be98f5]" name="tearDownClass" is-config="true" duration-ms="0" started-at="2015-06-29T10:50:47Z" finished-at="2015-06-29T10:50:47Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDownClass -->
+      </class> <!-- moc.tests.UserTest -->
+    </test> <!-- UserTest -->
+  </suite> <!-- Command line suite -->
+</testng-results>
