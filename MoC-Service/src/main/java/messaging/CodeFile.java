@@ -1,4 +1,4 @@
-package domain;
+package messaging;
 
 import java.io.Serializable;
 

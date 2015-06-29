@@ -2,7 +2,7 @@ package api;
 
 import com.sun.media.jfxmedia.logging.Logger;
 import domain.Challenge;
-import domain.CodeFile;
+import messaging.CodeFile;
 import domain.Competition;
 import domain.Team;
 import javax.inject.Inject;
