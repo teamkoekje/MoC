@@ -94,7 +94,7 @@ public class TestDataService {
         ch1.addHint(new Hint("Hint 1", 10));
         ch1.addHint(new Hint("Hint 2", 20));
 
-        c1.addChallenge(ch1, 25);
+        c1.addChallenge(ch1, 1000);
         c1.addChallenge(ch2, 30);
         c1.addChallenge(ch3, 30);
 
