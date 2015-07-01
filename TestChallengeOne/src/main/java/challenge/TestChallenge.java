@@ -5,7 +5,7 @@ import annotations.Hint;
 import enums.ChallengeDifficulty;
 
 @Challenge(
-        name = "testChallenge1",
+        name = "TestChallengeOne",
         author = "Daan Goumans",
         organisation = "Team Koekje",
         weblink = "www.daangoumans.nl",

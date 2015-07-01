@@ -71,6 +71,9 @@ controllers.service('newsfeedService', function () {
 
 controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 'user', 'newsfeedService', '$cookies',
     function ($scope, $rootScope, $translate, $user, newsfeedService, $cookies) {
+        var ip = "localhost";
+        var port = "8080";
+
         $rootScope.loading = false;
         $scope.changeLanguage = function (langKey) {
             $translate.use(langKey);
@@ -96,7 +99,7 @@ controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 
             $rootScope.loading = true;
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8080/MoC-Service/api/user/login",
+                url: "http://" + ip + ":" + port + "/MoC-Service/api/user/login",
                 data: {
                     username: username,
                     password: password
@@ -123,7 +126,7 @@ controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 
             $rootScope.loading = true;
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8080/MoC-Service/api/user/logout",
+                url: "http://" + ip + ":" + port + "/MoC-Service/api/user/logout",
                 xhrFields: {
                     withCredentials: true
                 }
@@ -143,7 +146,7 @@ controllers.controller('mainController', ['$scope', '$rootScope', '$translate', 
          * Creates a websocket
          */
         openWebsocket = function () {
-            var ws = new WebSocket('ws://localhost:8080/MoC-Service/ws/api');
+            var ws = new WebSocket("ws://" + ip + ":" + port + "/MoC-Service/ws/api");
 
             ws.onopen = function () {
                 console.log("opening ws connection");
@@ -786,7 +789,7 @@ controllers.controller('roundResultController', ['$scope', 'competition', 'newsf
         $scope.competition = $competition.all.get({competitionId: $routeParams.id}, function () {
             $scope.scores = $scope.competition.scores;
             var teamScores = $scope.competition.currentRound.teamScores;
-console.log($scope.competition);
+            console.log($scope.competition);
             for (var i = 0; i < teamScores.length; i++) {
                 var absent = true;
                 for (var i = 0; i < $scope.scores.length; i++) {

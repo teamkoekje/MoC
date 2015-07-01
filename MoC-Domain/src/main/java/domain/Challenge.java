@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlElement;
 
@@ -35,7 +36,9 @@ public class Challenge implements Serializable {
     private String organisation = "Not filled in";
     private String website = "";
     
-    private String descriptionParticipant = "Not filled in";;
+    @Lob
+    private String descriptionParticipant = "Not filled in";
+    @Lob
     private String descriptionSpectator = "Not filled in";
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
